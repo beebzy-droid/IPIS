@@ -1,0 +1,44 @@
+# SECOM Semiconductor Manufacturing dataset configuration
+#
+# Source: UCI ML Repository
+# Origin: Real semiconductor manufacturing fab
+# Use case: High-dimensional stress test (Module 1 Phase 1E)
+
+name: secom
+role: supplementary
+
+paths:
+  raw: ${paths.data_root}/raw/secom
+  processed: ${paths.data_root}/processed/secom
+
+# SECOM has 590 features — handled programmatically, not enumerated here
+n_features: 590
+n_samples: 1567
+
+target_variable: pass_fail  # binary: 1 = fail, -1 = pass
+task_type: classification
+
+# Heavy preprocessing required for SECOM
+preprocessing:
+  missing_value_threshold: 0.5  # drop columns with > 50% missing
+  imputation:
+    method: median
+  variance_filter:
+    enabled: true
+    threshold: 1e-5  # drop near-constant columns
+  correlation_filter:
+    enabled: true
+    threshold: 0.95  # drop highly correlated pairs
+  normalization:
+    method: robust  # robust to outliers, which SECOM has many of
+    fit_on: train_only
+
+splits:
+  train_fraction: 0.70
+  val_fraction: 0.15
+  test_fraction: 0.15
+  strategy: stratified  # preserve class balance (SECOM is imbalanced)
+
+class_imbalance:
+  resampling: smote  # smote | undersample | none
+  expected_minority_ratio: 0.066  # ~6.6% fail rate

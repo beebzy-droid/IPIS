@@ -1,0 +1,50 @@
+# Level 1 deployment configuration
+# Simulated OPC-UA server + MQTT + dashboard, no closed-loop control
+# See: docs/architecture/decisions/002-opcua-mqtt-level1.md
+
+level: 1
+description: "Simulated OPC-UA + MQTT + dashboard, read-only soft sensor advisory mode"
+
+opcua_simulator:
+  enabled: true
+  endpoint: opc.tcp://0.0.0.0:4840
+  namespace_uri: ${oc.env:OPCUA_NAMESPACE,ipis}
+  update_rate_seconds: 1.0
+  source_dataset: ${dataset.name}  # which dataset to replay
+  replay_speed: 1.0  # 1.0 = real-time, 10.0 = 10x speed for testing
+
+mqtt:
+  broker_host: ${oc.env:MQTT_BROKER_HOST,localhost}
+  broker_port: ${oc.env:MQTT_BROKER_PORT,1883}
+  qos: 1
+  retain: false
+  topics:
+    prediction: /ipis/m1/prediction
+    confidence: /ipis/m1/confidence
+    drift: /ipis/m1/drift
+    health: /ipis/m1/health
+
+influxdb:
+  enabled: true
+  url: ${oc.env:INFLUXDB_URL,http://localhost:8086}
+  bucket: ${oc.env:INFLUXDB_BUCKET,process_data}
+  batch_size: 100
+  flush_interval_seconds: 5
+
+inference_service:
+  enabled: true
+  framework: fastapi
+  host: ${oc.env:API_HOST,0.0.0.0}
+  port: ${oc.env:API_PORT,8000}
+  max_concurrent_requests: 10
+  latency_budget_ms: 200
+
+dashboard:
+  enabled: true
+  framework: streamlit
+  host: ${oc.env:STREAMLIT_HOST,0.0.0.0}
+  port: ${oc.env:STREAMLIT_PORT,8501}
+  refresh_rate_seconds: 2
+
+closed_loop_control:
+  enabled: false  # Level 2 feature, not in Module 1 scope

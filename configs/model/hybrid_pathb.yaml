@@ -1,0 +1,78 @@
+# Path B Hybrid Soft Sensor — the locked Module 1 architecture
+#
+# ŷ_hybrid = ŷ_physics + ŷ_ML
+# where ŷ_physics is the first-principles model output
+# and ŷ_ML learns the residual r = y_true - ŷ_physics
+# with physics-informed loss regularization on the residual learner.
+#
+# See: docs/architecture/decisions/001-path-b-pinn.md
+
+name: hybrid_pathb
+type: hybrid
+description: "Path B residual hybrid with PINN-regularized residual learner; fallback to standard ML"
+
+# ---------- Physics baseline ----------
+physics:
+  backend: dwsim  # dwsim | analytical | gekko
+  fallback: analytical  # used if DWSIM bridge unavailable
+  validate_balances: true
+  tolerance: 1.0e-3
+
+# ---------- Residual learner ----------
+residual_learner:
+  architecture: mlp  # mlp | lstm | tcn
+  hidden_dims: [128, 64, 32]
+  activation: relu
+  dropout: 0.1
+  use_batch_norm: true
+
+# ---------- PINN loss configuration ----------
+pinn_loss:
+  enabled: true
+  fallback_to_standard_ml: true  # if convergence fails, lambda_physics -> 0
+
+  # Loss component weights (tuned via Pareto sweep, not hand-picked)
+  lambda_data: 1.0
+  lambda_physics: 0.1
+  lambda_smooth: 0.01
+
+  # Physics constraints applied to the residual
+  physics_constraints:
+    - mass_balance        # overall mass balance
+    - component_balance   # key component balance
+    - energy_balance      # optional, dataset-dependent
+
+  # Loss balancing strategy
+  adaptive_weighting:
+    enabled: true
+    method: ntk  # ntk | gradnorm | uncertainty | fixed
+    update_frequency: 100  # batches between weight updates
+
+# ---------- Training ----------
+training:
+  batch_size: 64
+  epochs: 300
+  learning_rate: 5.0e-4
+  weight_decay: 1.0e-5
+  optimizer: adam
+  scheduler: cosine_warmup
+  warmup_epochs: 10
+  patience: 30
+  gradient_clip: 1.0
+
+# ---------- Convergence monitoring ----------
+convergence_check:
+  min_epochs_before_fallback: 50
+  physics_loss_explosion_threshold: 100.0  # ratio vs initial
+  fallback_decision_rule: |
+    If physics_loss explodes OR data_loss does not decrease for 50 epochs,
+    set lambda_physics=0 and continue as standard residual ML.
+
+# ---------- Hyperparameter search ----------
+search_space:
+  lambda_physics: [0.001, 0.01, 0.1, 0.5, 1.0]
+  hidden_dims:
+    - [64, 32]
+    - [128, 64, 32]
+    - [256, 128, 64]
+  learning_rate: [1.0e-4, 5.0e-4, 1.0e-3]

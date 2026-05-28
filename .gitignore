@@ -1,0 +1,151 @@
+# ============================================
+# IPIS .gitignore
+# ============================================
+
+# ---------- Data (NEVER commit) ----------
+# Ignore all files in data subdirs, but allow .gitkeep and README files
+# Note: must use /* (single asterisk) not /** for negations to work
+data/raw/*
+data/raw/*/*
+data/interim/*
+data/processed/*
+data/external/*
+
+# Re-include the directories themselves so git can descend into them
+!data/raw/debutanizer/
+!data/raw/tep/
+!data/raw/secom/
+
+# Re-include placeholder files
+!data/README.md
+!data/raw/debutanizer/.gitkeep
+!data/raw/tep/.gitkeep
+!data/raw/secom/.gitkeep
+
+# Industrial partner data — ALWAYS gitignored
+# (Coca-Cola or other partner data must never reach the public repo)
+data/external/**
+*.partner.csv
+*.partner.parquet
+*.confidential.*
+
+# ---------- Models and experiment tracking ----------
+models/checkpoints/*
+models/production/*
+!models/checkpoints/.gitkeep
+!models/production/README.md
+mlruns/
+.mlflow/
+wandb/
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ---------- Virtual environments ----------
+.venv/
+venv/
+ENV/
+env/
+.python-version
+
+# ---------- Testing and coverage ----------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# ---------- Type checking and linting ----------
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# ---------- Notebooks ----------
+.ipynb_checkpoints/
+notebooks/**/*.html
+notebooks/**/output/
+
+# ---------- IDEs ----------
+.vscode/
+!.vscode/settings.json.example
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+
+# ---------- Secrets — NEVER commit ----------
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+configs/secrets.yaml
+configs/**/secrets/
+
+# ---------- OS ----------
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ---------- Logs ----------
+logs/
+*.log
+
+# ---------- Docker ----------
+docker/data/
+docker/.env
+
+# ---------- DWSIM and physics tools ----------
+*.dwxmz.bak
+*.dwxml.bak
+
+# ---------- Documentation builds ----------
+docs/_build/
+docs/site/
+site/
+
+# ---------- Hydra outputs ----------
+outputs/
+multirun/
+.hydra/
+
+# ---------- Misc ----------
+*.tmp
+*.bak
+.cache/

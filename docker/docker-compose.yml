@@ -1,0 +1,87 @@
+version: "3.8"
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: ipis-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    restart: unless-stopped
+    networks:
+      - ipis-net
+
+  influxdb:
+    image: influxdb:2.7
+    container_name: ipis-influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=ipisadmin
+      - DOCKER_INFLUXDB_INIT_ORG=ipis
+      - DOCKER_INFLUXDB_INIT_BUCKET=process_data
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=ipis-dev-token
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+    restart: unless-stopped
+    networks:
+      - ipis-net
+
+  serving:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.serving
+    container_name: ipis-serving
+    ports:
+      - "8000:8000"
+    environment:
+      - MQTT_BROKER_HOST=mosquitto
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_TOKEN=ipis-dev-token
+      - INFLUXDB_ORG=ipis
+      - INFLUXDB_BUCKET=process_data
+      - LOG_LEVEL=INFO
+      - LOG_FORMAT=json
+    depends_on:
+      - mosquitto
+      - influxdb
+    restart: unless-stopped
+    networks:
+      - ipis-net
+
+  dashboard:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dashboard
+    container_name: ipis-dashboard
+    ports:
+      - "8501:8501"
+    environment:
+      - MQTT_BROKER_HOST=mosquitto
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_TOKEN=ipis-dev-token
+      - INFLUXDB_ORG=ipis
+      - INFLUXDB_BUCKET=process_data
+      - API_URL=http://serving:8000
+    depends_on:
+      - serving
+    restart: unless-stopped
+    networks:
+      - ipis-net
+
+networks:
+  ipis-net:
+    driver: bridge
+
+volumes:
+  mosquitto_data:
+  mosquitto_log:
+  influxdb_data:
+  influxdb_config:

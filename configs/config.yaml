@@ -1,0 +1,27 @@
+# IPIS root Hydra configuration
+#
+# Compose with: python -m ipis.module1_soft_sensor.pipelines.train +dataset=debutanizer +model=hybrid_pathb
+
+defaults:
+  - dataset: debutanizer
+  - model: hybrid_pathb
+  - training: default
+  - deployment: level1
+  - _self_
+
+project_name: ipis
+module: module1_soft_sensor
+
+paths:
+  data_root: ${oc.env:IPIS_DATA_ROOT,./data}
+  models_root: ${oc.env:IPIS_MODELS_ROOT,./models}
+  logs_root: ${oc.env:IPIS_LOGS_ROOT,./logs}
+
+seed: 42
+
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}

@@ -1,0 +1,62 @@
+# Tennessee Eastman Process dataset configuration
+#
+# Source: Downs & Vogel (1993), A plant-wide industrial process control problem
+# Origin: Simulated chemical plant benchmark
+# Use case: Cross-process transfer validation (Module 1 Phase 1C)
+
+name: tennessee_eastman
+role: secondary
+
+paths:
+  raw: ${paths.data_root}/raw/tep
+  processed: ${paths.data_root}/processed/tep
+
+# Subset of TEP measurements relevant to soft sensor target
+# Full TEP has 52 measurements + 41 manipulated variables; we select a relevant subset.
+input_variables:
+  - xmeas_1   # A feed flow
+  - xmeas_2   # D feed flow
+  - xmeas_3   # E feed flow
+  - xmeas_4   # A and C feed flow
+  - xmeas_7   # reactor pressure
+  - xmeas_8   # reactor level
+  - xmeas_9   # reactor temperature
+  - xmeas_12  # product separator level
+  - xmeas_15  # stripper level
+
+# Target options: stream 6 component composition, stream 9 component composition
+# Pick one for Phase 1C transfer experiment
+target_variable: xmeas_38  # Component G in stream 9 (slow lab measurement)
+
+# 21 disturbance modes (IDV 1–21) for robustness stress testing in Phase 1C
+disturbance_modes:
+  range: [0, 21]  # 0 = normal operation, 1–21 = specific disturbances
+
+sampling:
+  rate_seconds: 180  # 3-minute simulation step
+  simulation_hours: 500
+
+splits:
+  train_fraction: 0.70
+  val_fraction: 0.15
+  test_fraction: 0.15
+  strategy: time_ordered
+
+# Transfer learning configuration (Phase 1C)
+transfer:
+  source_dataset: debutanizer
+  target_data_fractions: [0.30, 0.50, 1.00]  # for the transfer experiment
+  freeze_backbone_layers: 2
+
+preprocessing:
+  smoothing:
+    enabled: true
+    method: savitzky_golay
+    window_length: 21
+    polyorder: 3
+  normalization:
+    method: standard
+    fit_on: train_only
+  lag_features:
+    enabled: true
+    max_lag: 10

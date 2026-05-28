@@ -1,0 +1,36 @@
+# Default training configuration — overridden per model where needed
+
+mode: train  # train | resume | finetune
+
+experiment_tracking:
+  use_mlflow: true
+  log_artifacts: true
+  log_models: true
+
+reproducibility:
+  seed: ${seed}
+  deterministic: true
+  benchmark: false  # cudnn benchmark, set false for reproducibility
+
+device: auto  # auto | cpu | cuda | mps
+
+evaluation:
+  metrics:
+    - rmse
+    - mae
+    - r2
+    - mape
+  # Per-regime metrics for drift / grade-transition analysis
+  per_regime: true
+  regime_detection_method: clustering
+
+uncertainty:
+  enabled: true
+  method: conformal
+  alpha: 0.05  # 95% coverage
+
+checkpointing:
+  save_best: true
+  save_last: true
+  monitor_metric: val_rmse
+  monitor_mode: min

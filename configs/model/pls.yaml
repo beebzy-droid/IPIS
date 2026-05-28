@@ -1,0 +1,15 @@
+# Partial Least Squares — baseline soft sensor model
+
+name: pls
+type: baseline
+description: "PLS regression — linear baseline for soft sensor benchmarking"
+
+hyperparameters:
+  n_components: 5  # tuned per dataset
+  scale: true
+  max_iter: 500
+  tol: 1.0e-6
+
+# Hyperparameter search space for grid search / Optuna
+search_space:
+  n_components: [2, 3, 5, 7, 10, 15]

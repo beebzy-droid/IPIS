@@ -1,0 +1,28 @@
+# LSTM — sequence-aware deep learning baseline
+
+name: lstm
+type: baseline
+description: "LSTM — captures process lags and temporal dynamics"
+
+hyperparameters:
+  hidden_size: 64
+  num_layers: 2
+  dropout: 0.2
+  bidirectional: false
+  sequence_length: 20
+
+training:
+  batch_size: 64
+  epochs: 200
+  learning_rate: 1.0e-3
+  weight_decay: 1.0e-5
+  optimizer: adam
+  scheduler: cosine
+  patience: 20  # early stopping
+  gradient_clip: 1.0
+
+search_space:
+  hidden_size: [32, 64, 128]
+  num_layers: [1, 2, 3]
+  dropout: [0.1, 0.2, 0.3]
+  sequence_length: [10, 20, 50]

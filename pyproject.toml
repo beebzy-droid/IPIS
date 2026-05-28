@@ -1,0 +1,188 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ipis"
+version = "0.1.0"
+description = "Integrated Process Intelligence System — hybrid soft sensors, predictive maintenance, and RTO for chemical process manufacturing"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Bien Busico"}
+]
+keywords = [
+    "soft-sensor",
+    "predictive-maintenance",
+    "real-time-optimization",
+    "digital-twin",
+    "process-engineering",
+    "industry-4.0",
+    "chemical-engineering",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+]
+
+dependencies = [
+    # Core scientific stack
+    "numpy>=1.26,<2.0",
+    "pandas>=2.1",
+    "scipy>=1.12",
+    "scikit-learn>=1.4",
+
+    # Deep learning
+    "torch>=2.2",
+
+    # Gradient boosting
+    "xgboost>=2.0",
+
+    # Online learning and drift detection
+    "river>=0.21",
+
+    # Uncertainty quantification
+    "mapie>=0.8",
+
+    # Process physics
+    "coolprop>=6.6",
+    "gekko>=1.1",
+
+    # OT/IT integration
+    "asyncua>=1.1",
+    "paho-mqtt>=2.0",
+    "influxdb-client>=1.40",
+
+    # Serving and UI
+    "fastapi>=0.110",
+    "uvicorn>=0.27",
+    "streamlit>=1.32",
+    "plotly>=5.20",
+
+    # Config management
+    "hydra-core>=1.3",
+    "omegaconf>=2.3",
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+
+    # MLOps
+    "mlflow>=2.11",
+
+    # Logging
+    "structlog>=24.1",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    # Testing
+    "pytest>=8.0",
+    "pytest-cov>=4.1",
+    "pytest-asyncio>=0.23",
+    "hypothesis>=6.99",
+
+    # Linting and formatting
+    "black>=24.2",
+    "ruff>=0.3",
+    "mypy>=1.9",
+    "pre-commit>=3.6",
+
+    # Notebooks
+    "jupyter>=1.0",
+    "ipykernel>=6.29",
+    "ipywidgets>=8.1",
+]
+
+docs = [
+    "mkdocs>=1.5",
+    "mkdocs-material>=9.5",
+    "mkdocstrings[python]>=0.24",
+]
+
+[project.urls]
+Homepage = "https://github.com/USERNAME/IPIS"
+Documentation = "https://github.com/USERNAME/IPIS/tree/main/docs"
+Issues = "https://github.com/USERNAME/IPIS/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ipis = ["py.typed"]
+
+# ---------- Tooling configs ----------
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade
+    "N",    # pep8-naming
+    "SIM",  # flake8-simplify
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "N803",  # argument name should be lowercase (math notation: X, Y allowed)
+    "N806",  # variable in function should be lowercase (math notation)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]  # allow assert in tests
+"notebooks/*" = ["E402", "F401"]  # notebook conventions
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+ignore_missing_imports = true
+warn_return_any = false
+warn_unused_ignores = true
+disallow_untyped_defs = false
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "ipis.*"
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--cov=ipis",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+]
+markers = [
+    "slow: marks tests as slow",
+    "integration: marks integration tests (require services)",
+    "gpu: marks tests requiring a GPU",
+]
+
+[tool.coverage.run]
+source = ["src/ipis"]
+omit = [
+    "*/tests/*",
+    "*/notebooks/*",
+    "*/__init__.py",
+]

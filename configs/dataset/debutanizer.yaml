@@ -1,0 +1,48 @@
+# Debutanizer dataset configuration
+#
+# Source: Fortuna et al. (2007), Soft Sensors for Monitoring and Control of Industrial Processes
+# Origin: Real French refinery debutanizer column
+# Size: 2,205 hourly samples
+
+name: debutanizer
+role: primary  # primary | secondary | supplementary
+
+paths:
+  raw: ${paths.data_root}/raw/debutanizer
+  processed: ${paths.data_root}/processed/debutanizer
+
+# 7 input variables (process measurements)
+input_variables:
+  - top_temperature       # u1: top of column temperature
+  - top_pressure          # u2: top of column pressure
+  - reflux_flow           # u3: reflux flow rate
+  - flow_to_next_unit     # u4: flow to next process
+  - tray_6_temperature    # u5: tray 6 temperature
+  - bottom_temperature_1  # u6: bottom temperature 1
+  - bottom_temperature_2  # u7: bottom temperature 2
+
+# Target: butane (C4) concentration in bottom product
+target_variable: c4_bottom_concentration
+
+sampling:
+  rate_seconds: 3600  # hourly
+  total_samples: 2205
+
+splits:
+  train_fraction: 0.70
+  val_fraction: 0.15
+  test_fraction: 0.15
+  strategy: time_ordered  # NO shuffling — preserve temporal structure
+
+preprocessing:
+  smoothing:
+    enabled: true
+    method: savitzky_golay
+    window_length: 11
+    polyorder: 3
+  normalization:
+    method: standard  # standard | minmax | robust
+    fit_on: train_only
+  lag_features:
+    enabled: true
+    max_lag: 5
