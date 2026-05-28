@@ -28,10 +28,7 @@ def main() -> None:
         "drift detection, and model health monitoring."
     )
 
-    st.info(
-        "**Dashboard placeholder.** Implementation in Phase 1D. "
-        "See `docs/module1/spec.md`."
-    )
+    st.info("**Dashboard placeholder.** Implementation in Phase 1D. " "See `docs/module1/spec.md`.")
 
     col1, col2, col3 = st.columns(3)
     with col1:

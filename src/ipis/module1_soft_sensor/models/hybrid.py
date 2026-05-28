@@ -55,7 +55,7 @@ class ResidualHybridSoftSensor:
         self.lambda_smooth = lambda_smooth
         self._fallback_active = False
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> "ResidualHybridSoftSensor":
+    def fit(self, X: np.ndarray, y: np.ndarray) -> ResidualHybridSoftSensor:
         """Train the residual learner with physics-informed regularization.
 
         Args:

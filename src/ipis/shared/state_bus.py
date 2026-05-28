@@ -9,12 +9,12 @@ See: docs/architecture/system-overview.md (section "The operational state bus")
 from __future__ import annotations
 
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class HealthFlag(str, Enum):
+class HealthFlag(StrEnum):
     """Equipment health flag levels."""
 
     OK = "ok"

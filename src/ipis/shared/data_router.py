@@ -50,9 +50,7 @@ class DataRouter:
             raise KeyError(f"No feature extractor registered for module '{module_id}'")
         return self._extractors[module_id].extract(raw_inputs)
 
-    def route_all(
-        self, raw_inputs: dict[str, float]
-    ) -> dict[str, dict[str, float]]:
+    def route_all(self, raw_inputs: dict[str, float]) -> dict[str, dict[str, float]]:
         """Route raw inputs to all registered extractors in parallel.
 
         Args:
