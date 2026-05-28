@@ -26,7 +26,7 @@ target_variable: c4_bottom_concentration
 
 sampling:
   rate_seconds: 3600  # hourly
-  total_samples: 2205
+  total_samples: 2394
 
 splits:
   train_fraction: 0.70
@@ -41,7 +41,7 @@ preprocessing:
     window_length: 11
     polyorder: 3
   normalization:
-    method: standard  # standard | minmax | robust
+    method: none  # data ships pre-normalized to ~[0,1] in this mirror
     fit_on: train_only
   lag_features:
     enabled: true
