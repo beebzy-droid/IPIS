@@ -81,6 +81,22 @@ The scale-and-bias correction (SBC) lineage. Core form, verified identical acros
 
 ---
 
+## Tier 1.5 — Foundational ChemE texts (theory/derivation support + cross-checks)
+
+Canonical textbooks that supplement Perry's for theory, derivations, and independent cross-checking. Perry's remains AUTHORITATIVE for citations; these provide a second authoritative source on the underlying physics. Edition-internal-fixtures discipline still applies (a numeric value and its inputs come from the same source). Structure verified from bookmarks/TOC.
+
+| Text (ed.) | pp | Authoritative-support for | Feeds | Priority |
+|---|---|---|---|---|
+| **Seader, *Separation Process Principles* (3rd)** | 849 | Distillation, absorption/stripping, VLE, equilibrium-stage & rate-based methods, FUG shortcut. Part 1 Fundamentals (p28); **Part 2 Separations by Phase Addition/Creation (p232) = distillation/VLE** | **M1 column model + bubble-point cross-check**; M3 rate-based | **Immediate** |
+| **Smith Van Ness Abbott, *Intro to Chemical Engineering Thermodynamics* (9th)** | 781 | VLE formulations (Ch 13, p477), Phase-equilibrium intro (Ch 12, p448), solution thermodynamics & activity coefficients (Ch 10, p375), EOS/volumetric (Ch 3, p86), fugacity | **M1 bubble-point/activity-model cross-check** (second source vs Perry's S4) | **Immediate** |
+| **Coughanowr, *Process Systems Analysis and Control* (3rd)** | 630 | Process dynamics, transfer functions, controller design, stability, frequency response | M2 (drift/dynamics), M3 (control/MPC/RTO) — supports Perry's S8 | Later (M2/M3) |
+| **Welty et al., *Fundamentals of Momentum, Heat and Mass Transfer* (7th)** | 774 | Transport phenomena: fluid mechanics, heat transfer, mass transfer | Column hydraulics, reboiler/condenser, mass-transfer efficiency; M3 / rate-based | Later (equipment) |
+| **Himmelblau, *Basic Principles and Calculations in ChemE* (9th)** | 912 | Material & energy balances, units, stoichiometry, gas laws, recycle | Foundational sanity-checking of balances anywhere | General support |
+| **Levenspiel, *Chemical Reaction Engineering* (3rd)** | 685 | Reactor kinetics & design | Not directly relevant (debutanizer has no reactor); future if IPIS extends to reactive systems | Future/general |
+| **Nan, *Theory and Problems for Chemistry Olympiad*** | (PDF parse glitch) | General organic/inorganic/physical chemistry — component properties, reaction & physical chem concepts | General chemistry support | General support |
+
+Immediate use: before building the physics-to-data bridge, the bubble-point inversion and pseudo-binary key approximation can be cross-checked against Seader (Part 2, distillation/VLE) and Smith (Ch 12-13 VLE; Ch 10 activity coefficients) as a second authoritative source — the same verify-against-the-page discipline applied to a confirming source.
+
 ## Tier 2 — Supplementary simulation/design references (pull just-in-time)
 
 Structure verified from each book's bookmarks/TOC. None touch the M1 analytical engine (pure Perry's); all are DWSIM/Aspen-stage references.
