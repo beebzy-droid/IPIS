@@ -13,8 +13,9 @@ References:
 from __future__ import annotations
 
 import math
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Protocol, Sequence
+from typing import Protocol
 
 
 class ActivityModel(Protocol):
@@ -79,9 +80,7 @@ class WilsonBinary:
             ValueError: If x is not length 2.
         """
         if len(x) != 2:
-            raise ValueError(
-                "WilsonBinary supports binary mixtures only (len(x) == 2)."
-            )
+            raise ValueError("WilsonBinary supports binary mixtures only (len(x) == 2).")
         x1, x2 = x[0], x[1]
         lam12, lam21 = self._lambdas(T)
         lam = lam12 / (x1 + x2 * lam12) - lam21 / (x2 + x1 * lam21)
