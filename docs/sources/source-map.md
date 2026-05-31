@@ -111,11 +111,31 @@ Structure verified from each book's bookmarks/TOC. None touch the M1 analytical 
 
 ---
 
+## Tier 1 (cont.) — Time-delay soft-sensor methods (primary-verified)
+
+Three papers on soft sensing under measurement delay, read from the primary
+PDFs (in /mnt/project/). Directly relevant to Module 1's dynamic soft sensor,
+where the C4 signal lives in tray-6 temperature (u5) at a ~15-sample transport
+delay. NOTE: two `.md` brain-transfer summaries of these exist and are accurate
+as a MAP, but are summaries, not primary; numbers below are verified against
+the actual papers.
+
+| Paper | Method | Verified key result | IPIS use |
+|---|---|---|---|
+| **Wang et al. (2021)**, *Control Eng. Practice* (WWTP/BSM1) | **DTDE-WRVM**: Fuzzy Curve Analysis static delimitation + adaptive sliding-window dynamic delay + weighted RVM | RMSE **-55.7%** (0.0972 -> 0.0431) from making the delay *dynamic*. Delay drifts with flow rate. | **Staged**: the principled lag upgrade IF the delay drifts. The Debutanizer diagnostic showed delay STABLE (best-lag 14-15 across all splits), so NOT adopted now (ADR-007). |
+| **Guo et al. (2014)**, *J. Process Control* | **Kalman filter + data fusion**: fast/regular/delay-free measurement fused with infrequent/irregular/delayed measurement; LTI state-space avoids augmented state (cost independent of delay length) | Demonstrated on a **binary distillation column** with delayed composition. | M1-late / M3: needs a state-space column model. LTI (linear) limitation noted. |
+| **Shardt (2016)**, *J. Process Control* | Soft sensor = **process model + bias-update term**; design of the bias-update for stability under random delay; open- vs closed-loop | Establishes when a static bias loses tracking and that closed-loop needs an integrating term. | Theory under the affine SBC now; the calibration-drift finding (negative CV with stable correlation, ADR-007) is its exact motivating scenario. Full use at M3 closed-loop. |
+
+**Caveat (verification discipline):** Wang's reported test R^2 = 0.987 is flagged as test-set-optimistic (training delays appear reused at test); cite the directly-stated **-55.7% RMSE** instead. The `.md` summaries are reading guides, not citable sources.
+
+---
+
 ## Verification Record (errors caught by the protocol)
 
 1. **GPR misplacement** — synthesized doc placed GPR as M1 ML layer; primary source (Kajero S4.2) shows it belongs to M3/transfer. (ADR-006)
 2. **Base-10 Antoine bug** — synthesized doc used 10**(A-B/(T+C)); Perry's Eq. 4-15 is natural-log exp(...). Base-10 gave 29,714 kPa vs correct 87.616 kPa — a ~340x error.
 3. **SBC over-scoping** — initial framing implied full functional SBC for the M1 normalization bridge; primary sources show M1 needs only the degenerate affine output case (Lu & Gao 2008a), with full functional SBC (Yan 2011) reserved for Phase 1C.
+4. **Static single-tray physics misframed as the predictor** — initial bridge applied bubble-point physics at lag 0 (R^2 = 0.018); diagnosis showed the problem is dynamic (transport delay ~15) and that single-tray physics ~= lagged u5. Corrected to a dynamic, physics-anchored model evaluated under blocked CV (ADR-007).
 
 ---
 
