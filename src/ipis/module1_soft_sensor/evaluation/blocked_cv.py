@@ -39,6 +39,9 @@ class Estimator(Protocol):
     def predict(self, X: Any) -> Any: ...
 
 
+FeatureBuilder = Callable[[pd.DataFrame], "tuple[pd.DataFrame, pd.Series]"]
+
+
 def blocked_cv_r2(
     df: pd.DataFrame,
     make_estimator: Callable[[], Estimator],
@@ -46,22 +49,27 @@ def blocked_cv_r2(
     n_splits: int = 5,
     input_cols: Sequence[str] = DEFAULT_INPUT_COLS,
     target_col: str = DEFAULT_TARGET_COL,
+    feature_builder: FeatureBuilder | None = None,
 ) -> list[float]:
     """Per-fold test R^2 under forward-chaining time-series CV.
 
-    For each fold, lagged features are built within the fold's train and test
-    segments separately (leakage-safe), the scaler is fit on fold-train only,
-    a FRESH estimator is fit, and R^2 is scored on the fold's held-out block.
+    For each fold, features are built within the fold's train and test segments
+    separately (leakage-safe), the scaler is fit on fold-train only, a FRESH
+    estimator is fit, and R^2 is scored on the fold's held-out block.
 
     Args:
         df: Time-ordered DataFrame (no shuffling will be applied).
         make_estimator: Zero-arg callable returning a fresh unfitted estimator
             with sklearn-style ``fit``/``predict``. Called once per fold so no
             state leaks between folds.
-        max_lag: Maximum lag for feature construction.
+        max_lag: Maximum lag; also the per-fold minimum segment length guard.
         n_splits: Number of forward-chaining folds.
-        input_cols: Input columns to lag.
-        target_col: Target column.
+        input_cols: Input columns to lag (used by the default builder).
+        target_col: Target column (used by the default builder).
+        feature_builder: Optional callable mapping a segment DataFrame to
+            (X, y). Defaults to standard lagged features with ``max_lag``. Pass
+            a custom builder (e.g. physics-anchored) to compare feature sets
+            under identical CV. The builder MUST be leakage-safe per segment.
 
     Returns:
         List of per-fold R^2 scores (length n_splits).
@@ -69,6 +77,9 @@ def blocked_cv_r2(
     Raises:
         ValueError: If any fold segment is too short for the requested max_lag.
     """
+    build: FeatureBuilder = feature_builder or (
+        lambda seg: make_lagged_features(seg, max_lag, input_cols, target_col)
+    )
     n = len(df)
     tscv = TimeSeriesSplit(n_splits=n_splits)
     scores: list[float] = []
@@ -81,8 +92,8 @@ def blocked_cv_r2(
                 f"train={len(seg_tr)}, test={len(seg_te)}. "
                 f"Reduce n_splits or max_lag."
             )
-        X_tr, y_tr = make_lagged_features(seg_tr, max_lag, input_cols, target_col)
-        X_te, y_te = make_lagged_features(seg_te, max_lag, input_cols, target_col)
+        X_tr, y_tr = build(seg_tr)
+        X_te, y_te = build(seg_te)
         scaler = StandardScaler().fit(X_tr)
         est = make_estimator()
         est.fit(scaler.transform(X_tr), y_tr)
