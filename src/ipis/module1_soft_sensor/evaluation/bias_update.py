@@ -32,7 +32,9 @@ feedforward exponentially-weighted form on the delayed RAW residual:
 
 theta is the LABEL (analyzer) delay -- how stale the freshest lab value is --
 which is conceptually distinct from the 15-sample transport lag baked into the
-features. Defaulted to 15 as a proxy; refine against the real analyzer cycle.
+features. For the Fortuna benchmark theta=4 (the gas-chromatograph delay; their
+NARMA uses 4 output lags). The true plant delay was "great and unknown", so 4
+is the benchmark convention; re-pin to the real analyzer cycle elsewhere.
 
 Detection is the trigger (Phase 1B step 2); THIS module is the correction. The
 cross-regime R^2 lift / SE reduction is the Module 1 robustness result.

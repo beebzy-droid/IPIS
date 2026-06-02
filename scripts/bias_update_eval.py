@@ -17,8 +17,10 @@ What it does, all on the ADR-007 physics-anchored model:
      test R^2 raw vs corrected at that lambda.
 
 label-delay (theta) is the analyzer/label staleness, distinct from the 15-sample
-transport lag in the features; defaulted to 15 as a proxy -- refine against the
-real analyzer cycle. The bias update is the CORRECTION; detection (step 2) is
+transport lag in the features. Default theta=4 = the Fortuna et al. (2005/2007)
+benchmark gas-chromatograph delay (their NARMA uses 4 output lags); the true
+plant delay was "great and unknown", so 4 is the benchmark convention. Re-pin
+theta to the real analyzer cycle for any other column. The bias update is the CORRECTION; detection (step 2) is
 only the trigger. The cross-regime SE reduction is the Module 1 result.
 """
 
@@ -65,8 +67,9 @@ def main() -> int:
     ap.add_argument(
         "--label-delay",
         type=int,
-        default=15,
-        help="Analyzer/label delay theta (samples). Default 15.",
+        default=4,
+        help="Analyzer/label delay theta (samples). Default 4 = Fortuna "
+        "benchmark gas-chromatograph delay (their NARMA uses 4 output lags).",
     )
     ap.add_argument("--n-splits", type=int, default=5)
     ap.add_argument(
