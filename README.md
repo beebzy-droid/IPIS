@@ -51,7 +51,7 @@ IPIS addresses all three with one architecture, validated across heterogeneous b
 
 | Module | Status | Target |
 |---|---|---|
-| Module 1 — Soft Sensor | 🚧 In progress (Phase 1A) | 16–20 weeks |
+| Module 1 — Soft Sensor | 🚧 In progress (Phase 1C); 1A–1B complete | 16–20 weeks |
 | Module 2 — Predictive Maintenance | ⏳ Planned | After Module 1 |
 | Module 3 — RTO | ⏳ Planned | After Module 2 |
 | Integration (full IPIS) | ⏳ Planned | After Module 3 |

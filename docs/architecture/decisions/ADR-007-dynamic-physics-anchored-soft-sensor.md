@@ -2,6 +2,8 @@
 
 **Status:** Accepted
 
+**Supersedes:** ADR-001 (Path B PINN/residual hybrid) — see ADR-001 revisit triggers; Path A retained as private future work.
+
 **Date:** 2026 (Module 1, Phase 1A)
 
 ## Context
