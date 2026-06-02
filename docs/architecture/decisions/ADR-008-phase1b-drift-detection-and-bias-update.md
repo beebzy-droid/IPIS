@@ -88,6 +88,29 @@ bracket. The λ–θ coupling is physically coherent (fresh labels → λ=1; sta
 λ=0.1). θ=4 is adopted because the benchmark sources it, not because it scores
 best (θ=2 does).
 
+**Head-to-head vs the literature-standard adaptive layer (JITL).** JITL
+(Cheng & Chiu 2004) — locally-weighted linear regression, the canonical adaptive
+soft sensor — was benchmarked on the same blocked-CV folds, same physics-anchored
+features, same causal θ=4 constraint. The bias-update dominates on every axis at
+zero local model fits:
+
+| mechanism | CV mean | CV SE | worst fold | held-out test | local fits |
+|---|---|---|---|---|---|
+| static (ADR-007) | +0.145 | 0.419 | −1.49 | +0.476 | 0 |
+| **Shardt bias-update (λ=0.1)** | **+0.648** | **0.046** | **+0.487** | **+0.857** | **0** |
+| JITL always-on (h=2) | +0.405 | 0.215 | −0.392 | +0.519 | 1,620 |
+| JITL ADWIN-gated | +0.146 | 0.419 | −1.49 | +0.506 | 37 |
+
+Reading: JITL *partially* rescues the catastrophic fold (−1.49 → −0.39) but the
+bias-update *fully* does (→ +0.49), with 4.7× tighter SE and zero local fits vs
+JITL's 1,620. The drift here is a per-regime *offset* on a *stable* relationship;
+the bias-update targets exactly that with one O(1) term, while JITL rebuilds an
+O(N·d²) local model every query to relearn a relationship that did not change.
+**JITL-gated barely moved** (= static): ADWIN's ~260-sample latency means it
+triggers local modelling only after the catastrophic fold's damage is done —
+quantifying, against JITL, why adaptation here must be *continuous*, not
+detector-gated. Right tool for calibration drift; not "JITL is bad".
+
 ## Consequences
 
 **Positive**
@@ -123,7 +146,14 @@ best (θ=2 does).
   do not have. **Parked.**
 - **Detector-triggered one-shot recalibration.** The bias is continuous and
   per-regime (every fold biased, varying offset), not a single step — a one-shot
-  reset under-corrects. **Rejected** in favour of a continuous update.
+  reset under-corrects. **Rejected** in favour of a continuous update. Confirmed
+  empirically: ADWIN-gated JITL barely beats static (CV +0.146, worst −1.49).
+- **JITL (Cheng & Chiu 2004) as the adaptive layer** — the original plan's
+  literature standard. **Benchmarked, not dominant here**: on this calibration-
+  drift problem the O(1) bias-update beats O(N) JITL on CV mean, SE, worst fold
+  and test (table above). Also dimension-fragile: JITL (LWR) collapsed (R² ≈ −8)
+  on the raw 112-feature lagged set, working only on the low-dim physics-anchored
+  features. JITL retained as the reported baseline, not the deployed mechanism.
 - **Page-Hinkley / CUSUM as primary detector.** Over-fire on residual-scale,
   heteroscedastic streams; ADWIN (scale-free, bounded FP) is primary.
 
@@ -138,6 +168,8 @@ best (θ=2 does).
   CUSUM / Page-Hinkley.
 - Montgomery, D. C. *Introduction to Statistical Quality Control.* — tabular
   CUSUM ARL₀ (validation reference).
+- Cheng, C. & Chiu, M. S. (2004). *A new data-based methodology for nonlinear
+  process modeling.* Chem. Eng. Sci. 59, 2801–2810. — JITL baseline.
 - Fortuna, L., Graziani, S., Xibilia, M. G. (2005/2007). — Debutanizer benchmark,
   C4 gas-chromatograph delay (4 output lags), θ source.
 

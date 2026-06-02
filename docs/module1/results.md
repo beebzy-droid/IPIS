@@ -85,6 +85,21 @@ CV (test untouched).
 θ-sensitivity bracket: θ=2 → CV +0.707±0.044; θ=4 → +0.648±0.046; θ=8 →
 +0.599±0.060. All solidly positive, SE 7–9× tighter than static across the bracket.
 
+**Head-to-head vs JITL (literature-standard adaptive layer).** Same folds, same
+physics-anchored features, same causal θ=4:
+
+| mechanism | CV mean | CV SE | worst fold | held-out test | local fits |
+|---|---|---|---|---|---|
+| static | +0.145 | 0.419 | −1.49 | +0.476 | 0 |
+| **bias-update (λ=0.1)** | **+0.648** | **0.046** | **+0.487** | **+0.857** | **0** |
+| JITL always-on (h=2) | +0.405 | 0.215 | −0.392 | +0.519 | 1,620 |
+| JITL ADWIN-gated | +0.146 | 0.419 | −1.49 | +0.506 | 37 |
+
+The O(1) bias-update beats O(N) JITL on every axis at zero local fits. JITL
+partially rescues the catastrophic fold (−1.49 → −0.39); the bias-update fully
+does (→ +0.49). Gated JITL ≈ static — ADWIN's latency triggers local modelling
+too late — confirming adaptation here must be continuous, not detector-gated.
+
 ### Observations
 The **SE collapse (0.419 → 0.046) is the result**, not the mean lift: it converts
 "competitive mean R² with large cross-regime variance" into "strictly dominant on

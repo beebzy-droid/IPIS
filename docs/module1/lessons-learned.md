@@ -62,6 +62,10 @@ Each phase entry follows the structure:
 - **Shardt open-loop bias-update (feedforward EWMA).** Stable for any λ, one knob,
   faithful to the verified primary. Turned worst fold −1.49 → +0.49 and cut
   cross-regime SE 9.1×.
+- **Benchmarking the targeted fix against the literature standard.** Building JITL
+  (Cheng & Chiu 2004) as a fair baseline turned a substitution we would have had
+  to *defend* into a result we can *claim*: the O(1) bias-update dominates O(N)
+  JITL on calibration-drift data.
 - **Verify-before-load-bearing.** Every algorithm (ADWIN, Page-Hinkley, CUSUM,
   the bias-update form, θ) was checked against a primary source before it carried
   weight — including a CUSUM ARL₀ validation against the textbook (169.5 vs 168).
@@ -75,6 +79,14 @@ Each phase entry follows the structure:
 - **Trying to derive θ from the data** (cross-correlation method 3) — inconclusive
   by design: the dataset is "data rich, information poor." Logged as a negative
   result rather than buried.
+- **JITL (LWR) is dimension-fragile.** On the raw 112-feature lagged set its
+  Euclidean similarity collapsed (curse of dimensionality) and it scored R² ≈ −8;
+  it worked only on the low-dim physics-anchored features. The bias-update has no
+  such dependence.
+- **Detector-gated adaptation was too slow here.** ADWIN-gated JITL ≈ static
+  (latency ~260 fires after the catastrophic fold's damage is done) — empirical
+  proof that continuous adaptation, not a drift trigger, is what closes Gap 2 on
+  this process.
 
 ### What I would do differently
 - Set detector scale from a robust/per-regime σ from the start, not a single

@@ -25,7 +25,7 @@ This directory holds Module 1 documentation.
 - **Datasets:** Debutanizer (primary), Tennessee Eastman (transfer), SECOM (stress test)
 - **Infrastructure:** Simulated OPC-UA server (asyncua), MQTT broker (Mosquitto), InfluxDB historian
 - **Serving:** FastAPI inference endpoint, Streamlit dashboard, MLflow versioning
-- **Drift handling:** ADWIN (primary) / Page-Hinkley / CUSUM residual detection + **Shardt open-loop bias-update** (**ADR-008**). The bias-update supersedes the originally-planned JITL retraining for this calibration-drift failure mode.
+- **Drift handling:** ADWIN (primary) / Page-Hinkley / CUSUM residual detection + **Shardt open-loop bias-update** (**ADR-008**). The bias-update was **benchmarked head-to-head against JITL** (the planned literature standard) and dominates on this calibration-drift problem (CV +0.648±0.046 vs JITL +0.405±0.215, worst fold +0.49 vs −0.39, at zero local fits vs 1,620). JITL retained as the reported baseline.
 - **Uncertainty:** Conformal prediction (MAPIE) — *planned; not yet implemented as of 1B. Owed before 1F (candidate: 1D or a 1A/1B addendum).*
 
 See `docs/architecture/decisions/` for the reasoning behind each decision.
