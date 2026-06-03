@@ -323,10 +323,18 @@ at 3-min); distinct from the analyzer label-delay θ≈5.
   reactor T, T×(D/E), A/C feeds, pressure, residence) + transport-lag diagnosis.
 - `tests/unit/test_tep.py` — 10 tests (synthetic-format, CI-safe).
 
-**NEXT ACTION:** build the **single-mode soft-sensor baseline** (part A) on mode1
-(blocked-CV, physics features, the same recipe), then the **3-method SBC migration**
-across modes (Lu OSBC baseline → Yan Bayesian functional SBC primary → Luo matrix
-SBC), on a **data-fraction sweep** (R² vs % mode_j data; <30% = crossover where
+**PART-A BASELINE DONE (scripts/tep_baseline.py, on mode1).** The Debutanizer
+recipe transfers to TEP: static physics-anchored blocked-CV R² = −0.089±0.493
+(same calibration-drift signature as the Debutanizer), held-out test +0.31; the
+**1B bias-update applied unchanged** recovers it to CV +0.19 (θ=5 documented) /
++0.45 (θ=2 empirical) — methodology transfers across topology. Transfer gap
+confirmed: mode1 model → mode2/mode3 R² = −1.08/−1.30 (migration motivation).
+Canonical mv-per modes 1/3/4 to be fetched in parallel (LFS); baseline/migration
+code is dataset-agnostic so they drop in.
+
+**NEXT ACTION:** build the **3-method SBC migration** across modes (Lu OSBC
+baseline → Yan Bayesian functional SBC primary → Luo matrix SBC), on a
+**data-fraction sweep** (R² vs % mode_j data; <30% = crossover where
 migrated ≥ from-scratch-at-100%). **Yan's GP bias delivers the owed MAPIE/conformal
 uncertainty on the transferred model** — fold MAPIE into 1C.
 
