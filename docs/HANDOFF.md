@@ -275,36 +275,79 @@ and Wang et al. 2021 (DTDE-WRVM) were the 1B soft-sensor-delay backbone.
 
 ---
 
-## 10. RESUME HERE → Phase 1C (cross-process transfer)
+## 10. RESUME HERE → Phase 1C (cross-process transfer) — DATA STAGE DONE
 
-**Current state:** 1A + 1B complete and pushed. Repo docs reconciled to as-built.
+**Framing DECIDED (user-ratified): A + C, not literal Debutanizer→TEP.**
+SBC migration requires a *shared input space* and *similar processes* (verified
+from Lu 2008/2009 + Luo 2015 + Yan 2011 primaries), so literal Debutanizer→TEP
+parameter migration is mathematically inapplicable (disjoint variables; the
+linear physics-anchored model has no transferable params/features). 1C is:
+- **(A) Methodology transfer** — the physics-anchoring + transport-lag + blocked-CV
+  + drift + bias-update *recipe* rebuilt on TEP needs <30% of the data a
+  from-scratch black-box needs. (Matches ADR-003 "transfer across topologies".)
+- **(C) Within-TEP regime migration** — SBC migrates a TEP soft sensor across
+  *operating regimes* (the staged papers' valid use: similar process, different
+  operating point), targeting <30% of full-retrain data.
+- **Rejected (B):** deep transfer-learning / domain-adaptation — reopens the deep
+  path (ADR-001 superseded), high risk, doesn't use the staged papers.
 
-**Next action:** scope **1C — migrate the Debutanizer soft sensor to Tennessee
-Eastman**, target <30% of full-retrain data for equivalent accuracy. Walk the
-migration-method option scale against the staged papers, recommend, ratify, build
-— same loop as 1B:
-- **Lu & Gao 2008/2009 — scale-bias correction (SBC):** parametric linear
-  scale+bias on the base model. Simplest.
-- **Yan et al. 2011 — Bayesian migration of GPR (functional SBC):** scaling
-  function + zero-mean GP bias; the "if new ≈ old, bias → 0" framework.
-- **Luo et al. 2015 — Bayesian improved migration:** adds prior information /
-  robust/sequential refinement.
+**TEP TARGET (grounded, Downs & Vogel 1993):** y = **XMEAS(40), component G mol%**
+in the product stream, predicted from the fast measurements (XMEAS 1-22 + XMV).
+The composition analyzers (XMEAS 23-41) are *delayed* GC readings; product
+analyzer = 0.25 h sample + 0.25 h dead time → **θ ≈ 5 samples at the 3-min
+cadence — DOCUMENTED, not assumed (upgrades 1B's convention θ=4).**
 
-**Open decisions feeding 1C scoping:**
-1. TEP soft-sensor target + which TEP variables map to the Debutanizer feature
-   roles (TEP is a full plant, not a single column — topology gap is the point).
-2. Whether MAPIE (owed) folds into 1C (conformal on the *transferred* model is a
-   strong story) or waits for 1D.
-3. How "<30% data" is measured (data-fraction sweep vs fixed budget; the success
-   metric and its CV protocol).
+**DATA — DONE (in-sandbox, validated).** COSTEP (Simulink) was abandoned after a
+non-reproducible reactor-pressure startup trip. Pivoted to the **Russell/Chiang/
+Braatz closed-loop FORTRAN** (the d00-d21 simulator), compiled headless with
+gfortran and run by Claude directly. Three operating-point regimes generated
+(2000 rows each, 100 h at 3-min cadence, IDV 8+10+13 excitation):
 
-**Also pending from 1B (verify on next session start):** confirm the 1B JITL
-code + doc commits are on `main` and CI is green (COMMIT_PLAN in the last
-handoff bundle). If not yet committed, that's the first action.
+| mode | SETPT14/15 | G mean±std (mol%) | reactor P max | learnable R² |
+|---|---|---|---|---|
+| mode1 (base) | 6.882/18.776 | 53.84±0.97 | 2983 (0% pinned) | 0.59 |
+| mode2 (mid-G) | 7.600/17.600 | 58.21±1.14 | 2945 (0% pinned) | 0.57 |
+| mode3 (high-G) | 8.500/16.500 | 63.43±1.72 | 2895 (0% pinned) | 0.71 |
+
+Regimes are feed-ratio-induced operating points on the HIGH-G side (low-G pins
+the 3000 kPa trip), NOT the canonical Downs & Vogel G/H modes — honest framing,
+sufficient for the Option-C claim. **Transfer gap demonstrated:** a mode1 model
+scores R²=0.59 in-sample but **−1.08 on mode2, −1.30 on mode3** → migration is
+clearly needed. Data is gitignored; reproduce via `generate_tep_modes.py` (needs
+the Braatz repo + gfortran). Diagnosed feature transport_lag = 0 (contemporaneous
+at 3-min); distinct from the analyzer label-delay θ≈5.
+
+**BUILT this stage (new files, tested, lint-clean):**
+- `data/tep_loader.py` — TEPLoader (54-col CSV → named DataFrame, y=XMEAS_40).
+- `features/tep_physics_features.py` — analytical-first G features (D/E ratio,
+  reactor T, T×(D/E), A/C feeds, pressure, residence) + transport-lag diagnosis.
+- `tests/unit/test_tep.py` — 10 tests (synthetic-format, CI-safe).
+
+**NEXT ACTION:** build the **single-mode soft-sensor baseline** (part A) on mode1
+(blocked-CV, physics features, the same recipe), then the **3-method SBC migration**
+across modes (Lu OSBC baseline → Yan Bayesian functional SBC primary → Luo matrix
+SBC), on a **data-fraction sweep** (R² vs % mode_j data; <30% = crossover where
+migrated ≥ from-scratch-at-100%). **Yan's GP bias delivers the owed MAPIE/conformal
+uncertainty on the transferred model** — fold MAPIE into 1C.
+
+**Migration methods (staged primaries):**
+- **Lu OSBC/IOSBC (2008):** scalar slope+bias; fewest data; global-linear only.
+- **Luo matrix-SBC (2015):** per-input diagonal S + vector B + Bayesian prior.
+- **Yan Bayesian functional SBC (2011):** s(x)·f_o(x)+δ(x), δ=zero-mean GP;
+  nonlinear + native uncertainty (→ discharges MAPIE debt).
+
+**Two correction layers compose:** migration (offline, across modes) + 1B
+bias-update (online, within mode) = migrated base + online bias-update.
+
 
 ---
 
 ## Changelog of this doc
-- **2026-06-03** — Created. Captures working agreement + project vision + full 1A/1B
-  state (through the JITL head-to-head) + the parked/deferred/owed ledger. Resume
-  point = Phase 1C scoping.
+- **2026-06-03** — Created. Working agreement + project vision + full 1A/1B state
+  (through the JITL head-to-head) + parked/deferred/owed ledger.
+- **2026-06-03** — 1C framing decided (A+C; SBC inapplicable to literal
+  Debutanizer→TEP). COSTEP abandoned (pressure-trip); pivoted to Russell/Braatz
+  closed-loop FORTRAN generated in-sandbox. 3 TEP operating-mode datasets
+  validated (G 53.8/58.2/63.4, transfer gap −1.08/−1.30). TEP loader +
+  physics-anchored features + 10 tests built. Target=XMEAS(40); θ≈5 documented.
+  Resume = single-mode baseline → 3-method SBC migration + data-fraction sweep.
