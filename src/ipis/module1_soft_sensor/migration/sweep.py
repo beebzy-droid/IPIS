@@ -1,0 +1,136 @@
+"""Data-fraction sweep harness for Phase-1C migration (method-agnostic).
+
+Quantifies the central 1C claim: a migrated source model reaches full-retrain
+target accuracy with <30% of the target data a from-scratch model needs.
+
+Protocol (all curves evaluated on the SAME held-out target test block):
+  - bar = from-scratch (same model class) trained on the FULL target pool.
+  - migrated(f) = source model + migrator, the migrator fit on the first f% of
+    the target pool (time-ordered).
+  - from_scratch_same(f), from_scratch_generic(f) = comparator curves trained on
+    the same f% slice (same physics features, and the generic lagged features).
+  - crossover = smallest f where migrated(f) >= bar.
+
+Per-split feature building (each slice/test built independently) avoids
+cross-split lag-alignment issues. source_predict(df) must apply the fixed source
+model on the SAME physics features used here, so its output aligns with y.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass, field
+
+import numpy as np
+import pandas as pd
+from sklearn.metrics import r2_score
+
+from ipis.module1_soft_sensor.migration.sbc import Migrator
+
+FeatureBuilder = Callable[[pd.DataFrame], tuple[pd.DataFrame, pd.Series]]
+SourcePredict = Callable[[pd.DataFrame], np.ndarray]
+EstimatorFactory = Callable[[], object]  # returns an unfitted sklearn-like estimator
+
+
+@dataclass
+class SweepResult:
+    fractions: list[float]
+    migrated_r2: list[float]
+    from_scratch_same_r2: list[float]
+    from_scratch_generic_r2: list[float] = field(default_factory=list)
+    bar_same_r2: float = float("nan")  # from-scratch same-class at 100% pool
+    bar_generic_r2: float = float("nan")
+    crossover_fraction: float | None = None  # min f where migrated >= bar_same
+
+    def summary(self) -> str:
+        lines = [f"  from-scratch (same class) @100% pool = bar: R2 {self.bar_same_r2:+.3f}"]
+        if not np.isnan(self.bar_generic_r2):
+            lines.append(
+                f"  from-scratch (generic)    @100% pool:     R2 {self.bar_generic_r2:+.3f}"
+            )
+        lines.append("  f%    migrated   fs-same   fs-generic")
+        for i, f in enumerate(self.fractions):
+            g = (
+                f"{self.from_scratch_generic_r2[i]:+.3f}"
+                if self.from_scratch_generic_r2
+                else "   -  "
+            )
+            lines.append(
+                f"  {f*100:4.0f}  {self.migrated_r2[i]:+.3f}    "
+                f"{self.from_scratch_same_r2[i]:+.3f}    {g}"
+            )
+        xo = "none" if self.crossover_fraction is None else f"{self.crossover_fraction*100:.0f}%"
+        lines.append(f"  => crossover (migrated >= from-scratch-100%): {xo}")
+        return "\n".join(lines)
+
+
+def _r2_clip(y_true: np.ndarray, y_pred: np.ndarray) -> float:
+    """R^2 with extreme negatives clipped (off-scale extrapolation is uninformative)."""
+    r = r2_score(y_true, y_pred)
+    return float(max(r, -10.0))
+
+
+def data_fraction_sweep(
+    pool_df: pd.DataFrame,
+    test_df: pd.DataFrame,
+    source_predict: SourcePredict,
+    physics_builder: FeatureBuilder,
+    migrator_factory: Callable[[], Migrator],
+    fractions: Sequence[float],
+    *,
+    same_class_factory: EstimatorFactory,
+    generic_builder: FeatureBuilder | None = None,
+    generic_factory: EstimatorFactory | None = None,
+) -> SweepResult:
+    """Run the data-fraction sweep for one migration method on one target regime."""
+    Xte, yte = physics_builder(test_df)
+    yte = np.asarray(yte, dtype=float).ravel()
+    sp_te = np.asarray(source_predict(test_df), dtype=float).ravel()
+
+    # bar: from-scratch same-class on the full pool
+    Xpool, ypool = physics_builder(pool_df)
+    bar_model = same_class_factory().fit(Xpool, np.asarray(ypool).ravel())
+    bar_same = _r2_clip(yte, bar_model.predict(Xte))
+
+    bar_generic = float("nan")
+    Xte_g = yte_g = None
+    if generic_builder is not None and generic_factory is not None:
+        Xpool_g, ypool_g = generic_builder(pool_df)
+        Xte_g, yte_g = generic_builder(test_df)
+        yte_g = np.asarray(yte_g, dtype=float).ravel()
+        gmodel = generic_factory().fit(Xpool_g, np.asarray(ypool_g).ravel())
+        bar_generic = _r2_clip(yte_g, gmodel.predict(Xte_g))
+
+    migrated, fs_same, fs_generic = [], [], []
+    n_pool = len(pool_df)
+    for f in fractions:
+        n = max(2, int(round(f * n_pool)))
+        slice_df = pool_df.iloc[:n]
+
+        # migrated: source model + migrator fit on the slice
+        Xs, ys = physics_builder(slice_df)
+        ys = np.asarray(ys, dtype=float).ravel()
+        sp_s = np.asarray(source_predict(slice_df), dtype=float).ravel()
+        mig = migrator_factory().fit(np.asarray(Xs), sp_s, ys)
+        migrated.append(_r2_clip(yte, mig.predict(np.asarray(Xte), sp_te)))
+
+        # from-scratch same-class on the slice
+        m_same = same_class_factory().fit(Xs, ys)
+        fs_same.append(_r2_clip(yte, m_same.predict(Xte)))
+
+        # from-scratch generic on the slice
+        if generic_builder is not None and generic_factory is not None:
+            Xsg, ysg = generic_builder(slice_df)
+            m_gen = generic_factory().fit(Xsg, np.asarray(ysg).ravel())
+            fs_generic.append(_r2_clip(yte_g, m_gen.predict(Xte_g)))
+
+    crossover = next((f for f, r in zip(fractions, migrated, strict=True) if r >= bar_same), None)
+    return SweepResult(
+        fractions=list(fractions),
+        migrated_r2=migrated,
+        from_scratch_same_r2=fs_same,
+        from_scratch_generic_r2=fs_generic,
+        bar_same_r2=bar_same,
+        bar_generic_r2=bar_generic,
+        crossover_fraction=crossover,
+    )
