@@ -198,3 +198,85 @@ class TestBiasUpdateLayer:
         )
         assert len(res.migrated_r2) == 2
         assert all(np.isfinite(r) for r in res.migrated_r2)
+
+
+class TestSweepExtras:
+
+    def test_data_efficiency_metric_populated(self):
+        # migration on an offset target reaches the target level at low data;
+        # the data-efficiency fields must be populated and sane.
+        src = _toy(400, 1.0, 0.0, 0)
+        src_model = LinearRegression().fit(*[np.asarray(a) for a in _builder(src)])
+
+        def source_predict(df):
+            X, _ = _builder(df)
+            return src_model.predict(np.asarray(X))
+
+        tgt = _toy(400, 1.0, 3.0, 1)
+        pool, test = tgt.iloc[:280], tgt.iloc[280:]
+        res = data_fraction_sweep(
+            pool,
+            test,
+            source_predict,
+            _builder,
+            LuOSBC,
+            [0.1, 0.3, 1.0],
+            same_class_factory=LinearRegression,
+            target_level=0.9,
+        )
+        assert res.target_level == 0.9
+        if res.bar_same_r2 > 0:
+            assert res.migrated_data_fraction in (*res.fractions, None)
+            if res.data_efficiency is not None:
+                assert res.data_efficiency > 0
+
+    def test_n_repeats_produces_error_bars(self):
+        src = _toy(400, 1.0, 0.0, 0)
+        src_model = LinearRegression().fit(*[np.asarray(a) for a in _builder(src)])
+
+        def source_predict(df):
+            X, _ = _builder(df)
+            return src_model.predict(np.asarray(X))
+
+        tgt = _toy(400, 1.0, 3.0, 1)
+        pool, test = tgt.iloc[:280], tgt.iloc[280:]
+        res = data_fraction_sweep(
+            pool,
+            test,
+            source_predict,
+            _builder,
+            LuOSBC,
+            [0.2, 0.5],
+            same_class_factory=LinearRegression,
+            n_repeats=3,
+            random_state=0,
+        )
+        assert len(res.migrated_r2_std) == 2
+        assert all(s >= 0 for s in res.migrated_r2_std)
+
+    def test_yan_sweep_reports_coverage(self):
+        # Yan exposes last_std_, so the sweep must populate coverage/width.
+        rng = np.random.default_rng(0)
+        n = 200
+        xs = rng.uniform(0, 1, n)
+        src = pd.DataFrame({"x": xs, "y": xs})
+        src_model = LinearRegression().fit(src[["x"]].to_numpy(), src["y"].to_numpy())
+
+        def source_predict(df):
+            return src_model.predict(df[["x"]].to_numpy())
+
+        xt = rng.uniform(0, 1, n)
+        tgt = pd.DataFrame({"x": xt, "y": 2.0 + xt + rng.normal(0, 0.1, n)})
+        pool, test = tgt.iloc[:140], tgt.iloc[140:]
+        res = data_fraction_sweep(
+            pool,
+            test,
+            source_predict,
+            _builder,
+            lambda: YanFunctionalSBC(n_restarts=2),
+            [0.3, 1.0],
+            same_class_factory=LinearRegression,
+        )
+        assert len(res.migrated_coverage) == 2 and len(res.migrated_width) == 2
+        assert all(0.0 <= c <= 1.0 for c in res.migrated_coverage)
+        assert all(w > 0 for w in res.migrated_width)

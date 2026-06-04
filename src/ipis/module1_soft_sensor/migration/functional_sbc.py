@@ -52,8 +52,9 @@ class YanFunctionalSBC:
     uncertainty) for the most recent call.
     """
 
-    def __init__(self, n_restarts: int = 3, random_state: int = 0) -> None:
+    def __init__(self, n_restarts: int = 8, prior_std: float = 3.0, random_state: int = 0) -> None:
         self.n_restarts = n_restarts
+        self.prior_std = prior_std  # log-space hyperparameter prior std (MAP regularization)
         self.random_state = random_state
         self.scaler_: StandardScaler | None = None
         self.Xs_: np.ndarray | None = None
@@ -61,6 +62,7 @@ class YanFunctionalSBC:
         self.F_: np.ndarray | None = None
         self.y_: np.ndarray | None = None
         self.theta_: np.ndarray | None = None  # [log a, log a0, log v0, log w, log s2]
+        self._prior_mean: np.ndarray | None = None
         self._L = None
         self._alpha = None
         self.last_std_: np.ndarray | None = None
@@ -88,7 +90,12 @@ class YanFunctionalSBC:
         alpha = cho_solve(L, self.y_)
         logdet = 2.0 * np.sum(np.log(np.diag(L[0])))
         n = len(self.y_)
-        return float(0.5 * self.y_ @ alpha + 0.5 * logdet + 0.5 * n * np.log(2 * np.pi))
+        nll = 0.5 * self.y_ @ alpha + 0.5 * logdet + 0.5 * n * np.log(2 * np.pi)
+        # MAP penalty: light Gaussian prior on log-hyperparameters (regularizes
+        # the small-sample fit, damping the low-data-fraction GP instability)
+        if self._prior_mean is not None and self.prior_std > 0:
+            nll = nll + 0.5 * float(np.sum(((theta - self._prior_mean) / self.prior_std) ** 2))
+        return float(nll)
 
     def fit(self, X: np.ndarray, source_pred: np.ndarray, y: np.ndarray) -> YanFunctionalSBC:
         X = np.asarray(X, dtype=float)
@@ -107,6 +114,7 @@ class YanFunctionalSBC:
         # init from data scales; optimize log-hyperparameters with restarts
         yvar = float(np.var(y)) + 1e-6
         base = np.log(np.array([yvar / max(np.mean(z**2), 1e-6), yvar, yvar, 1.0, 0.1 * yvar]))
+        self._prior_mean = base  # MAP prior centered at data-scale-reasonable values
         rng = np.random.default_rng(self.random_state)
         best_theta, best_nlml = None, np.inf
         for r in range(self.n_restarts):

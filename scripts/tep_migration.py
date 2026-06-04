@@ -53,7 +53,13 @@ def main() -> int:
         default="",
         help="online Shardt bias-update 'lam,theta' (e.g. '0.3,2'); empty = off",
     )
-    ap.add_argument("--gp-subsample", type=int, default=600, help="cap pool for GP tractability")
+    ap.add_argument("--gp-subsample", type=int, default=400, help="cap pool for GP tractability")
+    ap.add_argument(
+        "--n-repeats",
+        type=int,
+        default=1,
+        help=">1 averages random f-pct draws (error bars)",
+    )
     args = ap.parse_args()
     fractions = [float(x) for x in args.fractions.split(",")]
     bias_update = None
@@ -117,6 +123,7 @@ def main() -> int:
             generic_builder=generic,
             generic_factory=LinearRegression,
             bias_update=bias_update,
+            n_repeats=args.n_repeats,
         )
         print(f"\n=== TARGET {tgt} ===")
         print(res.summary())
