@@ -275,11 +275,14 @@ and Wang et al. 2021 (DTDE-WRVM) were the 1B soft-sensor-delay backbone.
 
 ---
 
-## 10. RESUME HERE → Phase 1C COMPLETE (cross-process transfer)
+## 10. RESUME HERE → Phase 1D (1C fully complete, incl. writeup)
 
-**Status:** 1A ✅, 1B ✅, **1C ✅ (data + part-A baseline + 3-method migration + MAPIE)**.
-**Next:** write up Phase 1C, then 1D (production stack incl. MAPIE productionization),
-1E (SECOM), 1F (writing).
+**Status:** 1A ✅, 1B ✅, **1C ✅ COMPLETE** (data + part-A baseline + 3-method
+migration + MAPIE + **writeup + ADR-009**).
+**Next:** **Phase 1D — production-ready deployment stack** (owed: MAPIE
+*productionization* = swap Yan's GP posterior for a conformal wrapper, validate
+coverage online; a nonlinear source model — which also re-opens Luo as viable;
+GP O(n³) tractability). Then 1E (SECOM stress test), 1F (writing/submission).
 
 ### 1C framing (DECIDED, user-ratified): A + C, not literal Debutanizer→TEP
 SBC migration requires a *shared input space* + *similar processes* (verified from
@@ -345,12 +348,29 @@ source pred; only Luo uses it). ~36 migration+tep tests; full suite ~190.
 - Honest caveats baked in: regimes are feed-ratio operating points (not canonical
   modes); report data-efficiency not the brittle crossover; θ is data-specific.
 
-### NEXT ACTION: write up Phase 1C
-The arc: (A) methodology transfers across topology (Debutanizer recipe → TEP, test
-R² 0.31, bias-update recovers) + transfer gap −1.08/−1.30 motivates migration →
-(C) 3-method SBC migration with the two-layer composition → **Yan ~10× data-
-efficient + calibrated intervals**, OSBC ~3.3×, Luo ≡ from-scratch (with the
-linear-source explanation). Then ADR for 1C, then Phase 1D.
+### Writeup (DONE this session)
+Phase-1C documented in three places (all in repo): `docs/module1/results.md`
+(Phase-1C section: Summary/Data/Metrics table/Observations/Unexpected),
+`docs/module1/lessons-learned.md` (Phase-1C section), and
+`docs/architecture/decisions/ADR-009-phase1c-cross-process-transfer.md` (full
+template: Context/Decision/Rationale/Consequences/Revisit/References). Also fixed
+in the migration code this session: LuoMatrixSBC uses `trf` (not `lm`; `lm` fails
+when n_samples < 2d+2 params at small fractions), and `tep_migration.py` fits the
+source scaler on numpy (kills the StandardScaler feature-name warning flood that
+was also slowing Luo). Luo confirmed 1.0× on the user's machine (tracks
+from-scratch to ±0.001–0.003 every fraction).
+
+### NEXT ACTION: Phase 1D — production-ready deployment stack
+Pull `docs/module1/spec.md` for the 1D scope, then option-scale the plan. Carry-in
+debts to clear in 1D: (1) **MAPIE/conformal productionization** — Yan's calibrated
+GP posterior discharged the *1C* uncertainty claim, but production needs a
+conformal wrapper with online coverage validation; (2) **a nonlinear source model**
+(GP/XGBoost) — would lift the soft sensor and *re-open Luo matrix-SBC* as a
+non-degenerate middle ground (revisit trigger in ADR-009); (3) **GP tractability**
+(O(n³) → sparse/subsample). Reusable assets: `evaluation/{drift,bias_update}.py`
+(1B), `migration/{sbc,functional_sbc,matrix_sbc,sweep}.py` (1C, `Migrator`
+interface with optional `source_fn`), `features/tep_physics_features.py`,
+`data/tep_loader.py`. Warm-up: `cd Projects\IPIS` + `conda activate ipis`.
 
 ---
 
@@ -366,3 +386,9 @@ linear-source explanation). Then ADR for 1C, then Phase 1D.
   metric; **Yan ~10× + calibrated intervals (MAPIE discharged)**, OSBC ~3.3×, Luo ≡
   from-scratch (linear-source degeneracy, verified). Doc de-duplicated/rebuilt.
   Resume = Phase 1C writeup.
+- **2026-06-04** — Phase 1C **fully closed**: writeup committed (results.md +
+  lessons-learned.md Phase-1C sections + ADR-009). Migration code hardened
+  (LuoMatrixSBC `lm`→`trf` for n<params; source scaler fit on numpy to kill the
+  warning flood). Luo 1.0× reproduced on user machine (±0.003 vs from-scratch).
+  Resume = **Phase 1D** (production stack: MAPIE productionization, nonlinear
+  source, GP tractability).
