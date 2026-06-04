@@ -138,6 +138,7 @@ def data_fraction_sweep(
     n_repeats: int = 1,
     random_state: int = 0,
     target_level: float = 0.90,
+    source_fn=None,
 ) -> SweepResult:
     """Run the data-fraction sweep for one migration method on one target regime.
 
@@ -179,8 +180,8 @@ def data_fraction_sweep(
         Xs, ys = physics_builder(slice_df)
         ys = np.asarray(ys, dtype=float).ravel()
         sp_s = np.asarray(source_predict(slice_df), dtype=float).ravel()
-        mig = migrator_factory().fit(np.asarray(Xs), sp_s, ys)
-        mig_pred = mig.predict(np.asarray(Xte), sp_te)
+        mig = migrator_factory().fit(np.asarray(Xs), sp_s, ys, source_fn=source_fn)
+        mig_pred = mig.predict(np.asarray(Xte), sp_te, source_fn=source_fn)
         r_mig = _score(yte, mig_pred, bias_update)
         std = getattr(mig, "last_std_", None)
         if std is not None:

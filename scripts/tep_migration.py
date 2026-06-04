@@ -32,11 +32,16 @@ from ipis.module1_soft_sensor.features.tep_physics_features import (
     make_tep_physics_features,
 )
 from ipis.module1_soft_sensor.migration.functional_sbc import YanFunctionalSBC
+from ipis.module1_soft_sensor.migration.matrix_sbc import LuoMatrixSBC
 from ipis.module1_soft_sensor.migration.sbc import LuOSBC
 from ipis.module1_soft_sensor.migration.sweep import data_fraction_sweep
 
 TEP_FAST_INPUTS = [f"XMEAS_{i}" for i in range(1, 23)]
-MIGRATORS = {"osbc": LuOSBC, "yan": lambda: YanFunctionalSBC(n_restarts=3)}
+MIGRATORS = {
+    "osbc": LuOSBC,
+    "yan": lambda: YanFunctionalSBC(n_restarts=3),
+    "luo": LuoMatrixSBC,
+}
 
 
 def main() -> int:
@@ -86,12 +91,17 @@ def main() -> int:
 
     # source model on ALL source-mode data
     X_src, y_src = phys(src)
+    X_src = np.asarray(X_src)  # fit on numpy so later numpy transforms don't warn
     scaler = StandardScaler().fit(X_src)
     src_model = LinearRegression().fit(scaler.transform(X_src), np.asarray(y_src).ravel())
 
     def source_predict(df: pd.DataFrame) -> np.ndarray:
         X, _ = phys(df)
-        return src_model.predict(scaler.transform(X))
+        return src_model.predict(scaler.transform(np.asarray(X)))
+
+    def source_fn(features: np.ndarray) -> np.ndarray:
+        # source model on a (possibly transformed) built-feature matrix (for Luo)
+        return src_model.predict(scaler.transform(np.asarray(features)))
 
     migrator = MIGRATORS[args.method]
     print("=" * 78)
@@ -108,7 +118,7 @@ def main() -> int:
         pool = pd.concat([sp.train, sp.val], ignore_index=True)
         test = sp.test.reset_index(drop=True)
         # subsample for GP methods (O(n^3)); keeps OSBC vs Yan a fair head-to-head
-        if args.method == "yan" and len(pool) > args.gp_subsample:
+        if args.method in ("yan", "luo") and len(pool) > args.gp_subsample:
             pool = pool.iloc[:: max(1, len(pool) // args.gp_subsample)].reset_index(drop=True)
             if len(test) > 400:
                 test = test.iloc[:: max(1, len(test) // 400)].reset_index(drop=True)
@@ -124,15 +134,20 @@ def main() -> int:
             generic_factory=LinearRegression,
             bias_update=bias_update,
             n_repeats=args.n_repeats,
+            source_fn=source_fn,
         )
         print(f"\n=== TARGET {tgt} ===")
         print(res.summary())
 
     print("\n" + "-" * 78)
-    print("  migrated >= from-scratch-100% at f<30% would confirm the <30%-data claim.")
-    print("  --bias-update composes migration (offline) with the 1B online bias-update")
-    print("  (within-mode drift removal); this lifts the bars and exposes migration's")
-    print("  low-data advantage. OSBC is stable; Yan is stronger but GP-noisier at low f.")
+    print("  Read DATA EFFICIENCY (reach 90% of from-scratch ceiling), not the brittle")
+    print("  ceiling-crossover. Three methods, linear physics-anchored source:")
+    print("   - osbc: output-only affine -- preserves source structure; fails relationship change.")
+    print("   - luo:  per-input + output affine -- collapses to from-scratch for a LINEAR source.")
+    print(
+        "   - yan:  functional GP bias -- ~10x data-efficient + calibrated intervals (the winner)."
+    )
+    print("  --bias-update composes migration (offline) + 1B bias-update (online).")
     return 0
 
 

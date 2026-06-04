@@ -31,11 +31,13 @@ import numpy as np
 class Migrator(Protocol):
     """Common interface for migration methods (OSBC, functional SBC, matrix SBC)."""
 
-    def fit(self, X: np.ndarray, source_pred: np.ndarray, y: np.ndarray) -> Migrator:
+    def fit(
+        self, X: np.ndarray, source_pred: np.ndarray, y: np.ndarray, source_fn=None
+    ) -> Migrator:
         """Fit the correction from target features, source predictions, target labels."""
         ...
 
-    def predict(self, X: np.ndarray, source_pred: np.ndarray) -> np.ndarray:
+    def predict(self, X: np.ndarray, source_pred: np.ndarray, source_fn=None) -> np.ndarray:
         """Apply the fitted correction to source predictions on target features."""
         ...
 
@@ -59,7 +61,7 @@ class LuOSBC:
     def __init__(self) -> None:
         self.params_: OSBCParams | None = None
 
-    def fit(self, X: np.ndarray, source_pred: np.ndarray, y: np.ndarray) -> LuOSBC:
+    def fit(self, X: np.ndarray, source_pred: np.ndarray, y: np.ndarray, source_fn=None) -> LuOSBC:
         sp = np.asarray(source_pred, dtype=float).ravel()
         yt = np.asarray(y, dtype=float).ravel()
         if sp.shape[0] != yt.shape[0]:
@@ -72,7 +74,7 @@ class LuOSBC:
         self.params_ = OSBCParams(scale=float(s_o), bias=float(b_o))
         return self
 
-    def predict(self, X: np.ndarray, source_pred: np.ndarray) -> np.ndarray:
+    def predict(self, X: np.ndarray, source_pred: np.ndarray, source_fn=None) -> np.ndarray:
         if self.params_ is None:
             raise RuntimeError("LuOSBC.predict called before fit.")
         sp = np.asarray(source_pred, dtype=float).ravel()

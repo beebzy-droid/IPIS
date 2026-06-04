@@ -8,6 +8,7 @@ import pytest
 from sklearn.linear_model import LinearRegression
 
 from ipis.module1_soft_sensor.migration.functional_sbc import YanFunctionalSBC
+from ipis.module1_soft_sensor.migration.matrix_sbc import LuoMatrixSBC
 from ipis.module1_soft_sensor.migration.sbc import LuOSBC, Migrator
 from ipis.module1_soft_sensor.migration.sweep import data_fraction_sweep
 
@@ -280,3 +281,51 @@ class TestSweepExtras:
         assert len(res.migrated_coverage) == 2 and len(res.migrated_width) == 2
         assert all(0.0 <= c <= 1.0 for c in res.migrated_coverage)
         assert all(w > 0 for w in res.migrated_width)
+
+
+class TestLuoMatrixSBC:
+    def _linear(self, n, seed, coefs, offset):
+        rng = np.random.default_rng(seed)
+        X = rng.uniform(-2, 2, (n, 3))
+        y = offset + X @ np.asarray(coefs) + rng.normal(0, 0.03, n)
+        return X, y
+
+    def test_requires_source_fn(self):
+        X, y = self._linear(50, 0, [1, -0.5, 0.3], 0.0)
+        with pytest.raises(ValueError, match="source_fn"):
+            LuoMatrixSBC().fit(X, np.zeros(50), y)  # no source_fn
+
+    def test_recovers_different_linear_target(self):
+        # linear source; Luo's per-input scaling should fit a DIFFERENT linear
+        # target well (it can realize any linear map) -- the documented behavior.
+        from sklearn.metrics import r2_score
+
+        Xs, ys = self._linear(200, 0, [1.0, -0.5, 0.3], 0.0)
+        src = LinearRegression().fit(Xs, ys)
+
+        def source_fn(F):
+            return src.predict(np.asarray(F))
+
+        Xt, yt = self._linear(200, 1, [0.4, 0.8, -0.6], 2.0)
+        Xte, yte = self._linear(100, 2, [0.4, 0.8, -0.6], 2.0)
+        m = LuoMatrixSBC().fit(Xt, source_fn(Xt), yt, source_fn=source_fn)
+        r = r2_score(yte, m.predict(Xte, source_fn(Xte), source_fn=source_fn))
+        assert r > 0.9
+
+    def test_satisfies_migrator_protocol(self):
+        assert isinstance(LuoMatrixSBC(), Migrator)
+
+    def test_predict_before_fit_raises(self):
+        with pytest.raises(RuntimeError):
+            LuoMatrixSBC().predict(
+                np.zeros((2, 3)), np.zeros(2), source_fn=lambda F: np.zeros(len(F))
+            )
+
+    def test_too_few_samples_raises(self):
+        with pytest.raises(ValueError):
+            LuoMatrixSBC().fit(
+                np.zeros((2, 3)),
+                np.zeros(2),
+                np.zeros(2),
+                source_fn=lambda F: np.zeros(len(F)),
+            )

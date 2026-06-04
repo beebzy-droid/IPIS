@@ -97,7 +97,9 @@ class YanFunctionalSBC:
             nll = nll + 0.5 * float(np.sum(((theta - self._prior_mean) / self.prior_std) ** 2))
         return float(nll)
 
-    def fit(self, X: np.ndarray, source_pred: np.ndarray, y: np.ndarray) -> YanFunctionalSBC:
+    def fit(
+        self, X: np.ndarray, source_pred: np.ndarray, y: np.ndarray, source_fn=None
+    ) -> YanFunctionalSBC:
         X = np.asarray(X, dtype=float)
         z = np.asarray(source_pred, dtype=float).ravel()
         y = np.asarray(y, dtype=float).ravel()
@@ -133,7 +135,7 @@ class YanFunctionalSBC:
         self._alpha = cho_solve(self._L, self.y_)
         return self
 
-    def predict(self, X: np.ndarray, source_pred: np.ndarray) -> np.ndarray:
+    def predict(self, X: np.ndarray, source_pred: np.ndarray, source_fn=None) -> np.ndarray:
         if self.theta_ is None:
             raise RuntimeError("YanFunctionalSBC.predict called before fit.")
         Xs = self.scaler_.transform(np.asarray(X, dtype=float))
