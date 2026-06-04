@@ -25,6 +25,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import r2_score
 
+from ipis.module1_soft_sensor.evaluation.bias_update import apply_bias_update
 from ipis.module1_soft_sensor.migration.sbc import Migrator
 
 FeatureBuilder = Callable[[pd.DataFrame], tuple[pd.DataFrame, pd.Series]]
@@ -70,6 +71,19 @@ def _r2_clip(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     return float(max(r, -10.0))
 
 
+def _score(y_true: np.ndarray, y_pred: np.ndarray, bias_update: tuple[float, int] | None) -> float:
+    """R^2, optionally after the online Shardt bias-update (two-layer composition).
+
+    When bias_update=(lam, theta) is given, the prediction stream is corrected
+    online using only delayed labels before scoring -- removing within-mode drift
+    from EVERY curve so the comparison isolates regime transfer.
+    """
+    if bias_update is not None:
+        lam, theta = bias_update
+        y_pred, _ = apply_bias_update(y_true, y_pred, lam=lam, delay=theta)
+    return _r2_clip(y_true, y_pred)
+
+
 def data_fraction_sweep(
     pool_df: pd.DataFrame,
     test_df: pd.DataFrame,
@@ -81,8 +95,14 @@ def data_fraction_sweep(
     same_class_factory: EstimatorFactory,
     generic_builder: FeatureBuilder | None = None,
     generic_factory: EstimatorFactory | None = None,
+    bias_update: tuple[float, int] | None = None,
 ) -> SweepResult:
-    """Run the data-fraction sweep for one migration method on one target regime."""
+    """Run the data-fraction sweep for one migration method on one target regime.
+
+    If bias_update=(lam, theta) is given, the 1B online bias-update is applied to
+    every prediction stream (migrated, from-scratch, bars) before scoring -- the
+    migration(offline) + bias-update(online) two-layer composition.
+    """
     Xte, yte = physics_builder(test_df)
     yte = np.asarray(yte, dtype=float).ravel()
     sp_te = np.asarray(source_predict(test_df), dtype=float).ravel()
@@ -90,7 +110,7 @@ def data_fraction_sweep(
     # bar: from-scratch same-class on the full pool
     Xpool, ypool = physics_builder(pool_df)
     bar_model = same_class_factory().fit(Xpool, np.asarray(ypool).ravel())
-    bar_same = _r2_clip(yte, bar_model.predict(Xte))
+    bar_same = _score(yte, bar_model.predict(Xte), bias_update)
 
     bar_generic = float("nan")
     Xte_g = yte_g = None
@@ -99,7 +119,7 @@ def data_fraction_sweep(
         Xte_g, yte_g = generic_builder(test_df)
         yte_g = np.asarray(yte_g, dtype=float).ravel()
         gmodel = generic_factory().fit(Xpool_g, np.asarray(ypool_g).ravel())
-        bar_generic = _r2_clip(yte_g, gmodel.predict(Xte_g))
+        bar_generic = _score(yte_g, gmodel.predict(Xte_g), bias_update)
 
     migrated, fs_same, fs_generic = [], [], []
     n_pool = len(pool_df)
@@ -112,17 +132,17 @@ def data_fraction_sweep(
         ys = np.asarray(ys, dtype=float).ravel()
         sp_s = np.asarray(source_predict(slice_df), dtype=float).ravel()
         mig = migrator_factory().fit(np.asarray(Xs), sp_s, ys)
-        migrated.append(_r2_clip(yte, mig.predict(np.asarray(Xte), sp_te)))
+        migrated.append(_score(yte, mig.predict(np.asarray(Xte), sp_te), bias_update))
 
         # from-scratch same-class on the slice
         m_same = same_class_factory().fit(Xs, ys)
-        fs_same.append(_r2_clip(yte, m_same.predict(Xte)))
+        fs_same.append(_score(yte, m_same.predict(Xte), bias_update))
 
         # from-scratch generic on the slice
         if generic_builder is not None and generic_factory is not None:
             Xsg, ysg = generic_builder(slice_df)
             m_gen = generic_factory().fit(Xsg, np.asarray(ysg).ravel())
-            fs_generic.append(_r2_clip(yte_g, m_gen.predict(Xte_g)))
+            fs_generic.append(_score(yte_g, m_gen.predict(Xte_g), bias_update))
 
     crossover = next((f for f, r in zip(fractions, migrated, strict=True) if r >= bar_same), None)
     return SweepResult(

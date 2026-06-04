@@ -31,11 +31,12 @@ from ipis.module1_soft_sensor.features.tep_physics_features import (
     diagnose_transport_lag,
     make_tep_physics_features,
 )
+from ipis.module1_soft_sensor.migration.functional_sbc import YanFunctionalSBC
 from ipis.module1_soft_sensor.migration.sbc import LuOSBC
 from ipis.module1_soft_sensor.migration.sweep import data_fraction_sweep
 
 TEP_FAST_INPUTS = [f"XMEAS_{i}" for i in range(1, 23)]
-MIGRATORS = {"osbc": LuOSBC}  # yan, luo added as implemented
+MIGRATORS = {"osbc": LuOSBC, "yan": lambda: YanFunctionalSBC(n_restarts=3)}
 
 
 def main() -> int:
@@ -47,8 +48,18 @@ def main() -> int:
     ap.add_argument("--transport-lag", type=int, default=-1)
     ap.add_argument("--generic-lag", type=int, default=3)
     ap.add_argument("--fractions", default="0.05,0.1,0.2,0.3,0.5,1.0")
+    ap.add_argument(
+        "--bias-update",
+        default="",
+        help="online Shardt bias-update 'lam,theta' (e.g. '0.3,2'); empty = off",
+    )
+    ap.add_argument("--gp-subsample", type=int, default=600, help="cap pool for GP tractability")
     args = ap.parse_args()
     fractions = [float(x) for x in args.fractions.split(",")]
+    bias_update = None
+    if args.bias_update:
+        lam_s, theta_s = args.bias_update.split(",")
+        bias_update = (float(lam_s), int(theta_s))
 
     loader = TEPLoader()
     try:
@@ -90,6 +101,11 @@ def main() -> int:
         sp = time_ordered_split(dft)
         pool = pd.concat([sp.train, sp.val], ignore_index=True)
         test = sp.test.reset_index(drop=True)
+        # subsample for GP methods (O(n^3)); keeps OSBC vs Yan a fair head-to-head
+        if args.method == "yan" and len(pool) > args.gp_subsample:
+            pool = pool.iloc[:: max(1, len(pool) // args.gp_subsample)].reset_index(drop=True)
+            if len(test) > 400:
+                test = test.iloc[:: max(1, len(test) // 400)].reset_index(drop=True)
         res = data_fraction_sweep(
             pool,
             test,
@@ -100,14 +116,16 @@ def main() -> int:
             same_class_factory=LinearRegression,
             generic_builder=generic,
             generic_factory=LinearRegression,
+            bias_update=bias_update,
         )
         print(f"\n=== TARGET {tgt} ===")
         print(res.summary())
 
     print("\n" + "-" * 78)
     print("  migrated >= from-scratch-100% at f<30% would confirm the <30%-data claim.")
-    print("  OSBC is the floor; Yan functional SBC + Luo matrix SBC handle the")
-    print("  input-dependent regime differences OSBC cannot.")
+    print("  --bias-update composes migration (offline) with the 1B online bias-update")
+    print("  (within-mode drift removal); this lifts the bars and exposes migration's")
+    print("  low-data advantage. OSBC is stable; Yan is stronger but GP-noisier at low f.")
     return 0
 
 

@@ -332,7 +332,38 @@ confirmed: mode1 model → mode2/mode3 R² = −1.08/−1.30 (migration motivati
 Canonical mv-per modes 1/3/4 to be fetched in parallel (LFS); baseline/migration
 code is dataset-agnostic so they drop in.
 
-**NEXT ACTION:** build the **3-method SBC migration** across modes (Lu OSBC
+**MIGRATION PROGRESS (Lu OSBC + Yan functional SBC built; two-layer composition validated).**
+- `migration/sbc.py` LuOSBC (Lu&Gao 2008a output-only SBC) + Migrator protocol;
+  `migration/sweep.py` data-fraction sweep (migrated vs from-scratch same+generic
+  vs bar; crossover metric; optional online bias-update layer);
+  `migration/functional_sbc.py` YanFunctionalSBC (Yan 2011 functional SBC, manual
+  GP with kernel a*FF^T + C, ML-II hyperparams, calibrated predictive variance).
+- `scripts/tep_migration.py --method {osbc,yan} --bias-update lam,theta`.
+- FINDINGS (generated data, headline): (1) **OSBC alone fails <30%** and even
+  underperforms from-scratch on the large mode3 gap (affine can't fix a wrong
+  input-output relationship). (2) **Yan beats OSBC** on mode3 (functional GP fixes
+  the relationship) and nails a synthetic nonlinear warp (R2 1.00 vs OSBC 0.30).
+  (3) **Within-mode drift confound:** untreated, from-scratch bars cap at ~0.15-0.22.
+  (4) **Two-layer composition (migration + 1B online bias-update) is the fix:**
+  bias-update lifts bars (mode2 0.22->0.48, mode3 0.15->0.43) and migration then
+  DOMINATES from-scratch at low data (mode2 OSBC+bias @5% +0.22 vs fs -0.28).
+  **OSBC+bias crossover ~40-50% (mode2), stable+monotonic. Yan+bias stronger at
+  30% but GP-noisy at low f** (mode2 "5%" crossover is an overfit artifact;
+  needs more restarts). Clean <30% not yet rock-solid; "migration+bias reaches
+  from-scratch parity at ~40-50% data and dominates at 5-20%" is the honest result.
+- Bug fixed: Yan predictive variance now includes observation noise (coverage
+  17%->97%); matters for the MAPIE discharge.
+- ~28 migration+tep tests (170+ suite). theta=2 used (empirical best on generated
+  data; theta=5 documented). GP subsampled to <=600 for tractability.
+
+**NEXT ACTION:** (a) stabilize Yan (more restarts / avg over test subsamples) for
+trustworthy low-fraction estimates; (b) build **Luo matrix-SBC** (per-input diagonal
+S + Bayesian prior, the middle ground); (c) discharge the owed **MAPIE/conformal**
+via Yan's calibrated GP posterior on the transferred model; (d) write up Phase 1C.
+Remaining staged primary: Luo 2015. Two comparator curves (same-class + generic)
+are in the sweep. Canonical mv-per modes = supplementary (under-excited).
+
+**(superseded) earlier next-action:** build the 3-method SBC migration across modes (Lu OSBC
 baseline → Yan Bayesian functional SBC primary → Luo matrix SBC), on a
 **data-fraction sweep** (R² vs % mode_j data; <30% = crossover where
 migrated ≥ from-scratch-at-100%). **Yan's GP bias delivers the owed MAPIE/conformal
