@@ -109,7 +109,51 @@ Each phase entry follows the structure:
 
 ## Phase 1C — Cross-Process Transfer
 
-*Status: not started*
+*Status: **complete** (ADR-009).*
+
+### What worked
+- **Honoring the SBC scope constraint up front.** Reading Lu/Yan/Luo closely enough
+  to see that model migration needs a shared input space turned a doomed task
+  (literal Debutanizer→TEP) into the right one (A+C). The framing decision was the
+  highest-leverage move in the phase.
+- **Reusing 1B unchanged.** The Shardt bias-update code, written for the
+  Debutanizer, dropped onto TEP with zero edits and recovered the static model the
+  same way — concrete evidence the recipe is portable, not bespoke.
+- **Data efficiency as the metric.** Switching from the brittle ceiling-crossover
+  to "fraction to reach 90% of the from-scratch ceiling" produced a stable,
+  reproducible ~10× result that matched to the decimal across machines.
+- **Verify-before-load-bearing on the Luo claim.** Predicting analytically that
+  Luo ≡ from-scratch for a linear source, then confirming it three ways
+  (synthetic R² 1.00, TEP tracking ±0.003), is exactly the discipline that makes a
+  negative result publishable rather than a hand-wave.
+
+### What didn't
+- **COSTEP/Simulink** burned time before the Russell/Braatz pivot — a reminder to
+  validate a data source's reproducibility before building on it.
+- **The strict crossover metric** flipped 20%↔100% across seeds and nearly led to
+  an overclaim ("<30% confirmed"); caught it on the second machine-reproduction and
+  reframed. Knife-edge metrics where two curves coincide should be distrusted by
+  default.
+- **`lm` solver + small fractions.** Luo's 22 parameters made `lm` fail when
+  n_samples < n_params at the 5% fraction; `trf` was needed. A reminder that
+  solver choice interacts with the experiment design (the data-fraction grid).
+- **DataFrame-fitted scaler + numpy calls** flooded thousands of warnings and
+  slowed Luo to a crawl — fit on numpy when the model will be called on numpy.
+
+### What I would do differently
+- Pin the data-efficiency metric and `--n-repeats ≥ 8` from the start, before
+  reporting any crossover number.
+- Build a nonlinear source variant earlier so Luo isn't degenerate — the
+  three-method comparison would have been more informative with a source where all
+  three methods are viable.
+
+### Implications for downstream phases
+- **1D:** Yan's GP is O(n³) → needs subsampling or a sparse/conformal replacement
+  for production; the MAPIE wrapper owed for productionization lands here. A
+  nonlinear source model would also re-open Luo as a viable middle ground.
+- **Writing (1F):** the cleanest story is the methodological lesson — *migrate a
+  parametric source by adding a nonparametric bias, not by reshaping its inputs* —
+  backed by the OSBC/Luo/Yan contrast and the ~10× + calibrated-interval result.
 
 ---
 

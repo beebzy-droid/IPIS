@@ -118,7 +118,90 @@ bias-update is the correction.
 
 ## Phase 1C — Cross-Process Transfer (Debutanizer → TEP)
 
-*Status: not started*
+*Status: **complete** (ADR-009). Framing A+C (methodology transfer + within-TEP
+regime migration); literal Debutanizer→TEP parameter migration is mathematically
+inapplicable (disjoint input spaces — see ADR-009).*
+
+### Summary
+The Phase-1A/1B recipe (physics-anchored features + forward-chaining blocked CV +
+Shardt open-loop bias-update), built on a distillation column, was rebuilt
+**unchanged** on the Tennessee Eastman reactor-separator-stripper process to
+predict product component G (XMEAS 40). Part A: the recipe transfers across
+topology — the static physics-anchored model shows the same calibration-drift
+signature (blocked-CV R² −0.089 ± 0.493, the Debutanizer pattern), held-out test
+R² 0.31, and the bias-update recovers it to CV +0.19 (θ=5, documented analyzer
+delay) / +0.45 (θ=2, empirical best). A mode-1 model applied to other operating
+regimes collapses (R² −1.08 / −1.30) — the transfer gap that motivates migration.
+Part C: three scale-bias-correction methods (Lu OSBC, Luo matrix-SBC, Yan
+functional SBC) were benchmarked on a data-fraction sweep against from-scratch
+baselines, composed with the 1B online bias-update (the two-layer architecture).
+**Yan functional SBC is ~10× more data-efficient than training from scratch** —
+reaching 90% of full-retrain accuracy with ~5% of the target data vs ~50% — and
+carries calibrated 95% prediction intervals (coverage 92–98%, widening with the
+regime gap), discharging the MAPIE/conformal debt for 1C. OSBC is ~3.3×; Luo
+collapses to from-scratch (1.0×) on the linear source.
+
+### Data
+Three TEP operating-point regimes generated in-sandbox from the Russell/Chiang/
+Braatz closed-loop simulator (COSTEP/Simulink abandoned — non-reproducible
+reactor-pressure startup trip; see ADR-009): 2000 rows each (100 h at the 3-min
+analyzer cadence), G means 53.8 / 58.2 / 63.4 mol% (gaps 4.4 / 5.2 ≫ within-mode
+std ~1.3), 0% pressure-pinned, single-mode multivariate R² 0.57–0.71. These are
+**feed-ratio operating points, not the canonical Downs & Vogel G/H modes** —
+honest framing, sufficient for the within-process migration claim. Canonical
+mv-per modes 1/3/4 fetched as a supplementary check; they are textbook-clean
+(mode 3 = 90 mol% G) but under-excited for soft-sensor training (within-mode
+R² ~0.04) — which is itself why deliberate excitation was injected for the
+headline data.
+
+### Metrics — data efficiency (mode 2, two-layer = migration + online bias-update, n_repeats = 8)
+
+| method | form | params | data efficiency | calibrated intervals |
+|---|---|---|---|---|
+| Lu OSBC (2008a) | output-only `S_O·z + B_O` | 2 | ~3.3× | — |
+| Luo matrix-SBC (2015) | per-input `ρ₀·x + λ₀` inside z, + output affine | 2d+2 | ~1.0× (no gain) | — |
+| **Yan functional SBC (2011)** | `s(x)·z + δ(x)`, δ = zero-mean GP | GP | **~10×** | **95% coverage 92–98%** |
+
+Data efficiency = (from-scratch data fraction) / (migrated data fraction) to reach
+90% of the from-scratch-at-100% R². Yan reaches the target at ~5% target data on
+both regimes; the larger mode-3 gap gives *more* migration benefit and *wider*
+intervals (2.8–4.0 vs mode-2 2.6–3.2). The strict "exceed the from-scratch
+ceiling" crossover is **not** reported as a headline: it is brittle here because
+migrated and from-scratch ceilings coincide (it flipped 20%↔100% across seeds);
+data efficiency is the robust metric.
+
+### Observations
+- **Methodology transfers across topology.** The exact Debutanizer recipe (down to
+  the bias-update code) works on a chemically unrelated reactor process. The
+  shared structure is the *method*, not the variables.
+- **The right way to migrate a parametric source is to add a nonparametric bias
+  (Yan), not to reshape its inputs (Luo).** OSBC's output-only rigidity preserves
+  the source's input-output shape (so it migrates, but cannot fix a relationship
+  change); Yan adds local GP corrections on top of the preserved source (fixes the
+  relationship *and* keeps the structure → ~10×).
+- **The two-layer composition is essential.** Within-mode drift (IDV random walks
+  over 100 h) caps every from-scratch bar at ~0.15–0.22 if untreated; the 1B
+  online bias-update removes it, lifting all curves and exposing migration's
+  low-data advantage.
+- **MAPIE/conformal discharged for 1C.** Yan's GP posterior gives calibrated 95%
+  intervals on the transferred model that widen with the regime gap (still owed as
+  a *productionization* item for 1D).
+
+### Unexpected findings
+- **Luo matrix-SBC ≡ from-scratch for a linear source.** For a linear base model
+  z, `z(ρ₀·x + λ₀)` is linear in x with coefficients `ρ₁·w_k·ρ_{0,k}`; since the
+  source weights w_k are fixed and nonzero, ρ₀ can realize *any* linear map, so
+  Luo's least-squares fit equals from-scratch linear regression — verified
+  analytically, on synthetic data (R² 1.00 = from-scratch on a different linear
+  target), and on TEP (migrated tracks from-scratch to ±0.001–0.003 at every
+  fraction). Luo's input-reshaping needs a *nonlinear* source to add value, and
+  its 2d+2 parameters make it underdetermined at small target fractions.
+- **Bigger regime gap ⇒ more migration benefit** (mode 3 dominance stronger than
+  mode 2): a from-scratch model with little data struggles most on the harder
+  regime, while migration leverages the source.
+- **θ is data-specific.** The documented analyzer delay θ=5 helped the generated
+  data (+0.19) but the empirical optimum was θ=2 (+0.45); on the 1-min-native
+  canonical data θ=5 *hurt* (−0.45). Re-pinned per dataset.
 
 ---
 
