@@ -149,3 +149,4 @@ multirun/
 *.tmp
 *.bak
 .cache/
+conformal_synthetic_check.png
