@@ -153,6 +153,34 @@ feed-ratio operating points (high-G side for pressure margin), NOT the canonical
 Downs & Vogel G/H modes — sufficient for the Option-C claim, framed honestly.
 
 
+## Tier 1 (cont.) — Conformal prediction / uncertainty quantification (Phase 1D)
+
+Distribution-free interval methods, read from the primary PDFs (in /mnt/project/)
+and verified against the equations/algorithms at the moment of use (ADR-010). The
+deployed sensor drifts per regime (ADR-007/008), so split conformal's exchangeability
+assumption is violated → the production primary is an *adaptive* method. Implemented
+**from-primary** in `src/ipis/module1_soft_sensor/evaluation/conformal.py`
+(15 unit tests), MAPIE retained only as an optional cross-check.
+
+| Paper | Method | Verified key content | IPIS use |
+|---|---|---|---|
+| **Gibbs & Candès (2021)**, *NeurIPS* (+ 2024 extension) | **ACI** / **DtACI** | ACI update **Eq. 4: `α_{t+1} = α_t + γ(α − err_t)`**, `err_t=1` if `Y_t∉Ĉ_t(α_t)`; prediction set = `1−β` quantile of a sliding window of the last `r` conformity scores; equivalent to online gradient descent on the pinball loss. DtACI (2024, Alg. 1) runs ACI experts over the candidate grid **{0.001,0.002,0.004,0.008,0.016,0.032,0.064,0.128}** and reweights them online (σ=1/(2L)). | **Phase 1D PRIMARY** (online). `ACIConformal`; γ via `select_gamma` over the published grid. Full DtACI deferred. |
+| **Xu & Xie (2021)**, *ICML* | **EnbPI** (Ensemble Batch Prediction Intervals) | Algorithm 1: B bootstrap models trained once; LOO-ensemble residual `ε̂_i = y_i − φ(f̂_b(x_i), i∉S_b)`; width-minimising **`β̂ = argmin_{β∈[0,α]}[q(1−α+β) − q(β)]`**; interval `= f̂^φ_{−t}(x_t) + [q(β̂), q(1−α+β̂)]`; **FIFO** residual refresh every `s` steps. No exchangeability; **B fits vs B·T for jackknife+**. Defaults: φ=mean, α=0.05. | **Phase 1D COMPARATOR** (time-series). `EnbPI`; `s` is the coverage-vs-latency knob. |
+| **Barber, Candès, Ramdas & Tibshirani (2021)**, *Ann. Statist.* 49(1) 486 | **jackknife+ / CV+** | Uses LOO predictions **at the test point** plus LOO residual quantiles; **worst-case coverage ≥ 1−2α**, ~1−α under algorithmic stability; naive jackknife can hit 0 coverage when unstable. Cost = `B·T` trainings. | Reference comparator / coverage-floor grounding. Not the production path (B·T cost; still exchangeability-based). |
+| **Papadopoulos et al. (2002)**, *ECML* (+ pattern-recognition variant) | **Inductive (split) CP** | Train once on proper-training set; nonconformity scores on a separate calibration set; prediction region from the score **sorted in descending order** at the `α`-rank → the `ceil((1−α)(k+1))`-th smallest score. Single calibration pass; marginal coverage under exchangeability. | **Phase 1D BASELINE** (deliberately weak; under-covers under drift). `SplitConformal`, `conformal_quantile`. |
+
+**Registered, not yet load-bearing (Phase 1D.1 does not need them):**
+- **Schlembach et al., "Conformal multistep-ahead multivariate time-series forecasting"** — extends conformal intervals to multi-horizon / multivariate outputs. Becomes load-bearing only if the soft sensor goes multi-horizon or multi-target.
+- **Astigarraga et al., "Conformal Prediction-based ML in Cheminformatics"** — application review; nonconformity-design precedent in a regulated domain. Context for framing/choices.
+
+**Verified synthetic check (ADR-010, `scripts/conformal_synthetic_check.py`):** on a
+residual-scale step-change at t=1500 (target 0.90), static split conformal post-drift
+coverage = **0.403** (collapses), ACI = **0.899** (holds, width 6.76 vs split 3.24),
+EnbPI = **0.832** (recovers with ~700-step FIFO lag at s=25). Per-regime + rolling
+coverage, not marginal, is the validation instrument.
+
+---
+
 ## Verification Record (errors caught by the protocol)
 
 1. **GPR misplacement** — synthesized doc placed GPR as M1 ML layer; primary source (Kajero S4.2) shows it belongs to M3/transfer. (ADR-006)

@@ -1,6 +1,6 @@
 # ADR-010 — Phase 1D: distribution-free conformal uncertainty (from-primary)
 
-**Status:** Proposed (pending owner ratification)
+**Status:** Accepted
 **Date:** 2026-06-05
 **Decision owner:** Bien Busico
 **Module:** 1 (soft sensor) — production uncertainty quantification
