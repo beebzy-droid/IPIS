@@ -14,8 +14,8 @@ This directory holds Module 1 documentation.
 |---|---|---|
 | 1A — Hybrid model on Debutanizer | **Complete** (ADR-007) | Weeks 1–4 |
 | 1B — Drift detection | **Complete** (ADR-008) | Weeks 5–7 |
-| 1C — Cross-process transfer | Not started | Weeks 8–12 |
-| 1D — Production-ready deployment stack | Not started | Weeks 13–16 |
+| 1C — Cross-process transfer | **Complete** (ADR-009) | Weeks 8–12 |
+| 1D — Production-ready deployment stack | 1D.1 conformal **done** (ADR-010); 1D.1b+ in progress | Weeks 13–16 |
 | 1E — SECOM stress test | Not started | Weeks 17–18 |
 | 1F — Writing & submission | Not started | Weeks 19–20 |
 
@@ -26,6 +26,6 @@ This directory holds Module 1 documentation.
 - **Infrastructure:** Simulated OPC-UA server (asyncua), MQTT broker (Mosquitto), InfluxDB historian
 - **Serving:** FastAPI inference endpoint, Streamlit dashboard, MLflow versioning
 - **Drift handling:** ADWIN (primary) / Page-Hinkley / CUSUM residual detection + **Shardt open-loop bias-update** (**ADR-008**). The bias-update was **benchmarked head-to-head against JITL** (the planned literature standard) and dominates on this calibration-drift problem (CV +0.648±0.046 vs JITL +0.405±0.215, worst fold +0.49 vs −0.39, at zero local fits vs 1,620). JITL retained as the reported baseline.
-- **Uncertainty:** Conformal prediction (MAPIE) — *planned; not yet implemented as of 1B. Owed before 1F (candidate: 1D or a 1A/1B addendum).*
+- **Uncertainty:** Distribution-free conformal prediction, implemented **from-primary** (**ADR-010**): **ACI** (Gibbs & Candès 2021) as the online primary, **EnbPI** (Xu & Xie 2021) comparator, split conformal as the deliberately-weak exchangeability baseline. Built and synthetic-validated in 1D.1 (post-drift coverage: split 0.403 vs ACI 0.899, target 0.90); real-TEP-regime validation pending (1D.1b). MAPIE retained as an optional cross-check, not a runtime dependency.
 
 See `docs/architecture/decisions/` for the reasoning behind each decision.

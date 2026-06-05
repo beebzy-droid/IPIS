@@ -212,10 +212,11 @@ as-is to SECOM and documents where it breaks.
   we don't have. Revisit only if a future process shows unstable delay.
 - **DEFERRED to M3 — closed-loop integrator bias term** (Shardt Eq.6/10, Σaⱼ=0,
   exact tracking). Needed only if the soft sensor drives control.
-- **OWED before 1F — conformal prediction (MAPIE).** Was a planned 1A scorecard
-  metric, never built. Lands in **1D** (or a 1A/1B addendum). The only genuine
-  missing deliverable (the model/drift divergences from the original spec are
-  recorded, defensible pivots).
+- **OWED before 1F — conformal prediction.** Built in **1D.1** *from-primary*
+  (ACI/EnbPI/split, ADR-010), **discharged on synthetic** (post-drift split 0.403
+  vs ACI 0.899). **Real-TEP-regime validation (1D.1b) pending.** Implemented from
+  primaries rather than MAPIE (kept as optional cross-check) — deviation logged in
+  ADR-010.
 - **LOAD-BEARING ASSUMPTION — θ=4.** Benchmark convention; the true plant delay
   was "great and unknown." Re-pin on any real column. Sensitivity bracket is the
   defense.
@@ -277,12 +278,16 @@ and Wang et al. 2021 (DTDE-WRVM) were the 1B soft-sensor-delay backbone.
 
 ## 10. RESUME HERE → Phase 1D (1C fully complete, incl. writeup)
 
-**Status:** 1A ✅, 1B ✅, **1C ✅ COMPLETE** (data + part-A baseline + 3-method
-migration + MAPIE + **writeup + ADR-009**).
-**Next:** **Phase 1D — production-ready deployment stack** (owed: MAPIE
-*productionization* = swap Yan's GP posterior for a conformal wrapper, validate
-coverage online; a nonlinear source model — which also re-opens Luo as viable;
-GP O(n³) tractability). Then 1E (SECOM stress test), 1F (writing/submission).
+**Status:** 1A ✅, 1B ✅, 1C ✅, **1D.1 ✅** — conformal engine
+(`evaluation/conformal.py`): ACI primary / EnbPI comparator / split baseline,
+implemented **from-primary** (not MAPIE), 15 unit tests, ADR-010. Synthetic
+drift check (residual scale ×3 @ t=1500, target 0.90): post-shift coverage
+**split 0.403 / ACI 0.899 / EnbPI 0.832** (ACI holds by widening 3.24→6.76).
+**Next:** **Phase 1D.1b — validate coverage on the real TEP regimes**
+(`tep_mode{1,2,3}`): wrap the *bias-corrected* predictions, report per-regime +
+rolling coverage, tune EnbPI `s`. Needs the `bias_update`/`tep_baseline` residual
+arrays. Then 1D.2 (FastAPI+MLflow+Docker+CI), 1D.3 (Streamlit), 1D.4 (OT-sim bus,
+gated), 1D.5 (nonlinear source, gated — re-opens Luo). Then 1E, 1F.
 
 ### 1C framing (DECIDED, user-ratified): A + C, not literal Debutanizer→TEP
 SBC migration requires a *shared input space* + *similar processes* (verified from
@@ -360,17 +365,32 @@ source scaler on numpy (kills the StandardScaler feature-name warning flood that
 was also slowing Luo). Luo confirmed 1.0× on the user's machine (tracks
 from-scratch to ±0.001–0.003 every fraction).
 
-### NEXT ACTION: Phase 1D — production-ready deployment stack
-Pull `docs/module1/spec.md` for the 1D scope, then option-scale the plan. Carry-in
-debts to clear in 1D: (1) **MAPIE/conformal productionization** — Yan's calibrated
-GP posterior discharged the *1C* uncertainty claim, but production needs a
-conformal wrapper with online coverage validation; (2) **a nonlinear source model**
-(GP/XGBoost) — would lift the soft sensor and *re-open Luo matrix-SBC* as a
-non-degenerate middle ground (revisit trigger in ADR-009); (3) **GP tractability**
-(O(n³) → sparse/subsample). Reusable assets: `evaluation/{drift,bias_update}.py`
-(1B), `migration/{sbc,functional_sbc,matrix_sbc,sweep}.py` (1C, `Migrator`
-interface with optional `source_fn`), `features/tep_physics_features.py`,
-`data/tep_loader.py`. Warm-up: `cd Projects\IPIS` + `conda activate ipis`.
+### Phase 1D.1 — conformal uncertainty (DONE this session, ADR-010)
+From-primary conformal in `src/ipis/module1_soft_sensor/evaluation/conformal.py`
+(380 ln, 15 tests): `SplitConformal` (baseline), `EnbPI` (Xu & Xie 2021 Alg. 1 —
+bootstrap LOO ensemble, width-min β̂, FIFO refresh every `s`), `ACIConformal`
+(Gibbs & Candès 2021 Eq. 4, `α_{t+1}=α_t+γ(α−err_t)`, sliding window) +
+`select_gamma` over the published grid {0.001…0.128}. Model-agnostic (consumes
+point preds + residual streams → composes with ADR-007 model + ADR-008
+bias-update, no retrain). Verified equations against the project-library PDFs
+(source-map Tier-1 conformal section). MAPIE deliberately **not** a dependency
+(ADR-010 rationale). Why ACI primary: the module's own drift (negative blocked-CV
+folds, transfer gap) violates split conformal's exchangeability, so an adaptive
+method is mandatory, not a refinement.
+
+### NEXT ACTION: Phase 1D.1b — conformal coverage on real TEP regimes
+Wire `scripts/conformal_eval.py` to wrap the **bias-corrected** sensor predictions
+and report **per-regime + rolling** coverage (marginal alone hides drift failure)
+across `tep_mode{1,2,3}`, and pick EnbPI `s` (coverage-vs-latency knob). Input
+needed: per-regime `y_true, y_pred_biascorrected` arrays (or the `bias_update.py`
+/ `tep_baseline.py` signatures that expose them). Then proceed to 1D.2 (FastAPI
+<200ms — note: serving hot path is linear+EWMA = µs compute; latency is I/O-bound;
+the 1C Yan-GP is offline migration only, so GP O(n³) is not on the serving path),
+1D.3 (Streamlit: prediction/interval/drift flag/rolling coverage), 1D.4 (OT-sim
+bus, gated), 1D.5 (nonlinear source, gated — re-opens Luo per ADR-009). Reusable
+assets: `evaluation/{drift,bias_update,conformal}.py`, `migration/*`,
+`features/tep_physics_features.py`, `data/tep_loader.py`. Warm-up:
+`cd Projects\IPIS` + `conda activate ipis`.
 
 ---
 
@@ -386,9 +406,11 @@ interface with optional `source_fn`), `features/tep_physics_features.py`,
   metric; **Yan ~10× + calibrated intervals (MAPIE discharged)**, OSBC ~3.3×, Luo ≡
   from-scratch (linear-source degeneracy, verified). Doc de-duplicated/rebuilt.
   Resume = Phase 1C writeup.
-- **2026-06-04** — Phase 1C **fully closed**: writeup committed (results.md +
-  lessons-learned.md Phase-1C sections + ADR-009). Migration code hardened
-  (LuoMatrixSBC `lm`→`trf` for n<params; source scaler fit on numpy to kill the
-  warning flood). Luo 1.0× reproduced on user machine (±0.003 vs from-scratch).
-  Resume = **Phase 1D** (production stack: MAPIE productionization, nonlinear
-  source, GP tractability).
+- **2026-06-05** — **Phase 1D.1**: from-primary conformal module
+  (`evaluation/conformal.py`, 380 ln, 15 tests) — `SplitConformal`/`EnbPI`/
+  `ACIConformal`+`select_gamma`, verified vs primaries (Gibbs Eq. 4, Xu Alg. 1,
+  Barber 1−2α floor, Papadopoulos ICP rank). Synthetic drift check: split→0.403,
+  ACI→0.899, EnbPI→0.832 post-shift (target 0.90). ADR-010 (from-primary over
+  MAPIE; ACI primary). 4 conformal sources registered Tier-1. spec.md status
+  synced (1C complete; 1D.1 added). Resume = **Phase 1D.1b** (coverage on real
+  `tep_mode{1,2,3}` — needs bias-corrected residual arrays).
