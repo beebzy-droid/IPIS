@@ -1,7 +1,5 @@
-"""Production serving infrastructure for Module 1.
+"""Serving layer for the Module-1 soft sensor (Phase 1D.2)."""
 
-- api: FastAPI REST inference endpoint
-- opcua_server: Simulated OPC-UA server replaying benchmark data
-- mqtt_publisher: MQTT client for prediction publishing
-- dashboard: Streamlit operator dashboard
-"""
+from ipis.module1_soft_sensor.serving.service import SoftSensorService
+
+__all__ = ["SoftSensorService"]
