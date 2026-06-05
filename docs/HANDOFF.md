@@ -212,11 +212,10 @@ as-is to SECOM and documents where it breaks.
   we don't have. Revisit only if a future process shows unstable delay.
 - **DEFERRED to M3 — closed-loop integrator bias term** (Shardt Eq.6/10, Σaⱼ=0,
   exact tracking). Needed only if the soft sensor drives control.
-- **OWED before 1F — conformal prediction.** Built in **1D.1** *from-primary*
-  (ACI/EnbPI/split, ADR-010), **discharged on synthetic** (post-drift split 0.403
-  vs ACI 0.899). **Real-TEP-regime validation (1D.1b) pending.** Implemented from
-  primaries rather than MAPIE (kept as optional cross-check) — deviation logged in
-  ADR-010.
+- **CONFORMAL — DISCHARGED (1D.1 + 1D.1b).** From-primary ACI/EnbPI/split (ADR-010),
+  validated on the real TEP regimes (`scripts/conformal_eval.py`): corrected+ACI
+  0.90 ± 0.003 across modes & θ, vs raw static split 0.847–0.957. From primaries,
+  not MAPIE (optional cross-check). No remaining conformal debt.
 - **LOAD-BEARING ASSUMPTION — θ=4.** Benchmark convention; the true plant delay
   was "great and unknown." Re-pin on any real column. Sensitivity bracket is the
   defense.
@@ -278,15 +277,16 @@ and Wang et al. 2021 (DTDE-WRVM) were the 1B soft-sensor-delay backbone.
 
 ## 10. RESUME HERE → Phase 1D (1C fully complete, incl. writeup)
 
-**Status:** 1A ✅, 1B ✅, 1C ✅, **1D.1 ✅** — conformal engine
-(`evaluation/conformal.py`): ACI primary / EnbPI comparator / split baseline,
-implemented **from-primary** (not MAPIE), 15 unit tests, ADR-010. Synthetic
-drift check (residual scale ×3 @ t=1500, target 0.90): post-shift coverage
-**split 0.403 / ACI 0.899 / EnbPI 0.832** (ACI holds by widening 3.24→6.76).
-**Next:** **Phase 1D.1b — validate coverage on the real TEP regimes**
-(`tep_mode{1,2,3}`): wrap the *bias-corrected* predictions, report per-regime +
-rolling coverage, tune EnbPI `s`. Needs the `bias_update`/`tep_baseline` residual
-arrays. Then 1D.2 (FastAPI+MLflow+Docker+CI), 1D.3 (Streamlit), 1D.4 (OT-sim bus,
+**Status:** 1A ✅, 1B ✅, 1C ✅, **1D.1 ✅** (conformal engine, from-primary,
+15 tests, ADR-010) + **1D.1b ✅** (coverage validated on the real TEP regimes,
+`scripts/conformal_eval.py`). Real-data result: **corrected+ACI = regime-uniform
+0.90 ± 0.003** (mode1/2/3 × θ∈{2,5}) where raw static split swings **0.847–0.957**
+(under mode1/2, over mode3) and EnbPI 0.857–0.897. ACI is θ-robust; EnbPI `s` is
+flat on these mild-drift regimes (use s=1). MAPIE/conformal debt **fully discharged**.
+**Next:** **Phase 1D.2 — serving stack** (FastAPI + MLflow + Docker + CI). Serving
+hot path = linear + EWMA bias-update + conformal-interval lookup = µs compute → the
+<200 ms budget is I/O-bound, not inference; the 1C Yan-GP is offline migration only,
+so GP O(n³) is not on the serving path. Then 1D.3 (Streamlit), 1D.4 (OT-sim bus,
 gated), 1D.5 (nonlinear source, gated — re-opens Luo). Then 1E, 1F.
 
 ### 1C framing (DECIDED, user-ratified): A + C, not literal Debutanizer→TEP
@@ -378,19 +378,30 @@ bias-update, no retrain). Verified equations against the project-library PDFs
 folds, transfer gap) violates split conformal's exchangeability, so an adaptive
 method is mandatory, not a refinement.
 
-### NEXT ACTION: Phase 1D.1b — conformal coverage on real TEP regimes
-Wire `scripts/conformal_eval.py` to wrap the **bias-corrected** sensor predictions
-and report **per-regime + rolling** coverage (marginal alone hides drift failure)
-across `tep_mode{1,2,3}`, and pick EnbPI `s` (coverage-vs-latency knob). Input
-needed: per-regime `y_true, y_pred_biascorrected` arrays (or the `bias_update.py`
-/ `tep_baseline.py` signatures that expose them). Then proceed to 1D.2 (FastAPI
-<200ms — note: serving hot path is linear+EWMA = µs compute; latency is I/O-bound;
-the 1C Yan-GP is offline migration only, so GP O(n³) is not on the serving path),
-1D.3 (Streamlit: prediction/interval/drift flag/rolling coverage), 1D.4 (OT-sim
-bus, gated), 1D.5 (nonlinear source, gated — re-opens Luo per ADR-009). Reusable
-assets: `evaluation/{drift,bias_update,conformal}.py`, `migration/*`,
-`features/tep_physics_features.py`, `data/tep_loader.py`. Warm-up:
-`cd Projects\IPIS` + `conda activate ipis`.
+### Phase 1D.1b — conformal coverage on the real TEP regimes (DONE, ADR-010 addendum)
+`scripts/conformal_eval.py` (pipeline + `--from-csv` paths) on `tep_mode{1,2,3}`:
+train-fit the physics-anchored linear sensor, calibrate conformal on val, evaluate
+on the held-out test stream; bias-update λ=0.3, θ∈{2,5}; ACI γ=0.05, window=200.
+Result: **corrected+ACI = 0.90 ± 0.003 across all modes & θ** (the only construction
+that is regime-uniform), at competitive-to-tightest width (mode3 2.01 vs raw 3.18);
+**raw static split swings 0.847–0.957** (under mode1/2, over mode3 — miscalibrated
+both ways); EnbPI 0.857–0.897 (works on real data — the synthetic 0.25 was an
+extreme-mean-shift artifact; slightly under-covers, widest; `s` flat → s=1). **ACI is
+θ-robust** (corrected+split is not). HONEST CAVEAT: real within-mode drift is *mild*
+(raw not collapsed); the synthetic ×3 collapse (split→0.40) is a controlled stress
+test. The production case is cross-regime coverage *inconsistency*, which ACI resolves.
+
+### NEXT ACTION: Phase 1D.2 — serving stack
+FastAPI inference endpoint (linear sensor + ADR-008 bias-update + ACI conformal
+interval) + MLflow registry + Docker + GitHub Actions CI. Option-scale the stack
+first (per working agreement). Serving hot path is µs compute → the <200 ms target
+is I/O/serialization-bound, not inference; report p50/p99. The deployed object is the
+bias-corrected linear sensor + ACI (1D.1b-confirmed); EnbPI/Yan-GP are not on the
+serving path. Then 1D.3 (Streamlit: prediction / interval / drift flag / rolling
+coverage), 1D.4 (OT-sim bus, gated), 1D.5 (nonlinear source, gated — re-opens Luo per
+ADR-009). Reusable assets: `evaluation/{drift,bias_update,conformal}.py`,
+`scripts/conformal_eval.py`, `migration/*`, `features/tep_physics_features.py`,
+`data/tep_loader.py`. Warm-up: `cd Projects\IPIS` + `conda activate ipis`.
 
 ---
 
@@ -414,3 +425,11 @@ assets: `evaluation/{drift,bias_update,conformal}.py`, `migration/*`,
   MAPIE; ACI primary). 4 conformal sources registered Tier-1. spec.md status
   synced (1C complete; 1D.1 added). Resume = **Phase 1D.1b** (coverage on real
   `tep_mode{1,2,3}` — needs bias-corrected residual arrays).
+- **2026-06-05** — **Phase 1D.1b**: conformal coverage validated on the real TEP
+  regimes (`scripts/conformal_eval.py`, pipeline + CSV paths, run against the real
+  package). corrected+ACI regime-uniform **0.90 ± 0.003** (modes 1/2/3 × θ∈{2,5});
+  raw split **0.847–0.957** (under mode1/2, over mode3); EnbPI 0.857–0.897, `s` flat
+  (use s=1); ACI θ-robust. Real drift mild — synthetic ×3 collapse was a stress test;
+  real case is cross-regime *inconsistency*. ADR-010 real-data addendum; results.md
+  1D section populated. **Conformal debt fully discharged.** Resume = **Phase 1D.2**
+  (serving stack: FastAPI + MLflow + Docker + CI).

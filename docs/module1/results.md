@@ -207,7 +207,42 @@ data efficiency is the robust metric.
 
 ## Phase 1D — Production-Ready Deployment Stack
 
-*Status: not started*
+*Status: 1D.1 + 1D.1b complete (conformal uncertainty); 1D.2+ (serving) in progress.*
+
+### 1D.1 — conformal uncertainty (ADR-010)
+
+Distribution-free intervals implemented from-primary (`evaluation/conformal.py`,
+15 tests): split (baseline), EnbPI (Xu & Xie 2021), ACI (Gibbs & Candès 2021,
+primary). Model-agnostic — wraps the bias-corrected linear sensor's residuals with no
+retrain. Synthetic stress test (residual scale ×3 mid-stream, target 0.90): static
+split collapses to 0.40 post-shift; ACI holds 0.90 (widening 3.24→6.76); EnbPI recovers
+to 0.83 with a FIFO lag. Isolates the failure mode adaptivity fixes.
+
+### 1D.1b — coverage on the real TEP regimes
+
+`scripts/conformal_eval.py` on `tep_mode{1,2,3}` (train-fit, val-calibrate, test-eval;
+bias-update λ=0.3, θ∈{2,5}; ACI γ=0.05, window=200):
+
+| construction | mode1 | mode2 | mode3 |
+|---|---|---|---|
+| raw + split | 0.847 | 0.847 | 0.957 |
+| corrected + split | 0.897 / 0.873 | 0.903 / 0.890 | 0.927 / 0.880 |
+| **corrected + ACI** | **0.900 / 0.897** | **0.900 / 0.903** | **0.900 / 0.900** |
+| EnbPI (standalone) | 0.897 | 0.857 | 0.873 |
+
+(θ=2 / θ=5; single value = θ-invariant.)
+
+corrected+ACI delivers regime-uniform **0.90 ± 0.003** where raw static split swings
+0.847–0.957 (under mode1/2, over mode3) and EnbPI 0.857–0.897. ACI is θ-robust;
+EnbPI's batch size `s` is flat on these mild-drift regimes (use s=1).
+
+### Observations
+- Real within-mode drift is mild; the dramatic split-collapse is a synthetic
+  construct. The real production case is cross-regime coverage *inconsistency*, which
+  ACI resolves to uniform nominal coverage.
+- The deployed interval = bias-corrected linear sensor + ACI; EnbPI is a standalone
+  comparator (no bias-update; cannot ingest the causal correction) and is dominated
+  here on both coverage-accuracy and width.
 
 ---
 

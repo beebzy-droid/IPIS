@@ -106,6 +106,42 @@ ADR-007/008 deviations from the original locked plan.
 - If multi-horizon / multi-target prediction is added → Schlembach et al. (multistep
   multivariate conformal) becomes load-bearing.
 
+## Addendum — validation on the real TEP regimes (1D.1b, 2026-06-05)
+
+`scripts/conformal_eval.py` on the three Russell/Braatz feed-ratio regimes
+(`tep_mode{1,2,3}`): physics-anchored linear sensor fit on train, conformal calibrated
+on val, evaluated on the held-out test stream; bias-update λ=0.3, θ∈{2,5}; ACI γ=0.05,
+window=200.
+
+| construction | mode1 | mode2 | mode3 | across-regime |
+|---|---|---|---|---|
+| raw + split | 0.847 | 0.847 | 0.957 | 0.847–0.957 |
+| corrected + split | 0.897 / 0.873 | 0.903 / 0.890 | 0.927 / 0.880 | θ-sensitive |
+| **corrected + ACI** | **0.900 / 0.897** | **0.900 / 0.903** | **0.900 / 0.900** | **0.897–0.903** |
+| EnbPI (standalone) | 0.897 | 0.857 | 0.873 | 0.857–0.897 |
+
+(cells are θ=2 / θ=5; a single value is θ-invariant.)
+
+Findings:
+- **Real within-mode drift is mild**, not the synthetic collapse — raw+split already
+  covers 0.85–0.96. The production case for adaptivity here is *cross-regime
+  inconsistency* (raw swings 0.847–0.957, miscalibrated both ways), not a collapse.
+  The synthetic ×3 check (split→0.40) remains the controlled stress test that isolates
+  the failure mode; it is not a claim about these regimes.
+- **corrected+ACI is the only construction with regime-uniform nominal coverage**
+  (0.90 ± 0.003 across modes and θ) at competitive-to-tightest width (mode3 2.01 vs raw
+  3.18). Confirmed as the production interval.
+- **ACI is robust to the θ choice** (corrected+split is not: mode3 0.927→0.880 across
+  θ). ACI absorbs bias-update misspecification — valuable since a live analyzer θ is
+  uncertain.
+- **EnbPI works on real data** (0.857–0.897), confirming the synthetic 0.25 was an
+  extreme-mean-shift artifact; it slightly under-covers, is widest, and its batch size
+  `s` is not a sensitive knob on mild-drift regimes (0.897–0.910 flat across
+  s∈{1,10,25,50}) → s=1.
+
+Decision unchanged (ACI primary, EnbPI comparator, split baseline); conformal debt
+fully discharged for production.
+
 ## References
 - Papadopoulos, Proedrou, Vovk & Gammerman (2002). Inductive confidence machines for
   regression. *ECML*. (split/inductive CP; rank-based calibration quantile)
