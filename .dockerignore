@@ -1,0 +1,23 @@
+# Keep the serving image context minimal; the image regenerates its own fixture.
+.git/
+.github/
+tests/
+docs/
+notebooks/
+data/
+models/
+mlruns/
+mlartifacts/
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+**/__pycache__/
+*.pyc
+*.pyo
+*.md
+*.ipynb
+.env
+.venv/
+conformal_synthetic_check.png
+conformal_coverage_tep.png
