@@ -45,6 +45,7 @@ jobs:
           tests/unit/test_api.py
           tests/unit/test_loader.py
           tests/unit/test_dashboard.py
+          tests/unit/test_secom.py
 
   docker:
     name: docker build + container smoke
