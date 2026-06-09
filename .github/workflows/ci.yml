@@ -19,14 +19,18 @@ jobs:
         # Serving runtime + test tooling only — NOT the full project deps
         # (torch/mlflow/etc.). MLflow is intentionally absent, so the MLflow
         # round-trip test skips (pytest.importorskip).
+        # black/ruff are PINNED: their formatting/rules drift across versions, so
+        # CI must match the version used locally to keep `--check` reproducible.
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-serving.txt
-          pip install pytest pytest-asyncio pytest-cov ruff black httpx
+          pip install pytest pytest-asyncio pytest-cov "ruff==0.15.16" "black==24.10.0" httpx
       - name: Ruff
-        run: ruff check src tests scripts
+        # Scope to the stable library + tests. scripts/ holds active WIP
+        # (canonical-TEP) and is linted locally; re-add "scripts" here once it lands.
+        run: ruff check src tests
       - name: Black
-        run: black --check src tests scripts
+        run: black --check src tests
       - name: Unit tests
         # Data-free Module-1 suite; data-dependent tests run locally
         # (gitignored benchmark data is not in CI).
