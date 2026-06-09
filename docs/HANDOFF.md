@@ -277,18 +277,20 @@ and Wang et al. 2021 (DTDE-WRVM) were the 1B soft-sensor-delay backbone.
 
 ## 10. RESUME HERE → Phase 1D (1C fully complete, incl. writeup)
 
-**Status:** 1A ✅, 1B ✅, 1C ✅, 1D.1 ✅, 1D.1b ✅, 1D.2 ✅, **1D.3 ✅** — Streamlit
-monitor (`serving/dashboard.py`) over the live FastAPI service: synthetic 3-feature
-stream matching the committed fixture (drift toggle inflates residual scale -> ACI band
-visibly widens while coverage holds), optional TEP-replay source, delayed labels posted
-after a configurable delay, conformal-band chart with labels overlaid, rolling-coverage
-curve vs target, metrics strip (b_t / alpha_t / coverage / drift light). Pure pieces
-(`make_synthetic_sample`, `ServiceClient`) unit-tested via FastAPI TestClient; streamlit
-lazy-imported so the module runs in lean CI. 58 data-free tests; CI green.
-**Next:** **Phase 1E — SECOM stress test** (publication-driven: the methodology on a
-third, harder dataset). 1D.4 (OT-sim bus) and 1D.5 (nonlinear source — re-opens Luo per
-ADR-009) stay gated; 1D.5 is better motivated after SECOM shows where the linear sensor
-breaks. Then 1F (writing -> Computers & Chemical Engineering / J. Process Control).
+**Status:** 1A ✅, 1B ✅, 1C ✅, 1D ✅ (1D.1/1b conformal, 1D.2 serving, 1D.3 dashboard;
+1D.4/1D.5 gated), **1E.1 ✅** — SECOM virtual-metrology stress test (ADR-012). The
+no-physics negative control BITES, by design: target x59 (max |point-biserial r| with
+fail = 0.156, <0.5% missing), screen kept 442/590, elastic-net path under blocked CV
+explodes at weak shrinkage (CV R2 to -5e4; p~n lottery) -> one-SE picks max shrinkage
+(alpha*=10, 6/441 coefs); test R2 raw = -1.84, bias-corrected -0.16 (large offset
+absorbed, still sub-mean). BUT corrected+ACI coverage = 0.910/0.915 (theta=2/5; target
+0.90), width 12.8 vs over-covering raw split 0.953 @ 20.2 — conformal validity is
+model-agnostic; point accuracy is what physics anchors buy. Fail-enrichment inconclusive
+(n=9 fails in test). Run reproduced exactly on owner machine vs canonical UCI bytes.
+**Next:** **Phase 1F — writing & submission**. 1E.2 (temporal transfer) gate CLOSED
+(ADR-012): within-SECOM R2 < 0 means there is no signal to migrate — a transfer arm
+would measure noise. 1D.4/1D.5 remain gated (1D.5 nonlinear source is the natural
+post-review extension; SECOM now precisely locates the linear sensor's breaking point).
 
 ### 1C framing (DECIDED, user-ratified): A + C, not literal Debutanizer→TEP
 SBC migration requires a *shared input space* + *similar processes* (verified from
@@ -430,17 +432,30 @@ Hard-won fixes worth remembering:
 Run: shell 1 `uvicorn ipis.module1_soft_sensor.serving.main:app --port 8000`; shell 2
 `streamlit run src\ipis\module1_soft_sensor\serving\dashboard.py` (PYTHONPATH=src).
 
-### NEXT ACTION: Phase 1E — SECOM stress test
-Publication-driven choice: SECOM (UCI semiconductor) stresses the methodology on a third
-dataset that is *hostile* to the pipeline's assumptions — 590 features / 1567 samples
-(p~n), heavy missingness, severe class/label imbalance, no physics anchors. The
-questions that matter for the paper: does blocked CV + the one-SE rule still pick sanely;
-what replaces physics features when no thermodynamic anchors exist; do ADR-008
-bias-update + ACI still deliver nominal coverage under real industrial mess. Option-scale
-first (per working agreement): target definition (regression vs the pass/fail label),
-feature screening strategy, and what "transfer" means for 1C methods here. 1D.4 (OT-sim
-bus: asyncua/Mosquitto/InfluxDB) and 1D.5 (nonlinear source; re-opens Luo per ADR-009)
-stay gated. Warm-up: cd Projects\IPIS + conda activate ipis.
+### Phase 1E.1 — SECOM stress test (DONE, ADR-012)
+`data/secom_loader.py` (SECOMLoader; quoted-datetime labels `label "dd/mm/yyyy
+HH:MM:SS"`; duplicate timestamps tolerated, order never re-sorted; schema-validated
+1567x590) + label-free `unsupervised_screen` (>40% missing: 32; near-constant: 116;
+kept 442) + `select_vm_target` (transparent criteria, audited: missingness <= 5%, rank
+by |point-biserial r| with fail; fail used ONLY to define the problem, never as a
+feature) + `scripts/secom_baseline.py` (blocked CV + one-SE over the elastic-net path,
+imputer INSIDE the estimator pipeline -> fold-train-fit, leakage-safe; 1D.1b conformal
+protocol: gamma=0.05, aci.run, theta via bias-update) + 9 data-free tests (synthetic
+UCI-format fixtures). Headline: validity-without-accuracy — ACI holds 0.91 coverage on
+a failed point model with 37% narrower intervals than static split; one-SE rescued
+selection from the p~n lottery; physics anchors are the accuracy difference.
+
+### NEXT ACTION: Phase 1F — writing & submission
+Target: Computers & Chemical Engineering (primary) / Journal of Process Control. The
+paper now has its full arc: (i) physics-anchored linear soft sensor + blocked-CV/one-SE
+methodology (1A, Debutanizer+TEP); (ii) drift handling via Shardt open-loop bias-update
+(1B); (iii) cross-process transfer, ~10x data efficiency (1C); (iv) from-primary
+conformal uncertainty, regime-uniform 0.90 +/- 0.003 real-TEP coverage, production
+serving stack (1D); (v) the honest negative control — no-physics SECOM, where point
+accuracy fails but conformal validity holds (1E). Option-scale first: paper skeleton
+(section map, figure list, claims-to-evidence table), then section drafts. Reusable:
+results.md is the evidence ledger; ADR-001..012 are the methods rationale; HANDOFF
+changelog is the chronology. Warm-up: cd Projects\IPIS + conda activate ipis.
 
 ---
 
@@ -488,3 +503,11 @@ stay gated. Warm-up: cd Projects\IPIS + conda activate ipis.
   streamlit imports keep the module CI-testable. 58 data-free tests; CI green. Resume =
   **Phase 1E (SECOM stress test)**; 1D.4/1D.5 stay gated (1D.5 after SECOM locates the
   linear sensor's breaking point).
+- **2026-06-05** — **Phase 1E.1 DONE** (SECOM stress test, ADR-012): loader + label-free
+  screen + audited VM-target selection + blocked-CV/one-SE elastic net + 1D.1b conformal
+  protocol; 9 tests; reproduced exactly on owner machine vs canonical UCI bytes
+  (1567x590, 104 fails, 4.54% missing). Result: test R2 raw -1.84 / corrected -0.16, yet
+  corrected+ACI coverage 0.910/0.915 @ width 12.8 vs raw split 0.953 @ 20.2 —
+  validity-without-accuracy; one-SE beat the p~n lottery (alpha*=10, 6/441 coefs).
+  **1E.2 (temporal transfer) gate CLOSED** — no signal to migrate. Resume = **Phase 1F
+  (writing & submission)**.

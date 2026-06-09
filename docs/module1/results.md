@@ -318,7 +318,58 @@ with the client tested against the real app via FastAPI's TestClient.
 
 ## Phase 1E — SECOM Stress Test
 
-*Status: not started*
+*Status: 1E.1 complete. 1E.2 (temporal transfer) gate closed — no signal to migrate (ADR-012).*
+
+The deliberate stress test: UCI SECOM (1,567 samples x 590 anonymized semiconductor
+sensor features, 2008-07-19 -> 2008-10-17; 104 fails = 6.6%; 4.5% missing cells) is
+hostile to every assumption the pipeline earned on TEP/Debutanizer — p ~ n, heavy
+missingness, severe imbalance, and **no physics anchors**. Framing (ADR-012): virtual
+metrology — one continuous measurement is held out as the regression target by stated,
+audited criteria (missingness <= 5%, non-degenerate variance, max |point-biserial r|
+with the pass/fail label = the yield-relevant measurement a VM sensor would exist to
+predict). The fail label defines the problem; it is never a feature. Selected: x59
+(|r| = 0.156, 0.45% missing). The label-free unsupervised screen kept 442/590 features
+(32 dropped >40% missing, 116 near-constant) and, being label-free, is applied once
+without selection leakage; the supervised screen is the elastic net's own shrinkage,
+inside the CV folds, with median imputation inside the estimator pipeline
+(fold-train-fit).
+
+### Results (theta in {2,5}; alpha = 0.10; gamma = 0.05; 1D.1b protocol)
+
+| quantity | value |
+|---|---|
+| CV R2 across the elastic-net path | -1.5 (strong shrinkage) to **-7e4** (weak) |
+| one-SE selection | alpha* = 10 (max shrinkage), 6/441 nonzero coefs |
+| test R2, raw | **-1.84** |
+| test R2, bias-corrected | -0.16 (theta=2) / -0.23 (theta=5) |
+| raw + static split | cov 0.953, width 20.2 (over-covers) |
+| corrected + ACI | **cov 0.910 / 0.915, width 12.8** (target 0.90) |
+| fail-enrichment of conformal misses | inconclusive (n = 9 fails in test) |
+
+### Observations
+- **Validity without accuracy.** The point model fails outright — even bias-corrected it
+  cannot beat predicting the mean — yet corrected+ACI delivers near-nominal coverage with
+  37% narrower intervals than the over-covering static split. Conformal validity is
+  model-agnostic; point accuracy is not. In production terms: on a process where the
+  sensor cannot be made accurate, the framework still tells the truth about its own
+  uncertainty.
+- **The one-SE rule beat the p~n lottery.** Weak shrinkage produces CV R2 of -10^3..-10^5
+  with SEs of the same magnitude — exactly the cross-regime lottery seen on the
+  Debutanizer, amplified by p ~ n. One-SE selected the simplest model on the path,
+  containing the damage to R2 ~ -1.8 rather than -10^4.
+- **Physics anchors are the accuracy difference.** Same pipeline, same validation
+  discipline: with thermodynamic features (TEP/Debutanizer) the sensor works; with 590
+  anonymous columns it does not. The negative control isolates *where* the performance
+  comes from.
+- **Bias-update absorbs offset, not structure.** The EWMA correction moved R2 from -1.84
+  to -0.16 — a large systematic offset between val-calibration and test — but cannot
+  manufacture predictive structure that is not there.
+- **1E.2 gate closed.** Temporal transfer (early window -> late window) presupposes a
+  signal to migrate; with within-SECOM R2 < 0 the arm would measure noise. Closed rather
+  than deferred (ADR-012).
+
+Reproducibility: the run is deterministic; the owner's machine reproduced every reported
+number exactly against the canonical UCI files (schema-validated 1567 x 590, 104 fails).
 
 ---
 
