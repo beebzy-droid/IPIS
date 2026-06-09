@@ -207,7 +207,7 @@ data efficiency is the robust metric.
 
 ## Phase 1D — Production-Ready Deployment Stack
 
-*Status: 1D.1 + 1D.1b complete (conformal uncertainty); 1D.2+ (serving) in progress.*
+*Status: 1D.1 + 1D.1b (conformal) + 1D.2 (serving stack) complete; 1D.3 (Streamlit) next.*
 
 ### 1D.1 — conformal uncertainty (ADR-010)
 
@@ -245,6 +245,46 @@ EnbPI's batch size `s` is flat on these mild-drift regimes (use s=1).
   here on both coverage-accuracy and width.
 
 ---
+
+### 1D.2 — production serving stack (ADR-011)
+
+The soft sensor is served as two asynchronous flows over mutable state, because labels
+are delayed and infrequent: a high-frequency `predict` (reads state) and a low-frequency
+`label` (mutates the bias-update, ACI, and drift detector). `SoftSensorService`
+(`serving/service.py`) is the framework-agnostic core; FastAPI (`serving/api.py`) wraps
+it with a mutation lock and a lifespan snapshot.
+
+Endpoints: `POST /predict` (batch-first), `POST /label`, `GET /health` (lock-free),
+`GET /metrics`, `GET /state`. The deployed object is the bias-corrected linear sensor +
+ACI (1D.1b-confirmed); the bias recursion is bit-faithful to ADR-008, so the 1D.1b
+coverage result transfers to the live path.
+
+Correctness detail (delayed labels): the ACI coverage indicator for a late label is
+computed against the interval *stored when that sample was predicted*, not the service's
+current interval — by the time an assay arrives, alpha_t and the score window have moved
+on. Verified by unit test.
+
+Model delivery: a joblib `ModelBundle` (frozen sklearn pipeline + calibration residuals
++ params) is the interchange format. MLflow is optional, used for registry + tracking
+only (params, metrics, the registered model, and the bundle artifact); serving loads the
+bundle from MLflow or a local file, with a committed synthetic fixture as the default
+(joblib fallback so it runs offline / in CI). A real MLflow log->resolve->serve
+round-trip is covered by a test (skipped when MLflow is absent).
+
+Validation: 49 unit tests (15 conformal + 13 service + 11 api + 10 loader). The lean
+serving container (`Dockerfile` + `requirements-serving.txt`; no torch/mlflow/streamlit)
+was built and run locally (`/health` 200, `/predict` schema OK) and GitHub Actions CI is
+green: a `test` job (pinned black/ruff on `src tests` + the 49 tests with `PYTHONPATH=src`)
+and a `docker` job (image build + `/health`/`/predict` smoke).
+
+#### Observations
+- The serving hot path is microsecond compute (linear + EWMA + interval lookup), so the
+  sub-200 ms latency target is I/O/serialization-bound, not inference-bound. Yan's GP
+  (1C) is offline migration only and never on the serving path (GP is O(n^3)).
+- State is in-process + a pickle snapshot (single instance; Redis deferred). The pickle
+  carries only mutable state (b_t, the ACI object, the river detector, the prediction
+  buffer, counters) — the immutable model reloads from the registry, never pickled into
+  the snapshot.
 
 ## Phase 1E — SECOM Stress Test
 

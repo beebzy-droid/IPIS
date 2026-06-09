@@ -277,17 +277,19 @@ and Wang et al. 2021 (DTDE-WRVM) were the 1B soft-sensor-delay backbone.
 
 ## 10. RESUME HERE → Phase 1D (1C fully complete, incl. writeup)
 
-**Status:** 1A ✅, 1B ✅, 1C ✅, **1D.1 ✅** (conformal engine, from-primary,
-15 tests, ADR-010) + **1D.1b ✅** (coverage validated on the real TEP regimes,
-`scripts/conformal_eval.py`). Real-data result: **corrected+ACI = regime-uniform
-0.90 ± 0.003** (mode1/2/3 × θ∈{2,5}) where raw static split swings **0.847–0.957**
-(under mode1/2, over mode3) and EnbPI 0.857–0.897. ACI is θ-robust; EnbPI `s` is
-flat on these mild-drift regimes (use s=1). MAPIE/conformal debt **fully discharged**.
-**Next:** **Phase 1D.2 — serving stack** (FastAPI + MLflow + Docker + CI). Serving
-hot path = linear + EWMA bias-update + conformal-interval lookup = µs compute → the
-<200 ms budget is I/O-bound, not inference; the 1C Yan-GP is offline migration only,
-so GP O(n³) is not on the serving path. Then 1D.3 (Streamlit), 1D.4 (OT-sim bus,
-gated), 1D.5 (nonlinear source, gated — re-opens Luo). Then 1E, 1F.
+**Status:** 1A ✅, 1B ✅, 1C ✅, 1D.1 ✅, 1D.1b ✅, **1D.2 ✅** — production serving
+stack (ADR-011): `SoftSensorService` (two async flows over mutable state) + FastAPI
+(`/predict` batch, `/label`, `/health`, `/metrics`, `/state`; mutation lock; lifespan
+snapshot) + bundle loader (joblib interchange; MLflow registry/tracking optional with
+joblib fallback) + lean Dockerfile + GitHub Actions CI (49 unit tests + container
+smoke). **CI green; local `docker build`+run verified.** Conformal debt discharged
+(1D.1/1b): corrected+ACI = regime-uniform 0.90 ± 0.003 vs raw split 0.847–0.957.
+**Next:** **Phase 1D.3 — Streamlit dashboard** over the serving API (live prediction +
+conformal interval + drift flag + rolling-coverage curve). Then 1D.4 (OT-sim bus,
+gated), 1D.5 (nonlinear source, gated — re-opens Luo per ADR-009), then 1E (SECOM
+stress test), 1F (writing → Computers & Chemical Engineering / J. Process Control).
+Serving hot path = linear + EWMA + interval lookup = µs; <200 ms budget is I/O-bound;
+Yan-GP is offline migration only, not on the serving path.
 
 ### 1C framing (DECIDED, user-ratified): A + C, not literal Debutanizer→TEP
 SBC migration requires a *shared input space* + *similar processes* (verified from
@@ -391,17 +393,38 @@ extreme-mean-shift artifact; slightly under-covers, widest; `s` flat → s=1). *
 (raw not collapsed); the synthetic ×3 collapse (split→0.40) is a controlled stress
 test. The production case is cross-regime coverage *inconsistency*, which ACI resolves.
 
-### NEXT ACTION: Phase 1D.2 — serving stack
-FastAPI inference endpoint (linear sensor + ADR-008 bias-update + ACI conformal
-interval) + MLflow registry + Docker + GitHub Actions CI. Option-scale the stack
-first (per working agreement). Serving hot path is µs compute → the <200 ms target
-is I/O/serialization-bound, not inference; report p50/p99. The deployed object is the
-bias-corrected linear sensor + ACI (1D.1b-confirmed); EnbPI/Yan-GP are not on the
-serving path. Then 1D.3 (Streamlit: prediction / interval / drift flag / rolling
-coverage), 1D.4 (OT-sim bus, gated), 1D.5 (nonlinear source, gated — re-opens Luo per
-ADR-009). Reusable assets: `evaluation/{drift,bias_update,conformal}.py`,
-`scripts/conformal_eval.py`, `migration/*`, `features/tep_physics_features.py`,
-`data/tep_loader.py`. Warm-up: `cd Projects\IPIS` + `conda activate ipis`.
+### Phase 1D.2 — production serving stack (DONE, ADR-011)
+Built and shipped (CI green; local Docker build+run verified):
+- `serving/service.py` — `SoftSensorService`: framework-agnostic core composing the
+  linear model + ADR-008 bias-update + ADR-010 ACI + drift detector + a `sample_id`->
+  prediction ring buffer + pickle snapshot. Two flows: `predict` (reads state, us-scale),
+  `label` (delayed assay -> mutates b_t/alpha_t/drift). DELAYED-LABEL INVARIANT: coverage
+  is scored against the interval STORED at predict time, not the current one (13 tests).
+- `serving/api.py` — FastAPI `create_app(service)`: `/predict` (batch-first), `/label`,
+  `/health` (lock-free), `/metrics`, `/state`; `asyncio.Lock` around mutations; lifespan
+  restores/saves the snapshot (11 tests, incl. async no-lost-update concurrency).
+- `serving/loader.py` + `serving/main.py` — `ModelBundle` joblib interchange; resolution
+  explicit -> IPIS_MODEL_BUNDLE -> IPIS_MLFLOW_MODEL (artifact) -> committed fixture;
+  MLflow optional (registry+tracking, joblib fallback); `app = get_app()` uvicorn
+  entrypoint (10 tests incl. a real MLflow round-trip, skipped without mlflow).
+- `scripts/register_model.py` — `--fixture` (synthetic; committed
+  `models/soft_sensor_fixture.joblib`) + real TEP path with MLflow logging.
+- `Dockerfile` (lean `requirements-serving.txt`, no torch/mlflow/streamlit; regenerates
+  the fixture in-image; non-root; HEALTHCHECK) + `.github/workflows/ci.yml` (test:
+  pinned black==24.10.0 / ruff==0.15.16 on `src tests` + 49 tests with PYTHONPATH=src;
+  docker: build + `/health`+`/predict` smoke).
+
+### NEXT ACTION: Phase 1D.3 — Streamlit dashboard
+A Streamlit app over the serving API: live point estimate + conformal band, the drift
+flag, and the rolling-coverage curve (the online-validity view), plus a panel to post
+delayed labels and watch b_t/alpha_t adapt. Option-scale first (per working agreement):
+the real choices are (a) call the live FastAPI service over HTTP vs embed
+`SoftSensorService` in-process, (b) how to drive a demo stream (replay a TEP regime CSV),
+(c) how much of /metrics//state to surface. Streamlit is already a declared dep.
+Reusable: the whole `serving/*` API, `scripts/conformal_eval.py` for the coverage curve,
+`data/tep_loader.py` for replay. Gated successors: 1D.4 (OT-sim bus —
+asyncua/Mosquitto/InfluxDB), 1D.5 (nonlinear source — XGBoost/GP, re-opens Luo per
+ADR-009). Warm-up: cd Projects\IPIS + conda activate ipis.
 
 ---
 
@@ -433,3 +456,12 @@ ADR-009). Reusable assets: `evaluation/{drift,bias_update,conformal}.py`,
   real case is cross-regime *inconsistency*. ADR-010 real-data addendum; results.md
   1D section populated. **Conformal debt fully discharged.** Resume = **Phase 1D.2**
   (serving stack: FastAPI + MLflow + Docker + CI).
+- **2026-06-05** — **Phase 1D.2 DONE** (serving stack, ADR-011): `SoftSensorService`
+  (two async flows over mutable state; delayed-label/stored-interval invariant) +
+  FastAPI (`/predict` batch, `/label`, `/health`, `/metrics`, `/state`; mutation lock;
+  lifespan snapshot) + `ModelBundle` loader (joblib interchange; MLflow registry/tracking
+  optional + joblib fallback) + uvicorn entrypoint + `register_model.py` (fixture + real
+  TEP) + lean Dockerfile + GitHub Actions CI. 49 unit tests (15 conformal + 13 service +
+  11 api + 10 loader); CI green (pinned black/ruff on `src tests`, PYTHONPATH=src, +
+  docker build/smoke); local `docker build`+run verified. Resume = **Phase 1D.3**
+  (Streamlit dashboard over the serving API).
