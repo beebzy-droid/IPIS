@@ -32,6 +32,10 @@ jobs:
       - name: Black
         run: black --check src tests
       - name: Unit tests
+        # src layout: make `ipis` importable (root conftest imports
+        # ipis.shared.state_bus, so this is needed even for the serving tests).
+        env:
+          PYTHONPATH: src
         # Data-free Module-1 suite; data-dependent tests run locally
         # (gitignored benchmark data is not in CI).
         run: >
