@@ -277,19 +277,18 @@ and Wang et al. 2021 (DTDE-WRVM) were the 1B soft-sensor-delay backbone.
 
 ## 10. RESUME HERE → Phase 1D (1C fully complete, incl. writeup)
 
-**Status:** 1A ✅, 1B ✅, 1C ✅, 1D.1 ✅, 1D.1b ✅, **1D.2 ✅** — production serving
-stack (ADR-011): `SoftSensorService` (two async flows over mutable state) + FastAPI
-(`/predict` batch, `/label`, `/health`, `/metrics`, `/state`; mutation lock; lifespan
-snapshot) + bundle loader (joblib interchange; MLflow registry/tracking optional with
-joblib fallback) + lean Dockerfile + GitHub Actions CI (49 unit tests + container
-smoke). **CI green; local `docker build`+run verified.** Conformal debt discharged
-(1D.1/1b): corrected+ACI = regime-uniform 0.90 ± 0.003 vs raw split 0.847–0.957.
-**Next:** **Phase 1D.3 — Streamlit dashboard** over the serving API (live prediction +
-conformal interval + drift flag + rolling-coverage curve). Then 1D.4 (OT-sim bus,
-gated), 1D.5 (nonlinear source, gated — re-opens Luo per ADR-009), then 1E (SECOM
-stress test), 1F (writing → Computers & Chemical Engineering / J. Process Control).
-Serving hot path = linear + EWMA + interval lookup = µs; <200 ms budget is I/O-bound;
-Yan-GP is offline migration only, not on the serving path.
+**Status:** 1A ✅, 1B ✅, 1C ✅, 1D.1 ✅, 1D.1b ✅, 1D.2 ✅, **1D.3 ✅** — Streamlit
+monitor (`serving/dashboard.py`) over the live FastAPI service: synthetic 3-feature
+stream matching the committed fixture (drift toggle inflates residual scale -> ACI band
+visibly widens while coverage holds), optional TEP-replay source, delayed labels posted
+after a configurable delay, conformal-band chart with labels overlaid, rolling-coverage
+curve vs target, metrics strip (b_t / alpha_t / coverage / drift light). Pure pieces
+(`make_synthetic_sample`, `ServiceClient`) unit-tested via FastAPI TestClient; streamlit
+lazy-imported so the module runs in lean CI. 58 data-free tests; CI green.
+**Next:** **Phase 1E — SECOM stress test** (publication-driven: the methodology on a
+third, harder dataset). 1D.4 (OT-sim bus) and 1D.5 (nonlinear source — re-opens Luo per
+ADR-009) stay gated; 1D.5 is better motivated after SECOM shows where the linear sensor
+breaks. Then 1F (writing -> Computers & Chemical Engineering / J. Process Control).
 
 ### 1C framing (DECIDED, user-ratified): A + C, not literal Debutanizer→TEP
 SBC migration requires a *shared input space* + *similar processes* (verified from
@@ -414,17 +413,34 @@ Built and shipped (CI green; local Docker build+run verified):
   pinned black==24.10.0 / ruff==0.15.16 on `src tests` + 49 tests with PYTHONPATH=src;
   docker: build + `/health`+`/predict` smoke).
 
-### NEXT ACTION: Phase 1D.3 — Streamlit dashboard
-A Streamlit app over the serving API: live point estimate + conformal band, the drift
-flag, and the rolling-coverage curve (the online-validity view), plus a panel to post
-delayed labels and watch b_t/alpha_t adapt. Option-scale first (per working agreement):
-the real choices are (a) call the live FastAPI service over HTTP vs embed
-`SoftSensorService` in-process, (b) how to drive a demo stream (replay a TEP regime CSV),
-(c) how much of /metrics//state to surface. Streamlit is already a declared dep.
-Reusable: the whole `serving/*` API, `scripts/conformal_eval.py` for the coverage curve,
-`data/tep_loader.py` for replay. Gated successors: 1D.4 (OT-sim bus —
-asyncua/Mosquitto/InfluxDB), 1D.5 (nonlinear source — XGBoost/GP, re-opens Luo per
-ADR-009). Warm-up: cd Projects\IPIS + conda activate ipis.
+### Phase 1D.3 — Streamlit dashboard (DONE)
+`serving/dashboard.py` (thin HTTP client to the live service, D1) + 9 unit tests.
+Synthetic-with-drift default + optional TEP replay (D2). Panels: conformal band with
+labels overlaid (altair), rolling coverage vs target, metrics strip + drift light,
+sidebar controls (URL / source / samples-per-advance / label-delay slider / inject-drift
+toggle / Advance / Reset) (D3). Stream state in `st.session_state`; labels queued at
+predict time and posted once their delay elapses (mirrors the real delayed-label flow).
+Hard-won fixes worth remembering:
+- `rolling_coverage` is `math.nan` server-side pre-label but crosses JSON as **null/None**
+  -> all metric formatting is None/NaN-safe (regression test pins the wire contract).
+- Streamlit "magic" echoes bare expression values: a `st.success(...) if ok else
+  st.error(...)` ternary dumped a DeltaGenerator repr into the sidebar -> statements only.
+- Streamlit/altair/pandas are lazy-imported inside `render()` so the module imports (and
+  its helpers test) without streamlit -> the 9 tests run in lean CI.
+Run: shell 1 `uvicorn ipis.module1_soft_sensor.serving.main:app --port 8000`; shell 2
+`streamlit run src\ipis\module1_soft_sensor\serving\dashboard.py` (PYTHONPATH=src).
+
+### NEXT ACTION: Phase 1E — SECOM stress test
+Publication-driven choice: SECOM (UCI semiconductor) stresses the methodology on a third
+dataset that is *hostile* to the pipeline's assumptions — 590 features / 1567 samples
+(p~n), heavy missingness, severe class/label imbalance, no physics anchors. The
+questions that matter for the paper: does blocked CV + the one-SE rule still pick sanely;
+what replaces physics features when no thermodynamic anchors exist; do ADR-008
+bias-update + ACI still deliver nominal coverage under real industrial mess. Option-scale
+first (per working agreement): target definition (regression vs the pass/fail label),
+feature screening strategy, and what "transfer" means for 1C methods here. 1D.4 (OT-sim
+bus: asyncua/Mosquitto/InfluxDB) and 1D.5 (nonlinear source; re-opens Luo per ADR-009)
+stay gated. Warm-up: cd Projects\IPIS + conda activate ipis.
 
 ---
 
@@ -465,3 +481,10 @@ ADR-009). Warm-up: cd Projects\IPIS + conda activate ipis.
   11 api + 10 loader); CI green (pinned black/ruff on `src tests`, PYTHONPATH=src, +
   docker build/smoke); local `docker build`+run verified. Resume = **Phase 1D.3**
   (Streamlit dashboard over the serving API).
+- **2026-06-05** — **Phase 1D.3 DONE**: Streamlit monitor over the live serving API
+  (`serving/dashboard.py`, 9 tests; D1 HTTP-client, D2 synthetic+drift default / TEP
+  replay optional, D3 band+coverage+metrics panels). Fixed: NaN->null/None over JSON in
+  the metrics strip (regression-tested); Streamlit magic echo from a bare ternary; lazy
+  streamlit imports keep the module CI-testable. 58 data-free tests; CI green. Resume =
+  **Phase 1E (SECOM stress test)**; 1D.4/1D.5 stay gated (1D.5 after SECOM locates the
+  linear sensor's breaking point).

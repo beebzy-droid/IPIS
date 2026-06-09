@@ -207,7 +207,7 @@ data efficiency is the robust metric.
 
 ## Phase 1D — Production-Ready Deployment Stack
 
-*Status: 1D.1 + 1D.1b (conformal) + 1D.2 (serving stack) complete; 1D.3 (Streamlit) next.*
+*Status: 1D complete — 1D.1/1b (conformal), 1D.2 (serving stack), 1D.3 (dashboard). 1D.4/1D.5 gated. Next: Phase 1E.*
 
 ### 1D.1 — conformal uncertainty (ADR-010)
 
@@ -285,6 +285,36 @@ and a `docker` job (image build + `/health`/`/predict` smoke).
   carries only mutable state (b_t, the ACI object, the river detector, the prediction
   buffer, counters) — the immutable model reloads from the registry, never pickled into
   the snapshot.
+
+### 1D.3 — Streamlit monitoring dashboard
+
+A thin Streamlit client over the live FastAPI service (two processes; the dashboard
+exercises the real 1D.2 stack rather than embedding the service). It drives a sample
+stream, calls `/predict`, queues each sample's ground truth at predict time, and posts it
+via `/label` once a configurable delay elapses — the same delayed-label flow the service
+is built around. Panels: the conformal band with arriving labels overlaid, the rolling
+empirical coverage against the 0.90 target, and a metrics strip (b_t, alpha_t, coverage,
+label count, drift light).
+
+The default stream is synthetic (3 features matching the committed fixture model) with a
+drift toggle that inflates the residual scale — the live demonstration of the 1D.1
+result: the ACI band visibly widens while rolling coverage holds near target. A TEP
+replay source is available when the gitignored data and a TEP bundle are present.
+
+Engineering notes (test-pinned where it matters): pre-label `rolling_coverage` is
+`math.nan` in the service but JSON carries no NaN, so it arrives client-side as
+null/None — all dashboard metric formatting is None/NaN-safe and a regression test pins
+that wire contract. Streamlit/altair/pandas are imported lazily inside the render
+function, so the module (and its pure helpers — the stream generator and the HTTP
+client) imports and tests without Streamlit installed; 9 unit tests run in the lean CI,
+with the client tested against the real app via FastAPI's TestClient.
+
+#### Observations
+- The dashboard is deliberately stateless with respect to the sensor: all b_t / alpha_t /
+  coverage state lives in the service and is read back over HTTP, so what the panels show
+  is the deployed object's actual state, not a parallel reimplementation.
+- Streamlit's rerun-the-whole-script model makes the stream state (`st.session_state`)
+  the only dashboard-owned state; everything else is fetched fresh each interaction.
 
 ## Phase 1E — SECOM Stress Test
 
