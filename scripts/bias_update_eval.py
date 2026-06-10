@@ -32,6 +32,9 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from ipis.module1_soft_sensor.features.physics_features import (
+    make_physics_anchored_features,
+)
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
@@ -43,9 +46,6 @@ from ipis.module1_soft_sensor.evaluation.bias_update import (
     oracle_debias_r2,
 )
 from ipis.module1_soft_sensor.evaluation.drift import blocked_cv_residuals
-from ipis.module1_soft_sensor.features.physics_features import (
-    make_physics_anchored_features,
-)
 
 DEFAULT_DATA_PATH = Path("data/raw/debutanizer/debutanizer_data.txt")
 
@@ -77,6 +77,11 @@ def main() -> int:
         type=str,
         default="0.1,0.2,0.5,1.0",
         help="Comma-separated EWMA lambdas to sweep.",
+    )
+    ap.add_argument(
+        "--json",
+        action="store_true",
+        help="dump the F4 evidence (held-out trace + fold R2s) to docs/paper/evidence/",
     )
     args = ap.parse_args()
     lams = [float(x) for x in args.lams.split(",")]
@@ -122,8 +127,10 @@ def main() -> int:
     print(f"  {'static (ADR-007)':<20} {_fold_str(raw)}  CV {m:+.3f} +/- {se:.3f}")
 
     best_lam, best_m = None, -np.inf
+    fold_corrected: dict[str, list[float]] = {}
     for lam in lams:
         c = corrected_fold_r2(folds, lam=lam, delay=theta)
+        fold_corrected[f"{lam:g}"] = [float(v) for v in c]
         m, se = _mean_se(c)
         label = f"EWMA lam={lam:g}"
         print(f"  {label:<20} {_fold_str(c)}  CV {m:+.3f} +/- {se:.3f}")
@@ -150,6 +157,27 @@ def main() -> int:
         f"  held-out test R^2: raw={raw_te:+.4f} -> corrected={corr_r2:+.4f} "
         f"(delta {corr_r2 - raw_te:+.4f})"
     )
+    if args.json:
+        from ipis.shared.evidence import dump_evidence
+
+        print(
+            "evidence ->",
+            dump_evidence(
+                "bias_trace_debutanizer",
+                {
+                    "y": [float(v) for v in y_te],
+                    "raw_pred": [float(v) for v in yhat_te],
+                    "corrected_pred": [float(v) for v in corr_te],
+                    "lam": float(best_lam),
+                    "theta": int(theta),
+                    "raw_test_r2": float(raw_te),
+                    "corrected_test_r2": float(corr_r2),
+                    "fold_r2_static": [float(v) for v in raw],
+                    "fold_r2_corrected": fold_corrected,
+                    "fold_r2_oracle": [float(v) for v in orc],
+                },
+            ),
+        )
     print("-" * 76)
     print("  Read: the static row should reproduce ADR-007. The win is a less")
     print("  negative worst fold and a SMALLER CV SE (cross-regime robustness).")

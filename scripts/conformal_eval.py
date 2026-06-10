@@ -211,6 +211,12 @@ def main() -> int:
     ap.add_argument("--window", type=int, default=200, help="ACI sliding score window")
     ap.add_argument("--enbpi-B", type=int, default=30)
     ap.add_argument("--enbpi-s", type=int, default=25)
+    ap.add_argument(
+        "--json",
+        action="store_true",
+        help="merge this run's coverage into docs/paper/evidence/coverage_tep.json "
+        "(run once per theta; runs merge by theta key)",
+    )
     args = ap.parse_args()
 
     modes = [m for m in args.modes.split(",") if m]
@@ -262,6 +268,32 @@ def main() -> int:
     # EnbPI s-sweep on the first regime
     first = next(iter(regimes.values()))
     _enbpi_s_sweep(first, args.alpha, args.enbpi_B, [1, 10, 25, 50])
+
+    if args.json:
+        import json as _json
+
+        from ipis.shared.evidence import EVIDENCE_DIR, dump_evidence
+
+        key_map = {
+            "split": "raw_split",
+            "cor_split": "cor_split",
+            "aci": "cor_aci",
+            "enbpi": "enbpi",
+        }
+        path = EVIDENCE_DIR / "coverage_tep.json"
+        doc: dict = {"target": target, "regimes": {}}
+        if path.exists():
+            prev = _json.loads(path.read_text())
+            doc["regimes"] = prev.get("regimes", {})
+        for m, res in results.items():
+            slot = doc["regimes"].setdefault(m, {})
+            entry = {}
+            for out_name, res_key in key_map.items():
+                if res_key in res:
+                    cov, w, _ = res[res_key]  # type: ignore[misc]
+                    entry[out_name] = {"cov": float(cov), "width": float(w)}
+            slot[str(args.theta)] = entry
+        print("evidence ->", dump_evidence("coverage_tep", doc))
 
     # verdict
     aci_cov = [results[m]["cor_aci"][0] for m in results if "cor_aci" in results[m]]  # type: ignore[index]

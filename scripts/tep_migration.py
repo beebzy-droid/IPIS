@@ -21,6 +21,10 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from ipis.module1_soft_sensor.migration.functional_sbc import YanFunctionalSBC
+from ipis.module1_soft_sensor.migration.matrix_sbc import LuoMatrixSBC
+from ipis.module1_soft_sensor.migration.sbc import LuOSBC
+from ipis.module1_soft_sensor.migration.sweep import data_fraction_sweep
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
 
@@ -31,10 +35,6 @@ from ipis.module1_soft_sensor.features.tep_physics_features import (
     diagnose_transport_lag,
     make_tep_physics_features,
 )
-from ipis.module1_soft_sensor.migration.functional_sbc import YanFunctionalSBC
-from ipis.module1_soft_sensor.migration.matrix_sbc import LuoMatrixSBC
-from ipis.module1_soft_sensor.migration.sbc import LuOSBC
-from ipis.module1_soft_sensor.migration.sweep import data_fraction_sweep
 
 TEP_FAST_INPUTS = [f"XMEAS_{i}" for i in range(1, 23)]
 MIGRATORS = {
@@ -64,6 +64,11 @@ def main() -> int:
         type=int,
         default=1,
         help=">1 averages random f-pct draws (error bars)",
+    )
+    ap.add_argument(
+        "--json",
+        action="store_true",
+        help="dump the F5 evidence (per-target SweepResult) to docs/paper/evidence/",
     )
     args = ap.parse_args()
     fractions = [float(x) for x in args.fractions.split(",")]
@@ -104,6 +109,7 @@ def main() -> int:
         return src_model.predict(scaler.transform(np.asarray(features)))
 
     migrator = MIGRATORS[args.method]
+    json_targets: dict[str, dict] = {}
     print("=" * 78)
     print(f"Phase 1C migration sweep -- method={args.method}  source={args.source}  lag={lag}")
     print("=" * 78)
@@ -138,6 +144,10 @@ def main() -> int:
         )
         print(f"\n=== TARGET {tgt} ===")
         print(res.summary())
+        if args.json:
+            from dataclasses import asdict
+
+            json_targets[tgt] = asdict(res)
 
     print("\n" + "-" * 78)
     print("  Read DATA EFFICIENCY (reach 90% of from-scratch ceiling), not the brittle")
@@ -148,6 +158,24 @@ def main() -> int:
         "   - yan:  functional GP bias -- ~10x data-efficient + calibrated intervals (the winner)."
     )
     print("  --bias-update composes migration (offline) + 1B bias-update (online).")
+    if args.json and json_targets:
+        import json as _json
+
+        from ipis.shared.evidence import EVIDENCE_DIR, dump_evidence
+
+        # merge by method so yan/osbc/luo runs accumulate into one evidence file
+        path = EVIDENCE_DIR / "efficiency_tep.json"
+        doc: dict = {"methods": {}}
+        if path.exists():
+            prev = _json.loads(path.read_text())
+            doc["methods"] = prev.get("methods", {})
+        doc["methods"][args.method] = {
+            "source": args.source,
+            "n_repeats": args.n_repeats,
+            "bias_update": args.bias_update or None,
+            "targets": json_targets,
+        }
+        print("evidence ->", dump_evidence("efficiency_tep", doc))
     return 0
 
 

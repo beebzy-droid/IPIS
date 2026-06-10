@@ -109,6 +109,13 @@ def run(
         print(f"  alpha={a:9.4f}  CV R2 = {m:+.4f} ± {s:.4f}")
     idx = int(one_se_selection(list(range(len(ALPHAS))), means, ses))
     alpha_star = float(ALPHAS[idx])
+    cv_path = {
+        "alphas": [float(a) for a in ALPHAS],
+        "cv_mean": [float(m) for m in means],
+        "cv_se": [float(s) for s in ses],
+        "one_se_index": idx,
+        "best_index": int(np.argmax(means)),
+    }
     print(
         f"[one-SE] alpha* = {alpha_star:.4f} (index {idx}; best mean at "
         f"index {int(np.argmax(means))})"
@@ -137,7 +144,13 @@ def run(
     )
 
     # gamma fixed at the 1D.1b protocol default (conformal_eval.py --gamma 0.05)
-    out: dict = {"target": target, "alpha_star": alpha_star, "nonzero": nz, "coverage": {}}
+    out: dict = {
+        "target": target,
+        "alpha_star": alpha_star,
+        "nonzero": nz,
+        "cv_path": cv_path,
+        "coverage": {},
+    }
     for theta in theta_grid:
         corrected, _ = apply_bias_update(y_test, raw_test, lam=0.3, delay=theta)
         res_cor = y_test - corrected
@@ -184,8 +197,16 @@ def main() -> int:
     ap.add_argument("--data-dir", type=Path, default=Path("data/raw/secom"))
     ap.add_argument("--alpha", type=float, default=0.10, help="target miscoverage")
     ap.add_argument("--gamma", type=float, default=0.05, help="ACI step size (1D.1b default)")
+    ap.add_argument(
+        "--json", action="store_true", help="dump evidence JSONs to docs/paper/evidence/"
+    )
     args = ap.parse_args()
-    run(args.data_dir, alpha_cov=args.alpha, gamma=args.gamma)
+    out = run(args.data_dir, alpha_cov=args.alpha, gamma=args.gamma)
+    if args.json:
+        from ipis.shared.evidence import dump_evidence
+
+        print("evidence ->", dump_evidence("secom_cv_path", out["cv_path"]))
+        print("evidence ->", dump_evidence("secom_stress", out))
     return 0
 
 
