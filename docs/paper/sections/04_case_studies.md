@@ -1,0 +1,82 @@
+# 4. Case-study design
+
+> Draft status: 1F.3 v1. Dataset statistics and protocol parameters transcribed from
+> the results ledger and frozen evidence; honest-framing notes (TEP regimes, SECOM
+> target) carried verbatim from ADR-009/ADR-012.
+
+Three datasets are chosen to span the assumption space, not to flatter the framework:
+one where the physics is rich and documented (the debutanizer), one that supports
+controlled regime structure for migration and coverage studies (TEP), and one that is
+deliberately hostile — high-dimensional, anonymized, physics-free (SECOM). The same
+pipeline, validation protocol, and hyper-parameter discipline run on all three.
+
+## 4.1 Debutanizer column
+
+The benchmark of [Fortuna et al. 2007]: 2,394 samples of seven process inputs
+(temperatures, pressure, reflux and flow signals, $u_1$–$u_7$) and the bottoms C4
+content $y$, pre-normalized to $[0,1]$. The final 360 samples are held out as the test
+window; the preceding 2,034 form the selection pool for blocked CV ($K = 5$). The
+transport lag is diagnosed at 15 samples (§3.1) and the label delay is set to the
+documented analyzer delay $\theta = 4$. This dataset carries the feature-ablation
+(C2), lag-diagnosis (C3), and drift/bias-update (C4) results.
+
+## 4.2 Tennessee Eastman process regimes
+
+The TEP [Downs & Vogel 1993] supplies the regime structure for the coverage (C7, C8)
+and migration (C6) studies. Three operating-point regimes of 2,000 rows each (100 h at
+the 3-minute analyzer cadence; 41 measured + 12 manipulated variables, of which the 22
+continuous measurements and the manipulated variables serve as inputs — the delayed
+composition analyzers are excluded except as the target, $y$ = XMEAS 40, product-G) were generated with the closed-loop
+Ricker/Russell–Chiang–Braatz simulation lineage [Bathelt et al. 2015], with product-G
+composition means of 53.8, 58.2 and 63.4 mol% — between-regime gaps of 4.4 and 5.2
+mol% against a within-regime standard deviation of ≈1.3, so the regimes are well
+separated without being disjoint. Two framing notes are part of the design, not
+caveats discovered later. First, these are *feed-ratio operating points*, not the
+canonical Downs–Vogel G/H product modes; the canonical modes were obtained as a
+supplementary check and proved textbook-clean but under-excited for soft-sensor
+training (within-mode $R^2 \approx 0.04$), which is precisely why deliberate
+excitation was injected for the headline data. Second, an open Simulink
+reimplementation [Vosloo et al.] was abandoned for a non-reproducible
+reactor-pressure startup trip; reproducibility of the data generator was treated as a
+gating requirement. Splits are time-ordered 70/15/15 per regime; label delays
+$\theta \in \{2, 5\}$ bracket the plausible analyzer range; the conformal protocol is
+fixed at $\alpha = 0.10$, $\gamma = 0.05$, window 200 (§3.4).
+
+## 4.3 SECOM (negative control)
+
+The UCI SECOM dataset [McCann & Johnston 2008]: 1,567 production lots × 590 anonymized
+sensor features from a semiconductor line over three months of 2008, with a pass/fail
+label (104 fails, 6.6%), 4.5% missing cells overall, 32 features more than 40%
+missing, and 116 near-constant features — $p \approx n$, heavy missingness, severe
+imbalance, no physics anchors. Because the framework's online machinery is regression,
+SECOM is framed as *virtual metrology*: one continuous measurement is held out as the
+target, selected by stated, audited criteria (missingness ≤ 5%, non-degenerate
+variance, maximal |point-biserial correlation| with pass/fail — the yield-relevant
+measurement a VM sensor would exist to predict; selected $x_{59}$, $|r| = 0.156$). The
+fail label defines the problem and is never a model feature. Label-free screens
+(missingness, near-zero variance) are applied once — no target is consulted, so no
+selection leakage is possible — leaving 442 features; all supervised selection happens
+inside CV folds via the elastic net's own shrinkage, with median imputation inside the
+estimator pipeline (fold-train fit). Splits, delays, and the conformal protocol are
+identical to §4.2.
+
+## 4.4 Protocol summary and metrics
+
+**T0 — Protocol at a glance.**
+
+| | Debutanizer | TEP regimes | SECOM |
+|---|---|---|---|
+| samples × features | 2,394 × 7 | 3 × (2,000 × 53) | 1,567 × 590 |
+| physics anchors | VLE bridge | process features | none |
+| target | bottoms C4 | product-G comp. | $x_{59}$ (VM) |
+| transport lag | 15 (diagnosed) | diagnosed/regime | — |
+| label delay $\theta$ | 4 (documented) | {2, 5} | {2, 5} |
+| selection | blocked CV $K{=}5$ + one-SE | idem | idem (elastic-net path) |
+| split | pool 2,034 / test 360 | 70/15/15 time-ordered | 70/15/15 time-ordered |
+
+Point accuracy is reported as $R^2$ (per fold, mean ± SE, worst fold, and held-out
+test); uncertainty as empirical coverage against the 0.90 target with mean interval
+width; transfer as data efficiency (§5.4); deployment as client-observed latency
+percentiles. All runs are deterministic; every reported number is regenerated by a
+single command per evidence file and committed with provenance stamps
+(`docs/paper/evidence/`), and the full pipeline reproduced exactly across two machines.
