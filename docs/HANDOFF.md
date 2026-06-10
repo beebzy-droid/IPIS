@@ -277,20 +277,21 @@ and Wang et al. 2021 (DTDE-WRVM) were the 1B soft-sensor-delay backbone.
 
 ## 10. RESUME HERE → Phase 1D (1C fully complete, incl. writeup)
 
-**Status:** 1A ✅, 1B ✅, 1C ✅, 1D ✅ (1D.1/1b conformal, 1D.2 serving, 1D.3 dashboard;
-1D.4/1D.5 gated), **1E.1 ✅** — SECOM virtual-metrology stress test (ADR-012). The
-no-physics negative control BITES, by design: target x59 (max |point-biserial r| with
-fail = 0.156, <0.5% missing), screen kept 442/590, elastic-net path under blocked CV
-explodes at weak shrinkage (CV R2 to -5e4; p~n lottery) -> one-SE picks max shrinkage
-(alpha*=10, 6/441 coefs); test R2 raw = -1.84, bias-corrected -0.16 (large offset
-absorbed, still sub-mean). BUT corrected+ACI coverage = 0.910/0.915 (theta=2/5; target
-0.90), width 12.8 vs over-covering raw split 0.953 @ 20.2 — conformal validity is
-model-agnostic; point accuracy is what physics anchors buy. Fail-enrichment inconclusive
-(n=9 fails in test). Run reproduced exactly on owner machine vs canonical UCI bytes.
-**Next:** **Phase 1F — writing & submission**. 1E.2 (temporal transfer) gate CLOSED
-(ADR-012): within-SECOM R2 < 0 means there is no signal to migrate — a transfer arm
-would measure noise. 1D.4/1D.5 remain gated (1D.5 nonlinear source is the natural
-post-review extension; SECOM now precisely locates the linear sensor's breaking point).
+**Status:** 1A–1E ✅, **1F.1 ✅** (claims-to-evidence audit + paper outline, CACE
+framework framing, `docs/paper/{claims_evidence,outline}.md` — the audit caught and
+fixed a C6 mischaracterization before drafting), **1F.2 ✅ core** (evidence freeze):
+`ipis.shared.evidence` JSON contract; `--json` dumps in secom_baseline / conformal_eval
+(theta-merge) / bias_update_eval / tep_migration (method-merge); `scripts/paper_figures/`
+emitters F3/F4/F5/F7 + make_all (PNG+PDF, elsarticle widths); `bench_latency.py`.
+FROZEN on owner machine, committed under docs/paper/{evidence,figures}: Yan two-layer
+(`--bias-update 0.3,2 --n-repeats 8`) = **10.0× BOTH targets** (5% vs 50%; GP coverage
+92–98%); Luo 1.0×/1.0× (degeneracy empirically exact ±0.001–0.006); OSBC 1.0×/4.0×
+(differs from 1C-era ~3.3× — unsubsampled pool + bias-updated baseline; frozen values
+supersede); bare-migration control confirms the two-layer composition is load-bearing;
+latency p50 1.23 ms / p99 1.97 ms single-row, ≈46 µs/row batch-32, label p50 0.97 ms.
+**Next:** finish the freeze — **F2 Debutanizer feature-ablation runner + F1 architecture
+diagram** — then **1F.3: draft Results** (transcribes the ledger), then Framework,
+Case-study design, Related work, Discussion, Intro last (per outline.md).
 
 ### 1C framing (DECIDED, user-ratified): A + C, not literal Debutanizer→TEP
 SBC migration requires a *shared input space* + *similar processes* (verified from
@@ -445,17 +446,28 @@ UCI-format fixtures). Headline: validity-without-accuracy — ACI holds 0.91 cov
 a failed point model with 37% narrower intervals than static split; one-SE rescued
 selection from the p~n lottery; physics anchors are the accuracy difference.
 
-### NEXT ACTION: Phase 1F — writing & submission
-Target: Computers & Chemical Engineering (primary) / Journal of Process Control. The
-paper now has its full arc: (i) physics-anchored linear soft sensor + blocked-CV/one-SE
-methodology (1A, Debutanizer+TEP); (ii) drift handling via Shardt open-loop bias-update
-(1B); (iii) cross-process transfer, ~10x data efficiency (1C); (iv) from-primary
-conformal uncertainty, regime-uniform 0.90 +/- 0.003 real-TEP coverage, production
-serving stack (1D); (v) the honest negative control — no-physics SECOM, where point
-accuracy fails but conformal validity holds (1E). Option-scale first: paper skeleton
-(section map, figure list, claims-to-evidence table), then section drafts. Reusable:
-results.md is the evidence ledger; ADR-001..012 are the methods rationale; HANDOFF
-changelog is the chronology. Warm-up: cd Projects\IPIS + conda activate ipis.
+### Phase 1F.1 + 1F.2 — audit, outline, evidence freeze (DONE)
+1F.1: `docs/paper/claims_evidence.md` (12 claims -> ledger numbers + artifact + figure +
+ADR + gap; C12 fail-enrichment locked to "inconclusive n=9") and `docs/paper/outline.md`
+(K1–K5 contributions, 7-section map, figure/table inventory, writing order). 1F.2:
+evidence-freeze architecture — eval scripts dump argv-stamped JSONs to
+docs/paper/evidence/, emitters render docs/paper/figures/ (one freeze point: JSON =
+figure = results.md). Frozen: secom_cv_path + secom_stress (real SECOM), coverage_tep
+(theta-merged 2&5), bias_trace_debutanizer (raw 0.476 -> corrected 0.857 held-out),
+efficiency_tep (yan 10.0x/10.0x two-layer; luo exact degeneracy; osbc 1.0x/4.0x),
+serving_latency (p50 1.23 ms). LESSONS: (1) the freeze caught a wrong regen command —
+bare migration gave 3.3x/n-a until --bias-update 0.3,2 restored the documented two-layer
+conditions; conditions BELONG IN THE COMMAND, argv-stamping made it auditable; (2) F3's
+"Debutanizer alpha-path panel" was cut — the 1A lottery is fold-spread evidence, no such
+path ever existed.
+
+### NEXT ACTION: finish freeze (F2 + F1), then Phase 1F.3 — Results draft
+F2: small ablation runner (physics features vs raw under the identical blocked-CV
+protocol on the Debutanizer; reuses features/physics_features + evaluation/blocked_cv)
+-> ablation evidence JSON -> fig emitter. F1: architecture diagram (framework + serving
+two-flow; draw.io or tikz at LaTeX time). Then 1F.3 drafts Results section-by-section
+from the frozen evidence (`docs/paper/sections/05_results.md` first per outline writing
+order). Warm-up: cd Projects\IPIS + conda activate ipis.
 
 ---
 
@@ -511,3 +523,9 @@ changelog is the chronology. Warm-up: cd Projects\IPIS + conda activate ipis.
   validity-without-accuracy; one-SE beat the p~n lottery (alpha*=10, 6/441 coefs).
   **1E.2 (temporal transfer) gate CLOSED** — no signal to migrate. Resume = **Phase 1F
   (writing & submission)**.
+- **2026-06-10** — **Phase 1F.1 + 1F.2 DONE**: claims-to-evidence audit + outline
+  (CACE framework framing; C6 corrected to within-TEP regime migration before drafting);
+  evidence-freeze pipeline (argv-stamped JSONs + F3/F4/F5/F7 emitters + make_all +
+  bench_latency). Frozen on owner machine: yan two-layer 10.0x both targets, luo exact
+  degeneracy, osbc 1.0x/4.0x (supersedes 1C-era ~3.3x), SECOM/TEP coverage evidence,
+  latency p50 1.23 ms. Resume = F2 ablation runner + F1 diagram, then 1F.3 Results.

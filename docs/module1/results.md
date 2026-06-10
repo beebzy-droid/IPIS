@@ -170,6 +170,19 @@ ceiling" crossover is **not** reported as a headline: it is brittle here because
 migrated and from-scratch ceilings coincide (it flipped 20%↔100% across seeds);
 data efficiency is the robust metric.
 
+**Frozen regeneration (Phase 1F.2, paper evidence).** The sweep was re-run end-to-end
+on the owner's machine under the documented two-layer conditions (`--bias-update 0.3,2
+--n-repeats 8`; argv-stamped in `docs/paper/evidence/efficiency_tep.json`): **Yan =
+10.0× on BOTH targets** (90% of ceiling at 5% vs 50%; GP coverage 92–98%, widths
+2.65–3.16 mode2 / 2.84–3.96 mode3 — wider for the larger gap); **Luo = 1.0×/1.0×**, the
+degeneracy empirically exact (≡ from-scratch to ±0.001–0.006 at every fraction);
+**OSBC = 1.0× (mode2) / 4.0× (mode3)** — differing from the 1C-era ~3.3× because OSBC
+runs on the full (unsubsampled) pool where the bias-updated from-scratch baseline is
+already strong at 5% on mode2; the frozen values supersede the table above for paper
+purposes. A bare-migration control (no bias-update) caps every migrated curve below
+90%-of-bar on mode2 — empirical confirmation that the two-layer composition is
+load-bearing.
+
 ### Observations
 - **Methodology transfers across topology.** The exact Debutanizer recipe (down to
   the bias-update code) works on a chemically unrelated reactor process. The
@@ -276,6 +289,11 @@ serving container (`Dockerfile` + `requirements-serving.txt`; no torch/mlflow/st
 was built and run locally (`/health` 200, `/predict` schema OK) and GitHub Actions CI is
 green: a `test` job (pinned black/ruff on `src tests` + the 49 tests with `PYTHONPATH=src`)
 and a `docker` job (image build + `/health`/`/predict` smoke).
+
+**Measured serving latency (Phase 1F.2, client-observed incl. HTTP, n=10⁴):** single-row
+`/predict` p50 1.23 ms / p90 1.51 / p99 1.97; batch-32 p50 1.46 ms (≈46 µs per row
+amortized); `/label` p50 0.97 ms. Two orders of magnitude inside the 200 ms budget —
+the path is I/O-bound as designed (`docs/paper/evidence/serving_latency.json`).
 
 #### Observations
 - The serving hot path is microsecond compute (linear + EWMA + interval lookup), so the
