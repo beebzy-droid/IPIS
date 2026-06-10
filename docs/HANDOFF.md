@@ -461,13 +461,22 @@ conditions; conditions BELONG IN THE COMMAND, argv-stamping made it auditable; (
 "Debutanizer alpha-path panel" was cut — the 1A lottery is fold-spread evidence, no such
 path ever existed.
 
-### NEXT ACTION: finish freeze (F2 + F1), then Phase 1F.3 — Results draft
-F2: small ablation runner (physics features vs raw under the identical blocked-CV
-protocol on the Debutanizer; reuses features/physics_features + evaluation/blocked_cv)
--> ablation evidence JSON -> fig emitter. F1: architecture diagram (framework + serving
-two-flow; draw.io or tikz at LaTeX time). Then 1F.3 drafts Results section-by-section
-from the frozen evidence (`docs/paper/sections/05_results.md` first per outline writing
-order). Warm-up: cd Projects\IPIS + conda activate ipis.
+### Phase 1F.2b — freeze CLOSED (F2 + F1)
+F2: `scripts/run_ablation_debutanizer.py` (four arms, identical blocked-CV protocol) ->
+frozen ablation evidence: physics+u5 (k=4) CV +0.145±0.419 / test +0.476 dominates;
+kitchen sink (k=126) CV -1.604±1.421, worst fold -6.248, test +0.221 — the lottery is
+visible OUT-OF-SAMPLE too. Cross-check: physics+u5 row is bit-identical to
+bias_update_eval's static row (independent scripts, same protocol). F1: scripted
+two-panel architecture diagram (`fig_architecture.py`, no evidence dependency). ALL SIX
+figures now render from frozen, argv-stamped, committed evidence via make_all.
+
+### NEXT ACTION: Phase 1F.3 — section drafts
+`docs/paper/sections/05_results.md` v1 EXISTS (transcribed 100% from frozen evidence,
+~1,500 words, T1/T2/T3 inline, anchors audited against the JSONs — zero new numbers).
+Next drafts in order (outline.md): 03_framework.md, 04_case_studies.md, then
+02_related_work.md (PDF primaries in /mnt/project), 06_discussion.md, 01_intro.md,
+07_conclusion.md, abstract. Then 1F.4/1F.5: LaTeX/elsarticle conversion + Fortuna 2007
+reference + submission package. Warm-up: cd Projects\IPIS + conda activate ipis.
 
 ---
 
@@ -529,3 +538,7 @@ order). Warm-up: cd Projects\IPIS + conda activate ipis.
   bench_latency). Frozen on owner machine: yan two-layer 10.0x both targets, luo exact
   degeneracy, osbc 1.0x/4.0x (supersedes 1C-era ~3.3x), SECOM/TEP coverage evidence,
   latency p50 1.23 ms. Resume = F2 ablation runner + F1 diagram, then 1F.3 Results.
+- **2026-06-10** — **Freeze CLOSED + 1F.3 started**: F2 ablation (physics+u5 dominates;
+  k=126 kitchen sink CV -1.60, worst -6.25 — out-of-sample-visible lottery) + F1
+  scripted architecture diagram; all six figures from frozen evidence. Results draft v1
+  (`docs/paper/sections/05_results.md`) transcribed from frozen JSONs, anchors audited.
