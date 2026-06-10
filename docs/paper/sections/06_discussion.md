@@ -1,0 +1,93 @@
+# 6. Discussion
+
+> Draft status: 1F.3 v1. Interpretive claims trace to Section 5; limitations are
+> carried from ADR-009/011/012 rather than discovered at writing time.
+
+## 6.1 Validity without accuracy is the production stance
+
+The result we consider most consequential for practice is the SECOM row of Table T3.
+A soft sensor that cannot be made accurate is a common industrial outcome — the
+informative variables are not instrumented, the process is not excited, the physics is
+not available — and the usual response is either to abandon the sensor or to deploy it
+with confidence statistics inherited from a validation set it no longer resembles. The
+framework offers a third position: deploy the calibration machinery even when the
+point model fails, and let the intervals tell the truth. On SECOM the corrected + ACI
+construction holds 0.910/0.915 coverage at 37% narrower width than the over-covering
+static baseline *around a point model with negative R²*. An operator reading those
+intervals learns, correctly, that the sensor knows little — which is actionable in a
+way that a confidently wrong point estimate is not. Conformal validity is
+model-agnostic; the decision to trust a soft sensor should be made on its interval
+width, not on the existence of a prediction.
+
+## 6.2 Where the performance comes from
+
+Holding the pipeline fixed across three datasets decomposes the credit. Point accuracy
+comes from the physics anchors: the same protocol that yields test R² of 0.48–0.86 on
+the debutanizer and working sensors on TEP produces −1.84 on SECOM, where no
+thermodynamic structure exists to encode (Sections 5.1, 5.5). Robustness — the
+difference between a usable and a lottery-dependent sensor *within* a dataset — comes
+from the validation discipline: blocked CV exposes the regime spread that adjacent
+validation averages away, and the one-SE rule converts that exposure into parsimonious
+selection (the k = 126 kitchen sink and the SECOM path explosion are the same failure
+at two scales). Honesty comes from the conformal layer, and only from it: neither the
+physics nor the bias update carries a coverage guarantee. The components are
+complementary, and the composition order matters — bias correction before conformal
+calibration (so the intervals price residual uncertainty, not removable offset), and
+drift alarming on the corrected residual (so alarms mean "intervention needed", not
+"the EWMA is working").
+
+## 6.3 The linear scope is a design choice, and what it costs
+
+Every point model in this paper is linear. We anticipate the objection — would a
+gradient-boosted or deep model rescue SECOM? — and answer it in two parts. First, the
+negative-control logic *requires* holding the model class fixed: the claim "physics
+anchors are the accuracy difference" is identified only because the estimator is
+identical across datasets; swapping in a nonlinear learner on the hard dataset would
+confound model capacity with feature information. Second, the linear choice is what
+makes the rest of the stack cheap and auditable: the bias update and conformal
+bookkeeping are O(1) per label, the serving path is microseconds, and Luo's
+degeneracy result (Section 5.4) is itself a consequence of source linearity that the
+literature obscures. The cost is stated plainly: the SECOM sensor is not deployable
+for point prediction, and we do not know how much of its failure a nonlinear model
+would recover. That experiment — which also re-opens Luo's method, since its collapse
+is specific to linear sources — is the designated extension, and SECOM now provides
+the exact dataset on which to run it.
+
+## 6.4 Limitations
+
+Stated as facts, not hedges. (i) The migration result is within-process regime
+migration; cross-process parameter migration is inapplicable by construction
+(disjoint input spaces), and what transfers across processes is the methodology.
+(ii) The TEP regimes are feed-ratio operating points generated under deliberate
+excitation, not the canonical product modes — sufficient for the within-process claim,
+not a canonical-benchmark claim. (iii) The fail-enrichment analysis on SECOM is
+underpowered (9 failing lots in the test window) and is reported as inconclusive.
+(iv) The OSBC data-efficiency figure is sensitive to evaluation conditions (pool
+subsampling, the presence of the online layer): it measured ~3.3× in early runs and
+1.0×/4.0× under the frozen protocol — one reason the paper commits to provenance-
+stamped evidence and reports the frozen values. (v) The serving architecture is
+single-instance with snapshot persistence; horizontal scale requires externalizing
+state, which is documented but not built. (vi) The label delay is treated as fixed and
+known; random or drifting delays are handled in the literature (Section 2.1) and
+would compose, but are not evaluated here. (vii) The virtual-metrology target on SECOM
+is our construction; the selection criteria and audit table are published precisely so
+that the choice can be attacked.
+
+## 6.5 Practitioner's recipe and future work
+
+For a practitioner the framework reduces to an ordering: diagnose the transport lag
+before judging any model; encode what physics is available as features and let k stay
+small; select with blocked CV and the one-SE rule, treating negative folds as signal;
+correct drift with the open-loop EWMA at the documented delay; calibrate with ACI on
+the corrected residuals and alarm on them too; and read interval width as the trust
+metric. Each step is justified by a failure it removed in Section 5.
+
+Beyond the nonlinear extension (§6.3), three directions follow directly. Dynamic
+delay estimation [Wang et al. 2021] is a drop-in upgrade where analyzer delays drift.
+The serving core is framework-agnostic and was designed for composition with plant
+buses (OPC UA/MQTT ingestion was prototyped and gated out of scope); closing that loop
+turns the reference implementation into a plant pilot. And the evidence-freeze
+discipline used to produce this paper — evaluation scripts emitting provenance-stamped
+artifacts that figures and claims consume — proved valuable enough during writing
+(it caught two would-be mischaracterizations before submission) that we would propose
+it as practice independent of the framework itself.
