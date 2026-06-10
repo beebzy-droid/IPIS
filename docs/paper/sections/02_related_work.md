@@ -59,13 +59,30 @@ exchangeability, and the responses split into ensemble and adaptive families: En
 [Xu & Xie 2021] maintains a FIFO ensemble of residuals with no exchangeability
 assumption; adaptive conformal inference [Gibbs & Candès 2021] performs online
 gradient updates on the working miscoverage level and guarantees long-run coverage
-under arbitrary distribution shift; [Schlembach et al. 2022] extend to multi-step
-multivariate forecasting; [Astigarraga et al.] survey applications. Process-industry
-deployments remain rare, and we are not aware of prior work addressing the
-soft-sensor-specific complication that drives §3.4: under label delay, the coverage
-indicator must be scored against the interval issued at prediction time, which an
-out-of-the-box ACI update loop (built for immediate feedback) silently gets wrong.
-Our serving design enforces the correct pairing structurally.
+under arbitrary distribution shift. A recent line addresses precisely the feedback
+imperfections that a delayed-label deployment exhibits: [Wang, Zecchin & Simeone 2025]
+treat *intermittent* feedback (IM-OCP, with long-run coverage and sub-linear regret
+when labels arrive only sporadically); [Wang, Zecchin & Simeone 2026] treat *corrupted*
+feedback, where the miscoverage indicator itself is unreliable; and [Hou et al. 2025]
+operate under sporadic edge–cloud feedback. The theoretical problem of online conformal
+calibration under imperfect or delayed feedback is therefore established, and we do not
+claim it as ours.
+
+What this thread has not addressed is the *instantiation* that §3.4 and §3.6 require: in
+a soft sensor the delayed label must be reconciled with the conformal layer **and** with
+an upstream drift corrector, and the reconciliation has to be structurally correct in a
+serving system, not only in an update rule. Two specifics follow. First, delay is
+threaded through *both* mechanisms — the bias update of §3.3 consumes the label at its
+documented delay, and only the corrected residual then feeds the conformal layer — so
+the interval prices uncertainty after drift removal rather than around a stale point
+estimate; this composition, not the conformal update alone, yields the regime-uniform
+coverage of Table T2. Second, the coverage indicator for a late label must be scored
+against the interval *stored at that sample's prediction time*, not the interval the
+since-adapted state would issue on arrival; the IM-OCP/corrupted-feedback analyses model
+*when or whether* feedback arrives, whereas our concern is the bookkeeping that pairs
+each arriving label with its originating interval. Our serving layer (§3.6) enforces
+that pairing by construction. The contribution here is integration and correct
+deployment, not a new conformal guarantee.
 
 ## 2.4 The gap
 
