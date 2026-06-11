@@ -43,6 +43,22 @@ separates train from validation blocks. The per-fold $R^2$ spread — including
 strongly negative folds (Table T1) — is retained as the signal, not suppressed as
 noise.
 
+Formally, let the pool be $\{(x_t, y_t)\}_{t=1}^{N}$ in time order and let
+$B_1, \dots, B_K$ be its partition into $K$ contiguous blocks of (near-)equal length.
+For fold $k$, the validation set is $B_k$ and the training set is
+$\bigcup_{j \neq k} B_j$ with the $\ell$ samples adjacent to each boundary of $B_k$
+removed, where $\ell$ is the maximum lag used by any feature; feature construction is
+applied to each contiguous segment independently, so no lagged feature spans a
+boundary in either direction. The fold score is the validation $R^2$ of the pipeline
+(imputer where applicable, scaler, estimator) fit on the gapped training set, and we
+report $\bar{R}^2 \pm \mathrm{SE}$ over folds together with the worst fold. Two
+properties matter. The gap makes the fold estimate leakage-free under serial
+dependence of range $\leq \ell$: no validation point shares lagged inputs with any
+training point. And contiguity makes each fold a *regime probe* — if the pool spans
+operating regimes, at least one fold must validate on a regime the model under-saw in
+training, which is precisely the deployment event the per-fold spread is meant to
+price.
+
 Model choice on any complexity path (feature sets; the elastic-net $\alpha$ path of
 Section 5.5) then follows the one-standard-error rule [Hastie et al. 2009]: take the
 complexity with the best mean CV score and select the *simplest* complexity whose mean
