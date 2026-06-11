@@ -1,4 +1,11 @@
-% IPIS paper bibliography (Phase 1F.5). TODO-flagged fields need one confirmation.
+% IPIS paper bibliography (Phase 1F.5 -- VERIFIED 2026-06-11).
+% All entries resolved against publisher metadata / title pages:
+%   IM-OCP pages 2888-2892 (Semantic Scholar BibTeX + ADS bibcode 2025ISPL...32.2888W;
+%   the author-CV value 2649-2653 is the outlier). Hou first author = Qiushuo (arXiv
+%   page; was mis-listed as Jing). Papadopoulos = LNCS/LNAI 2430 pp. 345-356.
+%   Smith 9th ed = 2022 (ISBN 9781260721478). Gibbs = NeurIPS-2021 ACI (matches the
+%   alpha-update stated in Sec. 3.4). Xu = ICML 2021 / PMLR 139 (EnbPI).
+% Remaining before submission: \ead{email} in main.tex (author-supplied).
 
 @article{guo2014,
   author  = {Guo, Yafeng and Zhao, Yu and Huang, Biao},
@@ -62,7 +69,7 @@
   booktitle = {Machine Learning: ECML 2002},
   series    = {Lecture Notes in Computer Science}, volume = {2430},
   pages     = {345--356},
-  note      = {TODO confirm page span},
+  editor    = {Elomaa, Tapio and Mannila, Heikki and Toivonen, Hannu},
   publisher = {Springer}, year = {2002},
   doi       = {10.1007/3-540-36755-1_29}}
 
@@ -77,32 +84,32 @@
   author    = {Xu, Chen and Xie, Yao},
   title     = {Conformal prediction interval for dynamic time-series},
   booktitle = {Proceedings of the 38th International Conference on Machine Learning (ICML)},
-  year      = {2021}, % TODO decide: ICML 2021 (EnbPI) vs extended IEEE TPAMI 2023 version
-  note      = {Extended version: \emph{Conformal prediction for time series}, arXiv:2010.09107}}
+  series    = {Proceedings of Machine Learning Research}, volume = {139},
+  year      = {2021},
+  note      = {Extended journal version: \emph{Conformal prediction for time series}, arXiv:2010.09107}}
 
 @inproceedings{gibbs2021aci,
   author    = {Gibbs, Isaac and Cand{\`e}s, Emmanuel},
   title     = {Adaptive conformal inference under distribution shift},
   booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
-  volume    = {34}, year = {2021},
-  note      = {TODO: confirm vs Gibbs and Candes 2022 (arXiv:2208.08401) for the arbitrary-shift guarantee}}
+  volume    = {34}, year = {2021}}
 
 @article{wang2025imocp,
   author  = {Wang, Bowen and Zecchin, Matteo and Simeone, Osvaldo},
   title   = {Mirror online conformal prediction with intermittent feedback},
   journal = {IEEE Signal Processing Letters},
   year    = {2025}, volume = {32}, pages = {2888--2892},
-  note    = {arXiv:2503.10345. TODO page conflict: CV says 2888--2892, ADS says 2649--2653; verify on Xplore}}
+  note    = {arXiv:2503.10345}}
 
 @misc{wang2026corrupted,
   author = {Wang, Bowen and Zecchin, Matteo and Simeone, Osvaldo},
   title  = {Online conformal prediction with corrupted feedback},
-  year   = {2026}, eprint = {2605.20515}, archiveprefix = {arXiv}, note = {TODO final venue}}
+  year   = {2026}, eprint = {2605.20515}, archiveprefix = {arXiv}, note = {Preprint}}
 
 @misc{hou2025ocppls,
-  author = {Hou, Jing and Park, Sangwoo and Zecchin, Matteo and Cai, Yunlong and Yu, Guanding and Simeone, Osvaldo},
+  author = {Hou, Qiushuo and Park, Sangwoo and Zecchin, Matteo and Cai, Yunlong and Yu, Guanding and Simeone, Osvaldo},
   title  = {Online conformal probabilistic numerics via adaptive edge-cloud offloading},
-  year   = {2025}, eprint = {2503.14453}, archiveprefix = {arXiv}, note = {TODO author list + venue}}
+  year   = {2025}, eprint = {2503.14453}, archiveprefix = {arXiv}, note = {Preprint}}
 
 @article{downs1993,
   author  = {Downs, James J. and Vogel, Ernest F.},
@@ -151,4 +158,4 @@
 @book{smith2018,
   author    = {Smith, Joseph M. and Van Ness, Hendrick C. and Abbott, Michael M. and Swihart, Mark T.},
   title     = {Introduction to Chemical Engineering Thermodynamics},
-  edition   = {9th}, publisher = {McGraw-Hill}, year = {2018}, note = {TODO confirm edition year; Ch. 13}}
+  edition   = {9th}, publisher = {McGraw-Hill}, year = {2022}, note = {Ch.~13}}

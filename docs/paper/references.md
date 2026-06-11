@@ -151,16 +151,25 @@
 
 ---
 
-### Open items for 1F.5 (collected)
+### Open items — RESOLVED 2026-06-11 (verification sweep)
 
-1. IM-OCP page span (2888–2892 vs 2649–2653) — IEEE Xplore DOI lookup.
-2. Corrupted-feedback (2605.20515) + Hou (2503.14453) final venues.
-3. Papadopoulos LNCS 2430 page span.
-4. Xu & Xie — ICML-2021 vs TPAMI-2023 version choice.
-5. Gibbs & Candès — 2021 ACI vs 2022 arbitrary-shift paper, matched to the §3.4 equation.
-6. Hastie 1-SE section number; Smith VLE chapter; Fortuna dataset citation form.
-7. CACE house style: numbered vs author–year; convert to elsarticle .bib accordingly.
-8. NORMALIZE in-text citation keys (audit found inconsistent forms across sections):
+1. ✅ IM-OCP pages = **2888–2892** (Semantic Scholar publisher BibTeX + ADS bibcode
+   `2025ISPL...32.2888W` agree; the author-CV 2649–2653 is the outlier).
+2. ✅ 2605.20515 (corrupted feedback) and 2503.14453 (OCP-PLS) = still arXiv preprints;
+   cited as @misc. **Hou first author corrected: Qiushuo Hou** (was mis-listed as Jing).
+3. ✅ Papadopoulos = LNCS/LNAI **2430, pp. 345–356**, eds. Elomaa/Mannila/Toivonen.
+4. ✅ Xu & Xie = ICML 2021 (PMLR 139, EnbPI); arXiv:2010.09107 noted as extended version.
+5. ✅ Gibbs & Candès = **NeurIPS 2021 ACI** — matches the α-update equation §3.4 states.
+6. ✅ Hastie 1-SE = ESL 2nd ed §7.10 (noted in bib); **Smith 9th ed = 2022**
+   (ISBN 9781260721478; bib year corrected from 2018), Ch. 13.
+7. ✅ Bib delivered as elsarticle-compatible `paper/references.bib`
+   (elsarticle-num-names style); compiles with zero undefined citations.
+8. ✅ Citation keys normalized at LaTeX conversion (the map below was applied
+   mechanically by the md→tex converter).
+9. REMAINING (author-side): `\ead{email}` + optional ORCID in `paper/main.tex`.
+
+Key map applied at conversion:
+   NORMALIZE in-text citation keys (audit found inconsistent forms across sections):
    - Lu: §2.2 uses "Lu & Gao 2008a/b" and "Lu et al. 2009" (correct); ensure no bare
      "Lu 2008" remains ambiguous between the two 2008 papers.
    - "Luo 2015" → "Luo et al. 2015"; "Yan 2011" → "Yan et al. 2011";
