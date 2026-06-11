@@ -1,0 +1,63 @@
+% IPIS soft-sensor framework paper -- Computers & Chemical Engineering (Elsevier)
+% Phase 1F.5 skeleton. Build: pdflatex main && bibtex main && pdflatex main x2
+\documentclass[review,12pt]{elsarticle}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{lineno}
+\graphicspath{{figures/}{../docs/paper/figures/}}
+\journal{Computers \& Chemical Engineering}
+
+\begin{document}
+\begin{frontmatter}
+
+\title{A physics-informed, drift-adaptive soft-sensor framework with calibrated
+uncertainty under delayed labels: from benchmark validation to a negative control
+and production serving}
+
+% TODO(Bien): affiliation as you want it to appear (independent researcher / company /
+% institute) + email + optional ORCID.
+\author{Bien Busico}
+\address{TODO: affiliation, City, Country}
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\begin{keyword}
+soft sensor \sep conformal prediction \sep label delay \sep drift \sep
+model migration \sep physics-informed features \sep Tennessee Eastman process
+\end{keyword}
+
+\end{frontmatter}
+\linenumbers
+
+\input{01_intro}
+\input{02_related_work}
+\input{03_framework}
+\input{04_case_studies}
+\input{05_results}
+\input{06_discussion}
+\input{07_conclusion}
+
+\section*{Data and code availability}
+The reference implementation, all evaluation scripts, the provenance-stamped evidence
+artifacts, and the emitters that regenerate every figure in this paper are available at
+\texttt{github.com/beebzy-droid/IPIS}. The Debutanizer benchmark is from
+\citet{fortuna2007}; the SECOM dataset from the UCI repository \citep{mccann2008secom};
+TEP regime data regenerate from the documented simulation lineage \citep{bathelt2015}.
+
+\section*{CRediT authorship contribution statement}
+\textbf{Bien Busico}: Conceptualization, Methodology, Software, Validation, Formal
+analysis, Investigation, Data curation, Writing -- original draft, Writing -- review \&
+editing, Visualization, Project administration.
+
+\section*{Declaration of competing interest}
+The author declares no competing financial interests or personal relationships that
+could have influenced the work reported in this paper.
+
+\bibliographystyle{elsarticle-num-names}
+\bibliography{references}
+
+\end{document}
