@@ -41,6 +41,12 @@ def _ols_fit_predict(x_tr: np.ndarray, y_tr: np.ndarray, x_ev: np.ndarray) -> np
 
 
 def main() -> None:
+    import argparse
+
+    ap = argparse.ArgumentParser(description="Synthetic conformal stress check (F6)")
+    ap.add_argument("--json", action="store_true", help="dump F6 evidence to docs/paper/evidence/")
+    args = ap.parse_args()
+
     rng = np.random.default_rng(SEED)
 
     # --- data: linear signal, residual std 1.0 -> 3.0 at the regime boundary ---
@@ -100,6 +106,41 @@ def main() -> None:
     print("-" * 54)
     for name, ov, pre, post, w, _g in rows:
         print(f"{name:<20} {ov:>8.3f} {pre:>7.3f} {post:>7.3f} {w:>8.2f}")
+
+    if args.json:
+        from ipis.shared.evidence import dump_evidence
+
+        win = 200
+        print(
+            "evidence ->",
+            dump_evidence(
+                "synthetic_stress",
+                {
+                    "target": TARGET,
+                    "alpha": ALPHA,
+                    "boundary": int(boundary),
+                    "window": win,
+                    "gamma": float(gamma),
+                    "rolling": {
+                        "split": [float(v) for v in rolling_coverage(cov_s, win)],
+                        "aci": [float(v) for v in rolling_coverage(cov_a, win)],
+                        "enbpi": [float(v) for v in rolling_coverage(cov_e, win)],
+                    },
+                    "summary": {
+                        name: {
+                            "overall": float(ov),
+                            "pre": float(pre),
+                            "post": float(post),
+                            "mean_width": float(w),
+                        }
+                        for (name, ov, pre, post, w, _g), key in zip(
+                            rows, ("split", "aci", "enbpi"), strict=True
+                        )
+                        for name in (key,)
+                    },
+                },
+            ),
+        )
 
     # --- plot rolling coverage (the dashboard view of online validity) ---
     try:
