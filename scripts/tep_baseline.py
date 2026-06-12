@@ -42,9 +42,7 @@ from ipis.module1_soft_sensor.features.tep_physics_features import (
 
 def _mean_se(xs: list[float]) -> tuple[float, float]:
     a = np.asarray(xs, dtype=float)
-    return float(a.mean()), (
-        float(a.std(ddof=1) / np.sqrt(len(a))) if len(a) > 1 else 0.0
-    )
+    return float(a.mean()), (float(a.std(ddof=1) / np.sqrt(len(a))) if len(a) > 1 else 0.0)
 
 
 def main() -> int:
@@ -76,9 +74,7 @@ def main() -> int:
     print("=" * 78)
     print(f"Phase 1C part-A baseline -- source={args.source}  (transport_lag={lag})")
     print("=" * 78)
-    print(
-        f"  source rows {len(src)}  pool {len(pool)}  test {len(test)}  n_splits {args.n_splits}"
-    )
+    print(f"  source rows {len(src)}  pool {len(pool)}  test {len(test)}  n_splits {args.n_splits}")
     print("-" * 78)
 
     # blocked forward-chaining CV on the pool (the honest cross-regime instrument)
@@ -101,9 +97,7 @@ def main() -> int:
     y_te = np.asarray(y_te, dtype=float).ravel()
     test_r2 = r2_score(y_te, source.predict(scaler.transform(X_te)))
     print(f"  held-out test R2 (within {args.source}): {test_r2:+.3f}")
-    print(
-        f"  => the recipe transfers across topology (part-A claim): R2 ~ {test_r2:.2f} on TEP"
-    )
+    print(f"  => the recipe transfers across topology (part-A claim): R2 ~ {test_r2:.2f} on TEP")
 
     # bias-update recovery: the 1B method (built for the Debutanizer) applied
     # unchanged to TEP -- the full-recipe-transfer result. theta=5 is the
@@ -112,9 +106,7 @@ def main() -> int:
 
     print("-" * 78)
     print("  FULL-RECIPE TRANSFER (1B bias-update applied unchanged to TEP):")
-    print(
-        f"    static                       CV {m:+.3f} +/- {se:.3f}  worst {min(cv_r2):+.3f}"
-    )
+    print(f"    static                       CV {m:+.3f} +/- {se:.3f}  worst {min(cv_r2):+.3f}")
     for theta in (2, 5, 8):
         c = corrected_fold_r2(folds, lam=0.3, delay=theta)
         cm, cse = _mean_se(c)
@@ -123,15 +115,11 @@ def main() -> int:
             f"    + bias-update theta={theta}{tag:13s} CV {cm:+.3f} +/- {cse:.3f}  worst {min(c):+.3f}"
         )
     print("    => the Debutanizer recipe (features + blocked CV + bias-update) works")
-    print(
-        "       unchanged on a reactor process: methodology transfers across topology."
-    )
+    print("       unchanged on a reactor process: methodology transfers across topology.")
 
     # transfer gap: source model applied untreated to the other modes
     print("-" * 78)
-    print(
-        "  TRANSFER GAP (source model -> other modes, UNTREATED = migration motivation):"
-    )
+    print("  TRANSFER GAP (source model -> other modes, UNTREATED = migration motivation):")
     full_src = pd.concat([pool, test], ignore_index=True)  # refit on all source data
     Xs, ys = builder(full_src)
     sc = StandardScaler().fit(Xs)
@@ -145,14 +133,10 @@ def main() -> int:
         Xt, yt = builder(dft)
         yt = np.asarray(yt, dtype=float).ravel()
         r2 = r2_score(yt, src_model.predict(sc.transform(Xt)))
-        print(
-            f"    {args.source} model -> {tgt}: R2 {r2:+.3f}  (G mean {yt.mean():.1f} mol%)"
-        )
+        print(f"    {args.source} model -> {tgt}: R2 {r2:+.3f}  (G mean {yt.mean():.1f} mol%)")
     print("-" * 78)
     print("  Negative transfer R2 => a model is NOT portable across operating regimes")
-    print(
-        "  without correction. Part C migrates the source model with <30% target data."
-    )
+    print("  without correction. Part C migrates the source model with <30% target data.")
     return 0
 
 

@@ -55,12 +55,17 @@ class TEPLoader:
         if not path.exists():
             raise FileNotFoundError(f"TEP data file not found: {path}")
         df = pd.read_csv(path, header=None)
-        if df.shape[1] != TEP_N_COLUMNS:
+        ncol = df.shape[1]
+        if ncol == TEP_N_COLUMNS:  # time + 41 XMEAS + 12 XMV (our generator)
+            df.columns = TEP_COLUMNS
+        elif ncol == 1 + N_XMEAS:  # time + 41 XMEAS only (canonical mv-per, no XMV)
+            df.columns = ["time"] + [f"XMEAS_{i}" for i in range(1, N_XMEAS + 1)]
+        else:
             raise ValueError(
-                f"Expected {TEP_N_COLUMNS} columns (time + {N_XMEAS} XMEAS + "
-                f"{N_XMV} XMV), got {df.shape[1]} in {path}."
+                f"Expected {TEP_N_COLUMNS} (time + {N_XMEAS} XMEAS + {N_XMV} XMV) "
+                f"or {1 + N_XMEAS} (time + {N_XMEAS} XMEAS, no XMV) columns, "
+                f"got {ncol} in {path}."
             )
-        df.columns = TEP_COLUMNS
         df["y"] = df[f"XMEAS_{TEP_TARGET_XMEAS}"]
         return df
 
