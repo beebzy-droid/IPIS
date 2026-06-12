@@ -309,9 +309,13 @@ chemical engineering (title "production serving" → "real-time implementation";
 estimation/reconciliation paths over calibration state; §5.6 → analyzer-cycle
 feasibility; F1 relabeled in process language). **`paper/*.tex` is now the
 AUTHORITATIVE manuscript; `docs/paper/sections/*.md` is the draft record and lags it.**
-(2) Submission status: package final (35 pp, 0 undefined, 0 missing chars, max
-overfull 10.6 pt); author upload to CACE Editorial Manager PENDING — update this line
-with the submission date. (3) Canonical-TEP WIP: PARKED on branch `wip/canonical-tep`
+(2) **SUBMITTED to Computers & Chemical Engineering via Editorial Manager,
+2026-06-12 17:17 (PH)** as a Full Length Article, sole author. **Manuscript number: CACE-D-26-00944** (checked in). Final submitted text = commit `c0bb541` (polish pass: 98
+prose em-dashes removed, tell-vocabulary reduced, three missed intro reframes fixed;
+35 pp, 0 undefined, 0 missing glyphs). EM-format wrapper files generated:
+cover_letter.docx + highlights.docx (md remain source of record). Affiliation note: EM shows "Mapúa Malayan College
+Mindanao" vs manuscript "Chemical Engineer, Quezon City, Philippines"; OWNER DECISION:
+align via the EM profile at revision stage if/when revisions occur. (3) Canonical-TEP WIP: PARKED on branch `wip/canonical-tep`
 (see §canonical-TEP below); `tennessee-eastman-dataset/` gitignored, not committed.
 
 ### 1C framing (DECIDED, user-ratified): A + C, not literal Debutanizer→TEP
@@ -606,6 +610,11 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   economics anchor). Submission upload + wip-branch push still pending owner-side.
   Resume = answer the two asks → 3A build (twin spec + validation harness + GEKKO
   skeleton).
+- **2026-06-12 17:17** — **PAPER SUBMITTED TO CACE — CACE-D-26-00944.** Final polish pass (commit
+  c0bb541) preceded upload; wip/canonical-tep parked on remote; dataset dir
+  gitignored on main. SESSION CLOSED. Module 1 + Phase 1F fully complete. Next
+  session opens at Module 3 / 3A, blocked only on the two owner asks (DWSIM
+  confirm + economics anchor) — or at reviewer response, whichever arrives first.
 - **2026-06-10** — **Freeze CLOSED + 1F.3 started**: F2 ablation (physics+u5 dominates;
   k=126 kitchen sink CV -1.60, worst -6.25 — out-of-sample-visible lottery) + F1
   scripted architecture diagram; all six figures from frozen evidence. Results draft v1
