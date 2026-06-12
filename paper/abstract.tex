@@ -2,11 +2,11 @@ Industrial soft sensors fail through recurring mechanisms: model selection becom
 lottery under autocorrelation and regime shift, calibration drifts between delayed and
 infrequent laboratory analyses, confidence statistics inherit an exchangeability
 assumption that drift destroys, and new operating regimes lack training data. We
-present an integrated framework that addresses each with a deliberately simple,
-auditable core --- physics-derived features on a linear estimator, blocked time-series
+present an integrated framework that addresses each with a simple,
+auditable core: physics-derived features on a linear estimator, blocked time-series
 cross-validation with a one-standard-error rule, an open-loop bias update at the
 documented label delay, adaptive conformal intervals computed on the corrected
-residuals, and functional scale-bias migration composed with the online layer --- and an
+residuals, and functional scale-bias migration composed with the online layer. The framework is completed by an
 online implementation that scores each delayed laboratory result against the interval
 issued when its sample was predicted. On the Tennessee Eastman process the framework delivers
 regime-uniform empirical coverage of 0.897--0.903 against a 0.90 target where a static

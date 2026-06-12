@@ -4,7 +4,7 @@
 Three datasets are chosen to span the assumption space, not to flatter the framework:
 one where the physics is rich and documented (the debutanizer), one that supports
 controlled regime structure for migration and coverage studies (TEP), and one that is
-deliberately hostile --- high-dimensional, anonymized, physics-free (SECOM). The same
+chosen to be hostile: high-dimensional, anonymized, and physics-free (SECOM). The same
 pipeline, validation protocol, and hyper-parameter discipline run on all three.
 
 \subsection{Debutanizer column}
@@ -22,16 +22,16 @@ documented analyzer delay \(\theta = 4\). This dataset carries the feature-ablat
 The TEP \citep{downs1993} supplies the regime structure for the coverage (C7, C8)
 and migration (C6) studies. Three operating-point regimes of 2,000 rows each (100 h at
 the 3-minute analyzer cadence; 41 measured + 12 manipulated variables, of which the 22
-continuous measurements and the manipulated variables serve as inputs --- the delayed
+continuous measurements and the manipulated variables serve as inputs; the delayed
 composition analyzers are excluded except as the target, \(y\) = XMEAS 40, product-G) were generated with the closed-loop
 Ricker/Russell--Chiang--Braatz simulation lineage \citep{bathelt2015}, with product-G
-composition means of 53.8, 58.2 and 63.4 mol\% --- between-regime gaps of 4.4 and 5.2
+composition means of 53.8, 58.2 and 63.4 mol\%. The between-regime gaps of 4.4 and 5.2
 mol\% against a within-regime standard deviation of $\approx$1.3, so the regimes are well
 separated without being disjoint. Two framing notes are part of the design, not
 caveats discovered later. First, these are \emph{feed-ratio operating points}, not the
 canonical Downs--Vogel G/H product modes; the canonical modes were obtained as a
 supplementary check and proved textbook-clean but under-excited for soft-sensor
-training (within-mode \(R^2 \approx 0.04\)), which is precisely why deliberate
+training (within-mode \(R^2 \approx 0.04\)), which is why deliberate
 excitation was injected for the headline data. Second, an open Simulink
 reimplementation \citep{vosloo2025} was abandoned for a non-reproducible
 reactor-pressure startup trip; reproducibility of the data generator was treated as a
@@ -44,15 +44,15 @@ fixed at \(\alpha = 0.10\), \(\gamma = 0.05\), window 200 (\S 3.4).
 The UCI SECOM dataset \citep{mccann2008secom}: 1,567 production lots $\times$ 590 anonymized
 sensor features from a semiconductor line over three months of 2008, with a pass/fail
 label (104 fails, 6.6\%), 4.5\% missing cells overall, 32 features more than 40\%
-missing, and 116 near-constant features --- \(p \approx n\), heavy missingness, severe
+missing, and 116 near-constant features. The dataset therefore combines \(p \approx n\), heavy missingness, severe
 imbalance, no physics anchors. Because the framework's online machinery is regression,
 SECOM is framed as \emph{virtual metrology}: one continuous measurement is held out as the
 target, selected by stated, audited criteria (missingness $\le$ 5\%, non-degenerate
-variance, maximal \textbar point-biserial correlation\textbar{} with pass/fail --- the yield-relevant
+variance, maximal \textbar point-biserial correlation\textbar{} with pass/fail), which identifies the yield-relevant
 measurement a VM sensor would exist to predict; selected \(x_{59}\), \(|r| = 0.156\)). The
 fail label defines the problem and is never a model feature. Label-free screens
-(missingness, near-zero variance) are applied once --- no target is consulted, so no
-selection leakage is possible --- leaving 442 features; all supervised selection happens
+(missingness, near-zero variance) are applied once; because no target is consulted, no
+selection leakage is possible. This leaves 442 features, and all supervised selection happens
 inside CV folds via the elastic net's own shrinkage, with median imputation inside the
 estimator pipeline (fold-train fit). Splits, delays, and the conformal protocol are
 identical to \S 4.2.

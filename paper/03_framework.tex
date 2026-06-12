@@ -4,7 +4,7 @@
 Figure~\ref{fig:f1}a summarizes the offline/online pipeline; each component below is introduced
 by the production failure mode it removes. Throughout, \(y_t\) is the (delayed,
 infrequent) quality measurement, \(\hat{y}_t\) the soft-sensor estimate, and \(\theta\) the
-label delay in samples --- a first-class protocol parameter, not an afterthought.
+label delay in samples, treated throughout as a first-class protocol parameter rather than an afterthought.
 
 \subsection{Physics-derived features and transport-lag diagnosis}
 
@@ -35,9 +35,9 @@ and averages away regime structure; selection then varies with the seed. We use
 \(K\)-fold blocked CV (\(K = 5\)): the pool is cut into contiguous time blocks, features
 are built within each segment separately (so lagged features cannot straddle a
 boundary), the scaler is fit on fold-train only, and a gap of the maximum lag
-separates train from validation blocks. The per-fold \(R^2\) spread --- including
-strongly negative folds (Table~\ref{tab:t1}) --- is retained as the signal, not suppressed as
-noise.
+separates train from validation blocks. The per-fold \(R^2\) spread, including the
+strongly negative folds in Table~\ref{tab:t1}, is retained as the signal rather than
+suppressed as noise.
 
 Formally, let the pool be \(\{(x_t, y_t)\}_{t=1}^{N}\) in time order and let
 \(B_1, \dots, B_K\) be its partition into \(K\) contiguous blocks of (near-)equal length.
@@ -50,9 +50,9 @@ boundary in either direction. The fold score is the validation \(R^2\) of the pi
 report \(\bar{R}^2 \pm \mathrm{SE}\) over folds together with the worst fold. Two
 properties matter. The gap makes the fold estimate leakage-free under serial
 dependence of range \(\leq \ell\): no validation point shares lagged inputs with any
-training point. And contiguity makes each fold a \emph{regime probe} --- if the pool spans
+training point. Contiguity, in turn, makes each fold a \emph{regime probe}: if the pool spans
 operating regimes, at least one fold must validate on a regime the model under-saw in
-training, which is precisely the deployment event the per-fold spread is meant to
+training, which is the very deployment event the per-fold spread is meant to
 price.
 
 Model choice on any complexity path (feature sets; the elastic-net \(\alpha\) path of
@@ -60,7 +60,7 @@ Section 5.5) then follows the one-standard-error rule \citep{hastie2009}: take t
 complexity with the best mean CV score and select the \emph{simplest} complexity whose mean
 lies within one standard error of it. The rule encodes that validation cannot
 distinguish the robust low-complexity model from the regime-overfit high-complexity
-one, and resolves the tie toward parsimony --- without ever touching the held-out test
+one, and resolves the tie toward parsimony without ever touching the held-out test
 set. On SECOM this is the difference between \(R^2 \approx -1.8\) and \(R^2 \approx -10^4\) (Figure~\ref{fig:f3}).
 
 \subsection{Drift: open-loop bias update with a corrected-residual alarm}
@@ -77,7 +77,7 @@ b_t = (1 - \lambda)\, b_{t-1} + \lambda \left( y_{t-\theta} - \hat{y}_{t-\theta}
 
 with \(b\) held at \(b_0 = 0\) until the first label. \(\lambda\) is CV-selected on the pool
 (test untouched; \(\lambda = 0.1\) on the debutanizer), and \(\theta\) is the documented
-analyzer delay. The update is open-loop --- it never feeds a controller --- so the
+analyzer delay. The update is open-loop in the sense that it never feeds a controller, so the
 stability concerns of closed-loop bias correction do not arise; what it buys is the
 9$\times$ cross-fold SE reduction and the rescue of regime-shifted folds reported in
 Section 5.2. Because a tracking update can absorb genuine drift, drift \emph{alarming} is
@@ -89,8 +89,8 @@ the event that warrants intervention.
 \emph{Failure mode: uncalibrated confidence under drift.} Split conformal prediction
 \citep{papadopoulos2002} turns held-out absolute residuals
 \(s_i = |y_i - \tilde{y}_i|\) into a distribution-free interval
-\(\tilde{y}_t \pm Q_{1-\alpha}(s)\), but its guarantee requires exchangeability ---
-exactly what drift destroys (Section 5.3). We therefore deploy adaptive conformal
+\(\tilde{y}_t \pm Q_{1-\alpha}(s)\), but its guarantee requires exchangeability,
+which is exactly what drift destroys (Section 5.3). We therefore apply adaptive conformal
 inference \citep{gibbs2021aci}: after each label, the working miscoverage level is
 updated by
 
@@ -101,7 +101,7 @@ updated by
 \]
 
 with target \(\alpha = 0.10\), step \(\gamma = 0.05\), a rolling score window of 200, and
-\(\alpha_t\) deliberately not clipped to \([0,1]\) --- the score quantile handles the
+\(\alpha_t\) intentionally left unclipped; the score quantile handles the
 extremes, matching the original construction. The interval is formed around the
 \emph{bias-corrected} estimate, so the conformal layer prices residual uncertainty after
 the drift mechanism of \S 3.3 has done its work; the composition, not either piece
@@ -127,11 +127,11 @@ scale-bias correction family, the functional form of \citep{yan2011},
 \]
 
 keeps the source model's structure while a zero-mean GP bias repairs the relationship
-change locally --- and supplies calibrated posterior intervals for free. Two honest
+change locally, and it supplies calibrated posterior intervals at no extra cost. Two
 scoping notes carry into the results. First, parameter-level migration requires a
 shared input space; across genuinely different processes (debutanizer $\to$ TEP) it is
-mathematically inapplicable, and what transfers is the \emph{methodology} --- the full
-\S 3.1--3.4 recipe, verbatim. Second, for a \emph{linear} source the per-input affine
+mathematically inapplicable, and what transfers is the \emph{methodology}: the full
+\S 3.1--3.4 recipe, applied verbatim. Second, for a \emph{linear} source the per-input affine
 re-scaling of \citep{luo2015} absorbs the source weights entirely and provably
 collapses to from-scratch regression; Section 5.4 shows the empirical face of that
 identity. Migration is offline; deployed migrated sensors still run the \S 3.3 online
@@ -152,8 +152,8 @@ updates $b_t$, $\alpha_t$, and the residual window, pairing each result with the
 estimate and interval recorded when its sample was taken (\S 3.4). The calibration
 state is persisted so that the sensor survives a restart without losing its
 correction, while the point model itself is never modified online. The computational
-cost is deliberately negligible --- a linear map, an exponentially weighted average,
-and a quantile lookup, each $O(1)$ per laboratory result --- so the measured
+cost is negligible by design (a linear map, an exponentially weighted average,
+and a quantile lookup, each $O(1)$ per laboratory result), so the measured
 99th-percentile latency of 1.97~ms per estimate (Section~5.6) leaves two orders of
 magnitude of margin inside a typical 200~ms analyzer-cycle budget. Fast, auditable
 computation is a design consequence of the linear scope, not an optimization
