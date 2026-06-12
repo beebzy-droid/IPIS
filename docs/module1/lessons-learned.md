@@ -197,3 +197,21 @@ Each phase entry follows the structure:
 - **Mounted "PDFs" may not be PDFs.** The project-source files were ZIP archives of
   JPEG page scans (PK magic); `pdftotext` returned empty without erroring loudly.
   Check file magic before concluding a document has no text layer.
+
+
+## Reviewer pass (post-1F)
+
+- **"Compiles clean" is not "renders correctly."** pdflatex silently DROPS unicode
+  Greek and math glyphs in text mode — λ, θ, ≈, × vanished from prose with zero
+  errors and a 0-undefined log. The defect was invisible to every exit-code check and
+  found only by rasterizing pages and looking. Rule: visually inspect at least the
+  pages carrying tables, equations, and Greek-letter prose before calling a PDF final.
+- **Pandoc artifacts survive successful compiles.** Auto-width tables overflowed the
+  page by up to 1224 pt (the user-visible "text overlaps"), and `\hypertarget` slugs
+  printed as literal body text without hyperref. Hand-write submission tables; strip
+  hypertargets post-conversion; treat the Overfull count in the log as a gate.
+- **Write for the journal's discipline, not the work's toolchain.** The serving stack
+  is software, but CACE readers are process engineers: "two async flows over mutable
+  state" became "estimation and reconciliation paths over a calibration state," and
+  Docker/CI/test-count evidence became analyzer-cycle feasibility. The figure labels
+  carry register too — F1's panel (b) needed relabeling, not just the prose.

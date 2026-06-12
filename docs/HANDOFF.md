@@ -210,6 +210,12 @@ as-is to SECOM and documents where it breaks.
 - **PARKED — Wang DTDE (dynamic time-delay re-estimation, SD-DU + WRVM).** Best
   lag is stable (14–15) across all splits, so delay re-estimation solves a problem
   we don't have. Revisit only if a future process shows unstable delay.
+- **PARKED (2026-06-12) — canonical-TEP WIP** on branch `wip/canonical-tep`
+  (`convert_canonical_tep.py`, `tep_canonical_loader.py`, modified
+  `tep_baseline.py`/`tep_loader.py`/`test_tep.py`). Its scientific product — canonical
+  modes are textbook-clean but under-excited (within-mode R² ≈ 0.04) — is already
+  harvested into paper §4.2. Dataset dir gitignored (large; re-download documented in
+  the branch README stub). Revisit if a reviewer asks for canonical-mode results.
 - **DEFERRED to M3 — closed-loop integrator bias term** (Shardt Eq.6/10, Σaⱼ=0,
   exact tracking). Needed only if the soft sensor drives control.
 - **CONFORMAL — DISCHARGED (1D.1 + 1D.1b).** From-primary ACI/EnbPI/split (ADR-010),
@@ -293,6 +299,20 @@ Editorial Manager upload. **Next phase: Module 3 scoping** (MATLAB confirmed in;
 gPROMS candidacy to evaluate). GATED carry-overs: 1D.4 OT-sim bus, 1D.5 nonlinear
 source (the designated post-review extension; SECOM locates the linear sensor's
 breaking point), canonical-TEP WIP in `scripts/`.
+
+**POST-CLOSE ADDENDA (2026-06-12):** (1) **A reviewer pass rebuilt the submission**:
+all four tables hand-rewritten (pandoc auto-width tables overflowed up to 1224 pt),
+127 unicode Greek/math glyphs converted to LaTeX math (pdflatex was silently DROPPING
+them in prose — λ, θ, ≈ vanished without errors), pandoc \hypertarget slugs purged
+(they printed as body text), and the register reframed from software engineering to
+chemical engineering (title "production serving" → "real-time implementation"; §3.6 →
+estimation/reconciliation paths over calibration state; §5.6 → analyzer-cycle
+feasibility; F1 relabeled in process language). **`paper/*.tex` is now the
+AUTHORITATIVE manuscript; `docs/paper/sections/*.md` is the draft record and lags it.**
+(2) Submission status: package final (35 pp, 0 undefined, 0 missing chars, max
+overfull 10.6 pt); author upload to CACE Editorial Manager PENDING — update this line
+with the submission date. (3) Canonical-TEP WIP: PARKED on branch `wip/canonical-tep`
+(see §canonical-TEP below); `tennessee-eastman-dataset/` gitignored, not committed.
 
 ### 1C framing (DECIDED, user-ratified): A + C, not literal Debutanizer→TEP
 SBC migration requires a *shared input space* + *similar processes* (verified from
@@ -556,6 +576,11 @@ per the standing decision. Warm-up: cd Projects\IPIS + conda activate ipis.
   novelty claim; references verified to title-page/publisher level (caught: Hou first
   name, Smith edition year, IM-OCP page conflict); elsarticle package compiles clean
   (38 pp, 0 undefined). Author-side: compile, read, submit. Resume = Module 3 scoping.
+- **2026-06-12** — **Reviewer pass + Module 3 scoping opened.** Submission rebuilt
+  (tables, unicode math, hypertarget purge, ChemE register; paper/*.tex authoritative);
+  canonical-TEP WIP parked on `wip/canonical-tep`; Module 3 (RTO) scoping doc filed at
+  `docs/module3/scoping.md` — five decisions D1–D5 option-scaled, awaiting
+  ratification.
 - **2026-06-10** — **Freeze CLOSED + 1F.3 started**: F2 ablation (physics+u5 dominates;
   k=126 kitchen sink CV -1.60, worst -6.25 — out-of-sample-visible lottery) + F1
   scripted architecture diagram; all six figures from frozen evidence. Results draft v1
