@@ -172,3 +172,28 @@ Each phase entry follows the structure:
 ## Phase 1F — Writing & Submission
 
 *Status: not started*
+
+
+## Phase 1F — writing & submission
+
+- **The evidence freeze pays for itself during writing, not after.** Argv-stamped
+  evidence JSONs caught a wrong regeneration command (bare migration read 3.3×/n-a
+  until `--bias-update 0.3,2` restored the documented two-layer conditions) and
+  killed a figure that never existed (the "Debutanizer α-path" panel — the 1A lottery
+  was always fold-spread evidence). Run conditions belong in the command; provenance
+  stamps make the difference auditable.
+- **Sweep the literature on every "first to" claim before a reviewer does.** §2.3's
+  "not aware of prior work" on delayed-feedback conformal prediction was refuted by
+  the IM-OCP/corrupted-feedback line. The repositioned claim — the engineering
+  instantiation (delay through both correction layers + stored-interval pairing
+  enforced structurally) — is narrower and stronger because it is defensible.
+- **Verify references at publisher-metadata level; CVs and memory both fail.** The
+  sweep caught a wrong first author (Qiushuo Hou, mis-recalled as Jing), a wrong
+  edition year (Smith 9th ed = 2022, not 2018), and resolved a page-number conflict
+  where the author's own CV was the outlier against Semantic Scholar + ADS bibcode.
+  Rule: machine-derived publisher metadata > hand-maintained pages > recollection.
+- **BibTeX silently eats fields after inline `%` comments inside entries** — the
+  "empty year" warning on a complete entry was the tell. TODOs go in `note` fields.
+- **Mounted "PDFs" may not be PDFs.** The project-source files were ZIP archives of
+  JPEG page scans (PK magic); `pdftotext` returned empty without erroring loudly.
+  Check file magic before concluding a document has no text layer.

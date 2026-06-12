@@ -31,3 +31,5 @@ conformal prediction for time series, process model migration.
 Thank you for your consideration.
 
 Bien Busico
+Chemical Engineer, Quezon City, Philippines
+bienbusico@gmail.com

@@ -277,21 +277,22 @@ and Wang et al. 2021 (DTDE-WRVM) were the 1B soft-sensor-delay backbone.
 
 ## 10. RESUME HERE → Phase 1D (1C fully complete, incl. writeup)
 
-**Status:** 1A–1E ✅, **1F.1 ✅** (claims-to-evidence audit + paper outline, CACE
-framework framing, `docs/paper/{claims_evidence,outline}.md` — the audit caught and
-fixed a C6 mischaracterization before drafting), **1F.2 ✅ core** (evidence freeze):
-`ipis.shared.evidence` JSON contract; `--json` dumps in secom_baseline / conformal_eval
-(theta-merge) / bias_update_eval / tep_migration (method-merge); `scripts/paper_figures/`
-emitters F3/F4/F5/F7 + make_all (PNG+PDF, elsarticle widths); `bench_latency.py`.
-FROZEN on owner machine, committed under docs/paper/{evidence,figures}: Yan two-layer
-(`--bias-update 0.3,2 --n-repeats 8`) = **10.0× BOTH targets** (5% vs 50%; GP coverage
-92–98%); Luo 1.0×/1.0× (degeneracy empirically exact ±0.001–0.006); OSBC 1.0×/4.0×
-(differs from 1C-era ~3.3× — unsubsampled pool + bias-updated baseline; frozen values
-supersede); bare-migration control confirms the two-layer composition is load-bearing;
-latency p50 1.23 ms / p99 1.97 ms single-row, ≈46 µs/row batch-32, label p50 0.97 ms.
-**Next:** finish the freeze — **F2 Debutanizer feature-ablation runner + F1 architecture
-diagram** — then **1F.3: draft Results** (transcribes the ledger), then Framework,
-Case-study design, Related work, Discussion, Intro last (per outline.md).
+**Status:** **Module 1 (1A–1E) ✅ and Phase 1F (writing & submission) ✅ CLOSED.**
+The full CACE submission package exists under `paper/`: elsarticle LaTeX (compiles to
+38 pp review mode, zero undefined refs), all 8 sections, 7 figures rendered from
+frozen argv-stamped evidence via `scripts/paper_figures/make_all.py`, verified
+22-entry `references.bib` (every entry checked against publisher metadata or source
+title pages), figure captions, highlights, cover letter, CRediT + data-availability
+statements, author block complete (sole author, Chemical Engineer, Quezon City, PH).
+1F.4 literature sweep REPOSITIONED §2.3 (delayed-feedback conformal prior work exists
+— IM-OCP et al.; our claim narrowed to the engineering instantiation) and the bib
+verification caught a wrong first author (Qiushuo Hou, not Jing), a wrong edition year
+(Smith 9th ed = 2022), and resolved an IM-OCP page conflict via publisher metadata.
+**Author-side to submit:** local pdflatex+bibtex compile, final typeset read,
+Editorial Manager upload. **Next phase: Module 3 scoping** (MATLAB confirmed in;
+gPROMS candidacy to evaluate). GATED carry-overs: 1D.4 OT-sim bus, 1D.5 nonlinear
+source (the designated post-review extension; SECOM locates the linear sensor's
+breaking point), canonical-TEP WIP in `scripts/`.
 
 ### 1C framing (DECIDED, user-ratified): A + C, not literal Debutanizer→TEP
 SBC migration requires a *shared input space* + *similar processes* (verified from
@@ -470,13 +471,25 @@ bias_update_eval's static row (independent scripts, same protocol). F1: scripted
 two-panel architecture diagram (`fig_architecture.py`, no evidence dependency). ALL SIX
 figures now render from frozen, argv-stamped, committed evidence via make_all.
 
-### NEXT ACTION: Phase 1F.3 — section drafts
-`docs/paper/sections/05_results.md` v1 EXISTS (transcribed 100% from frozen evidence,
-~1,500 words, T1/T2/T3 inline, anchors audited against the JSONs — zero new numbers).
-Next drafts in order (outline.md): 03_framework.md, 04_case_studies.md, then
-02_related_work.md (PDF primaries in /mnt/project), 06_discussion.md, 01_intro.md,
-07_conclusion.md, abstract. Then 1F.4/1F.5: LaTeX/elsarticle conversion + Fortuna 2007
-reference + submission package. Warm-up: cd Projects\IPIS + conda activate ipis.
+### Phase 1F.3–1F.5 — drafts, hardening, submission package (DONE)
+1F.3: all 8 sections drafted in `docs/paper/sections/` (~6.9k body words), every
+number transcribed from frozen evidence with anchor audits (zero new numbers at
+writing time). 1F.4: literature sweep refuted §2.3's "not aware of prior work" claim
+(Wang/Zecchin/Simeone IM-OCP line); repositioned to the integration claim — delay
+through BOTH bias-update and conformal layers + stored-interval pairing enforced
+structurally. References extracted from source-PDF title pages (the /mnt/project
+"PDFs" are JPEG-zip wrappers; title pages read visually). Figure captions written;
+§3.2 formal blocked-CV definition added. 1F.5: elsarticle conversion (pandoc +
+citation-key map, compile-verified in sandbox with texlive), F6 emitter ported
+(deterministic seed — regenerates §5.3 numbers bit-identically), bib verification
+sweep (all 8 open items resolved), author block + email complete.
+
+### NEXT ACTION: submit, then Module 3 scoping
+Author: `cd paper && pdflatex main && bibtex main && pdflatex main && pdflatex main`,
+read the typeset PDF, upload to CACE Editorial Manager (files: main.pdf or source
+bundle, highlights, cover letter; figures embedded). Then Module 3 scoping session:
+option-scale the MATLAB/Simulink integration surface and evaluate gPROMS candidacy
+per the standing decision. Warm-up: cd Projects\IPIS + conda activate ipis.
 
 ---
 
@@ -538,6 +551,11 @@ reference + submission package. Warm-up: cd Projects\IPIS + conda activate ipis.
   bench_latency). Frozen on owner machine: yan two-layer 10.0x both targets, luo exact
   degeneracy, osbc 1.0x/4.0x (supersedes 1C-era ~3.3x), SECOM/TEP coverage evidence,
   latency p50 1.23 ms. Resume = F2 ablation runner + F1 diagram, then 1F.3 Results.
+- **2026-06-11** — **PHASE 1F CLOSED — submission package complete.** Results-first
+  drafting from frozen evidence; §2.3 repositioned after the sweep refuted the
+  novelty claim; references verified to title-page/publisher level (caught: Hou first
+  name, Smith edition year, IM-OCP page conflict); elsarticle package compiles clean
+  (38 pp, 0 undefined). Author-side: compile, read, submit. Resume = Module 3 scoping.
 - **2026-06-10** — **Freeze CLOSED + 1F.3 started**: F2 ablation (physics+u5 dominates;
   k=126 kitchen sink CV -1.60, worst -6.25 — out-of-sample-visible lottery) + F1
   scripted architecture diagram; all six figures from frozen evidence. Results draft v1
