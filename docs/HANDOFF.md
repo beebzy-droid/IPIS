@@ -281,7 +281,67 @@ and Wang et al. 2021 (DTDE-WRVM) were the 1B soft-sensor-delay backbone.
 
 ---
 
-## 10. RESUME HERE → Phase 1D (1C fully complete, incl. writeup)
+## 10. RESUME HERE → Module 3 / 3A twin build (skeleton committed, DWSIM next)
+
+**Status (2026-06-13):** The two 3A blocking asks are ANSWERED (DWSIM installed
+and launches; economics = literature defaults now, plant figures slot in later).
+**3A skeleton COMMITTED**: `src/ipis/module3_rto/{economics,column_model,rto_nlp}.py`
++ `scripts/validate_twin.py` + 24 tests (suite green at 263) +
+`docs/module3/twin-spec-3a.md` (decisions T1-T6). Build is now GATED per
+`docs/module3/dwsim-walkthrough-3a.md` (G0 done -> G1 master case -> G2 16-run
+grid -> G3 validation -> G4 closeout/ADR-013); **HANDOFF is updated at every
+gate — a gate is not passed until its line is committed here.**
+
+**Economics anchor (owner-ratified, cited):** C4 overhead 0.750 USD/gal
+(EIA/FRED MB propane 2025, conservative n-C4 floor) = 0.3395 USD/kg; bottoms
+gasoline 2.10 USD/gal (EIA USGC spot complex 2025; FLAGGED estimate, objective
+rides the 1.35 USD/gal spread) = 0.8364 USD/kg; steam 6.28 USD/GJ (EIA NGM
+5.50 USD/Mcf industrial / 0.80 boiler eff). Densities/latent heats
+CoolProp-verified (nC4 2.209 kg/gal, nC6 2.511 kg/gal, dHvap nC6@110C
+25.93 kJ/mol — boilup is hexane-rich; nC4 near-critical at 152 C).
+
+**STRUCTURAL FINDING (ratify-by-commit):** the scoping's literal objective
+("C4 recovery value - energy") makes the RTO DEGENERATE — spec constraint
+inactive, back-off costless. The committed objective is the TWO-STREAM form:
+overhead at C4 price, bottoms at gasoline price, by mass. The gasoline>C4
+spread creates the upgrade incentive (+28.9 USD/kmol C4 retained in bottoms,
+-42.8 USD/kmol C6 lost overhead) that pins the optimum ON the 0.02 spec —
+verified: constraint active at every back-off, gradient ~ -1.9 USD/h per
+0.001 back-off (~16.5k USD/yr per 0.001). This is the structure 3B requires.
+
+**Twin decisions locked (twin-spec-3a.md):** binary nC4/nC6 (T1, = M1 physics
+proxy); Peng-Robinson (T2); **N=8 theoretical** (T3 — at realistic N the
+binary split at alpha~6 is razor-sharp and the RTO degenerate; N=8 spans
+xB 0.0002-0.046 over the box, ~16-20 real trays at 45-50% efficiency);
+R in [0.8,3], D in [33,37], spec xB_C4 <= 0.02 (T4); quadratic ln(xB)
+surface + GEKKO/IPOPT, duty analytic (T6). **Known limitation kept
+deliberately:** quadratic max ln-resid 0.55 (x1.74 band; cubic only x1.41)
+at the saturation corner -> at zero back-off the surface-feasible optimum
+violates the TRUE spec by ~17% — the in-repo demonstration of why back-off
+exists and the ADR-006 GPR motivation for 3B.
+
+**DWSIM numbering trap (walkthrough):** DWSIM counts the condenser as
+stage 1 -> set 9 stages, feed at DWSIM stage 5. **Sensor-stage mapping is a
+G1 DISCOVERY:** envelope [100,112] C <-> tray-liquid x_C4 0.10-0.19 @4.9 bar;
+profile spans 48->128 C, so the stage playing M1's "tray 6" is identified
+from the converged profile (likely DWSIM 6-8) and recorded here at G1.
+
+**Master-case checkpoints (G1, R=1.5/D=34.5):** feed bubble 83 C @4.8 bar;
+condenser ~48 C; reboiler ~128 C; xB_C4 0.006-0.025 (shortcut 0.0124);
+xD_C4 >0.97; duty 500-800 kW (analytic 621). Out-of-band = stop, diagnose.
+
+**Gate log (append at each gate):**
+- G0 2026-06-13: skeleton + spec + walkthrough committed; selftest PASS.
+- G1: <pending — record sensor_stage_dwsim = n, its T and x_C4>
+- G2: <pending — runs converged /16, gaps noted>
+- G3: <pending — V1-V4 results, deviations>
+- G4: <pending — closeout, ADR-013, resume = 3B>
+
+---
+
+## 10b. Previous resume block (Module 1 era — historical)
+
+### (was) 10. RESUME HERE → Phase 1D (1C fully complete, incl. writeup)
 
 **Status:** **Module 1 (1A–1E) ✅ and Phase 1F (writing & submission) ✅ CLOSED.**
 The full CACE submission package exists under `paper/`: elsarticle LaTeX (compiles to
@@ -528,16 +588,26 @@ parallel-track filler for solver lulls / review-wait periods.
 First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harness
 + GEKKO NLP skeleton. Warm-up: cd Projects\IPIS + conda activate ipis.
 
-**Other open loose ends:**
-- CACE submission: package final; author upload PENDING → update the POST-CLOSE
-  ADDENDA line with the date when done. Local compile check + typeset read first.
-- `wip/canonical-tep` branch: parking commands provided but branch NOT yet on the
-  remote (verified 404) — run the parking block or report if it failed.
-- ORCID: optional, recommended before submission.
+**Loose ends (RESOLVED 2026-06-13, remote-verified):** CACE submitted
+(CACE-D-26-00944, see addenda); `wip/canonical-tep` IS on the remote (HTTP 200);
+`tennessee-eastman-dataset/` gitignored on main. Remaining optional: ORCID.
 
 ---
 
 ## Changelog of this doc
+- **2026-06-13** — **3A UNBLOCKED + SKELETON BUILT (G0).** Owner answered both
+  asks (DWSIM installed; literature-default economics, plant figures later).
+  Cited anchors locked (EIA/FRED: MB propane 0.750 USD/gal 2025; USGC gasoline
+  ~2.10 flagged; industrial NG 5.50 USD/Mcf -> 6.28 USD/GJ steam; CoolProp
+  property verification). STRUCTURAL FINDING: two-stream objective required
+  (naive "C4 value - energy" leaves the spec inactive and back-off costless);
+  committed form pins the optimum on the spec, gradient -1.9 USD/h per 0.001
+  back-off. Twin decisions T1-T6 locked incl. N=8 (degenerate at realistic N).
+  Delivered: module3_rto package (economics/column_model/rto_nlp), GEKKO NLP,
+  validate_twin.py harness, 24 tests (suite 263 green), twin-spec-3a.md,
+  dwsim-walkthrough-3a.md (gates G0-G4, checkpoints C1-C4, sensor-stage
+  discovery protocol). Stale loose-ends block reconciled against the remote.
+  Resume = G1 master case in DWSIM.
 - **2026-06-03** — Created. Working agreement + project vision + full 1A/1B state
   (through the JITL head-to-head) + parked/deferred/owed ledger.
 - **2026-06-03** — 1C framing decided (A+C). COSTEP abandoned; pivoted to
