@@ -64,6 +64,62 @@ class TestTEPLoader:
         with pytest.raises(ValueError, match="columns"):
             TEPLoader().load(p)
 
+    def test_loads_xmeas_only_42col(self, tmp_path):
+        # canonical mv-per format: time + 41 XMEAS, no XMV (42 cols total)
+        import numpy as np
+
+        p = tmp_path / "tep_canon.csv"
+        n = 50
+        data = np.column_stack(
+            [np.arange(n) * 0.05, np.random.default_rng(0).normal(1, 0.1, (n, 41))]
+        )
+        pd.DataFrame(data).to_csv(p, header=False, index=False)
+        df = TEPLoader().load(p)
+        assert df.shape[1] == 42 + 1  # 42 + y
+        assert "XMEAS_41" in df.columns and "XMV_1" not in df.columns
+        assert np.allclose(df["y"], df["XMEAS_40"])
+
+
+class TestTEPCanonicalLoader:
+    def _write_canon_xlsx(self, path, n=300):
+        import numpy as np
+
+        rng = np.random.default_rng(0)
+        cols = {"Time": np.arange(n) * 0.016667}
+        for k in range(1, 42):
+            cols[f"xmv-{k}"] = rng.normal(1, 0.1, n)
+        cols["xmv-40"] = 53.8 + rng.normal(0, 0.5, n)
+        pd.DataFrame(cols).to_excel(path, index=False)
+
+    def test_renames_decimates_targets(self, tmp_path):
+        from ipis.module1_soft_sensor.data.tep_canonical_loader import (
+            TEPCanonicalLoader,
+        )
+
+        p = tmp_path / "mode1_normal.xlsx"
+        self._write_canon_xlsx(p, n=300)
+        df = TEPCanonicalLoader(decimate=3).load(p)
+        assert len(df) == 100  # 300 / 3
+        assert all(f"XMEAS_{i}" in df.columns for i in range(1, 42))
+        assert not any(str(c).startswith("xmv") for c in df.columns)
+        assert np.allclose(df["y"], df["XMEAS_40"])
+
+    def test_bad_decimate_raises(self):
+        from ipis.module1_soft_sensor.data.tep_canonical_loader import (
+            TEPCanonicalLoader,
+        )
+
+        with pytest.raises(ValueError):
+            TEPCanonicalLoader(decimate=0)
+
+    def test_missing_file_raises(self):
+        from ipis.module1_soft_sensor.data.tep_canonical_loader import (
+            TEPCanonicalLoader,
+        )
+
+        with pytest.raises(FileNotFoundError):
+            TEPCanonicalLoader().load("/nonexistent/mode1.xlsx")
+
 
 class TestTEPPhysicsFeatures:
     def test_derived_features_added(self, tmp_path):
