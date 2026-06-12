@@ -504,12 +504,32 @@ citation-key map, compile-verified in sandbox with texlive), F6 emitter ported
 (deterministic seed — regenerates §5.3 numbers bit-identically), bib verification
 sweep (all 8 open items resolved), author block + email complete.
 
-### NEXT ACTION: submit, then Module 3 scoping
-Author: `cd paper && pdflatex main && bibtex main && pdflatex main && pdflatex main`,
-read the typeset PDF, upload to CACE Editorial Manager (files: main.pdf or source
-bundle, highlights, cover letter; figures embedded). Then Module 3 scoping session:
-option-scale the MATLAB/Simulink integration surface and evaluate gPROMS candidacy
-per the standing decision. Warm-up: cd Projects\IPIS + conda activate ipis.
+### NEXT ACTION (session end 2026-06-12): Module 3 / 3A build, pending two asks
+
+**Ratified this session:** Module 3 scoping D1–D5 (`docs/module3/scoping.md`) —
+D1-C uncertainty-aware steady-state RTO (M1 conformal intervals = constraint
+back-off; the paper-2 hook); D2 debutanizer twin first, TEP/Simulink at 3C;
+D3 stack = DWSIM + GEKKO + CoolProp + MATLAB(3C), **gPROMS OUT** (re-entry trigger
+documented); D4 M1→M3 over `state_bus` (estimate + interval + drift flag); D5 order
+3A skeleton → 3B contribution → 3C closed-loop (1D.4 merges into 3C). **Sequencing
+decision:** 1→3 is deliberate; module numbers are labels, not dependencies — M2
+(PdM) is independent (≈10–20% asset reuse vs ≈70–80% for M3) and is the designated
+parallel-track filler for solver lulls / review-wait periods.
+
+**3A IS BLOCKED ON TWO OWNER ASKS (answer these to start the build):**
+1. Confirm DWSIM installs/runs on the Windows box (free, dwsim.org; twin executes
+   owner-side, sandbox builds/validates code — same split as M1 data runs).
+2. 3A economics anchor: C4-product-value vs reboiler-energy-cost pair, or say
+   "literature defaults" and Claude sources cited representative figures.
+First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harness
++ GEKKO NLP skeleton. Warm-up: cd Projects\IPIS + conda activate ipis.
+
+**Other open loose ends:**
+- CACE submission: package final; author upload PENDING → update the POST-CLOSE
+  ADDENDA line with the date when done. Local compile check + typeset read first.
+- `wip/canonical-tep` branch: parking commands provided but branch NOT yet on the
+  remote (verified 404) — run the parking block or report if it failed.
+- ORCID: optional, recommended before submission.
 
 ---
 
@@ -581,6 +601,11 @@ per the standing decision. Warm-up: cd Projects\IPIS + conda activate ipis.
   canonical-TEP WIP parked on `wip/canonical-tep`; Module 3 (RTO) scoping doc filed at
   `docs/module3/scoping.md` — five decisions D1–D5 option-scaled, awaiting
   ratification.
+- **2026-06-12 (session end)** — **D1–D5 RATIFIED; 1→3 sequencing decided** (M2 =
+  independent parallel filler). 3A blocked on two owner asks (DWSIM confirm +
+  economics anchor). Submission upload + wip-branch push still pending owner-side.
+  Resume = answer the two asks → 3A build (twin spec + validation harness + GEKKO
+  skeleton).
 - **2026-06-10** — **Freeze CLOSED + 1F.3 started**: F2 ablation (physics+u5 dominates;
   k=126 kitchen sink CV -1.60, worst -6.25 — out-of-sample-visible lottery) + F1
   scripted architecture diagram; all six figures from frozen evidence. Results draft v1
