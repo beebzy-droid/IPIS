@@ -1,51 +1,34 @@
 \section{Results}
 \label{sec:results}
 
-\hypertarget{feature-philosophy-and-model-selection-k1-k2-debutanizer}{%
-\subsection{Feature philosophy and model selection (K1, K2 --- Debutanizer)}\label{feature-philosophy-and-model-selection-k1-k2-debutanizer}}
+\subsection{Feature philosophy and model selection (K1, K2 --- Debutanizer)}
 
 Table~\ref{tab:t1} / Figure~\ref{fig:f2} report the feature ablation under the identical blocked
 time-series CV protocol (5 folds, transport lag 15, plain linear regression, scaler fit
 per fold-train). The four arms differ only in where model complexity comes from.
 
-\textbf{T1 --- Debutanizer feature ablation (blocked CV; held-out test n = 360).}
 
-\begin{table}[t]\centering\small
-\caption{Debutanizer feature ablation under the identical blocked-CV protocol (held-out test $n=360$).}\label{tab:t1}
-\begin{tabular}{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2000}}@{}}
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-arm
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-k
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-blocked-CV R²
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-worst fold
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-test R²
-\end{minipage} \\
-\midrule\noalign{}
-
-\bottomrule\noalign{}
-\endlastfoot
-u5 only (backbone) & 1 & +0.034 ± 0.438 & −1.697 & +0.395 \\
-physics only & 3 & +0.120 ± 0.479 & −1.770 & +0.440 \\
-physics + u5 (deployed) & 4 & \textbf{+0.145 ± 0.419} & −1.494 & \textbf{+0.476} \\
-lagged raw (kitchen sink) & 126 & −1.604 ± 1.421 & −6.248 & +0.221 \\
+\begin{table}[t]
+\centering\small
+\caption{Debutanizer feature ablation under the identical blocked-CV protocol (held-out test $n=360$).}
+\label{tab:t1}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+arm & $k$ & blocked-CV $R^2$ & worst fold & test $R^2$ \\
+\midrule
+$u_5$ only (backbone) & 1 & $+0.034 \pm 0.438$ & $-1.697$ & $+0.395$ \\
+physics only & 3 & $+0.120 \pm 0.479$ & $-1.770$ & $+0.440$ \\
+physics + $u_5$ (deployed) & 4 & $\mathbf{+0.145 \pm 0.419}$ & $-1.494$ & $\mathbf{+0.476}$ \\
+lagged raw (kitchen sink) & 126 & $-1.604 \pm 1.421$ & $-6.248$ & $+0.221$ \\
+\bottomrule
 \end{tabular}
 \end{table}
 
 Three observations. First, the thermodynamically grounded set (bubble-point estimate,
-relative volatility α(T), stripping factor) dominates on every metric while using 4
+relative volatility $\alpha$(T), stripping factor) dominates on every metric while using 4
 features instead of 126: complexity set by physics beats complexity set by validation.
 Second, the kitchen sink's failure is not a cross-validation artifact --- its held-out
-test R² (+0.221) is less than half the deployed set's (+0.476), so the overfitting is
+test $R^2$ (+0.221) is less than half the deployed set's (+0.476), so the overfitting is
 visible out-of-sample as well. Third, the negative folds in \emph{every} arm are the
 cross-regime selection lottery that motivates the protocol: under naive adjacent
 validation these regime shifts are averaged away and selection becomes seed-dependent;
@@ -55,59 +38,58 @@ independent bias-update evaluation (Section 5.2), an internal consistency check 
 two separately written evaluation scripts.
 
 The transport-lag diagnosis precedes all of this: at lag 0 the physics bridge appears
-to fail (static R² ≈ 0.02), which a naive reading would call a physics error; lag
-scanning recovers u5 at lag 15 as a stable interior maximum (r² ≈ 0.51). The lag-zero
-failure is diagnostic of transport delay, not of the thermodynamics (results ledger, \S 1A).
+to fail (static $R^2$ $\approx$ 0.02), which a naive reading would call a physics error; lag
+scanning recovers u5 at lag 15 as a stable interior maximum ($r^2$ $\approx$ 0.51). The lag-zero
+failure is diagnostic of transport delay, not of the thermodynamics (see the accompanying repository).
 
-\hypertarget{drift-handling-under-delayed-labels-k2-debutanizer-tep}{%
-\subsection{Drift handling under delayed labels (K2 --- Debutanizer, TEP)}\label{drift-handling-under-delayed-labels-k2-debutanizer-tep}}
+\subsection{Drift handling under delayed labels (K2 --- Debutanizer, TEP)}
 
 Figure~\ref{fig:f4} shows the held-out residual trace before and after the open-loop bias-update
-\citep{shardt2016} at the documented analyzer delay (λ = 0.1 CV-selected on the pool, test
-untouched; θ = 4). The static model's per-fold R² spread of {[}+0.224, \textbf{−1.494},
-+0.574, +0.728, +0.695{]} (CV +0.145 ± 0.419) collapses to {[}+0.614, +0.487, +0.684,
-+0.704, +0.751{]} (CV +0.648 ± \textbf{0.046}) --- a 9× reduction in cross-fold standard error,
-which is the robustness claim: the update rescues the regime-shifted fold (−1.49 →
+\citep{shardt2016} at the documented analyzer delay ($\lambda$ = 0.1 CV-selected on the pool, test
+untouched; $\theta$ = 4). The static model's per-fold $R^2$ spread of {[}+0.224, \textbf{--1.494},
++0.574, +0.728, +0.695{]} (CV +0.145 $\pm$ 0.419) collapses to {[}+0.614, +0.487, +0.684,
++0.704, +0.751{]} (CV +0.648 $\pm$ \textbf{0.046}) --- a 9$\times$ reduction in cross-fold standard error,
+which is the robustness claim: the update rescues the regime-shifted fold (--1.49 $\to$
 +0.49) without sacrificing the good ones. On the held-out test window the same
-mechanism moves R² from +0.476 to \textbf{+0.857} (Δ +0.381). The correction also exceeds
+mechanism moves $R^2$ from +0.476 to \textbf{+0.857} ($\Delta$ +0.381). The correction also exceeds
 the best \emph{constant} per-fold offset (oracle CV +0.540), confirming that within-fold
 drift tracking --- not merely offset removal --- is doing work.
 
 The same recipe applied unchanged to the TEP regimes reproduces the signature
-(blocked-CV −0.089 ± 0.493 static; bias-update recovery to CV +0.19 at θ = 5, +0.45 at
-θ = 2) --- the methodology transfers across process topology before any model migration
-is attempted (results ledger, \S 1C).
+(blocked-CV --0.089 $\pm$ 0.493 static; bias-update recovery to CV +0.19 at $\theta$ = 5, +0.45 at
+$\theta$ = 2) --- the methodology transfers across process topology before any model migration
+is attempted (see the accompanying repository).
 
-\hypertarget{calibrated-uncertainty-under-drift-and-delay-k3-tep-synthetic}{%
-\subsection{Calibrated uncertainty under drift and delay (K3 --- TEP, synthetic)}\label{calibrated-uncertainty-under-drift-and-delay-k3-tep-synthetic}}
+\subsection{Calibrated uncertainty under drift and delay (K3 --- TEP, synthetic)}
 
 Static split conformal \citep{papadopoulos2002} assumes exchangeability; process drift
-breaks it. On a controlled synthetic stress test (residual scale ×3 mid-stream, target
+breaks it. On a controlled synthetic stress test (residual scale $\times$3 mid-stream, target
 0.90), split coverage collapses to 0.403 while ACI \citep{gibbs2021aci} holds 0.899
 and EnbPI \citep{xu2021enbpi} recovers with FIFO lag (0.832) --- Figure~\ref{fig:f6}. The real TEP
 regimes exhibit the production version of this failure: not a collapse but
 \emph{inconsistency} (Table~\ref{tab:t2} / Figure~\ref{fig:f7}).
 
-\textbf{T2 --- Empirical coverage (target 0.90), TEP regimes × delay θ; n\_test = 300/regime.}
 
-\begin{table}[t]\centering\small
-\caption{Empirical coverage against the 0.90 target on real TEP regimes, by construction and label delay $\theta$ ($n_\mathrm{test}=300$ per regime). Width in parentheses.}\label{tab:t2}
-\begin{tabular}{@{}llll@{}}
-\toprule\noalign{}
-regime & construction & θ = 2 cov (width) & θ = 5 cov (width) \\
-\midrule\noalign{}
-
-\bottomrule\noalign{}
-\endlastfoot
-mode 1 & raw + split & 0.847 (1.79) & 0.847 (1.79) \\
-& corrected + ACI & \textbf{0.900} (1.72) & 0.897 (2.04) \\
-& EnbPI & 0.897 (2.11) & 0.897 (2.11) \\
-mode 2 & raw + split & 0.847 (2.11) & 0.847 (2.11) \\
-& corrected + ACI & \textbf{0.900} (1.90) & 0.903 (2.18) \\
-& EnbPI & 0.857 (2.26) & 0.857 (2.26) \\
-mode 3 & raw + split & 0.957 (3.18) & 0.957 (3.18) \\
-& corrected + ACI & \textbf{0.900} (2.01) & 0.900 (2.48) \\
-& EnbPI & 0.873 (2.49) & 0.873 (2.49) \\
+\begin{table}[t]
+\centering\small
+\caption{Empirical coverage against the 0.90 target on real TEP regimes, by construction and label delay $\theta$ ($n_{\mathrm{test}}=300$ per regime); interval width in parentheses.}
+\label{tab:t2}
+\begin{tabular}{@{}llcc@{}}
+\toprule
+regime & construction & $\theta=2$ cov.\ (width) & $\theta=5$ cov.\ (width) \\
+\midrule
+mode 1 & raw + split        & 0.847 (1.79) & 0.847 (1.79) \\
+       & corrected + ACI    & \textbf{0.900} (1.72) & 0.897 (2.04) \\
+       & EnbPI              & 0.897 (2.11) & 0.897 (2.11) \\
+\addlinespace
+mode 2 & raw + split        & 0.847 (2.11) & 0.847 (2.11) \\
+       & corrected + ACI    & \textbf{0.900} (1.90) & 0.903 (2.18) \\
+       & EnbPI              & 0.857 (2.26) & 0.857 (2.26) \\
+\addlinespace
+mode 3 & raw + split        & 0.957 (3.18) & 0.957 (3.18) \\
+       & corrected + ACI    & \textbf{0.900} (2.01) & 0.900 (2.48) \\
+       & EnbPI              & 0.873 (2.49) & 0.873 (2.49) \\
+\bottomrule
 \end{tabular}
 \end{table}
 
@@ -115,53 +97,51 @@ The static baseline swings from under-coverage (0.847, modes 1--2) to over-cover
 (0.957, mode 3) --- invalid in both directions, and the over-covering regime pays for its
 nominal-looking number with the widest intervals (3.18). The corrected + ACI
 construction is regime-uniform at the target --- coverage range {[}0.897, 0.903{]} across all
-six regime × delay cells --- with widths 1.7--2.5, and is robust to the label delay (θ
-enters through the bias-update; ACI is driven by the 1D.1b protocol, γ = 0.05). EnbPI
+six regime $\times$ delay cells --- with widths 1.7--2.5, and is robust to the label delay ($\theta$
+enters through the bias-update; ACI follows the \S 3.4 protocol, $\gamma = 0.05$). EnbPI
 sits between the two, structurally limited by its FIFO residual window on these
 mild-drift regimes (its batch-size parameter is flat here: coverage 0.897--0.910 over
-s ∈ \{1, 10, 25, 50\}).
+s $\in$ \{1, 10, 25, 50\}).
 
-\hypertarget{model-migration-across-operating-regimes-k4-tep}{%
-\subsection{Model migration across operating regimes (K4 --- TEP)}\label{model-migration-across-operating-regimes-k4-tep}}
+\subsection{Model migration across operating regimes (K4 --- TEP)}
 
-Migration is evaluated as within-process regime migration (mode 1 → modes 2, 3) under
+Migration is evaluated as within-process regime migration (mode 1 $\to$ modes 2, 3) under
 the two-layer composition --- offline migration plus the Section 5.2 online bias-update
-(λ = 0.3, θ = 2) --- with n = 8 random-subset repeats per data fraction; literal
+($\lambda$ = 0.3, $\theta$ = 2) --- with n = 8 random-subset repeats per data fraction; literal
 cross-process parameter migration is mathematically inapplicable here because the
-source and target input spaces are disjoint (ADR-009). The metric is \textbf{data
+source and target input spaces are disjoint (Section~5.4; full analysis in the accompanying repository). The metric is \textbf{data
 efficiency}: the ratio of data fractions at which from-scratch and migrated models
 reach 90\% of the from-scratch ceiling. (The stricter ceiling-crossover statistic
 flipped between 20\% and 100\% across seeds in preliminary runs and is not headlined.)
 
 Figure~\ref{fig:f5}: Yan functional scale-bias correction \citep{yan2011} --- a per-input affine plus a
 zero-mean GP bias on the source predictor --- reaches 90\% of the ceiling at \textbf{5\%} of
-target data versus \textbf{50\%} from scratch on \emph{both} targets: \textbf{10.0× data efficiency},
+target data versus \textbf{50\%} from scratch on \emph{both} targets: \textbf{10.0$\times$ data efficiency},
 with calibrated 95\% GP posterior intervals (coverage 92--98\%) that are appropriately
 wider for the larger mode-3 regime gap (widths 2.84--3.96 vs 2.65--3.16). Luo matrix
-scale-bias correction \citep{luo2015} yields exactly 1.0× on both targets: for a linear
+scale-bias correction \citep{luo2015} yields exactly 1.0$\times$ on both targets: for a linear
 source its per-input scaling absorbs the source weights and the method is from-scratch
-regression in disguise --- the migrated and from-scratch curves coincide to ±0.001--0.006
+regression in disguise --- the migrated and from-scratch curves coincide to $\pm$0.001--0.006
 at every fraction, the empirical face of an identity we also verify analytically.
-Output-only correction \citep{lu2008similarity} lands between (1.0× / 4.0×). A bare-migration control
+Output-only correction \citep{lu2008similarity} lands between (1.0$\times$ / 4.0$\times$). A bare-migration control
 (no bias-update layer) caps every migrated curve below the 90\% threshold on mode 2:
 the two-layer composition is load-bearing, because within-regime drift otherwise
 swamps the cross-regime correction.
 
-\hypertarget{the-negative-control-no-physics-anchors-k5-secom}{%
-\subsection{The negative control: no physics anchors (K5 --- SECOM)}\label{the-negative-control-no-physics-anchors-k5-secom}}
+\subsection{The negative control: no physics anchors (K5 --- SECOM)}
 
 SECOM inverts every assumption the framework exploits: 590 anonymized features over
-1,567 samples (p ≈ n), 4.5\% missing cells, no thermodynamic structure. Framed as
-virtual metrology (target x59, selected by stated criteria --- missingness ≤ 5\%, maximal
+1,567 samples (p $\approx$ n), 4.5\% missing cells, no thermodynamic structure. Framed as
+virtual metrology (target x59, selected by stated criteria --- missingness $\le$ 5\%, maximal
 \textbar point-biserial r\textbar{} = 0.156 with pass/fail; audit table in the run output), the
-elastic-net path under blocked CV explodes at weak shrinkage --- CV R² reaching −7 × 10⁴
-with standard errors of the same magnitude (Figure~\ref{fig:f3}), the p ≈ n amplification of the
-Section 5.1 lottery. The one-SE rule selects maximal shrinkage (α* = 10, 6/441 nonzero
+elastic-net path under blocked CV explodes at weak shrinkage --- CV $R^2$ reaching --7 $\times$ 10$^4$
+with standard errors of the same magnitude (Figure~\ref{fig:f3}), the p $\approx$ n amplification of the
+Section 5.1 lottery. The one-SE rule selects maximal shrinkage ($\alpha$* = 10, 6/441 nonzero
 coefficients) and contains the damage; the resulting sensor still fails as a point
-predictor: test R² = \textbf{−1.84} raw, −0.16 after the bias-update absorbs a large
+predictor: test $R^2$ = \textbf{--1.84} raw, --0.16 after the bias-update absorbs a large
 calibration offset --- even corrected, it cannot beat predicting the mean.
 
-Coverage, however, survives (Table~\ref{tab:t3}): corrected + ACI delivers 0.910 / 0.915 (θ =
+Coverage, however, survives (Table~\ref{tab:t3}): corrected + ACI delivers 0.910 / 0.915 ($\theta$ =
 2/5) against the 0.90 target at mean width 12.8, where the static split over-covers
 (0.953) at width 20.2 --- 37\% wider. \textbf{Conformal validity is model-agnostic; point
 accuracy is what the physics anchors buy.} On a process where the sensor cannot be
@@ -169,78 +149,69 @@ made accurate, the framework still tells the truth about its own uncertainty. Th
 fail-enrichment of conformal misses is inconclusive (9 failing lots in the test
 window) and is reported only as such.
 
-\textbf{T3 --- Cross-dataset summary (the negative-control row is the point).}
 
-\begin{table}[t]\centering\small
-\caption{Cross-dataset summary; the negative-control row is the point.}\label{tab:t3}
-\begin{tabular}{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}@{}}
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-dataset
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-physics anchors
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-point R² (raw → corrected)
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-ACI coverage (target 0.90)
-\end{minipage} \\
-\midrule\noalign{}
-
-\bottomrule\noalign{}
-\endlastfoot
-Debutanizer & yes (VLE bridge) & +0.476 → \textbf{+0.857} & --- (Section 5.3 protocol on TEP) \\
-TEP regimes & yes (process features) & +0.31 → CV +0.45 (θ=2) & \textbf{0.897--0.903}, all cells \\
-SECOM & \textbf{none} & −1.84 → −0.16 & \textbf{0.910 / 0.915} \\
+\begin{table}[t]
+\centering\small
+\caption{Cross-dataset summary; the negative-control row is the point.}
+\label{tab:t3}
+\begin{tabular}{@{}lllc@{}}
+\toprule
+dataset & physics & point $R^2$ (raw $\to$ corr.) & ACI coverage \\
+\midrule
+Debutanizer & VLE bridge & $+0.476 \to \mathbf{+0.857}$ & --- \\
+TEP regimes & process feat. & $+0.31 \to$ CV $+0.45$ ($\theta{=}2$) & \textbf{0.897--0.903} all cells \\
+SECOM & \textbf{none} & $-1.84 \to -0.16$ & \textbf{0.910 / 0.915} ($\theta{=}2/5$) \\
+\bottomrule
 \end{tabular}
 \end{table}
 
-\hypertarget{deployment-evidence-k5}{%
-\subsection{Deployment evidence (K5)}\label{deployment-evidence-k5}}
+\subsection{Real-time feasibility (K5)}
 
-The serving stack (Figure~\ref{fig:f1}b) was exercised end-to-end: 243 tests pass (CI: lint,
-unit, Docker build, container smoke on \texttt{/health} and \texttt{/predict}), and client-observed
-latency on commodity hardware is p50 1.23 ms / p90 1.51 / p99 1.97 over 10⁴ single-row
-predictions --- including HTTP and serialization --- with batch-32 amortizing to ≈46 µs
-per row and the delayed-label \texttt{/label} round-trip at p50 0.97 ms. The 200 ms
-soft-sensor budget is met with two orders of magnitude of headroom; the path is
-I/O-bound by construction, since the deployed object is a linear model, an EWMA, and a
-quantile lookup. Correctness under delayed labels is enforced structurally: the
-coverage indicator for a late label is computed against the interval \emph{stored when that
-sample was predicted}, not the interval current at arrival time (Figure~\ref{fig:f1}b, dashed) ---
-by which time α\_t and the score window have moved on.
+The complete pipeline was exercised end-to-end against a live instance of the
+online implementation (Figure~\ref{fig:f1}b). The measured latency per estimate on
+commodity hardware --- including communication and serialization, i.e.\ the number an
+operator-facing system would observe --- is 1.23~ms at the median and 1.97~ms at the
+99th percentile over $10^4$ single-sample requests, with 32-sample batches amortizing
+to ${\approx}46~\mu$s per sample and the delayed-laboratory-result update completing
+in under 1~ms. A typical online-analyzer cycle of 200~ms is therefore met with two
+orders of magnitude of headroom, and the margin is structural: the computation per
+estimate is a linear map, an exponentially weighted average, and a quantile lookup.
+Correctness under delayed laboratory results is enforced by construction: the
+coverage indicator for a late result is computed against the interval \emph{recorded
+when that sample was estimated} (Figure~\ref{fig:f1}b, dashed), not the interval the
+since-adapted calibration would issue at arrival time --- by which point $\alpha_t$
+and the residual window have moved on. All software, evaluation scripts, and
+provenance-stamped evidence artifacts accompany the paper (see Data and code
+availability).
 
 % --- figures first referenced in this section ---
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.6\textwidth]{F2_feature_ablation}
-\caption{\textbf{Feature ablation on the debutanizer (identical blocked-CV protocol).} Bars: blocked-CV R² mean ± SE; red dashes: worst fold; k = number of features. The physics-anchored set with the raw lagged temperature (k = 4) dominates (CV +0.145 ± 0.419, test +0.476), while the 126-feature lagged kitchen sink collapses (CV −1.604 ± 1.421, worst fold −6.248) and its failure is visible out-of-sample as well (test +0.221): complexity set by physics beats complexity set by validation.}
+\caption{\textbf{Feature ablation on the debutanizer (identical blocked-CV protocol).} Bars: blocked-CV $R^2$ mean $\pm$ SE; red dashes: worst fold; k = number of features. The physics-anchored set with the raw lagged temperature (k = 4) dominates (CV +0.145 $\pm$ 0.419, test +0.476), while the 126-feature lagged kitchen sink collapses (CV --1.604 $\pm$ 1.421, worst fold --6.248) and its failure is visible out-of-sample as well (test +0.221): complexity set by physics beats complexity set by validation.}
 \label{fig:f2}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.6\textwidth]{F3_secom_cv_path}
-\caption{\textbf{SECOM elastic-net CV path (p ≈ n selection lottery).} Mean blocked-CV −R² (log scale) ± SE along the regularization path, complexity increasing to the right. The path explodes by four orders of magnitude (to −R² ≈ 7 × 10⁴) at weak shrinkage; the one-standard-error rule (blue) selects maximal shrinkage α* = 10 (6/441 nonzero coefficients), adjacent to the best CV mean (red), containing the lottery that pure CV-mean selection would re-enter.}
+\caption{\textbf{SECOM elastic-net CV path (p $\approx$ n selection lottery).} Mean blocked-CV --$R^2$ (log scale) $\pm$ SE along the regularization path, complexity increasing to the right. The path explodes by four orders of magnitude (to --$R^2$ $\approx$ 7 $\times$ 10$^4$) at weak shrinkage; the one-standard-error rule (blue) selects maximal shrinkage $\alpha$* = 10 (6/441 nonzero coefficients), adjacent to the best CV mean (red), containing the lottery that pure CV-mean selection would re-enter.}
 \label{fig:f3}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{F4_bias_trace}
-\caption{\textbf{Held-out residual trace, raw vs.~bias-corrected (debutanizer).} Residuals on the 360-sample test window before (red) and after (blue) the open-loop EWMA bias update (λ = 0.1 CV-selected on the pool; θ = 4). The correction removes the calibration offset and tracks within-window drift, lifting held-out R² from +0.476 to +0.857; the residual sd drops accordingly. The same mechanism reduces cross-fold SE 9× in CV (Table~\ref{tab:t1} vs.~§5.2).}
+\caption{\textbf{Held-out residual trace, raw vs.~bias-corrected (debutanizer).} Residuals on the 360-sample test window before (red) and after (blue) the open-loop EWMA bias update ($\lambda$ = 0.1 CV-selected on the pool; $\theta$ = 4). The correction removes the calibration offset and tracks within-window drift, lifting held-out $R^2$ from +0.476 to +0.857; the residual sd drops accordingly. The same mechanism reduces cross-fold SE 9$\times$ in CV (Table~\ref{tab:t1} vs.~\S 5.2).}
 \label{fig:f4}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{F5_data_efficiency}
-\caption{\textbf{Data efficiency of regime migration (TEP, mode 1 → modes 2 and 3;
-two-layer = migration + online bias update, n = 8 repeats).} Held-out R² vs.~fraction of target-regime data for the migrated sensor (blue, ± sd) and from-scratch training (red); dashed line: 90\% of the from-scratch ceiling. Yan functional scale-bias migration reaches the threshold at 5\% of target data vs.~50\% from scratch on both targets --- 10.0× data efficiency --- with calibrated GP posterior intervals (coverage 92--98\%) that widen appropriately for the larger mode-3 regime gap.}
+\caption{\textbf{Data efficiency of regime migration (TEP, mode 1 $\to$ modes 2 and 3;
+two-layer = migration + online bias update, n = 8 repeats).} Held-out $R^2$ vs.~fraction of target-regime data for the migrated sensor (blue, $\pm$ sd) and from-scratch training (red); dashed line: 90\% of the from-scratch ceiling. Yan functional scale-bias migration reaches the threshold at 5\% of target data vs.~50\% from scratch on both targets --- 10.0$\times$ data efficiency --- with calibrated GP posterior intervals (coverage 92--98\%) that widen appropriately for the larger mode-3 regime gap.}
 \label{fig:f5}
 \end{figure}
 
@@ -255,6 +226,6 @@ two-layer = migration + online bias update, n = 8 repeats).} Held-out R² vs.~fr
 \centering
 \includegraphics[width=\textwidth]{F7_tep_coverage}
 \caption{\textbf{Empirical coverage on real TEP regimes (target 0.90, dashed; n = 300 per
-regime; θ ∈ \{2, 5\}).} Static split conformal on raw residuals is invalid in both directions --- under-covering modes 1--2 (0.847) and over-covering mode 3 (0.957, at the widest intervals, 3.18). The corrected + ACI construction is regime-uniform at the target (range {[}0.897, 0.903{]} across all six regime × delay cells) at widths 1.7--2.5; EnbPI sits between. Validity here is a property of the composition: bias correction first, conformal calibration on what remains.}
+regime; $\theta$ $\in$ \{2, 5\}).} Static split conformal on raw residuals is invalid in both directions --- under-covering modes 1--2 (0.847) and over-covering mode 3 (0.957, at the widest intervals, 3.18). The corrected + ACI construction is regime-uniform at the target (range {[}0.897, 0.903{]} across all six regime $\times$ delay cells) at widths 1.7--2.5; EnbPI sits between. Validity here is a property of the composition: bias correction first, conformal calibration on what remains.}
 \label{fig:f7}
 \end{figure}

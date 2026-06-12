@@ -6,8 +6,7 @@ by the production failure mode it removes. Throughout, \(y_t\) is the (delayed,
 infrequent) quality measurement, \(\hat{y}_t\) the soft-sensor estimate, and \(\theta\) the
 label delay in samples --- a first-class protocol parameter, not an afterthought.
 
-\hypertarget{physics-derived-features-and-transport-lag-diagnosis}{%
-\subsection{Physics-derived features and transport-lag diagnosis}\label{physics-derived-features-and-transport-lag-diagnosis}}
+\subsection{Physics-derived features and transport-lag diagnosis}
 
 \emph{Failure mode: complexity set by validation.} Rather than offering the model every
 input at every lag and letting validation choose (the \(k = 126\) kitchen sink of
@@ -28,8 +27,7 @@ lag 0 the same physics appears to fail (\(R^2 \approx 0.02\)). The diagnostic po
 matters: a lag-zero failure indicts the data alignment, not the thermodynamics, and
 resolving it costs one scan rather than a model-class escalation.
 
-\hypertarget{selection-blocked-time-series-cross-validation-with-the-one-se-rule}{%
-\subsection{Selection: blocked time-series cross-validation with the one-SE rule}\label{selection-blocked-time-series-cross-validation-with-the-one-se-rule}}
+\subsection{Selection: blocked time-series cross-validation with the one-SE rule}
 
 \emph{Failure mode: the selection lottery under autocorrelation and regime shift.}
 Validation on adjacent or randomly shuffled samples leaks autocorrelated information
@@ -65,8 +63,7 @@ distinguish the robust low-complexity model from the regime-overfit high-complex
 one, and resolves the tie toward parsimony --- without ever touching the held-out test
 set. On SECOM this is the difference between \(R^2 \approx -1.8\) and \(R^2 \approx -10^4\) (Figure~\ref{fig:f3}).
 
-\hypertarget{drift-open-loop-bias-update-with-a-corrected-residual-alarm}{%
-\subsection{Drift: open-loop bias update with a corrected-residual alarm}\label{drift-open-loop-bias-update-with-a-corrected-residual-alarm}}
+\subsection{Drift: open-loop bias update with a corrected-residual alarm}
 
 \emph{Failure mode: slow drift and regime offsets under delayed, infrequent labels.}
 Following the open-loop case of \citep{shardt2016}, the deployed estimate carries a
@@ -82,13 +79,12 @@ with \(b\) held at \(b_0 = 0\) until the first label. \(\lambda\) is CV-selected
 (test untouched; \(\lambda = 0.1\) on the debutanizer), and \(\theta\) is the documented
 analyzer delay. The update is open-loop --- it never feeds a controller --- so the
 stability concerns of closed-loop bias correction do not arise; what it buys is the
-9× cross-fold SE reduction and the rescue of regime-shifted folds reported in
+9$\times$ cross-fold SE reduction and the rescue of regime-shifted folds reported in
 Section 5.2. Because a tracking update can absorb genuine drift, drift \emph{alarming} is
 performed on the corrected residual \(y_t - \tilde{y}_t\) (ADWIN \citep{bifet2007adwin}): the detector fires only when the bias update can no longer keep up, which is
 the event that warrants intervention.
 
-\hypertarget{calibrated-uncertainty-adaptive-conformal-intervals-under-label-delay}{%
-\subsection{Calibrated uncertainty: adaptive conformal intervals under label delay}\label{calibrated-uncertainty-adaptive-conformal-intervals-under-label-delay}}
+\subsection{Calibrated uncertainty: adaptive conformal intervals under label delay}
 
 \emph{Failure mode: uncalibrated confidence under drift.} Split conformal prediction
 \citep{papadopoulos2002} turns held-out absolute residuals
@@ -108,19 +104,18 @@ with target \(\alpha = 0.10\), step \(\gamma = 0.05\), a rolling score window of
 \(\alpha_t\) deliberately not clipped to \([0,1]\) --- the score quantile handles the
 extremes, matching the original construction. The interval is formed around the
 \emph{bias-corrected} estimate, so the conformal layer prices residual uncertainty after
-the drift mechanism of §3.3 has done its work; the composition, not either piece
+the drift mechanism of \S 3.3 has done its work; the composition, not either piece
 alone, produces the regime-uniform coverage of Table~\ref{tab:t2}. EnbPI \citep{xu2021enbpi} is
 carried as a comparator and behaves as its FIFO residual ensemble predicts.
 
 Label delay interacts with conformal bookkeeping in a way that is easy to get wrong:
 when a label for sample \(i\) arrives \(\theta\) samples late, its coverage indicator must
 be evaluated against the interval \emph{issued at prediction time} \(C_i\), not the interval
-the (since-adapted) state would issue now. The serving layer (§3.6) enforces this
-structurally by storing \((\hat{y}_i, \tilde{y}_i, C_i)\) per sample identifier and
+the (since-adapted) state would issue now. The online implementation (\S 3.6) enforces this
+structurally by recording \((\hat{y}_i, \tilde{y}_i, C_i)\) per sample identifier and
 scoring arrivals against the stored tuple.
 
-\hypertarget{transfer-functional-scale-bias-migration-composed-with-the-online-layer}{%
-\subsection{Transfer: functional scale-bias migration, composed with the online layer}\label{transfer-functional-scale-bias-migration-composed-with-the-online-layer}}
+\subsection{Transfer: functional scale-bias migration, composed with the online layer}
 
 \emph{Failure mode: data scarcity on a new operating regime.} When a sibling regime of the
 same process exists, the source sensor is migrated rather than retrained. Among the
@@ -134,38 +129,41 @@ scale-bias correction family, the functional form of \citep{yan2011},
 keeps the source model's structure while a zero-mean GP bias repairs the relationship
 change locally --- and supplies calibrated posterior intervals for free. Two honest
 scoping notes carry into the results. First, parameter-level migration requires a
-shared input space; across genuinely different processes (debutanizer → TEP) it is
+shared input space; across genuinely different processes (debutanizer $\to$ TEP) it is
 mathematically inapplicable, and what transfers is the \emph{methodology} --- the full
-§3.1--3.4 recipe, verbatim. Second, for a \emph{linear} source the per-input affine
+\S 3.1--3.4 recipe, verbatim. Second, for a \emph{linear} source the per-input affine
 re-scaling of \citep{luo2015} absorbs the source weights entirely and provably
 collapses to from-scratch regression; Section 5.4 shows the empirical face of that
-identity. Migration is offline; deployed migrated sensors still run the §3.3 online
+identity. Migration is offline; deployed migrated sensors still run the \S 3.3 online
 update, and this two-layer composition is load-bearing (the bare-migration control of
 Section 5.4 caps below threshold).
 
-\hypertarget{serving-two-asynchronous-flows-over-mutable-state}{%
-\subsection{Serving: two asynchronous flows over mutable state}\label{serving-two-asynchronous-flows-over-mutable-state}}
+\subsection{Online implementation: estimation and delayed-label reconciliation}
 
-\emph{Failure mode: stateless model hosting cannot represent a sensor whose calibration is
-a function of delayed labels.} The deployed object is not a frozen function but a
-frozen point model plus mutable state \((b_t, \alpha_t, \text{score window})\). The
-service (Figure~\ref{fig:f1}b) is therefore organized as two asynchronous flows: a
-high-frequency \emph{predict} flow that reads state (\(\tilde{y}_t\) and \(C_t\) in
-microseconds --- the model is a linear map, an EWMA, and a quantile lookup), and a
-low-frequency \emph{label} flow that mutates it under an explicit lock, pairing each
-arrival with its stored prediction tuple (§3.4). Mutable state is snapshot to disk for
-restart safety; the immutable model travels as a registry bundle (frozen estimator,
-calibration residuals, protocol parameters) and is never serialized into the
-snapshot. The compute path being trivially cheap is a design consequence, not an
-accident: every adaptive mechanism in §3.3--3.4 is \(O(1)\) per label, so the 200 ms
-soft-sensor budget is spent on I/O, and the measured p99 of 1.97 ms (Section 5.6)
-carries two orders of magnitude of headroom.
+\emph{Failure mode: a sensor whose calibration depends on delayed laboratory
+results cannot be implemented as a fixed function.} The implemented object is a frozen
+point model plus a small calibration state $(b_t, \alpha_t, \text{score window})$
+that evolves as laboratory results arrive. The implementation (Figure~\ref{fig:f1}b)
+therefore separates two activities running at different rates: a fast
+\emph{estimation} path, executed at the process scan rate, which reads the
+calibration state and issues $\tilde{y}_t$ with its interval $C_t$; and a slow
+\emph{reconciliation} path, executed whenever a laboratory result arrives, which
+updates $b_t$, $\alpha_t$, and the residual window, pairing each result with the
+estimate and interval recorded when its sample was taken (\S 3.4). The calibration
+state is persisted so that the sensor survives a restart without losing its
+correction, while the point model itself is never modified online. The computational
+cost is deliberately negligible --- a linear map, an exponentially weighted average,
+and a quantile lookup, each $O(1)$ per laboratory result --- so the measured
+99th-percentile latency of 1.97~ms per estimate (Section~5.6) leaves two orders of
+magnitude of margin inside a typical 200~ms analyzer-cycle budget. Fast, auditable
+computation is a design consequence of the linear scope, not an optimization
+afterthought.
 
 % --- figures first referenced in this section ---
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{F1_architecture}
-\caption{\textbf{Framework and serving architecture.} (a) The offline/online pipeline: physics-derived features (bubble-point estimate, relative volatility α(T), stripping factor) feed blocked time-series CV with one-SE selection; the frozen linear sensor is corrected online by an open-loop EWMA bias update at the documented label delay θ, and adaptive conformal intervals are computed on the corrected residuals; drift alarming acts on the corrected residual, and migration (offline) initializes sensors for sibling regimes. (b) Serving as two asynchronous flows over mutable state (bᵗ, αᵗ, score window): the predict flow reads state and stores the issued interval per sample; the delayed label flow mutates state under a lock and scores coverage against the interval stored at prediction time (dashed), not the since-adapted current interval.}
+\caption{\textbf{Framework and online implementation.} (a) The offline/online pipeline: physics-derived features (bubble-point estimate, relative volatility $\alpha(T)$, stripping factor) feed blocked time-series CV with one-SE selection; the frozen linear sensor is corrected online by an open-loop EWMA bias update at the documented analyzer delay $\theta$, and adaptive conformal intervals are computed on the corrected residuals; drift alarming acts on the corrected residual, and migration (offline) initializes sensors for sibling regimes. (b) The online implementation as a fast estimation path and a slow reconciliation path over a small calibration state ($b_t$, $\alpha_t$, residual window): each estimate is issued with its interval and recorded; each delayed laboratory result updates the calibration state and is scored against the interval recorded when its sample was estimated (dashed), not the since-adapted current one.}
 \label{fig:f1}
 \end{figure}

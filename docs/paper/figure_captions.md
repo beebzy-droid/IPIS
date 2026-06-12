@@ -5,16 +5,17 @@
 > NOTE: F6 currently renders from the 1D.1b script, not from a `paper_figures` emitter —
 > port it into the emitter package during 1F.5 for one-command regeneration.
 
-**Figure F1 — Framework and serving architecture.** (a) The offline/online pipeline:
+**Figure F1 — Framework and online implementation.** (a) The offline/online pipeline:
 physics-derived features (bubble-point estimate, relative volatility α(T), stripping
 factor) feed blocked time-series CV with one-SE selection; the frozen linear sensor is
-corrected online by an open-loop EWMA bias update at the documented label delay θ, and
-adaptive conformal intervals are computed on the corrected residuals; drift alarming
-acts on the corrected residual, and migration (offline) initializes sensors for sibling
-regimes. (b) Serving as two asynchronous flows over mutable state (bᵗ, αᵗ, score
-window): the predict flow reads state and stores the issued interval per sample; the
-delayed label flow mutates state under a lock and scores coverage against the interval
-stored at prediction time (dashed), not the since-adapted current interval.
+corrected online by an open-loop EWMA bias update at the documented analyzer delay θ,
+and adaptive conformal intervals are computed on the corrected residuals; drift
+alarming acts on the corrected residual, and migration (offline) initializes sensors
+for sibling regimes. (b) The online implementation as a fast estimation path and a
+slow reconciliation path over a small calibration state (bᵗ, αᵗ, residual window):
+each estimate is issued with its interval and recorded; each delayed laboratory result
+updates the calibration state and is scored against the interval recorded when its
+sample was estimated (dashed), not the since-adapted current one.
 
 **Figure F2 — Feature ablation on the debutanizer (identical blocked-CV protocol).**
 Bars: blocked-CV R² mean ± SE; red dashes: worst fold; k = number of features. The

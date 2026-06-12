@@ -10,8 +10,8 @@ validation to a negative control and production serving," for publication in
 The paper integrates five mechanisms that production soft sensors need but the
 literature treats separately — leakage-free model selection under regime shift, drift
 correction at the documented label delay, adaptive conformal calibration whose
-bookkeeping remains correct when labels arrive late, data-efficient model migration
-across operating regimes, and a deployable serving architecture — under a single
+bookkeeping remains correct when laboratory results arrive late, data-efficient model migration
+across operating regimes, and a real-time online implementation — under a single
 validation discipline. Three properties distinguish the contribution. First, the
 evaluation includes a deliberately hostile negative control (SECOM, no physics
 anchors), which isolates *where the performance comes from*: the point sensor fails

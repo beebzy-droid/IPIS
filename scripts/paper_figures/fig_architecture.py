@@ -76,12 +76,12 @@ def render(out_dir=None) -> list:
     _arrow(a, 0.84, 0.26, 0.84, 0.40, ls="--")
 
     # ---------------- panel (b): serving two flows ----------------
-    b.set_title("(b) serving (two async flows over mutable state)", fontsize=8)
-    _box(b, 0.02, 0.66, 0.22, 0.2, "client\n/predict", GREY)
-    _box(b, 0.02, 0.12, 0.22, 0.2, "delayed assay\n/label", GREY)
-    _box(b, 0.36, 0.39, 0.28, 0.3, "mutable state\nb_t, α_t,\nscore window,\nbuffer", RED)
-    _box(b, 0.74, 0.66, 0.24, 0.2, "interval\nstored at\npredict time", TEAL)
-    _box(b, 0.74, 0.12, 0.24, 0.2, "snapshot\n(restart-safe)", GREY)
+    b.set_title("(b) online implementation (estimation + reconciliation)", fontsize=8)
+    _box(b, 0.02, 0.66, 0.22, 0.2, "process inputs\n(scan rate)", GREY)
+    _box(b, 0.02, 0.12, 0.22, 0.2, "laboratory result\n(delay \u03b8)", GREY)
+    _box(b, 0.36, 0.39, 0.28, 0.3, "calibration state\nb_t, α_t,\nresidual window", RED)
+    _box(b, 0.74, 0.66, 0.24, 0.2, "estimate + interval\nissued and\nrecorded", TEAL)
+    _box(b, 0.74, 0.12, 0.24, 0.2, "state persisted\n(restart-safe)", GREY)
     _arrow(b, 0.24, 0.76, 0.36, 0.62)  # predict reads state
     _arrow(b, 0.64, 0.62, 0.74, 0.74)  # store interval
     _arrow(b, 0.24, 0.22, 0.36, 0.45, color=RED)  # label mutates state
@@ -90,7 +90,7 @@ def render(out_dir=None) -> list:
     b.text(
         0.49,
         0.02,
-        "coverage scored against the interval stored at predict time (dashed)",
+        "coverage scored against the interval recorded at estimation time (dashed)",
         ha="center",
         fontsize=6,
         color=GREY,
