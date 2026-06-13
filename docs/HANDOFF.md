@@ -207,6 +207,13 @@ as-is to SECOM and documents where it breaks.
 
 ## 7. The ledger — parked / deferred / owed
 
+- **PARKED 2026-06-13 (decide at G4):** codify the twin's GUI construction as a
+  committed `DWSIM.Automation` (pythonnet) build script, so the twin is a
+  re-runnable artifact rather than a one-off GUI session (publication
+  reproducibility). Sequencing: build in GUI first (G1b) to find the known-good
+  converging config, THEN codify it — removes most blind-iteration risk since
+  the sandbox cannot run DWSIM.
+
 - **PARKED — Wang DTDE (dynamic time-delay re-estimation, SD-DU + WRVM).** Best
   lag is stable (14–15) across all splits, so delay re-estimation solves a problem
   we don't have. Revisit only if a future process shows unstable delay.
@@ -330,10 +337,24 @@ from the converged profile (likely DWSIM 6-8) and recorded here at G1.
 condenser ~48 C; reboiler ~128 C; xB_C4 0.006-0.025 (shortcut 0.0124);
 xD_C4 >0.97; duty 500-800 kW (analytic 621). Out-of-band = stop, diagnose.
 
+**Execution = Claude Code via DWSIM MCP** (server `dwsim`, 34 tools,
+`C:\Users\<user>\.claude.json`). Capability probed 2026-06-13. HARD BLOCKER:
+`add_unit` supports `separator` ONLY — no distillation-column type, so the
+rigorous column CANNOT be built from a blank MCP session. Resolution: built
+ONCE in the GUI, saved as `.dwxmz` (G1b), everything else MCP-automated. Two
+wins vs the old manual plan: `flash_tp` does a full PR-vs-Raoult VLE check
+before any column (G1a); `parameter_sweep` collapses the G2 grid to one study.
+SI TRAP: all MCP I/O is SI (mol/s, K, Pa, W) — Claude Code converts to the
+harness schema (kmol/h, °C, bar, kW) on export. `optimize` tool DELIBERATELY
+UNUSED (RTO stays in GEKKO per ADR-006/D4). Full detail + driving steps in
+`docs/module3/dwsim-walkthrough-3a.md`.
+
 **Gate log (append at each gate):**
 - G0 2026-06-13: skeleton + spec + walkthrough committed; selftest PASS.
-- G1: <pending — record sensor_stage_dwsim = n, its T and x_C4>
-- G2: <pending — runs converged /16, gaps noted>
+- G1a: <pending — PR-vs-Raoult deviation table; gate |dev| ≤ 5 °C; C1 confirmed>
+- G1b: <pending — `.dwxmz` saved to data/raw/dwsim/; GUI convergence note>
+- G1c: <pending — sensor_stage_dwsim = n, its T and x_C4; C2–C4 in band>
+- G2: <pending — parameter_sweep runs converged /16, gaps noted>
 - G3: <pending — V1-V4 results, deviations>
 - G4: <pending — closeout, ADR-013, resume = 3B>
 
@@ -595,6 +616,17 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
 ---
 
 ## Changelog of this doc
+- **2026-06-13 (later)** — **MCP execution path established; G1 re-planned.**
+  Owner wired a DWSIM MCP server (34 tools) to Claude Code. Probe found the
+  hard blocker: only `separator` unit type, no rigorous column — column must be
+  GUI-built once (G1b) and saved as `.dwxmz`; all else MCP-automated. Plan
+  improved: G1a now a PR-vs-Raoult flash cross-check (5-point envelope, gate
+  |dev| ≤ 5 °C) done before any column; G2 collapses to a single
+  `parameter_sweep` + `export_study_results`. SI-unit trap documented (MCP SI ->
+  harness schema units, Claude Code converts). `optimize` tool ruled out (RTO
+  stays in GEKKO). G1 split into G1a/b/c in the gate map + gate log. Parked: a
+  DWSIM.Automation build script for twin reproducibility (decide at G4).
+  Walkthrough doc updated throughout; resume = G1a in Claude Code.
 - **2026-06-13** — **3A UNBLOCKED + SKELETON BUILT (G0).** Owner answered both
   asks (DWSIM installed; literature-default economics, plant figures later).
   Cited anchors locked (EIA/FRED: MB propane 0.750 USD/gal 2025; USGC gasoline
