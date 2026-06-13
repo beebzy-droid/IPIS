@@ -429,9 +429,26 @@ UNUSED (RTO stays in GEKKO per ADR-006/D4). Full detail + driving steps in
   docs/module3/results.md sec3A (Summary/Data/Metrics/Observations/Unexpected).
   validate_twin selftest redirected to twin-validation-selftest.md so the real
   G3 report (twin-validation.md) is trackable — un-ignore it in .gitignore.
-  ** PHASE 3A COMPLETE pending owner commit + review. Resume = 3B
-  (uncertainty-aware RTO: M1 conformal intervals -> chance back-off; GPR
-  surrogate per ADR-006; head-to-head vs 3A fixed margins).
+  ** PHASE 3A COMPLETE.
+- 3B 2026-06-13 SCOPING DRAFTED (docs/module3/scoping-3b.md), awaiting
+  ratification. Thesis: replace 3A's fixed back-off with the calibrated
+  conformal half-width of the soft-sensor xB estimate; claim higher profit at
+  equal violation rate because sensor uncertainty is heteroscedastic (3A: it
+  widens at the high-R envelope exits). Decisions to ratify: D1 one-sided
+  conformal UCB (spec is one-sided xB<=0.02, so upper bound < two-sided
+  half-width = less conservative for free); D2 M1 conformal METHODOLOGY
+  calibrated on twin data (NOT literal Debutanizer weights — dodges the C6
+  disjoint-input trap); D3 one-sided ACI, 1-alpha=0.90, coverage is a GATE;
+  D4 profit delta at EQUAL violation rate (Pareto frontiers, fixed-margin vs
+  interval-driven); D5 GPR over twin (ADR-006; high-purity sampling caveat) +
+  disturbance ensemble (vary feed z and/or noise); D6 build 3B.1 GPR ->
+  3B.2 conformal sensor+chance solve -> 3B.3 head-to-head, OPEN-LOOP (Shardt
+  -> 3C). M1 wiring VERIFIED present: conformal.py (SplitConformal, ACIConformal,
+  enbpi_offsets, coverage instruments); state_bus.OperationalState already has
+  interval-halfwidth + setpoint_recommendations slots. Prize ~$70-140k/yr at
+  lit anchors, TO BE MEASURED (contingent on heteroscedasticity). WIN CONDITION
+  stated honestly: interval-driven beats fixed-margin IFF uncertainty is
+  heteroscedastic; measure, don't assume. Resume = owner ratifies D1-D6 -> 3B.1.
 - G3: <pending — V1-V4 results, deviations>
 - G4: <pending — closeout, ADR-013, resume = 3B>
 
@@ -693,6 +710,13 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
 ---
 
 ## Changelog of this doc
+- **2026-06-13 (3B scoping drafted)** — Phase 3A committed/closed; opened 3B with
+  docs/module3/scoping-3b.md (D1-D6 option tables + asks). Verified M1
+  components exist for the wiring (conformal engines + state_bus interval &
+  setpoint slots). Key calls pending ratification: one-sided conformal UCB,
+  M1-methodology-on-twin (not literal weights), profit-delta-at-equal-violation
+  Pareto comparison, GPR surrogate with the 3A high-purity sampling caveat.
+  No code this turn (decisions before code). Resume = ratify D1-D6 -> 3B.1.
 - **2026-06-13 (G4 drafted — Phase 3A complete)** — ADR-013 (twin fidelity T1-T6
   + G1a/V1/V4/feasibility/optimum findings) and docs/module3/results.md sec3A
   written. Fixed the twin-validation.md path collision: selftest now writes
