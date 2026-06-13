@@ -98,6 +98,18 @@ comparing DWSIM PR bubble-T to the M1 ideal-Raoult reference:
 (used by V1/V4) needs review before the column is built - stop and report the
 zone. This also pre-confirms C1 (feed bubble point) without a column.
 
+**RESULT (2026-06-13, session 461a5c56): PASS.** PR bubble-T is uniformly
+ABOVE Raoult: Delta = +0.2 (0.99), +1.7 (0.65), +3.2 (0.35), +3.2 (0.144),
++0.4 (0.02) degC. Max +3.2 < 5 gate. Zero at pure ends -> pure-Psat bases
+agree; max at mid-composition -> mild liquid non-ideality (effective gamma<1,
+slight NEGATIVE deviation from Raoult) that ideal-Raoult omits — physically
+expected for an asymmetric n-alkane pair at kij=0. CONSEQUENCE: the C1-C3b
+bands below were computed on the Raoult basis; read them +offset on PR
+(feed ~86 degC not 83). V4 margin re-verified: at the sensor stage the M1
+inversion at the PR temperature predicts x_C4~0.121 vs twin 0.144 ->
+deviation ~0.023, 6.5x inside the 0.15 threshold. C3b 12-degC window absorbs
+the offset (a Raoult-106 stage reads ~109 on PR, still in [100,112]).
+
 ## G1b — Build the column ONCE in the GUI (owner; the one manual step)
 
 The MCP server has no distillation-column unit type, so the rigorous column is
@@ -138,8 +150,8 @@ Convert all readings to schema units before reporting.
 2. **Feed stream** `FEED`: 100 kmol/h; mole fractions nC4 = 0.35,
    nC6 = 0.65; P = 4.8 bar; specify by **P + vapor fraction = 0**
    (bubble-point liquid — DWSIM computes T).
-   - **Checkpoint C1:** DWSIM should report FEED T ≈ **83 °C**
-     (repo physics: 83.1 °C, ideal-Raoult basis; PR may land ±3 °C).
+   - **Checkpoint C1:** DWSIM (PR) should report FEED T ≈ **86 °C**
+     (repo Raoult basis 83.1 °C + G1a-measured +3.2 °C PR offset).
      If it reads ~20 °C the stream is sub-cooled-spec'd, not VF = 0.
 3. **Distillation Column (rigorous)**: 9 stages, total condenser,
    feed `FEED` → stage 5. Condenser P = 4.7 bar, reboiler P = 5.1 bar
@@ -159,7 +171,7 @@ Convert all readings to schema units before reporting.
 
 | # | quantity | expected band | basis |
 |---|---|---|---|
-| C1 | FEED temperature | 83 ± 3 °C | bubble point z = 0.35 @ 4.8 bar |
+| C1 | FEED temperature | 83 ± 3 °C **(Raoult); ~86 ± 3 on PR — G1a measured** | bubble point z = 0.35 @ 4.8 bar; investigate only if > 89 |
 | C2 | Condenser T (stage 1) | 45–55 °C | x_C4 ≈ 0.99 @ 4.7 bar → 48.3 °C |
 | C2 | Reboiler T (stage 9) | 122–132 °C | x_C4 = 0.02 @ 5.1 bar → 127.7 °C |
 | C3 | x_C4 bottoms | 0.006–0.025 | shortcut 0.0124; rigorous vs shortcut band 0.5–2× |

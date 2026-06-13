@@ -351,7 +351,12 @@ UNUSED (RTO stays in GEKKO per ADR-006/D4). Full detail + driving steps in
 
 **Gate log (append at each gate):**
 - G0 2026-06-13: skeleton + spec + walkthrough committed; selftest PASS.
-- G1a: <pending — PR-vs-Raoult deviation table; gate |dev| ≤ 5 °C; C1 confirmed>
+- G1a 2026-06-13 PASS (session 461a5c56): PR uniformly above Raoult,
+  Delta = +0.2/+1.7/+3.2/+3.2/+0.4 °C across x_C4 0.99→0.02; max +3.2 < 5 gate.
+  Pure-Psat bases agree (ends ~0); mid-composition bump = mild liquid
+  non-ideality (gamma<1) PR captures and ideal-Raoult omits. CONSEQUENCE:
+  checkpoint bands shift +offset on PR (feed ~86 not 83 °C). V4 margin
+  re-verified ~0.023 vs 0.15; C3b 12°C window absorbs the offset. Build cleared.
 - G1b: <pending — `.dwxmz` saved to data/raw/dwsim/; GUI convergence note>
 - G1c: <pending — sensor_stage_dwsim = n, its T and x_C4; C2–C4 in band>
 - G2: <pending — parameter_sweep runs converged /16, gaps noted>
@@ -616,6 +621,15 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
 ---
 
 ## Changelog of this doc
+- **2026-06-13 (G1a)** — PR-vs-Raoult flash validation run via DWSIM MCP
+  (Claude Code, session 461a5c56). PASS: max bubble-T deviation +3.2 °C < 5 °C
+  gate, mid-composition, vanishing at pure ends = mild liquid non-ideality PR
+  captures (slight negative deviation from Raoult, gamma<1) — corrected the
+  loose "positive bubble-pressure correction" wording from the run report.
+  Worked the +3.2 °C offset through all checkpoint bands: C1 feed now ~86 °C
+  on PR (VF=0 spec finds it; flag only >89), C2 unchanged, C3b window has
+  slack, V4 predicted ~0.023 vs 0.15. Walkthrough bands annotated for PR
+  basis. Resume = G1b (GUI column build).
 - **2026-06-13 (later)** — **MCP execution path established; G1 re-planned.**
   Owner wired a DWSIM MCP server (34 tools) to Claude Code. Probe found the
   hard blocker: only `separator` unit type, no rigorous column — column must be
