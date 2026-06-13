@@ -55,7 +55,7 @@ to avoid. At most a later sanity cross-check, never the path.
 | G1b | Column built + saved (GUI) | converges in GUI; condenser ~48 °C, reboiler ~128 °C | `.dwxmz` path + GUI-config note recorded |
 | G1c | Master case via MCP | checkpoints C2–C4 in band; sensor stage identified (C3b) | sensor_stage_dwsim = n, its T and x_C4 recorded |
 | G2 | 16-run grid (parameter_sweep) | study completes; CSV schema valid in target units | grid status + any non-converged corners noted |
-| G3 | Validation PASS | `twin-validation.md` V1–V3 PASS (V4 if profile exported) | validation result + deviations recorded |
+| G3 | Validation PASS | `twin-validation.md` V1–V3 PASS (V4 dropped — superseded by G1a) | validation result + deviations recorded |
 | G4 | 3A closeout | twin surface fit (R² > 0.95 reported), case study on twin, ADR-013, results.md §3A | full closeout block, resume = 3B |
 
 Timebox estimate: G1 ≈ 1–2 h (first DWSIM column always costs the most),
@@ -66,19 +66,48 @@ built next turn.
 
 ## Stage-numbering convention (read before touching DWSIM)
 
-DWSIM's rigorous column counts the **condenser as stage 1** and the
-**reboiler as the last stage**. The FUG/shortcut N = 8 includes the
-reboiler but NOT the total condenser (a total condenser is not an
-equilibrium stage). Therefore:
+**DWSIM 9.0.5 is 0-INDEXED** (verified from the GUI, 2026-06-13): Condenser =
+stage **0**, Reboiler = stage **8**, interior stages 1–7. "Number of Stages"
+= **9** (= 8 equilibrium + total condenser; the total condenser is not an
+equilibrium stage but is counted as a row). The FUG/shortcut N = 8 includes
+the reboiler but not the condenser, hence 9 here. Therefore:
 
-| quantity | value |
+| quantity | value (9.0.5, 0-indexed) |
 |---|---|
-| DWSIM "Number of Stages" | **9** (= 8 equilibrium + total condenser) |
-| Feed stage (DWSIM numbering) | **5** (= shortcut mid-column stage 4 + condenser offset) |
-| Reboiler | DWSIM stage 9 |
+| Number of Stages | **9** (Condenser=0 … Reboiler=8) |
+| Feed stage | **4** ("Stage4", mid-column; index 3–5 acceptable) |
+| Reboiler | stage **8** |
 
-All CSV exports use DWSIM numbering; the sensor-stage mapping (G1, C3)
-documents the offset explicitly.
+All CSV exports and the sensor-stage mapping (C3b) use this 0-indexed scheme.
+(Earlier drafts assumed 1-indexed condenser=stage1/feed=5 — corrected.)
+
+## Column specification encoding (9.0.5 — the distillate trap)
+
+9.0.5 carries ONE spec per side: **Condenser tab = Reflux Ratio**, **Reboiler
+tab = Product Molar Flow**. The reboiler product is the **BOTTOMS**, so the
+RTO's distillate handle D is encoded as **bottoms = F − D**:
+
+| RTO variable | DWSIM reboiler Product Molar Flow (bottoms) |
+|---|---|
+| D = 34.5 (master) | 65.5 kmol/h = 18.1944 mol/s |
+| D = 33 | 67 kmol/h | 
+| D = 36 | 64 kmol/h |
+| D = 37 | 63 kmol/h |
+
+**UNIT TRAP:** the reboiler flow field defaults to **mol/s** — set the dropdown
+to kmol/h or convert (÷3.6). G1c/G2 automation sets bottoms = 100 − D, NOT
+distillate. (Reflux on condenser + one product flow = correctly determined;
+do not add a distillate-flow spec on top — over-specifies the binary balance.)
+
+## Pressure setup (9.0.5 — General tab, not per-stage)
+
+Pressure is NOT a per-stage grid column in 9.0.5 (the Stages grid shows only
+Name/Efficiency). Set two fields on the **General tab**: **Condenser/Top
+Pressure = 4.7 bar** and **Column Pressure Drop = 0.4 bar** → reboiler 5.1 bar,
+linearly interpolated (mid-stage idx4 = 4.9 bar). Known bug to check: if a
+prior version left per-stage P at 1 atm, the General-tab values may not
+propagate; the two-field method in 9.0.5 sidesteps it.
+
 
 ## G1a — PR-vs-Raoult flash validation (Claude Code, no column)
 
@@ -174,7 +203,7 @@ Convert all readings to schema units before reporting.
 | C1 | FEED temperature | 83 ± 3 °C **(Raoult); ~86 ± 3 on PR — G1a measured** | bubble point z = 0.35 @ 4.8 bar; investigate only if > 89 |
 | C2 | Condenser T (stage 1) | 45–55 °C | x_C4 ≈ 0.99 @ 4.7 bar → 48.3 °C |
 | C2 | Reboiler T (stage 9) | 122–132 °C | x_C4 = 0.02 @ 5.1 bar → 127.7 °C |
-| C3 | x_C4 bottoms | 0.006–0.025 | shortcut 0.0124; rigorous vs shortcut band 0.5–2× |
+| C3 | x_C4 bottoms | judge vs **spec 0.02**, not a band | shortcut 0.0124; **twin 0.0243 at master = INFEASIBLE** (rigorous less sharp) |
 | C3 | x_C4 distillate | > 0.97 | shortcut 0.991 |
 | C4 | Reboiler duty | 500–800 kW | analytic 621 kW; rigorous adds sensible/non-CMO effects |
 
@@ -224,9 +253,38 @@ run_id,reflux_ratio,distillate_kmol_h,feed_kmol_h,z_c4,tray6_T_C,top_P_bar,xD_c4
 - **Unit conversion is mandatory** (MCP is SI): distillate_kmol_h = mol/s × 3.6;
   tray6_T_C = K − 273.15; top_P_bar = Pa / 1e5 (= 4.7, constant);
   reboiler_duty_kW = W / 1000. Mole fractions are dimensionless.
-- `tray6_T_C` / `tray6_x_c4_liq` = the **sensor stage from C3b** (same stage
-  every run), liquid phase. The optional last column enables check V4.
+- `tray6_T_C` = the **sensor stage** (idx 5, same every run), liquid-stage
+  temperature. **`tray6_x_c4_liq` is left blank** — DWSIM 9 won't expose stage
+  compositions, and V4 is dropped (superseded by G1a), so it isn't needed.
 - Write to `data\raw\dwsim\twin_runs.csv`.
+
+## G1c result + DWSIM 9.0.5 API limitation (2026-06-13)
+
+**PASS** via `scripts/run_g1c.py` (DWSIM.Automation3, pythonnet 3.1.0, .NET Fx
+4.8, ipis env). Real-PR readouts: feed 87.09, condenser 49.16, reboiler 127.43
+C; duty 609.3 kW; **xD=0.9684, xB=0.0243** (product streams — genuine PR).
+Sensor stage = **idx 5** @ 103.86 C (locked).
+
+**HEADLINE:** master case xB=0.0243 **> 0.02 spec** -> the shortcut-feasible
+operating point is INFEASIBLE on the rigorous twin (shortcut said 0.0124). The
+rigorous PR split is less sharp; the RTO feasible region shifts to higher R /
+lower D. G2's sweep maps the true feasible set; the optimum and back-off
+economics move accordingly. (The old C3 band 0.006-0.025 is looser than the
+real RTO spec xB<=0.02 — judge against 0.02, not the band.) xD=0.968 is a
+NON-ISSUE: xD is not a spec; only xB<=0.02 is.
+
+**DWSIM 9.0.5 cannot expose per-stage liquid compositions post-solve**
+(confirmed by reflection: Stage.l/v/Kvalues empty; ColumnPropertiesProfile is
+bulk-only; standalone pp flash needs a CurrentMaterialStream). The per-stage
+x_nC4 in run_g1c.py is therefore a **Raoult/Antoine sanity estimate**, NOT a
+twin output. Product-stream xB/xD ARE real PR (read off the stream phase
+objects), so the RTO path is unaffected.
+
+**=> V4 (stage physics-bridge check) is DROPPED, superseded by G1a.** Reason:
+comparing a Raoult stage estimate against M1's Raoult inversion is circular
+(and Antoine-vs-DIPPR noise). G1a already did the PR-vs-Raoult VLE consistency
+check rigorously across the envelope and passed. **G3 = V1-V3 only**;
+`tray6_x_c4_liq` is NOT populated in the CSV (so V4 does not fire).
 
 ## G3 — Validation
 

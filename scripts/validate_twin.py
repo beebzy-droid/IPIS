@@ -15,6 +15,10 @@ Checks (each PASS/FAIL with numbers, never silent):
         (catches non-converged DWSIM rows that still export numbers).
     V3  Monotonicity — at fixed D, increasing R must not increase xB_C4
         and must increase reboiler duty (physical sanity of the response).
+    V4  [SUPERSEDED by G1a for the DWSIM twin — DWSIM 9 won't expose stage
+        compositions; a Raoult-vs-Raoult stage check would be circular. V4
+        only fires if tray6_x_c4_liq is populated, which the twin CSV leaves
+        blank. Retained for non-DWSIM sources.]
     V4  Physics-bridge consistency — where the optional tray-6 liquid C4
         column is exported, compare against the Module 1 bubble-point
         inversion at (T_tray6, P); report mean/max deviation (diagnostic,

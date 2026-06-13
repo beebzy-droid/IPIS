@@ -207,12 +207,17 @@ as-is to SECOM and documents where it breaks.
 
 ## 7. The ledger — parked / deferred / owed
 
-- **PARKED 2026-06-13 (decide at G4):** codify the twin's GUI construction as a
-  committed `DWSIM.Automation` (pythonnet) build script, so the twin is a
-  re-runnable artifact rather than a one-off GUI session (publication
-  reproducibility). Sequencing: build in GUI first (G1b) to find the known-good
-  converging config, THEN codify it — removes most blind-iteration risk since
-  the sandbox cannot run DWSIM.
+- **PARKED 2026-06-13 (paper enhancement):** real PR per-stage composition
+  profile via `pp.CurrentMaterialStream = <scratch stream>` then PT/bubble
+  flash per stage — DWSIM's Stage API won't expose it directly. Only needed if
+  a stage-composition figure is wanted for the paper; the RTO needs product xB
+  only. Not required for any 3A gate.
+- **PULLED FORWARD 2026-06-13:** the DWSIM.Automation (pythonnet) script is no
+  longer optional — it is the twin-execution engine for G1c/G2/G3 (the MCP
+  can't load cases). G1c/G2 LOAD the GUI-built `.dwxmz`; the fuller
+  BUILD-FROM-SCRATCH automation (full publication reproducibility, no binary
+  dependency) remains parked for the G4 freeze. Authored by Claude Code in-situ
+  (live-assembly introspection) — a deliberate exception to "sandbox builds".
 
 - **PARKED — Wang DTDE (dynamic time-delay re-estimation, SD-DU + WRVM).** Best
   lag is stable (14–15) across all splits, so delay re-estimation solves a problem
@@ -357,8 +362,31 @@ UNUSED (RTO stays in GEKKO per ADR-006/D4). Full detail + driving steps in
   non-ideality (gamma<1) PR captures and ideal-Raoult omits. CONSEQUENCE:
   checkpoint bands shift +offset on PR (feed ~86 not 83 °C). V4 margin
   re-verified ~0.023 vs 0.15; C3b 12°C window absorbs the offset. Build cleared.
-- G1b: <pending — `.dwxmz` saved to data/raw/dwsim/; GUI convergence note>
-- G1c: <pending — sensor_stage_dwsim = n, its T and x_C4; C2–C4 in band>
+- G1b 2026-06-13 PASS: master case converged (40 iters). Feed 87.09, condenser
+  49.16, reboiler 127.95 °C; reboiler duty 609.3 kW = shortcut 621 within 1.9%.
+  Pressure profile 4.7→5.1 bar confirmed (no stuck-at-1-atm). Specs read back
+  R=1.5, bottoms=65.5 kmol/h. SENSOR STAGE (C3b) = idx 5 (Stage5) @ 103.82 °C —
+  only stage in [100,112]. NOTE: reboiler T implies xB_C4~0.02 (at spec edge)
+  vs shortcut 0.0124 — expected rigorous-vs-shortcut gap, G1c reads exact.
+  Saved data/raw/dwsim/debutanizer_3a.dwxmz (gitignored).
+- G1c 2026-06-13 PASS (via scripts/run_g1c.py, DWSIM.Automation3, pythonnet
+  3.1.0 / .NET Fx 4.8 in ipis env). Real PR: feed 87.09, condenser 49.16,
+  reboiler 127.43 C; duty 609.3 kW; xD=0.9684, xB=0.0243 (PRODUCT streams,
+  genuine PR). Sensor stage = idx 5 @ 103.86 C (locked).
+  ** HEADLINE: xB=0.0243 > 0.02 spec — the master case (R=1.5,D=34.5) is
+  SPEC-INFEASIBLE on the rigorous twin (shortcut said 0.0124, feasible). The
+  rigorous PR split is less sharp; RTO feasible set shifts to higher R / lower
+  D than the shortcut implied. G2 sweep maps the true feasible set; optimum +
+  back-off economics move. Surrogate architecture unchanged (refit on twin xB).
+  ** xD 0.968 vs old "expect >0.97": NON-ISSUE — xD is not a spec (only xB<=0.02
+  is); 0.97 was a too-tight shortcut-derived sanity band. Less-sharp split is
+  expected rigorous-vs-ideal behaviour.
+  ** DWSIM 9.0.5 API LIMITATION: per-stage liquid compositions NOT exposed
+  post-solve (Stage.l/v/Kvalues empty; ColumnPropertiesProfile bulk-only; pp
+  flash needs CurrentMaterialStream). Stage x_nC4 = Raoult/Antoine estimate
+  (sanity only). => V4 (stage physics-bridge check) DROPPED, superseded by
+  G1a (which did the PR-vs-Raoult VLE check rigorously). tray6_x_c4_liq NOT
+  populated; G3 = V1-V3 only. Product xB/xD are real, so the RTO path is intact.
 - G2: <pending — parameter_sweep runs converged /16, gaps noted>
 - G3: <pending — V1-V4 results, deviations>
 - G4: <pending — closeout, ADR-013, resume = 3B>
@@ -621,6 +649,44 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
 ---
 
 ## Changelog of this doc
+- **2026-06-13 (G1c PASS + twin earns its keep)** — run_g1c.py works via
+  DWSIM.Automation3 (pythonnet 3.1.0, .NET Fx 4.8, ipis env). All temps + duty
+  in band; product xB/xD are genuine PR. HEADLINE: master case xB=0.0243 > 0.02
+  spec -> spec-INFEASIBLE on the rigorous twin (shortcut 0.0124 was optimistic);
+  RTO feasible set shifts higher-R/lower-D, G2 will map it. xD near-miss is a
+  non-issue (xD not a spec). DWSIM 9 won't expose per-stage compositions
+  post-solve (thorough introspection confirmed) -> stage x is a Raoult sanity
+  estimate, and V4 is DROPPED as superseded by G1a (avoids a circular
+  Raoult-vs-Raoult check); G3 = V1-V3. Sensor stage locked at idx 5 (103.86 C).
+  Housekeeping owed: delete scripts/_probe_*.py scratch; keep run_g1c.py.
+  Resume = G2 sweep (refit ln(xB) surface on real twin xB).
+- **2026-06-13 (G1c MCP dead -> Automation pivot)** — DWSIM MCP `load_case` is
+  stubbed in the prebuilt DwsimWorker v0.1.0.0 (same root as the separator-only
+  limit): the MCP cannot load a `.dwxmz`. MCP is therefore flash-only and done
+  after G1a. Pivoted G1c/G2/G3 to a DWSIM.Automation pythonnet script that
+  loads the GUI-built twin — the route scoping.md always anticipated, and it
+  pulls the parked reproducibility item forward as the execution engine. G1c
+  staged: runtime probe (pythonnet + DWSIM assembly) before any script;
+  fallback = manual GUI readout. Script authored by Claude Code in-situ (live
+  introspection beats sandbox-blind). Resume = G1c probe + run_g1c.py.
+- **2026-06-13 (G1b PASS)** — DWSIM master case solved & validated. All four
+  checkpoints in band (feed 87.09 / condenser 49.16 / reboiler 127.95 °C, duty
+  609.3 kW); duty within 1.9% of the shortcut's 621 kW = independent twin
+  confirmation. Pressure ramp 4.7→5.1 bar verified. Sensor stage = idx 5
+  (Stage5, 103.82 °C), sole stage in the [100,112] envelope. Flagged: rigorous
+  xB~0.02 at master vs shortcut 0.0124 (the gap the twin exists to capture).
+  File saved. Resume = G1c (MCP load/run/read via Claude Code).
+- **2026-06-13 (G1b UI mapping)** — Mapped DWSIM 9.0.5 column editor from GUI
+  screenshots. Three corrections to the walkthrough, all load-bearing for
+  G1c/G2 automation: (1) stages are 0-INDEXED (Condenser=0…Reboiler=8), feed
+  idx 4 — earlier 1-indexed convention corrected; (2) condenser/reboiler
+  pressure lives on the General tab as Condenser/Top Pressure + Column Pressure
+  Drop (4.7 + 0.4 → 5.1 bar), not a per-stage grid; (3) the column is specified
+  by Reflux Ratio (condenser) + Product Molar Flow = BOTTOMS (reboiler), so the
+  RTO distillate handle D maps to bottoms = F − D (master 65.5 kmol/h), and the
+  reboiler flow field defaults to mol/s (unit trap). Master-case values to set:
+  R=1.5, bottoms=65.5 kmol/h, top P=4.7, ΔP=0.4. One connection error to clear
+  before solve. Resume = solve master case, report 4 checkpoints.
 - **2026-06-13 (G1a)** — PR-vs-Raoult flash validation run via DWSIM MCP
   (Claude Code, session 461a5c56). PASS: max bubble-T deviation +3.2 °C < 5 °C
   gate, mid-composition, vanishing at pure ends = mild liquid non-ideality PR
