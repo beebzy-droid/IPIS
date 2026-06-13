@@ -103,6 +103,52 @@ class SplitConformal:
         return y_pred - self.halfwidth, y_pred + self.halfwidth
 
 
+class NormalizedOneSidedConformal:
+    """Locally-adaptive one-sided upper conformal bound (Lei 2018, normalized).
+
+    For a one-sided spec ``y <= s`` we need an UPPER bound ``U(x)`` with
+    ``P(y <= U) >= 1 - alpha``, then enforce ``U <= s``. Two ingredients make
+    the bound *heteroscedastic* — the property that lets it beat a fixed margin:
+
+      - signed nonconformity ``e_i = y_i - y_hat_i`` (an *upper* bound uses the
+        signed residual, not |e|, so it is tighter than a two-sided half-width
+        for free when the mean model is roughly unbiased);
+      - a local scale ``sigma_hat(x_i) > 0`` (a model of the conditional residual
+        magnitude). The score is ``s_i = e_i / sigma_hat(x_i)`` and the bound is
+        ``U(x) = y_hat(x) + sigma_hat(x) * q`` with ``q`` the ``1 - alpha``
+        conformal quantile of the scores. Width ``= sigma_hat(x) * q`` scales
+        with the local uncertainty: tight where the sensor is sharp, wide near
+        the cliff / outside the calibrated envelope.
+
+    With constant ``sigma_hat`` this reduces to a one-sided split-conformal
+    bound (the constant-width baseline) — so the heteroscedasticity, hence any
+    advantage over a fixed margin, comes entirely from a non-constant scale.
+    """
+
+    def __init__(
+        self,
+        calib_residuals: FloatArray,
+        calib_scales: FloatArray,
+        alpha: float = 0.1,
+    ) -> None:
+        e = np.asarray(calib_residuals, np.float64)
+        sig = np.asarray(calib_scales, np.float64)
+        if e.shape != sig.shape:
+            raise ValueError("residuals and scales must have the same shape")
+        if np.any(sig <= 0.0):
+            raise ValueError("scales must be strictly positive")
+        self.alpha = float(alpha)
+        self.q = conformal_quantile(e / sig, 1.0 - alpha)  # signed -> one-sided
+
+    def upper_halfwidth(self, scale: FloatArray) -> FloatArray:
+        """Back-off ``C+ = scale * q`` at a test point's local scale."""
+        return np.asarray(scale, np.float64) * self.q
+
+    def upper_bound(self, y_pred: FloatArray, scale: FloatArray) -> FloatArray:
+        """Upper confidence bound ``U = y_hat + scale * q``."""
+        return np.asarray(y_pred, np.float64) + self.upper_halfwidth(scale)
+
+
 # --------------------------------------------------------------------------- #
 # EnbPI -- Ensemble Batch Prediction Intervals (Xu & Xie 2021, Algorithm 1)    #
 # --------------------------------------------------------------------------- #

@@ -437,3 +437,115 @@ class TestSurfaceRTOSolver:
         # surface always above spec even at best corner
         res = solve_rto_surface(lambda r, d: 0.5, backoff=0.0)
         assert res is None
+
+
+class TestNormalizedConformal:
+    """The normalized one-sided conformal primitive (the 3B mechanism)."""
+
+    def test_oneside_coverage_large_sample(self):
+        import numpy as np
+
+        from ipis.module1_soft_sensor.evaluation.conformal import (
+            NormalizedOneSidedConformal,
+            marginal_coverage,
+        )
+
+        rng = np.random.default_rng(0)
+        # heteroscedastic noise: scale grows with x; mean model unbiased
+        n = 4000
+        x = rng.uniform(0, 1, n)
+        scale = 0.5 + 2.0 * x
+        e = rng.normal(0, 1, n) * scale  # signed residuals
+        ca, te = slice(0, 2000), slice(2000, n)
+        cc = NormalizedOneSidedConformal(e[ca], scale[ca], alpha=0.10)
+        covered = e[te] <= cc.upper_halfwidth(scale[te])
+        cov = marginal_coverage(covered)
+        assert 0.87 <= cov <= 0.93  # one-sided 90%, large-sample
+
+    def test_constant_scale_reduces_to_split(self):
+        import numpy as np
+
+        from ipis.module1_soft_sensor.evaluation.conformal import (
+            NormalizedOneSidedConformal,
+            conformal_quantile,
+        )
+
+        rng = np.random.default_rng(1)
+        e = rng.normal(0, 1, 500)
+        ones = np.ones_like(e)
+        cc = NormalizedOneSidedConformal(e, ones, alpha=0.10)
+        # with unit scale, the half-width equals the one-sided split quantile
+        assert cc.upper_halfwidth(np.array([1.0]))[0] == pytest.approx(conformal_quantile(e, 0.90))
+
+    def test_positive_scale_required(self):
+        import numpy as np
+
+        from ipis.module1_soft_sensor.evaluation.conformal import NormalizedOneSidedConformal
+
+        with pytest.raises(ValueError, match="positive"):
+            NormalizedOneSidedConformal(np.zeros(5), np.zeros(5), alpha=0.1)
+
+
+class TestTwinSoftSensor:
+    """3B.2: conformal soft sensor on (synthetic) twin data."""
+
+    @staticmethod
+    def _synth(seed, n=900):
+        import numpy as np
+
+        rng = np.random.default_rng(seed)
+        t = rng.uniform(94.0, 120.0, n)
+        z = rng.uniform(0.30, 0.40, n)
+        xb = np.clip(
+            0.09 * np.exp(-0.045 * (t - 94.0)) + 0.35 * np.exp(-0.04 * (t - 94.0)) * (z - 0.35),
+            1e-4,
+            None,
+        )
+        t_meas = t + rng.normal(0, 0.75, n)
+        idx = rng.permutation(n)
+        return t_meas, xb, idx[:400], idx[400:650], idx[650:]
+
+    def test_coverage_and_heteroscedastic(self):
+        import warnings
+
+        warnings.filterwarnings("ignore")
+        from ipis.module3_rto.soft_sensor import TwinSoftSensor
+
+        tm, xb, tr, ca, te = self._synth(7)
+        s = TwinSoftSensor(alpha=0.10)
+        s.fit(tm[tr], xb[tr], tm[ca], xb[ca])
+        rep = s.validate_coverage(tm[te], xb[te])
+        assert 0.84 <= rep.empirical <= 0.97  # finite-sample band around 0.90
+        assert rep.halfwidth_cv > 0.1  # widths vary -> heteroscedastic
+
+    def test_backoff_callable_wider_at_cliff(self):
+        import warnings
+
+        warnings.filterwarnings("ignore")
+        from ipis.module3_rto.soft_sensor import TwinSoftSensor
+
+        tm, xb, tr, ca, te = self._synth(7)
+        s = TwinSoftSensor(alpha=0.10)
+        s.fit(tm[tr], xb[tr], tm[ca], xb[ca])
+        bo = s.backoff_callable(lambda r, d: 94.0 + 9.0 * r)  # higher R -> hotter
+        assert bo(1.0, 35.0) > bo(2.8, 35.0)  # cliff (low R, cool) wider than sharp
+
+    def test_chance_solve_feasible(self):
+        import warnings
+
+        import numpy as np
+
+        warnings.filterwarnings("ignore")
+        from ipis.module3_rto.rto_surface import solve_rto_surface
+        from ipis.module3_rto.soft_sensor import TwinSoftSensor
+
+        tm, xb, tr, ca, te = self._synth(7)
+        s = TwinSoftSensor(alpha=0.10)
+        s.fit(tm[tr], xb[tr], tm[ca], xb[ca])
+        bo = s.backoff_callable(lambda r, d: 94.0 + 9.0 * r)
+        res = solve_rto_surface(
+            lambda R, D: float(0.09 * np.exp(-0.9 * (R - 0.8)) * np.exp(-0.05 * (D - 33.0))),
+            backoff=bo,
+        )
+        assert res is not None and res.feasible_found
+        assert res.backoff_at_opt > 0.0

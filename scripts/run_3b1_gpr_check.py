@@ -36,7 +36,9 @@ def main(argv: list[str] | None = None) -> int:
     quad = fit_ln_xb_surface_from_csv(args.csv)
     df = pd.read_csv(args.csv)
 
-    gp_pts = np.array([gpr_xb.predict(r, d) for r, d in zip(df.reflux_ratio, df.distillate_kmol_h)])
+    gp_pts = np.array(
+        [gpr_xb.predict(r, d) for r, d in zip(df.reflux_ratio, df.distillate_kmol_h, strict=False)]
+    )
     err = np.abs(gp_pts - df.xb_c4.to_numpy()).max()
 
     rs = np.linspace(0.8, 3.0, 23)

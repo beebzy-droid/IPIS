@@ -716,6 +716,14 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-13 (3B.2 machinery)** — Conformal soft sensor built + demonstrated
+  on a synthetic z-stand-in. Decisions: feed-z (unmeasured) + noise disturbance;
+  normalized locally-adaptive one-sided conformal (the heteroscedastic mechanism
+  — plain split = fixed margin = no win). NormalizedOneSidedConformal added to
+  conformal.py; TwinSoftSensor + backoff_callable wire into solve_rto_surface.
+  Coverage 0.896 over seeds (=0.90), heteroscedastic width, +6.6 USD/h preview
+  with consistent surfaces. 42 m3 tests green. Pending the DWSIM z-campaign for
+  real magnitude. Resume = z-campaign -> 3B.3.
 - **2026-06-13 (3B.1 PASS)** — GPR surrogate over the twin built + gated.
   surrogate.py (bounded/seeded GP, reproducible) + rto_surface.py (generic
   grid solver accepting constant or adaptive back-off). GPR interpolates the
