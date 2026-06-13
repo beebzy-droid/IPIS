@@ -409,7 +409,22 @@ UNUSED (RTO stays in GEKKO per ADR-006/D4). Full detail + driving steps in
   on the 15-row preview: V1-V3 PASS, overall PASS. Full suite 269 green.
   New code: rto_nlp.fit_ln_xb_surface_from_points/_from_csv/fit_quadratic_surface;
   run_g2_analysis.py (surface + feasibility + back-off sweep + V1-at-optimum).
-  <pending: owner re-runs run_015, regenerates twin_runs.csv, reruns analysis>
+  ** run_015 RESOLUTION (2026-06-13): re-run via fine-stepping returned
+  xB=0.0079/xD=0.9854 but this FAILS V2 mass balance (1.4% closure error — xD
+  would need 0.9995 to close at that xB). Root cause is NOT a cache bug: at
+  R=3.0/B=65.5 (high-purity, over-refluxed) the Wang-Henke solver at 1e-5 tol
+  cannot reach a single balance-closing steady state; the result is
+  initialization-path-dependent (warm-start dup 0.0051; fresh master 0.024;
+  fine-step non-closing 0.0079). DECISION: **DROP run_015, run with 15 rows**
+  (>=12 needed; the over-purified corner is covered by runs 13,14 and the RTO
+  never visits it). With 15 rows: V1-V3 PASS, overall PASS, surface R^2=0.996
+  (x1.13 band), optimum R*=2.70/D*=33.7 @ sensor 101.4 C IN envelope. The
+  fine-step guard in run_g2_sweep.py is KEPT but must screen mass-balance
+  closure before accepting (don't accept a non-closing 'best effort').
+  ** 3B IMPLICATION (ledger): DWSIM's solver is initialization-sensitive in the
+  high-purity regime; the ADR-006 GPR-over-DWSIM EI loop must use continuation
+  + per-point mass-balance screening when sampling that corner.
+  G3 = PASS on the 15-row CSV. Resume = G4 (ADR-013 + sec3A writeup).
 - G3: <pending — V1-V4 results, deviations>
 - G4: <pending — closeout, ADR-013, resume = 3B>
 
@@ -671,6 +686,15 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
 ---
 
 ## Changelog of this doc
+- **2026-06-13 (G2/G3 closed, 15 rows)** — run_015 re-run via fine-stepping
+  failed V2 (1.4% mass-balance gap) — the high-purity/over-refluxed R=3.0,B=65.5
+  point has no balance-closing steady state at the solver's tolerance and is
+  initialization-path-dependent. Dropped it; ran G2/G3 on 15 rows: V1-V3 PASS,
+  surface R^2=0.996 (x1.13 band), RTO optimum R*=2.70/D*=33.7 at sensor 101.4 C
+  IN the M1 envelope (deterministic optimum is M1-valid). Profit gradient
+  ~2.7-5.2 USD/h per 0.001 back-off. V2 earned its keep by catching the
+  non-closing row. Flagged for 3B: GPR-over-DWSIM sampling needs continuation +
+  mass-balance screening in the high-purity corner. Resume = G4.
 - **2026-06-13 (G2 sweep + analysis)** — 16-run DWSIM sweep done (master
   reproduces G1c; spec-setter works). run_015 flagged BAD (cached duplicate) ->
   owner re-runs. V1 reframed to coverage semantics (all cold exits are also
