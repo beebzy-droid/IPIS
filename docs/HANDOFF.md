@@ -424,7 +424,14 @@ UNUSED (RTO stays in GEKKO per ADR-006/D4). Full detail + driving steps in
   ** 3B IMPLICATION (ledger): DWSIM's solver is initialization-sensitive in the
   high-purity regime; the ADR-006 GPR-over-DWSIM EI loop must use continuation
   + per-point mass-balance screening when sampling that corner.
-  G3 = PASS on the 15-row CSV. Resume = G4 (ADR-013 + sec3A writeup).
+  G3 = PASS on the 15-row CSV.
+- G4 2026-06-13 DRAFTED: ADR-013 (T1-T6 + G-gate findings) and
+  docs/module3/results.md sec3A (Summary/Data/Metrics/Observations/Unexpected).
+  validate_twin selftest redirected to twin-validation-selftest.md so the real
+  G3 report (twin-validation.md) is trackable — un-ignore it in .gitignore.
+  ** PHASE 3A COMPLETE pending owner commit + review. Resume = 3B
+  (uncertainty-aware RTO: M1 conformal intervals -> chance back-off; GPR
+  surrogate per ADR-006; head-to-head vs 3A fixed margins).
 - G3: <pending — V1-V4 results, deviations>
 - G4: <pending — closeout, ADR-013, resume = 3B>
 
@@ -686,6 +693,11 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
 ---
 
 ## Changelog of this doc
+- **2026-06-13 (G4 drafted — Phase 3A complete)** — ADR-013 (twin fidelity T1-T6
+  + G1a/V1/V4/feasibility/optimum findings) and docs/module3/results.md sec3A
+  written. Fixed the twin-validation.md path collision: selftest now writes
+  twin-validation-selftest.md (gitignore that; un-ignore the real report).
+  Phase 3A closed pending commit. Resume = 3B (the paper-2 contribution).
 - **2026-06-13 (G2/G3 closed, 15 rows)** — run_015 re-run via fine-stepping
   failed V2 (1.4% mass-balance gap) — the high-purity/over-refluxed R=3.0,B=65.5
   point has no balance-closing steady state at the solver's tolerance and is

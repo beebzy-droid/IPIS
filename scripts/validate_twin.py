@@ -229,22 +229,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--selftest", action="store_true", help="validate a shortcut-model fixture")
     parser.add_argument(
         "--out",
-        default="docs/module3/twin-validation.md",
-        help="output markdown path",
+        default=None,
+        help="output markdown path (default: twin-validation.md for a real run, "
+        "twin-validation-selftest.md for --selftest so it never clobbers the report)",
     )
     args = parser.parse_args(argv)
 
     if args.selftest:
         df, source = make_selftest_fixture(), "selftest (ShortcutColumnModel fixture)"
+        out = args.out or "docs/module3/twin-validation-selftest.md"
     elif args.csv:
         df, source = pd.read_csv(args.csv), args.csv
+        out = args.out or "docs/module3/twin-validation.md"
     else:
         parser.error("provide a CSV path or --selftest")
 
     results = validate(df)
     md = render_markdown(results, source, len(df))
-    Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.out).write_text(md)
+    Path(out).parent.mkdir(parents=True, exist_ok=True)
+    Path(out).write_text(md)
     print(md)
     return 0 if all(r.passed for r in results) else 1
 
