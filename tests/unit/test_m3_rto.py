@@ -307,3 +307,133 @@ class TestSurfaceFitVariants:
         p.write_text("reflux_ratio,distillate_kmol_h\n1.5,34.5\n")
         with pytest.raises(ValueError, match="missing columns"):
             fit_ln_xb_surface_from_csv(str(p))
+
+
+class TestGPRSurrogate:
+    """3B.1: GP surrogate over the twin (ADR-006)."""
+
+    @pytest.fixture(scope="class")
+    def twin_csv(self, tmp_path_factory):
+        import csv as _csv
+
+        p = tmp_path_factory.mktemp("twin") / "twin.csv"
+        rows = [
+            (1, 0.8, 37.0, 101.4, 0.033466),
+            (2, 0.8, 36.0, 99.4, 0.040582),
+            (3, 0.8, 34.5, 96.7, 0.053404),
+            (4, 0.8, 33.0, 94.5, 0.068177),
+            (5, 1.5, 37.0, 111.2, 0.012444),
+            (6, 1.5, 36.0, 108.7, 0.015817),
+            (7, 1.5, 34.5, 103.9, 0.024291),
+            (8, 1.5, 33.0, 98.3, 0.038581),
+            (9, 2.2, 37.0, 116.5, 0.006495),
+            (10, 2.2, 36.0, 114.3, 0.008364),
+            (11, 2.2, 34.5, 107.6, 0.015151),
+            (12, 2.2, 33.0, 97.1, 0.032282),
+            (13, 3.0, 37.0, 119.8, 0.003903),
+            (14, 3.0, 36.0, 117.9, 0.005068),
+            (16, 3.0, 33.0, 94.0, 0.030860),
+        ]
+        with open(p, "w", newline="") as f:
+            w = _csv.writer(f)
+            w.writerow(
+                [
+                    "run_id",
+                    "reflux_ratio",
+                    "distillate_kmol_h",
+                    "feed_kmol_h",
+                    "z_c4",
+                    "tray6_T_C",
+                    "top_P_bar",
+                    "xd_c4",
+                    "xb_c4",
+                    "reboiler_duty_kW",
+                    "tray6_x_c4_liq",
+                ]
+            )
+            for rid, r, d, t, xb in rows:
+                w.writerow([rid, r, d, 100, 0.35, t, 4.7, 0.9, xb, 600, ""])
+        return str(p)
+
+    def test_gpr_interpolates_and_monotone(self, twin_csv):
+        import warnings
+
+        import numpy as np
+
+        warnings.filterwarnings("ignore")
+        from ipis.module3_rto.surrogate import fit_gpr_from_csv
+
+        gpr_xb, gpr_tt = fit_gpr_from_csv(twin_csv)
+        assert gpr_xb.r_squared > 0.999
+        # monotone in R and D on a coarse grid
+        rs = np.linspace(0.8, 3.0, 12)
+        ds = np.linspace(33.0, 37.0, 10)
+        assert all(
+            gpr_xb.predict(rs[i], d) >= gpr_xb.predict(rs[i + 1], d) - 1e-5
+            for d in ds
+            for i in range(len(rs) - 1)
+        )
+
+    def test_gpr_optimum_matches_3a(self, twin_csv):
+        import warnings
+
+        warnings.filterwarnings("ignore")
+        from ipis.module3_rto.rto_nlp import fit_ln_xb_surface_from_csv, solve_rto
+        from ipis.module3_rto.rto_surface import solve_rto_surface
+        from ipis.module3_rto.surrogate import fit_gpr_from_csv
+
+        gpr_xb, _ = fit_gpr_from_csv(twin_csv)
+        quad = fit_ln_xb_surface_from_csv(twin_csv)
+        gpr_opt = solve_rto_surface(gpr_xb.predict, backoff=0.0)
+        quad_opt = solve_rto(quad, backoff=0.0)
+        assert "c4_spec_backoff" in gpr_opt.active_constraints
+        assert abs(gpr_opt.distillate_kmol_h - quad_opt.distillate_kmol_h) < 0.5
+        assert abs(gpr_opt.profit_usd_per_h - quad_opt.profit_usd_per_h) < 5.0
+
+    def test_gpr_reproducible(self, twin_csv):
+        import warnings
+
+        warnings.filterwarnings("ignore")
+        from ipis.module3_rto.surrogate import fit_gpr_from_csv
+
+        a, _ = fit_gpr_from_csv(twin_csv)
+        b, _ = fit_gpr_from_csv(twin_csv)
+        assert a.predict(2.0, 35.0) == b.predict(2.0, 35.0)
+
+
+class TestSurfaceRTOSolver:
+    """The generic grid solver (constant + adaptive back-off)."""
+
+    def test_constant_backoff_tightens(self):
+        from ipis.module3_rto.rto_surface import solve_rto_surface
+
+        import math
+
+        # analytic surface spanning ~0.004-0.05, monotone down in R and D
+        def surf(r, d):
+            return 0.1 * math.exp(-0.9 * r) * math.exp(-0.1 * (d - 33.0))
+
+        loose = solve_rto_surface(surf, backoff=0.0)
+        tight = solve_rto_surface(surf, backoff=0.005)
+        assert loose is not None and tight is not None
+        assert tight.x_bottoms_lk <= loose.x_bottoms_lk + 1e-9
+
+    def test_adaptive_backoff_callable(self):
+        from ipis.module3_rto.rto_surface import solve_rto_surface
+
+        import math
+
+        def surf(r, d):
+            return 0.1 * math.exp(-0.9 * r) * math.exp(-0.1 * (d - 33.0))
+
+        # operating-point-dependent back-off (proxy for interval width)
+        res = solve_rto_surface(surf, backoff=lambda r, d: 0.002 + 0.001 * r)
+        assert res is not None
+        assert res.backoff_at_opt > 0.0
+
+    def test_infeasible_returns_none(self):
+        from ipis.module3_rto.rto_surface import solve_rto_surface
+
+        # surface always above spec even at best corner
+        res = solve_rto_surface(lambda r, d: 0.5, backoff=0.0)
+        assert res is None

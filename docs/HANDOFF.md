@@ -710,6 +710,14 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
 ---
 
 ## Changelog of this doc
+- **2026-06-13 (3B.1 PASS)** — GPR surrogate over the twin built + gated.
+  surrogate.py (bounded/seeded GP, reproducible) + rto_surface.py (generic
+  grid solver accepting constant or adaptive back-off). GPR interpolates the
+  15 twin points (R^2=1.0), is monotone, and reproduces the 3A optimum (profit
+  within 1.4 USD/h, D* to 0.014, spec active, sensor-T in envelope). Honest:
+  on this clean binary surface GPR ~= the quadratic; its payoff is variance +
+  flexibility, banked for the 5-comp case and surrogate refinement. 275 green.
+  Resume = 3B.2.
 - **2026-06-13 (3B scoping drafted)** — Phase 3A committed/closed; opened 3B with
   docs/module3/scoping-3b.md (D1-D6 option tables + asks). Verified M1
   components exist for the wiring (conformal engines + state_bus interval &
