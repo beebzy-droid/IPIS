@@ -95,11 +95,41 @@ def fit_ln_xb_surface(
             except ValueError:
                 continue
             if resp.x_bottoms_lk > 0.0:
-                rows.append((float(r), float(d), float(np.log(resp.x_bottoms_lk))))
+                rows.append((float(r), float(d), float(resp.x_bottoms_lk)))
     if len(rows) < 12:
         raise ValueError(f"Only {len(rows)} feasible grid points; need >= 12.")
     arr = np.asarray(rows)
-    r, d, y = arr[:, 0], arr[:, 1], arr[:, 2]
+    return fit_ln_xb_surface_from_points(arr[:, 0], arr[:, 1], arr[:, 2])
+
+
+def fit_ln_xb_surface_from_points(
+    r: np.ndarray, d: np.ndarray, x_bottoms: np.ndarray
+) -> LnXbSurface:
+    """Fit the quadratic ln(x_B) surface from explicit (R, D, x_B) points.
+
+    This is the shared core: the model-grid path (`fit_ln_xb_surface`) and the
+    twin-CSV path (`fit_ln_xb_surface_from_csv`) both feed it. Points with
+    non-positive x_B are dropped (log undefined).
+
+    Args:
+        r: Reflux ratios.
+        d: Distillate rates (kmol/h).
+        x_bottoms: Bottoms light-key mole fractions (must be > 0).
+
+    Returns:
+        The fitted surface with R^2 and the max |ln residual| band.
+
+    Raises:
+        ValueError: If fewer than 12 valid points remain.
+    """
+    r = np.asarray(r, dtype=float)
+    d = np.asarray(d, dtype=float)
+    xb = np.asarray(x_bottoms, dtype=float)
+    mask = xb > 0.0
+    r, d, xb = r[mask], d[mask], xb[mask]
+    if r.size < 12:
+        raise ValueError(f"Only {r.size} valid points; need >= 12.")
+    y = np.log(xb)
     x_mat = np.column_stack([np.ones_like(r), r, d, r * r, d * d, r * d])
     coef, *_ = np.linalg.lstsq(x_mat, y, rcond=None)
     resid = y - x_mat @ coef
@@ -109,6 +139,41 @@ def fit_ln_xb_surface(
         coef=tuple(float(c) for c in coef),
         r_squared=1.0 - ss_res / ss_tot,
         max_abs_resid=float(np.abs(resid).max()),
+    )
+
+
+def fit_ln_xb_surface_from_csv(
+    csv_path: str,
+    r_col: str = "reflux_ratio",
+    d_col: str = "distillate_kmol_h",
+    xb_col: str = "xb_c4",
+) -> LnXbSurface:
+    """Fit the ln(x_B) surface from a DWSIM twin sweep CSV (G2 output).
+
+    The CSV is the validated twin export (real Peng-Robinson x_B), so this is
+    the surface the 3A RTO is actually solved on — the shortcut model is left
+    behind here.
+
+    Args:
+        csv_path: Path to the twin sweep CSV.
+        r_col: Reflux-ratio column name.
+        d_col: Distillate-rate column name (kmol/h).
+        xb_col: Bottoms light-key mole-fraction column name.
+
+    Returns:
+        The fitted surface.
+
+    Raises:
+        ValueError: If columns are missing or fewer than 12 valid rows remain.
+    """
+    import pandas as pd
+
+    df = pd.read_csv(csv_path)
+    missing = [c for c in (r_col, d_col, xb_col) if c not in df.columns]
+    if missing:
+        raise ValueError(f"CSV missing columns: {missing}")
+    return fit_ln_xb_surface_from_points(
+        df[r_col].to_numpy(), df[d_col].to_numpy(), df[xb_col].to_numpy()
     )
 
 

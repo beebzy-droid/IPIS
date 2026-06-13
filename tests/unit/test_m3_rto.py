@@ -197,3 +197,90 @@ class TestValidateTwin:
         md = render_markdown([CheckResult("V1 envelope", False, "1 row outside")], "x.csv", 5)
         assert "FAIL" in md and "Overall: **FAIL**" not in md  # table cell, bold line
         assert "**Overall: FAIL**" in md
+
+
+class TestSurfaceFitVariants:
+    """The from-points / from-csv fit paths (G2 consumption)."""
+
+    def test_from_points_matches_model_grid(self):
+        """from_points on the model's own grid reproduces the grid fit."""
+        import numpy as np
+
+        from ipis.module3_rto.rto_nlp import fit_ln_xb_surface_from_points
+
+        m = ShortcutColumnModel()
+        rs, ds, xbs = [], [], []
+        for r in np.linspace(0.8, 3.0, 9):
+            for d in np.linspace(33.0, 37.0, 9):
+                try:
+                    resp = m.evaluate(float(r), float(d))
+                except ValueError:
+                    continue
+                rs.append(r)
+                ds.append(d)
+                xbs.append(resp.x_bottoms_lk)
+        surf = fit_ln_xb_surface_from_points(np.array(rs), np.array(ds), np.array(xbs))
+        grid = fit_ln_xb_surface(m)
+        assert surf.r_squared == pytest.approx(grid.r_squared, rel=1e-9)
+
+    def test_from_points_too_few_raises(self):
+        import numpy as np
+
+        from ipis.module3_rto.rto_nlp import fit_ln_xb_surface_from_points
+
+        with pytest.raises(ValueError, match="need >= 12"):
+            fit_ln_xb_surface_from_points(np.arange(5.0), np.arange(5.0), np.full(5, 0.01))
+
+    def test_from_points_drops_nonpositive_xb(self):
+        """Non-positive xB rows are dropped; fit still succeeds on the rest."""
+        import numpy as np
+
+        from ipis.module3_rto.rto_nlp import fit_ln_xb_surface_from_points
+
+        m = ShortcutColumnModel()
+        rs, ds, xbs = [], [], []
+        for r in np.linspace(0.8, 3.0, 4):
+            for d in np.linspace(33.0, 37.0, 4):
+                try:
+                    resp = m.evaluate(float(r), float(d))
+                except ValueError:
+                    continue
+                rs.append(r)
+                ds.append(d)
+                xbs.append(resp.x_bottoms_lk)
+        # inject two non-positive rows that must be dropped (would crash log())
+        rs += [1.0, 2.0]
+        ds += [35.0, 35.0]
+        xbs += [0.0, -1.0]
+        surf = fit_ln_xb_surface_from_points(np.array(rs), np.array(ds), np.array(xbs))
+        assert surf.r_squared > 0.9  # varied real xB -> well-defined, good fit
+
+    def test_from_csv_roundtrip(self, tmp_path):
+        import csv as _csv
+
+        import numpy as np
+
+        from ipis.module3_rto.rto_nlp import fit_ln_xb_surface_from_csv
+
+        m = ShortcutColumnModel()
+        p = tmp_path / "twin.csv"
+        with open(p, "w", newline="") as f:
+            w = _csv.writer(f)
+            w.writerow(["reflux_ratio", "distillate_kmol_h", "xb_c4"])
+            for r in np.linspace(0.8, 3.0, 6):
+                for d in np.linspace(33.0, 37.0, 6):
+                    try:
+                        resp = m.evaluate(float(r), float(d))
+                    except ValueError:
+                        continue
+                    w.writerow([r, d, resp.x_bottoms_lk])
+        surf = fit_ln_xb_surface_from_csv(str(p))
+        assert surf.r_squared > 0.9
+
+    def test_from_csv_missing_column_raises(self, tmp_path):
+        from ipis.module3_rto.rto_nlp import fit_ln_xb_surface_from_csv
+
+        p = tmp_path / "bad.csv"
+        p.write_text("reflux_ratio,distillate_kmol_h\n1.5,34.5\n")
+        with pytest.raises(ValueError, match="missing columns"):
+            fit_ln_xb_surface_from_csv(str(p))

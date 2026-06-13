@@ -387,7 +387,15 @@ UNUSED (RTO stays in GEKKO per ADR-006/D4). Full detail + driving steps in
   (sanity only). => V4 (stage physics-bridge check) DROPPED, superseded by
   G1a (which did the PR-vs-Raoult VLE check rigorously). tray6_x_c4_liq NOT
   populated; G3 = V1-V3 only. Product xB/xD are real, so the RTO path is intact.
-- G2: <pending — parameter_sweep runs converged /16, gaps noted>
+- G2 2026-06-13 CONSUMPTION SIDE READY (sandbox): refactored rto_nlp with
+  fit_ln_xb_surface_from_points + fit_ln_xb_surface_from_csv; new
+  scripts/run_g2_analysis.py (surface fit on real PR xB -> feasibility map vs
+  0.02 -> RTO back-off sweep + profit gradient). Pipeline tested end-to-end on
+  a synthetic CSV (29 m3 tests green). DWSIM SIDE PENDING: Claude Code runs the
+  16-run sweep (scripts/run_g2_sweep.py, built on run_g1c.py) — must SET specs
+  (reflux on condenser, bottoms=100-D on reboiler; G1c only read) and emit the
+  CSV schema. Expect fewer feasible points + optimum at higher R/lower D than
+  the shortcut (twin separates less sharply). <pending sweep CSV>
 - G3: <pending — V1-V4 results, deviations>
 - G4: <pending — closeout, ADR-013, resume = 3B>
 
@@ -649,6 +657,15 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
 ---
 
 ## Changelog of this doc
+- **2026-06-13 (G2 consumption built)** — Prepared the twin-CSV consumption
+  pipeline in the sandbox ahead of the sweep: rto_nlp gains
+  fit_ln_xb_surface_from_points (shared core) + fit_ln_xb_surface_from_csv;
+  scripts/run_g2_analysis.py fits the ln(xB) surface on real PR xB, maps
+  feasibility vs the 0.02 spec, and runs the RTO back-off sweep with profit
+  gradient. Verified end-to-end on a shortcut-generated synthetic CSV (R^2 0.98,
+  spec active at every back-off, gradient ~1.7-2.5 USD/h per 0.001); 5 new tests
+  (29 m3 total, green). Awaiting the real DWSIM sweep CSV from Claude Code.
+  Resume = run G2 sweep, then run_g2_analysis on the real CSV.
 - **2026-06-13 (G1c PASS + twin earns its keep)** — run_g1c.py works via
   DWSIM.Automation3 (pythonnet 3.1.0, .NET Fx 4.8, ipis env). All temps + duty
   in band; product xB/xD are genuine PR. HEADLINE: master case xB=0.0243 > 0.02
