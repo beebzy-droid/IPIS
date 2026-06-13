@@ -405,9 +405,9 @@ class TestSurfaceRTOSolver:
     """The generic grid solver (constant + adaptive back-off)."""
 
     def test_constant_backoff_tightens(self):
-        from ipis.module3_rto.rto_surface import solve_rto_surface
-
         import math
+
+        from ipis.module3_rto.rto_surface import solve_rto_surface
 
         # analytic surface spanning ~0.004-0.05, monotone down in R and D
         def surf(r, d):
@@ -419,9 +419,9 @@ class TestSurfaceRTOSolver:
         assert tight.x_bottoms_lk <= loose.x_bottoms_lk + 1e-9
 
     def test_adaptive_backoff_callable(self):
-        from ipis.module3_rto.rto_surface import solve_rto_surface
-
         import math
+
+        from ipis.module3_rto.rto_surface import solve_rto_surface
 
         def surf(r, d):
             return 0.1 * math.exp(-0.9 * r) * math.exp(-0.1 * (d - 33.0))

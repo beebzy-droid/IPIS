@@ -709,6 +709,12 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
 
 ---
 
+## Lessons
+- **Run the exact CI command, not piecemeal.** A test-file edit was black-formatted
+  but ruff was only run on the changed src files, missing an I001 import-order
+  regression that CI caught. Before declaring clean: `ruff check src tests` AND
+  `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
+
 ## Changelog of this doc
 - **2026-06-13 (3B.1 PASS)** — GPR surrogate over the twin built + gated.
   surrogate.py (bounded/seeded GP, reproducible) + rto_surface.py (generic
@@ -717,7 +723,8 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   within 1.4 USD/h, D* to 0.014, spec active, sensor-T in envelope). Honest:
   on this clean binary surface GPR ~= the quadratic; its payoff is variance +
   flexibility, banked for the 5-comp case and surrogate refinement. 275 green.
-  Resume = 3B.2.
+  CI fix: ruff I001 import-order in test_m3_rto.py (the toy-surface edit was
+  black'd but not ruff'd) — fixed; lesson logged below. Resume = 3B.2.
 - **2026-06-13 (3B scoping drafted)** — Phase 3A committed/closed; opened 3B with
   docs/module3/scoping-3b.md (D1-D6 option tables + asks). Verified M1
   components exist for the wiring (conformal engines + state_bus interval &
