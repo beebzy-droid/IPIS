@@ -387,15 +387,29 @@ UNUSED (RTO stays in GEKKO per ADR-006/D4). Full detail + driving steps in
   (sanity only). => V4 (stage physics-bridge check) DROPPED, superseded by
   G1a (which did the PR-vs-Raoult VLE check rigorously). tray6_x_c4_liq NOT
   populated; G3 = V1-V3 only. Product xB/xD are real, so the RTO path is intact.
-- G2 2026-06-13 CONSUMPTION SIDE READY (sandbox): refactored rto_nlp with
-  fit_ln_xb_surface_from_points + fit_ln_xb_surface_from_csv; new
-  scripts/run_g2_analysis.py (surface fit on real PR xB -> feasibility map vs
-  0.02 -> RTO back-off sweep + profit gradient). Pipeline tested end-to-end on
-  a synthetic CSV (29 m3 tests green). DWSIM SIDE PENDING: Claude Code runs the
-  16-run sweep (scripts/run_g2_sweep.py, built on run_g1c.py) — must SET specs
-  (reflux on condenser, bottoms=100-D on reboiler; G1c only read) and emit the
-  CSV schema. Expect fewer feasible points + optimum at higher R/lower D than
-  the shortcut (twin separates less sharply). <pending sweep CSV>
+- G2 2026-06-13 SWEEP DONE + ANALYSIS VERIFIED. 16/16 converged; master row
+  reproduces G1c exactly (spec-setter confirmed: condenser 'C' Stream_Ratio,
+  reboiler 'R' Product_Molar_Flow_Rate, SpecValue, kmol/h, direct assignment).
+  ** run_015 (R=3.0,D=34.5) is BAD — bit-identical to run_014; physics says
+  D=36->34.5 must move xB (~0.007), so spec didn't re-apply/solve cached.
+  OWNER TODO: re-run that one case fresh; do not accept the duplicate.
+  ** V1 REFRAMED: sweep grid explores beyond nominal, so V1-across-grid is the
+  wrong test. All 6 cold exits (<100 C) are ALSO xB-infeasible (RTO never goes
+  there); the only FEASIBLE exits are HOT (>112 C: runs 9,10,13,14) = the 3B
+  motivation (econ-tempting high-R pushes the sensor out of its trained
+  envelope). check_envelope softened to coverage semantics: PASS iff a
+  feasible in-envelope region exists; reports the map + hot-exit count.
+  ** ANALYSIS (preview on 15 good rows): real-PR ln(xB) surface R^2=0.996,
+  x1.13 band (vs shortcut x1.74 — twin is SMOOTHER, eases the 3B GPR case).
+  RTO optimum R*=2.70 D*=33.7 -> sensor T=101.4 C IN envelope = deterministic
+  optimum is M1-valid. Profit gradient ~3.3-5.5 USD/h per 0.001 back-off (vs
+  ~1.9 shortcut; tighter feasible region raises the back-off stake for 3B).
+  ** SCHEMA reconciled to lowercase xd_c4/xb_c4 across validate_twin + tests.
+  V4 now skips on absent OR all-blank column (twin leaves it blank). Validation
+  on the 15-row preview: V1-V3 PASS, overall PASS. Full suite 269 green.
+  New code: rto_nlp.fit_ln_xb_surface_from_points/_from_csv/fit_quadratic_surface;
+  run_g2_analysis.py (surface + feasibility + back-off sweep + V1-at-optimum).
+  <pending: owner re-runs run_015, regenerates twin_runs.csv, reruns analysis>
 - G3: <pending — V1-V4 results, deviations>
 - G4: <pending — closeout, ADR-013, resume = 3B>
 
@@ -657,6 +671,17 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
 ---
 
 ## Changelog of this doc
+- **2026-06-13 (G2 sweep + analysis)** — 16-run DWSIM sweep done (master
+  reproduces G1c; spec-setter works). run_015 flagged BAD (cached duplicate) ->
+  owner re-runs. V1 reframed to coverage semantics (all cold exits are also
+  spec-infeasible; the only feasible exits are HOT high-R = the 3B motivation);
+  check_envelope softened accordingly. Real-PR surface R^2=0.996 (x1.13 band,
+  smoother than shortcut x1.74). RTO optimum R*=2.70/D*=33.7 lands at sensor
+  T=101.4 C IN envelope -> deterministic optimum is M1-valid. Profit gradient
+  ~3.3-5.5 USD/h per 0.001 back-off. Schema unified to lowercase; V4 skips on
+  blank column. run_g2_analysis.py + 3 fit helpers added; 269 suite green.
+  Resume = owner re-runs run_015 -> rerun validate_twin + run_g2_analysis on
+  the full 16-row CSV -> G3 closeout.
 - **2026-06-13 (G2 consumption built)** — Prepared the twin-CSV consumption
   pipeline in the sandbox ahead of the sweep: rto_nlp gains
   fit_ln_xb_surface_from_points (shared core) + fit_ln_xb_surface_from_csv;

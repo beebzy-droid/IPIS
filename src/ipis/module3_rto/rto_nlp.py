@@ -142,6 +142,41 @@ def fit_ln_xb_surface_from_points(
     )
 
 
+def fit_quadratic_surface(r, d, z):
+    """Fit z ~ quadratic(R, D) and return a callable f(R, D) -> z.
+
+    Used for diagnostic surfaces (e.g. sensor-stage temperature vs R, D) where
+    a plain interpolating quadratic suffices — no log transform, no LnXbSurface
+    machinery. Drops non-finite rows.
+
+    Args:
+        r: Reflux ratios.
+        d: Distillate rates.
+        z: Response values.
+
+    Returns:
+        A callable taking (R, D) floats and returning the fitted response.
+
+    Raises:
+        ValueError: If fewer than 6 finite points remain.
+    """
+    r = np.asarray(r, dtype=float)
+    d = np.asarray(d, dtype=float)
+    z = np.asarray(z, dtype=float)
+    mask = np.isfinite(r) & np.isfinite(d) & np.isfinite(z)
+    r, d, z = r[mask], d[mask], z[mask]
+    if r.size < 6:
+        raise ValueError(f"Only {r.size} finite points; need >= 6.")
+    x_mat = np.column_stack([np.ones_like(r), r, d, r * r, d * d, r * d])
+    coef, *_ = np.linalg.lstsq(x_mat, z, rcond=None)
+    b = tuple(float(c) for c in coef)
+
+    def _surface(rr: float, dd: float) -> float:
+        return b[0] + b[1] * rr + b[2] * dd + b[3] * rr * rr + b[4] * dd * dd + b[5] * rr * dd
+
+    return _surface
+
+
 def fit_ln_xb_surface_from_csv(
     csv_path: str,
     r_col: str = "reflux_ratio",

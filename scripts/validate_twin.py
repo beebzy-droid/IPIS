@@ -48,8 +48,8 @@ REQUIRED_COLUMNS = [
     "z_c4",
     "tray6_T_C",
     "top_P_bar",
-    "xD_c4",
-    "xB_c4",
+    "xd_c4",
+    "xb_c4",
     "reboiler_duty_kW",
 ]
 OPTIONAL_TRAY6_X_COLUMN = "tray6_x_c4_liq"
@@ -69,25 +69,38 @@ class CheckResult:
     detail: str
 
 
-def check_envelope(df: pd.DataFrame) -> CheckResult:
-    """V1: every run inside the Module 1 physics-bridge envelope."""
-    t_ok = df["tray6_T_C"].between(*ENVELOPE_T_C)
+def check_envelope(df: pd.DataFrame, spec_xb: float = 0.02) -> CheckResult:
+    """V1: a feasible operating region inside the M1 physics-bridge envelope exists.
+
+    The sweep grid deliberately explores beyond nominal operation, so requiring
+    every grid point in [100, 112] C is the wrong test — exploration corners
+    leave the envelope by design. The RTO-relevant question is whether a
+    SPEC-FEASIBLE (xB <= spec) operating region sits inside the envelope. V1
+    passes iff that intersection is non-empty; out-of-envelope corners are
+    reported as a coverage map, and feasible HOT exits (T > upper bound) are
+    flagged as the uncertainty-aware-RTO (3B) motivation — the sensor leaving
+    its trained envelope in the economically-tempting high-reflux region.
+    """
     p_ok = df["top_P_bar"].between(*ENVELOPE_P_BAR)
-    bad = df[~(t_ok & p_ok)]
+    t_ok = df["tray6_T_C"].between(*ENVELOPE_T_C)
+    in_env = t_ok & p_ok
+    feasible = df["xb_c4"] <= spec_xb if "xb_c4" in df.columns else pd.Series(True, index=df.index)
+    feas_in_env = feasible & in_env
+    feas_hot = feasible & (df["tray6_T_C"] > ENVELOPE_T_C[1])
     detail = (
         f"T range [{df['tray6_T_C'].min():.1f}, {df['tray6_T_C'].max():.1f}] C "
-        f"(env {ENVELOPE_T_C}); P range [{df['top_P_bar'].min():.2f}, "
-        f"{df['top_P_bar'].max():.2f}] bar (env {ENVELOPE_P_BAR}); "
-        f"{len(bad)}/{len(df)} rows outside"
+        f"(env {ENVELOPE_T_C}); {int(in_env.sum())}/{len(df)} grid pts in-env; "
+        f"feasible&in-env={int(feas_in_env.sum())}; "
+        f"feasible HOT exits (>{ENVELOPE_T_C[1]} C, 3B flag)={int(feas_hot.sum())}"
     )
-    return CheckResult("V1 envelope", bad.empty, detail)
+    return CheckResult("V1 envelope (feasible region)", bool(feas_in_env.any()), detail)
 
 
 def check_mass_balance(df: pd.DataFrame) -> CheckResult:
     """V2: per-row light-key balance closure within tolerance."""
     f_lk = df["feed_kmol_h"] * df["z_c4"]
     bottoms = df["feed_kmol_h"] - df["distillate_kmol_h"]
-    closure = (f_lk - df["distillate_kmol_h"] * df["xD_c4"] - bottoms * df["xB_c4"]).abs() / f_lk
+    closure = (f_lk - df["distillate_kmol_h"] * df["xd_c4"] - bottoms * df["xb_c4"]).abs() / f_lk
     worst = float(closure.max())
     n_bad = int((closure > MASS_BALANCE_TOL).sum())
     return CheckResult(
@@ -104,7 +117,7 @@ def check_monotonicity(df: pd.DataFrame) -> CheckResult:
         g = grp.sort_values("reflux_ratio")
         if len(g) < 2:
             continue
-        dx = np.diff(g["xB_c4"].to_numpy())
+        dx = np.diff(g["xb_c4"].to_numpy())
         dq = np.diff(g["reboiler_duty_kW"].to_numpy())
         if (dx > 1e-9).any():
             violations.append(f"xB increases with R at D={d_val}")
@@ -118,20 +131,30 @@ def check_monotonicity(df: pd.DataFrame) -> CheckResult:
 
 
 def check_physics_bridge(df: pd.DataFrame) -> CheckResult | None:
-    """V4: tray-6 liquid C4 vs Module 1 bubble-point inversion (optional)."""
+    """V4: tray-6 liquid C4 vs Module 1 inversion (DROPPED for the DWSIM twin).
+
+    Superseded by G1a (DWSIM 9 won't expose stage compositions; a Raoult-vs-
+    Raoult stage check would be circular). Skips when the column is absent OR
+    all-blank — the twin CSV leaves it blank, so V4 does not fire. Retained for
+    any non-DWSIM source that genuinely populates it.
+    """
     if OPTIONAL_TRAY6_X_COLUMN not in df.columns:
         return None
+    col = pd.to_numeric(df[OPTIONAL_TRAY6_X_COLUMN], errors="coerce")
+    if col.notna().sum() == 0:
+        return None  # all-blank -> V4 superseded by G1a
     from ipis.physics.bubble_point_inversion import light_key_fraction
 
-    pred = df.apply(
+    valid = col.notna()
+    pred = df[valid].apply(
         lambda row: light_key_fraction(row["tray6_T_C"] + 273.15, row["top_P_bar"] * 1.0e5),
         axis=1,
     )
-    dev = (pred - df[OPTIONAL_TRAY6_X_COLUMN]).abs()
+    dev = (pred - col[valid]).abs()
     return CheckResult(
         "V4 physics bridge",
         float(dev.max()) <= PHYSICS_DEVIATION_TOL,
-        f"|x_C4 dev| mean {dev.mean():.3f} / max {dev.max():.3f} " f"(tol {PHYSICS_DEVIATION_TOL})",
+        f"|x_C4 dev| mean {dev.mean():.3f} / max {dev.max():.3f} (tol {PHYSICS_DEVIATION_TOL})",
     )
 
 
@@ -192,8 +215,8 @@ def make_selftest_fixture() -> pd.DataFrame:
                     "z_c4": m.z_lk,
                     "tray6_T_C": 106.0,  # nominal mid-envelope placeholder
                     "top_P_bar": 4.9,
-                    "xD_c4": resp.x_distillate_lk,
-                    "xB_c4": resp.x_bottoms_lk,
+                    "xd_c4": resp.x_distillate_lk,
+                    "xb_c4": resp.x_bottoms_lk,
                     "reboiler_duty_kW": resp.reboiler_duty_kw,
                 }
             )

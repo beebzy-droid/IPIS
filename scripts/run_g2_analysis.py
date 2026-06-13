@@ -80,11 +80,14 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"  {'backoff':>8}  {'R*':>6}  {'D*':>7}  {'xB':>7}  {'Q_kW':>7}  {'profit$/h':>10}  active"
     )
+    opt0 = None
     for bo in backoffs:
         res = solve_rto(surf, economics=econ, backoff=bo)
         if res is None:
             print(f"  {bo:8.4f}  (held)")
             continue
+        if opt0 is None:
+            opt0 = res
         print(
             f"  {bo:8.4f}  {res.reflux_ratio:6.3f}  {res.distillate_kmol_h:7.3f}  "
             f"{res.x_bottoms_lk:7.4f}  {res.reboiler_duty_kw:7.1f}  "
@@ -96,6 +99,37 @@ def main(argv: list[str] | None = None) -> int:
                 grad = (prev[1] - res.profit_usd_per_h) / (d_bo / 0.001)
                 print(f"           -> profit gradient {grad:6.2f} USD/h per 0.001 back-off")
         prev = (bo, res.profit_usd_per_h)
+
+    # 4. V1-at-optimum: sensor stage in the M1 envelope at the RTO optimum?
+    if opt0 is not None and "tray6_T_C" in df.columns:
+        try:
+            from ipis.module3_rto.rto_nlp import fit_quadratic_surface
+
+            tsurf = fit_quadratic_surface(
+                df["reflux_ratio"].to_numpy(),
+                df["distillate_kmol_h"].to_numpy(),
+                df["tray6_T_C"].to_numpy(),
+            )
+            t_opt = float(tsurf(opt0.reflux_ratio, opt0.distillate_kmol_h))
+            in_env = 100.0 <= t_opt <= 112.0
+            print("\n=== V1 at the RTO optimum (zero back-off) ===")
+            print(
+                f"  optimum R*={opt0.reflux_ratio:.3f} D*={opt0.distillate_kmol_h:.3f} "
+                f"-> sensor stage T = {t_opt:.1f} C "
+                f"[{'IN' if in_env else 'OUT of'} envelope 100-112]"
+            )
+            if in_env:
+                print(
+                    "  Deterministic optimum is M1-envelope-valid. (High-R grid "
+                    "corners exit HOT but are over-purified and dominated.)"
+                )
+            else:
+                print(
+                    "  3B FLAG: optimum leaves the M1 sensor envelope -> conformal "
+                    "intervals widen there; uncertainty-aware back-off (3B) is the fix."
+                )
+        except Exception as ex:  # diagnostic only, never fatal
+            print(f"\n(V1-at-optimum check skipped: {ex})")
 
     print("\nNote: V1-V3 validation is run separately via scripts/validate_twin.py.")
     return 0

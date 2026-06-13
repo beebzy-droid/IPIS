@@ -166,20 +166,43 @@ class TestValidateTwin:
         from validate_twin import validate
 
         with pytest.raises(ValueError, match="missing required columns"):
-            validate(fixture_df.drop(columns=["xB_c4"]))
+            validate(fixture_df.drop(columns=["xb_c4"]))
 
-    def test_envelope_violation_fails(self, fixture_df):
+    def test_envelope_passes_when_feasible_region_in_envelope(self):
+        """V1 passes if at least one feasible (xB<=spec) point is in-envelope."""
+        import pandas as pd
         from validate_twin import check_envelope
 
-        bad = fixture_df.copy()
-        bad.loc[bad.index[0], "tray6_T_C"] = 130.0  # outside [100, 112]
-        assert not check_envelope(bad).passed
+        df = pd.DataFrame(
+            {
+                "tray6_T_C": [106.0, 99.0, 118.0],  # in / cold / hot
+                "top_P_bar": [4.7, 4.7, 4.7],
+                "xb_c4": [0.015, 0.05, 0.004],  # feasible / infeasible / feasible-hot
+            }
+        )
+        res = check_envelope(df)
+        assert res.passed  # the 106 C row is feasible AND in-envelope
+        assert "3B flag" in res.detail
+
+    def test_envelope_fails_when_no_feasible_point_in_envelope(self):
+        """V1 fails only if the feasible set never lands inside the envelope."""
+        import pandas as pd
+        from validate_twin import check_envelope
+
+        df = pd.DataFrame(
+            {
+                "tray6_T_C": [99.0, 118.0],  # cold + hot, none in [100,112]
+                "top_P_bar": [4.7, 4.7],
+                "xb_c4": [0.05, 0.004],
+            }
+        )
+        assert not check_envelope(df).passed
 
     def test_mass_balance_violation_fails(self, fixture_df):
         from validate_twin import check_mass_balance
 
         bad = fixture_df.copy()
-        bad.loc[bad.index[0], "xB_c4"] = 0.5  # breaks closure
+        bad.loc[bad.index[0], "xb_c4"] = 0.5  # breaks closure
         assert not check_mass_balance(bad).passed
 
     def test_monotonicity_violation_fails(self, fixture_df):
@@ -188,7 +211,7 @@ class TestValidateTwin:
         bad = fixture_df.copy()
         d0 = bad["distillate_kmol_h"].iloc[0]
         grp = bad[bad["distillate_kmol_h"] == d0].sort_values("reflux_ratio")
-        bad.loc[grp.index[-1], "xB_c4"] = grp["xB_c4"].iloc[0] + 0.1
+        bad.loc[grp.index[-1], "xb_c4"] = grp["xb_c4"].iloc[0] + 0.1
         assert not check_monotonicity(bad).passed
 
     def test_render_markdown_reports_fail(self, fixture_df):
