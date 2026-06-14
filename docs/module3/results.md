@@ -77,86 +77,100 @@ row reproduces G1c to the decimal (xB 0.0243, xD 0.9684, duty 609.3 kW).
 
 ## Phase 3B — Uncertainty-aware RTO (paper-2 contribution)
 
-*Status: **machinery complete, awaiting twin data.** 3B.1 (GPR surrogate) and
-3B.2 (conformal soft sensor) built and gated on synthetic stand-ins; 3B.3
-(head-to-head harness) built. Real magnitude pending the DWSIM feed-z campaign
-(`twin_runs_zvaried.csv`). Numbers marked **[pending]** fill when that lands.*
+*Status: **complete on real twin data.** Run on the 77-row DWSIM feed-z campaign
+(`twin_runs_zvaried.csv`) + the 15-row nominal surface (`twin_runs.csv`). The 3B
+contribution was reframed from a profit claim to a calibrated-safety claim once
+the data showed the selection effect (ADR-014). Reproduce:
+`python scripts/run_3b3_regime_map.py --nominal <nominal.csv> --zvaried <zvaried.csv>`.*
 
 ### Summary
-Phase 3A's constraint back-off was a fixed margin chosen by the engineer. Phase
-3B replaces it with the **calibrated conformal half-width of the soft-sensor
-estimate of the bottoms C4 fraction**: the RTO subtracts from the spec an
-operating-point-dependent upper bound earned from data, not a hand-set constant.
-The contribution is stated in two tiers, primary first:
+The 3B chance constraint is CPP-style over the **unmeasured feed-z disturbance**
+at a known decision (R, D): maximize profit s.t. P_z[xB(R,D,z) <= spec] >= 1-alpha.
+A conformal back-off C(R,D) enters as the constraint margin (xB_nominal + C <= spec).
+The headline is **calibrated risk control, not profit** — at realistic feed
+variability the chance constraint is barely active and every method lands within
+0.5% of the deterministic optimum, so the differentiator is the realized
+constraint-violation rate (audit-A).
 
-1. **Calibrated risk control (the robust claim).** The conformal soft sensor
-   delivers distribution-free, guaranteed ~90% one-sided coverage of the true
-   bottoms quality *without a priori knowledge of the heteroscedastic
-   uncertainty field*. Carried into the RTO chance constraint
-   (`y_hat + C+ <= spec`), this produces setpoints that respect a target
-   violation rate by construction. A fixed-margin baseline can match a target
-   violation rate only if the correct margin is known in advance — which
-   presupposes exactly the uncertainty structure the conformal layer estimates
-   from data. This advantage holds regardless of the profit comparison.
-
-2. **Profit at matched violation rate (the conditional claim).** Where the
-   operating geometry permits — genuine (R, D) freedom *and* low-sensor-
-   uncertainty regions that are also profitable — the heteroscedastic back-off
-   attains higher profit than the best fixed margin at the same violation rate.
-   This is **measured, not assumed**: the harness traces both Pareto frontiers
-   and reports the matched-violation delta. The magnitude is conditional and may
-   be modest; on an effectively 1-D setpoint problem the two frontiers coincide.
+The finding: a **marginally**-calibrated back-off — including the adaptive/
+normalized soft-sensor interval — is **unsafe under RTO selection**. The optimizer
+drives toward operating points where the marginal margin under-covers the
+*conditional* (1-alpha) quantile, so realized violation reaches ~5x the nominal
+level. This is the CPP selection effect / the Gibbs–Cherian–Candès
+conditional-coverage gap, on a chemical process. The fix is a **conditional**
+formulation (conformalized quantile regression, CQR) plus a **CPP a-posteriori**
+calibration step at the selected setpoint, which restores violation control to the
+oracle (truth conditional quantile) level across a swept disturbance range.
 
 ### Data
-- Nominal twin surface (z=0.35): the 15-row `twin_runs.csv` (Phase 3A) -> GPR
-  `(R,D)->xB` and `(R,D)->tray-6 T` (3B.1).
-- Feed-z campaign **[pending]**: `R x D` grid at feed z in {0.30,...,0.40} ->
-  `twin_runs_zvaried.csv`, supplying (i) the conformal sensor's calibration
-  residuals (tray-6 T -> xB scatter from the unmeasured z disturbance) and (ii)
-  the 3-D truth surface `xB(R,D,z)` used to score violations.
-- Disturbance ensemble: feed composition z (primary, unmeasured; ±0.05 about
-  0.35) + tray-6 measurement noise sigma ~ 0.75 C. Rationale: feed-z is the
-  dominant real debutanizer disturbance and is unmeasured, so the single-feature
-  sensor genuinely cannot resolve it — the regime where empirical conformal
-  intervals beat closed-form noise propagation.
+- Nominal twin surface (z=0.35): 15-row `twin_runs.csv` -> GPR `(R,D)->xB`,
+  `(R,D)->xD`, `(R,D)->reboiler duty` for the objective; bounded-hyperparameter
+  GP, seed 20260613 (3B.1).
+- Feed-z campaign: 77 clean rows (`twin_runs_zvaried.csv`), grid z in
+  {0.30,0.325,0.35,0.375,0.40} x R x D -> the 3-D truth surface `xB(R,D,z)` that
+  scores violations, and the calibration residuals for the conformal back-offs.
+- Disturbance: z ~ TruncNormal(0.35, sigma_z) on [0.30, 0.40], sigma_z swept
+  {0.004,...,0.025}, realistic center **sigma_z ~ 0.006** (well-controlled upstream).
+- Physical limit: spec xB <= 0.02 is unachievable for z >~ 0.38 within D in
+  [33,37] (distillate-flow limited; min xB at z=0.40 is ~0.048), so the full
+  [0.30,0.40] ensemble is infeasible for any method — operational sigma_z must be
+  tight (audit-E: DWSIM stage-composition / flow limitation).
 
 ### Metrics
 
+Regime map (spec xB<=0.02, target violation <= 0.10; realized violation at the
+RTO optimum, profit in USD/h). Canonical run on the committed twin data
+(`twin_runs_zvaried.csv`, with the patched z375_13 row; seed 20260614). Violation
+rates are Monte-Carlo estimates (4-6k disturbance draws) and carry ~+/-0.01-0.02
+of cross-platform sampling noise; the regime structure and the ~5x selection-effect
+gap are stable.
+
+| sigma_z | oracle | CQR+a-posteriori | naive-fixed | naive-adaptive |
+|---|---|---|---|---|
+| 0.004 | 0.084 / $5383 | **0.063 / $5381** | 0.190 / $5388 | 0.429 / $5394 |
+| **0.006** | 0.079 / $5374 | **0.101 / $5376** (k=1.53) | 0.167 / $5381 | 0.449 / $5394 |
+| 0.008 | 0.101 / $5364 | **0.097 / $5364** | 0.159 / $5374 | 0.472 / $5396 |
+| 0.010 | 0.106 / $5351 | **0.066 / $5335** | 0.112 / $5356 | 0.488 / $5396 |
+| 0.015 | 0.095 / $5310 | **0.105 / $5298** (k=5.78) | INFEASIBLE | 0.480 / $5396 |
+| 0.020 | 0.087 / $5288 | **0.094 / $5282** | INFEASIBLE | 0.482 / $5394 |
+| 0.025 | 0.105 / $5271 | INFEASIBLE | INFEASIBLE | 0.502 / $5396 |
+
 | quantity | value | note |
 |---|---|---|
-| 3B.1 GPR ln(xB) fit (15 pts) | R^2 1.0, monotone | reproduces 3A optimum (profit within 1.4 USD/h) |
-| 3B.1 GPR vs quadratic | ~equal on binary surface | GPR value = variance + flexibility, not fit gain |
-| 3B.2 one-sided coverage | 0.90 (synthetic, mean of seeds) | **[pending]** real value on z-campaign |
-| 3B.2 width heteroscedasticity (CV) | ~0.23 (synthetic) | >0 required; cliff width ~2x sharp-region |
-| 3B.3 profit delta @ matched violation | **[pending]** | synthetic with consistent surfaces: +6.6 USD/h (favourable geometry) to ~0 (1-D geometry) |
-| coverage as a gate | enforced | scoping D3; no profit claim until coverage holds |
+| 3-D truth surface | leave-z=0.375-out R^2 0.917, MAE 0.0053 (n=15) | audit-F; interpolation in z validated |
+| naive-adaptive realized violation | 0.43–0.50 across all sigma_z | ~5x the 0.10 target — the selection effect |
+| CQR+a-posteriori realized violation | 0.063–0.105, sigma_z <= 0.020 | tracks the oracle; infeasible only at 3x realistic |
+| a-posteriori inflation kappa | 1.0–1.5 (sigma_z<=0.010), 5.8 at 0.015 | conditional estimate is data-starved as the disturbance widens |
+| profit spread at realistic sigma_z | <0.5% (all methods ~$5374–5394) | deterministic optimum ~$5393 — profit is muted |
+| violation-rate precision floor | ~0.005 xB (truth MAE) | oracle at 0.08–0.11 not exactly 0.10 reflects this |
 
 ### Observations
-- The interval-driven mechanism is the *adaptivity*, not the conformal label:
-  plain split conformal yields a constant width — identical to a fixed margin —
-  so any advantage comes entirely from the local scale model `sigma_hat(x)`
-  making the back-off heteroscedastic (tight where the sensor is sharp, wide at
-  the cliff / outside the trained envelope).
-- The RTO optimum sits in the high-reflux region, which is where the sensor is
-  sharpest (over-purified column, weak feed-z sensitivity), so the interval-
-  driven back-off there is small relative to a worst-case fixed margin — the
-  source of any profit upside.
-- Coverage is a random variable centred on the target; single-split estimates
-  scatter (±~0.03 at the campaign's calibration size), so the gate reads a
-  finite-sample band, not a single exceedance.
+- The mechanism that matters is **conditional** validity, not the conformal
+  label. Split/normalized conformal guarantees only *marginal* coverage; under an
+  optimizer that selects against the margin, marginal validity is not enough.
+- The oracle (truth conditional (1-alpha) quantile, available because xB is
+  monotone in z so q_{1-alpha}[xB] = xB(z_{1-alpha})) realizes violation ~alpha by
+  construction — it is the achievable bound the data-driven methods are scored
+  against, and it confirms the chance-constraint machinery is correct.
+- The conditional-quantile estimate needs more calibration data as the
+  disturbance widens (n_cal scaled with sigma_z); at fixed n_cal the CQR method
+  goes infeasible early purely from estimation error, not a fundamental limit.
+- Back-offs are floored at 0 (a safety margin is non-negative); negative margins
+  break the a-posteriori kappa scaling.
 
 ### Unexpected findings
-- **The frontiers can coincide.** When the setpoint decision is effectively 1-D
-  (violation monotone in one effective variable, here reflux), every back-off
-  scheme that hits a target violation rate selects ~the same setpoint and earns
-  the same profit — the scheme changes only the parameterization (b vs alpha),
-  not the achievable frontier. The interval-driven *profit* win is therefore
-  conditional on multi-D setpoint freedom and on low-uncertainty regions being
-  profitable; in a synthetic where these were anti-correlated, the delta was ~0.
-  This is why the contribution leads with calibrated risk control (tier 1), which
-  is geometry-independent, and treats the profit delta (tier 2) as a measured
-  result whose magnitude the twin will decide.
-- **alpha does not equal the realized violation rate at the selected setpoint.**
-  Setpoint selection introduces a selection effect, so the conformal coverage
-  level and the RTO's realized violation rate are related but not identical —
-  the harness measures the realized rate directly rather than assuming it.
+- **The naive adaptive method fails *worse* than the fixed margin, not better.**
+  The pre-data 3B framing expected the heteroscedastic back-off to be the
+  improvement; on the twin it is the most dangerous (violation 0.35–0.51 vs the
+  fixed margin's 0.10–0.23) because its small back-off in low-scale regions is
+  exactly what the optimizer exploits. The contribution inverted: the adaptive
+  method became the cautionary baseline and the conditional+a-posteriori method
+  the result.
+- **alpha != the realized violation at the selected setpoint** (anticipated in
+  3A): setpoint selection is a selection effect, quantified here at ~5x for the
+  marginal back-off and closed by the CPP a-posteriori step (smallest kappa>=1
+  such that realized violation at the chosen optimum <= alpha on a held-out draw).
+- **Profit is muted at realistic disturbance.** Because a tight sigma_z barely
+  activates the chance constraint, the safety-vs-profit tension the project
+  expected is mild at the realistic operating point; the value of the conditional
+  method is calibrated safety, with the profit gap widening only as sigma_z grows.

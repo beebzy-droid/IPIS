@@ -36,9 +36,12 @@ Density bases (CoolProp, saturated liquid at 60 F / 15.56 C, the NGL
 gallon accounting basis): n-C4 583.6 kg/m3 = 2.209 kg/gal; n-C6 663.3
 kg/m3 = 2.511 kg/gal.
 
-The 3B headline (profit delta, interval-driven vs fixed-margin back-off at
-equal violation rate) is driven by the price SPREADS, not the levels;
-plant figures should replace all three legs together.
+The 3B headline (calibrated violation control; profit is muted at realistic
+sigma_z) is driven by the price SPREADS, not the levels; plant figures should
+replace all three legs together. Pre-submission task (audit-D): pin the
+n-butane-specific Mont Belvieu spot series from EIA (currently propane is used as
+a documented floor proxy) and transcribe the USGC conventional-gasoline series
+value in place of the flagged spread estimate.
 """
 
 from __future__ import annotations

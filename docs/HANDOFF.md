@@ -451,6 +451,25 @@ UNUSED (RTO stays in GEKKO per ADR-006/D4). Full detail + driving steps in
   heteroscedastic; measure, don't assume. Resume = owner ratifies D1-D6 -> 3B.1.
 - G3: <pending — V1-V4 results, deviations>
 - G4: <pending — closeout, ADR-013, resume = 3B>
+- **3B.3 2026-06-14 PASS (production build on real 77-row twin data):** chance-
+  constrained RTO regime map (Design B, CPP-style over feed-z). Built
+  `ipis.module3_rto.chance_rto` (DisturbanceModel, decision grid + economics
+  profit, sample_calibration, one_sided_quantile [exact ceil((n+1)(1-a))-th order
+  statistic], back-offs {oracle, cqr, normalized=baseline, fixed} all floored>=0,
+  solve_chance_rto, realized_violation, aposteriori_tighten [feasibility-window
+  kappa search on fixed validation z-draw]); `scripts/run_3b3_regime_map.py`
+  (sweep sigma_z, audit-F leave-z-out R2=0.927/MAE 0.0048, gate);
+  `tests/unit/test_m3_chance_rto.py` (7 tests, synthetic surface, code-validation
+  only). REGIME MAP (target viol<=0.10): naive-adaptive (the old 3B.2 method)
+  realized viol 0.43-0.50 across ALL sigma_z (~5x, the selection effect);
+  CQR+a-posteriori 0.063-0.105 tracking the oracle for sigma_z<=0.020 at
+  near-oracle profit (infeasible only at 3x-realistic 0.025); naive-fixed
+  over-violates then infeasible >=0.015. Profit muted (<0.5% spread, deterministic
+  ~$5393). Suite: 51 m3 tests PASS; ruff+black clean (130 files). Docs: ADR-014,
+  results.md Phase 3B rewrite (audit-A lead-with-safety, audit-E flow limitation),
+  economics.py audit-D pre-submission note. Contribution reframed (ADR-014):
+  conditional-conformal calibrated safety, NOT adaptive-profit.
+- G4: <pending — closeout, ADR-013, resume = 3B>
 
 ---
 
@@ -728,6 +747,14 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   doc (feed saturated-liquid PVF=0; MCP flash as independent T-vs-z check;
   Automation3 sweep; xB-responds-to-z is the arbiter). Resume = user uploads
   Tier-1 sources -> implement audit changes A-F -> run z-campaign -> close 3B.
+
+- 3B MAJOR FINDING 2026-06-14 (real z-data, Design B = CPP-style chance constraint over feed-z at known R,D, the ratified D5 scope; my 3B.2 had DRIFTED to Design A = tray6_T pooling R,D,z). Realistic disturbance: feed-z ~ TruncNorm(0.35, sigma_z), Bien anchored sigma_z~0.006 (tight/well-controlled). 3D truth GP from 77 rows; leave-z=0.375-out R2=0.89 MAE 0.006 (interpolation validated, audit-F). xB monotone in z => chance-constraint q90[xB]=xB(z90) (no MC needed). RESULT (target violation<=0.10, spec xB<=0.02):
+    oracle (truth cond. quantile): realized viol ~0.08-0.11 ACROSS sigma_z => FRAMEWORK VALIDATED.
+    naive-adaptive (normalized conformal = current 3B.2 method): realized viol 0.42-0.49 => CATASTROPHIC. The RTO exploits the marginal-vs-conditional coverage gap (drives to R~2.9 D~33.7 where smooth sigma_hat underestimates local risk). This IS the CPP selection effect / Gibbs conditional-coverage failure on a real process.
+    naive-fixed (constant margin): viol 0.12-0.15 then INFEASIBLE at sigma_z>=0.015.
+    CQR-conditional (GBR quantile alpha=0.90 + conformal): viol 0.07-0.14, TRACKS ORACLE => the FIX (targets conditional quantile directly). + CPP a-posteriori tightening at the selected point closes residual gap to a guarantee.
+  CONTRIBUTION REFRAMED (3rd time, decisively better, all sources in files): NOT 'adaptive earns more profit' (at realistic sigma_z ALL methods within 0.5% of deterministic ~5393 -- profit muted). The claim: conformal back-offs are UNSAFE for RTO unless CONDITIONALLY valid; marginal/normalized back-off => ~5x nominal violation under optimization; CQR + CPP a-posteriori restores control to oracle level, swept over sigma_z. Engages CPP (selection/a-posteriori), Gibbs-conditional, CQR.
+  PHYSICS: spec xB<=0.02 is UNACHIEVABLE for z>~0.38 within D in [33,37] (distillate-flow-limited: min xB at z=0.40 is 0.048); so full [0.30,0.40] ensemble is infeasible for all methods -> operational sigma_z must be tight (consistent with Bien's 0.006). Exploratory experiment: /tmp/designB2.py (oracle/CQR/naive, monotone-z shortcut, EconomicsAnchor). NEXT BUILD (pending PI nod on reframe): productionize 3B as oracle + CQR-conditional + CPP a-posteriori + naive baselines; reframe 3B.2 gate around conditional calibration + a-posteriori violation@optimum; 3B.3 = regime map over sigma_z. Then audit A-F, CI, commit.
 
 ## Lessons
 - **Run the exact CI command, not piecemeal.** A test-file edit was black-formatted
