@@ -84,52 +84,57 @@ on the feed-z campaign producing data that (i) closes the C4 mass balance at
 responds to z (xB moves with z at fixed R,D). Until then, 3B.2/3B.3 numbers are
 pending by design.
 
-## 3. Sources to upload (prioritized, exact)
+## 3. Sources — ALL ALREADY IN THE PROJECT (corrected 2026-06-13)
 
-**Tier 1 — RTO-under-uncertainty + closest prior art (positioning-critical):**
-1. del Rio Chanona, E.A., Petsagkourakis, P., Bradford, E., et al. (2021).
-   "Real-time optimization meets Bayesian optimization and derivative-free
-   optimization: A tale of modifier adaptation." *Computers & Chemical
-   Engineering*. — **Closest prior art** (GP posterior tightens joint chance
-   constraints under plant-model mismatch). 3B's wedge = distribution-free
-   conformal calibration vs Gaussian GP posterior.
-2. Marchetti, A., Chachuat, B., Bonvin, D. (2009). "Modifier-Adaptation
-   Methodology for Real-Time Optimization." *Ind. Eng. Chem. Res.* 48(13),
-   6022-6033. — The constraint-modifier paradigm 3B's back-off connects to.
-3. Chachuat, B., Srinivasan, B., Bonvin, D. (2009). "Adaptation strategies for
-   real-time optimization." *Comput. Chem. Eng.* 33(10), 1557-1567. — Survey;
-   the back-off-reduction-via-measurement precedent.
+Verified by project-knowledge search: **every source below is already present.**
+Nothing needs uploading. (Lesson: search the project knowledge before requesting
+sources — VERIFY-BEFORE-LOAD-BEARING applies to the project files too.)
 
-**Tier 1 — chance-constrained process optimization (classical ChemE):**
-4. Li, P., Arellano-Garcia, H., Wozny, G. (2008). "Chance constrained
-   programming approach to process optimization under uncertainty." *Comput.
-   Chem. Eng.* 32(1-2), 25-45.
+**RTO-under-uncertainty + closest prior art — PRESENT:**
+- del Rio Chanona, Petsagkourakis, Bradford, et al. (2021), "RTO meets Bayesian
+  optimization and DFO: a tale of modifier adaptation," *Comput. Chem. Eng.*
+  (`Chanona_...pdf`). Closest prior art: GP modifiers G_p - G ~ GP(mu, sigma^2),
+  GP mean corrects the constraint, GP variance drives the acquisition. **3B's
+  wedge:** distribution-free conformal interval on a soft-sensor estimate vs
+  their Gaussian GP posterior.
+- Marchetti, Chachuat, Bonvin (2009), "Modifier-Adaptation Methodology for RTO,"
+  *Ind. Eng. Chem. Res.* 48(13) (`Marchetti_...pdf`). Constraint-modifier
+  formalism G_m = G + eps^G + lambda^GT(u-u_k) with KKT-matching. **Position the
+  conformal back-off as a measurement-based constraint modifier.**
+- Chachuat, Srinivasan, Bonvin (2009), "Adaptation strategies for RTO,"
+  *Comput. Chem. Eng.* (`Chachuat_...pdf`). The back-off-reduction-via-
+  measurement precedent.
 
-**Tier 1 — soft-sensor benchmark provenance:**
-5. Fortuna, L., Graziani, S., Rizzo, A., Xibilia, M.G. (2007). *Soft Sensors for
-   Monitoring and Control of Industrial Processes.* Springer. — Primary source of
-   the **Debutanizer** benchmark used in Module 1; also the standard soft-sensor
-   reference.
+**Chance-constrained process optimization — PRESENT:**
+- Li, Arellano-Garcia, Wozny (2008), "Chance constrained programming approach to
+  process optimization under uncertainty," *Comput. Chem. Eng.* (`Li_...pdf`).
 
-**Tier 2 — conformal methodology completeness:**
-6. Lei, J., G'Sell, M., Rinaldo, A., Tibshirani, R.J., Wasserman, L. (2018).
-   "Distribution-Free Predictive Inference for Regression." *JASA* 113(523),
-   1094-1111. — Locally-adaptive/normalized conformal; basis of the current
-   sensor's scale model.
-7. Gibbs, I., Cherian, J.J., Candès, E.J. (2025). "Conformal prediction with
-   conditional guarantees." *JRSS-B* 87(4), 1100-1126. — The conditional-coverage
-   route; explains/fixes the alpha != realized-violation selection effect.
-8. Angelopoulos, A.N., Bates, S. (2023). "Conformal Prediction: A Gentle
-   Introduction." *Foundations and Trends in ML* 16(4). — Foundational; cited by
-   CPP itself.
+**Soft-sensor + debutanizer provenance — PRESENT (richer than expected):**
+- Fortuna, Graziani, Rizzo, Xibilia (2007), *Soft Sensors...* (`Fortuna_...pdf`).
+- Debutanizer-specific soft-sensor precedents also present: Ramli (ANN),
+  Pani (regression tree/ANFIS, x2), Moghadam (time-variable-parameter),
+  Rozanec (LPG debutanizer ML soft sensors). Cite for the Module-1 benchmark.
 
-**Tier 2 — safe-optimization analogue (optional but strong):**
-9. The Safe-BOCP paper (Bayesian optimization with formal safety guarantees via
-   online conformal prediction), IEEE J-STSP 2024 (KCLIP). — GP + conformal
-   caution-increasing back-off; the BO analogue of 3B.
+**Conformal completeness — PRESENT:**
+- Lei et al. (2018), "Distribution-Free Predictive Inference for Regression,"
+  *JASA* (`Lei_...pdf`) — normalized/locally-adaptive conformal.
+- Gibbs, Cherian, Candès (2025), "Conformal prediction with conditional
+  guarantees," *JRSS-B* (`Gibbs_..._Conditional_Guarantees.pdf`) — the
+  conditional-coverage route for the selection effect.
+- Angelopoulos, Bates (2023), "A Gentle Introduction to Conformal Prediction,"
+  (`Angelopoulos_...pdf`) — foundational.
+- Barber et al. (2023), "Conformal prediction beyond exchangeability," *Ann.
+  Statist.* (`Barber_...pdf`) — the non-exchangeable foundation under the RTO's
+  operating-point shift.
+- Burger, "Distribution-Free Process Monitoring with Conformal Prediction"
+  (`Burger_...pdf`); Ma, "Intrinsically Calibrated UQ in Industrial Models..."
+  (`Ma_...pdf`) — industrial conformal/UQ precedent.
+- Zhang et al., Safe-BOCP (`Zhang_Bayesian_Optimization_...Conformal...pdf`) —
+  GP + conformal caution-increasing back-off; the BO analogue.
 
-(Items 1-5 are the ones that genuinely block the paper's framing. 6-9 deepen the
-conformal rigor and pre-empt reviewers.)
+Plus CPP (`Lindemann_...pdf`) and CQR (`Candes_...pdf`), verified earlier.
+
+**Conclusion: the corpus is complete; proceed to implement the audit changes.**
 
 ## 4. DWSIM feed-z campaign — step by step
 
@@ -148,12 +153,36 @@ and is used here only as an *independent thermodynamic cross-check*.
    Rationale: with VF=0 fixed, changing z re-computes the bubble-point T, so z is
    an isolated disturbance (no subcooled/two-phase confound).
 
-**Step 2 (independent check, DWSIM MCP flash) — confirm T responds to z.**
-Using the DWSIM MCP flash on a copy of the feed (P=4.8 bar, VF=0):
-- flash at z(nC4)=0.30 -> record bubble-point T
-- flash at z(nC4)=0.40 -> record bubble-point T
-These must differ (higher nC4 -> lower bubble T). This validates the feed-spec
-physics *independently of the Automation sweep*, before spending the full run.
+**Step 2 (independent check that bubble-point T responds to z).** The point is
+to confirm the feed disturbance is real *before* the full sweep. Use an
+INDEPENDENT thermodynamic reference (CoolProp, Peng-Robinson) — a different
+library from DWSIM — computed for the feed at 4.8 bar, VF=0:
+
+| z(n-C4) | bubble-point T (C), CoolProp PR | first-vapor y(n-C4) |
+|---|---|---|
+| 0.300 | 90.98 | 0.685 |
+| 0.325 | 88.62 | 0.714 |
+| 0.350 | 86.34 | 0.739 |
+| 0.375 | 84.16 | 0.763 |
+| 0.400 | 82.07 | 0.784 |
+
+(z=0.35 -> 86.3 C matches the G1a PR feed temperature, confirming consistency.)
+Higher n-C4 -> LOWER bubble T, ~2.2 C per 0.025 step.
+
+Three ways to get DWSIM's feed T to compare against this table (any one suffices):
+1. **GUI (simplest, no MCP):** with the feed on the PVF (VF=0) spec, change the
+   feed n-C4 mole fraction to 0.30, read the computed feed Temperature; repeat at
+   0.40. It must match the table within ~1-3 C and decrease with n-C4.
+2. **DWSIM MCP flash (via Claude Code):** hand Claude Code this instruction —
+   "Use the DWSIM flash MCP to compute the bubble point (Peng-Robinson,
+   n-butane/n-hexane, P = 4.8 bar, vapor fraction = 0) at n-C4 mole fractions
+   0.30, 0.35, 0.40; report temperature and incipient-vapor composition." Claude
+   Code knows the MCP's flash-tool signature; it returns T per z.
+3. **Sweep self-report:** the campaign already records the feed T per run; the
+   z=0.35 rows must show ~86 C.
+
+**Arbiter:** DWSIM's feed T must track the CoolProp table (direction + ~1-3 C).
+If it does, the feed-z mechanism is physically correct and the sweep can run.
 
 **Step 3 (the sweep, Claude Code + DWSIM.Automation3).** Run the corrected
 `run_zvaried_sweep.py` (the three fixes from review must be in place):
