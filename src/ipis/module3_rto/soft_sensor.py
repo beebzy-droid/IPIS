@@ -75,6 +75,8 @@ class TwinSoftSensor:
         self._t_mean = 0.0
         self._t_std = 1.0
         self._conformal: NormalizedOneSidedConformal | None = None
+        self._calib_resid: np.ndarray | None = None
+        self._calib_scale: np.ndarray | None = None
 
     def _z(self, t: np.ndarray) -> np.ndarray:
         return (np.asarray(t, float).reshape(-1, 1) - self._t_mean) / self._t_std
@@ -94,6 +96,8 @@ class TwinSoftSensor:
         y_ca = np.asarray(xb_calib, float)
         e_ca = y_ca - self._mu.predict(self._z(t_ca))  # signed
         sig_ca = self._scale(t_ca)
+        self._calib_resid = e_ca  # stored so we can re-quantile at any alpha
+        self._calib_scale = sig_ca
         self._conformal = NormalizedOneSidedConformal(e_ca, sig_ca, alpha=self.alpha)
 
     def _scale(self, t) -> np.ndarray:
@@ -137,5 +141,21 @@ class TwinSoftSensor:
             t = float(tray_t_surface(r, d))
             _, cplus = self.predict([t])
             return float(cplus[0])
+
+        return _bo
+
+    def backoff_callable_at_alpha(self, tray_t_surface, alpha: float):
+        """Back-off callable at a chosen alpha (re-quantiles the stored calib scores).
+
+        Lets the 3B.3 interval-driven frontier sweep alpha without refitting the
+        mean/scale models — only the conformal quantile changes.
+        """
+        from ipis.module1_soft_sensor.evaluation.conformal import conformal_quantile
+
+        q = conformal_quantile(self._calib_resid / self._calib_scale, 1.0 - alpha)
+
+        def _bo(r: float, d: float) -> float:
+            t = float(tray_t_surface(r, d))
+            return float(self._scale([t])[0] * q)
 
         return _bo

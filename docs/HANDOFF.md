@@ -716,6 +716,14 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-13 (3B.3 harness + design finding)** — Built the head-to-head harness
+  (3D truth surface, alpha-swept interval frontier, fixed-margin frontier, matched-
+  violation delta). Synthetic test exposed that the frontiers can coincide when the
+  setpoint problem is effectively 1-D or when low-uncertainty regions are not
+  profitable -> interval-driven profit win is conditional and may be small. Robust
+  fallback: conformal's guaranteed coverage without a priori uncertainty knowledge.
+  Surfaced pre-DWSIM so the framing can adapt. 44 m3 tests green. Resume = run the
+  z-campaign, close 3B.2, run 3B.3 on real data, then choose the headline.
 - **2026-06-13 (3B.2 machinery)** — Conformal soft sensor built + demonstrated
   on a synthetic z-stand-in. Decisions: feed-z (unmeasured) + noise disturbance;
   normalized locally-adaptive one-sided conformal (the heteroscedastic mechanism

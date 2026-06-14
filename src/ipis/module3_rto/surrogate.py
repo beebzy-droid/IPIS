@@ -125,3 +125,64 @@ def fit_gpr_from_csv(
     xb = fit_gpr_ln_xb(df[r_col].to_numpy(), df[d_col].to_numpy(), df[xb_col].to_numpy())
     tt = fit_gpr_tray_t(df[r_col].to_numpy(), df[d_col].to_numpy(), df[t_col].to_numpy())
     return xb, tt
+
+
+@dataclass(frozen=True)
+class TruthSurface3D:
+    """GP truth model xB(R, D, z) — the plant the RTO is scored against in 3B.3.
+
+    Fit on the feed-z campaign. The RTO optimizes against the nominal (z=0.35)
+    2-D surface and cannot see z; this 3-D surface supplies the *true* xB at the
+    realized (R, D, z), so violations and realized profit are honest.
+    """
+
+    gp: GaussianProcessRegressor
+    x_mean: np.ndarray
+    x_std: np.ndarray
+    r_squared: float
+
+    def predict(self, r: float, d: float, z: float) -> float:
+        xz = (np.array([[r, d, z]], float) - self.x_mean) / self.x_std
+        return float(np.exp(self.gp.predict(xz)[0]))
+
+
+def fit_truth_surface_3d(
+    csv_path: str,
+    r_col: str = "reflux_ratio",
+    d_col: str = "distillate_kmol_h",
+    z_col: str = "z_c4",
+    xb_col: str = "xb_c4",
+) -> TruthSurface3D:
+    """Fit the 3-D truth surface ln xB(R, D, z) from the feed-z campaign CSV."""
+    import pandas as pd
+
+    df = pd.read_csv(csv_path)
+    missing = [c for c in (r_col, d_col, z_col, xb_col) if c not in df.columns]
+    if missing:
+        raise ValueError(f"CSV missing columns: {missing}")
+    x = df[[r_col, d_col, z_col]].to_numpy(float)
+    xb = df[xb_col].to_numpy(float)
+    ok = np.isfinite(xb) & (xb > 0)
+    x, xb = x[ok], xb[ok]
+    if x.shape[0] < 12:
+        raise ValueError(f"Only {x.shape[0]} usable rows; need >= 12 for the 3-D GP.")
+    x_mean, x_std = x.mean(0), x.std(0)
+    x_std[x_std == 0] = 1.0
+    xz = (x - x_mean) / x_std
+    y = np.log(xb)
+    kernel = ConstantKernel(1.0, (1e-2, 1e2)) * Matern(
+        length_scale=[1.0, 1.0, 1.0], length_scale_bounds=(0.3, 5.0), nu=2.5
+    ) + WhiteKernel(1e-4, (1e-8, 1e-1))
+    gp = GaussianProcessRegressor(
+        kernel=kernel,
+        alpha=_ALPHA,
+        normalize_y=True,
+        n_restarts_optimizer=_N_RESTARTS,
+        random_state=_SEED,
+    )
+    gp.fit(xz, y)
+    pred = gp.predict(xz)
+    ss_res = float(((y - pred) ** 2).sum())
+    ss_tot = float(((y - y.mean()) ** 2).sum())
+    r2 = 1.0 - ss_res / ss_tot if ss_tot > 0 else 1.0
+    return TruthSurface3D(gp=gp, x_mean=x_mean, x_std=x_std, r_squared=r2)

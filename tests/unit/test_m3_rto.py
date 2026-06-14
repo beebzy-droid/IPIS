@@ -549,3 +549,47 @@ class TestTwinSoftSensor:
         )
         assert res is not None and res.feasible_found
         assert res.backoff_at_opt > 0.0
+
+
+class TestHeadToHead:
+    """3B.3 frontier logic (mock truth for speed)."""
+
+    class _MockTruth:
+        """xB(R,D,z) = base(R) + slope*(z-0.35); higher R -> lower xB."""
+
+        def predict(self, r, d, z):
+            return max(0.09 * (1.0 - (r - 0.8) / 2.2) + 0.3 * (z - 0.35), 1e-4)
+
+    def test_fixed_margin_frontier_violation_monotone(self):
+        import numpy as np
+
+        from ipis.module3_rto.head_to_head import fixed_margin_frontier
+
+        truth = self._MockTruth()
+        z = np.linspace(0.30, 0.40, 50)
+
+        def surf(R, D):  # nominal == truth at z=0.35
+            return 0.09 * (1.0 - (R - 0.8) / 2.2)
+
+        fr = fixed_margin_frontier(surf, truth, z, b_grid=np.linspace(0.0, 0.01, 6))
+        viols = [p.violation_rate for p in fr if p.feasible]
+        assert all(viols[i] >= viols[i + 1] - 1e-9 for i in range(len(viols) - 1))
+
+    def test_profit_delta_interpolation(self):
+        from ipis.module3_rto.head_to_head import FrontierPoint, profit_delta_at_matched_violation
+
+        # fixed: profit 100 at viol .2, 90 at viol .05
+        ff = [
+            FrontierPoint(0.0, 2.0, 34.0, 0.20, 100.0, True),
+            FrontierPoint(0.01, 2.5, 34.0, 0.05, 90.0, True),
+        ]
+        # interval: profit 102 at viol .2, 95 at viol .05  (dominates)
+        fi = [
+            FrontierPoint(0.30, 2.1, 34.0, 0.20, 102.0, True),
+            FrontierPoint(0.10, 2.5, 34.0, 0.05, 95.0, True),
+        ]
+        d = profit_delta_at_matched_violation(ff, fi, 0.05)
+        assert d["profit_fixed"] == pytest.approx(90.0)
+        assert d["profit_interval"] == pytest.approx(95.0)
+        assert d["delta_usd_per_h"] == pytest.approx(5.0)
+        assert d["delta_usd_per_yr"] == pytest.approx(5.0 * 8760)
