@@ -74,3 +74,89 @@ row reproduces G1c to the decimal (xB 0.0243, xD 0.9684, duty 609.3 kW).
   the RTO-relevant region but loses single-steady-state resolution in the high-purity
   over-refluxed corner — a caveat that now governs the 3B GPR-over-DWSIM sampling plan
   (continuation + mass-balance screening required there).
+
+## Phase 3B — Uncertainty-aware RTO (paper-2 contribution)
+
+*Status: **machinery complete, awaiting twin data.** 3B.1 (GPR surrogate) and
+3B.2 (conformal soft sensor) built and gated on synthetic stand-ins; 3B.3
+(head-to-head harness) built. Real magnitude pending the DWSIM feed-z campaign
+(`twin_runs_zvaried.csv`). Numbers marked **[pending]** fill when that lands.*
+
+### Summary
+Phase 3A's constraint back-off was a fixed margin chosen by the engineer. Phase
+3B replaces it with the **calibrated conformal half-width of the soft-sensor
+estimate of the bottoms C4 fraction**: the RTO subtracts from the spec an
+operating-point-dependent upper bound earned from data, not a hand-set constant.
+The contribution is stated in two tiers, primary first:
+
+1. **Calibrated risk control (the robust claim).** The conformal soft sensor
+   delivers distribution-free, guaranteed ~90% one-sided coverage of the true
+   bottoms quality *without a priori knowledge of the heteroscedastic
+   uncertainty field*. Carried into the RTO chance constraint
+   (`y_hat + C+ <= spec`), this produces setpoints that respect a target
+   violation rate by construction. A fixed-margin baseline can match a target
+   violation rate only if the correct margin is known in advance — which
+   presupposes exactly the uncertainty structure the conformal layer estimates
+   from data. This advantage holds regardless of the profit comparison.
+
+2. **Profit at matched violation rate (the conditional claim).** Where the
+   operating geometry permits — genuine (R, D) freedom *and* low-sensor-
+   uncertainty regions that are also profitable — the heteroscedastic back-off
+   attains higher profit than the best fixed margin at the same violation rate.
+   This is **measured, not assumed**: the harness traces both Pareto frontiers
+   and reports the matched-violation delta. The magnitude is conditional and may
+   be modest; on an effectively 1-D setpoint problem the two frontiers coincide.
+
+### Data
+- Nominal twin surface (z=0.35): the 15-row `twin_runs.csv` (Phase 3A) -> GPR
+  `(R,D)->xB` and `(R,D)->tray-6 T` (3B.1).
+- Feed-z campaign **[pending]**: `R x D` grid at feed z in {0.30,...,0.40} ->
+  `twin_runs_zvaried.csv`, supplying (i) the conformal sensor's calibration
+  residuals (tray-6 T -> xB scatter from the unmeasured z disturbance) and (ii)
+  the 3-D truth surface `xB(R,D,z)` used to score violations.
+- Disturbance ensemble: feed composition z (primary, unmeasured; ±0.05 about
+  0.35) + tray-6 measurement noise sigma ~ 0.75 C. Rationale: feed-z is the
+  dominant real debutanizer disturbance and is unmeasured, so the single-feature
+  sensor genuinely cannot resolve it — the regime where empirical conformal
+  intervals beat closed-form noise propagation.
+
+### Metrics
+
+| quantity | value | note |
+|---|---|---|
+| 3B.1 GPR ln(xB) fit (15 pts) | R^2 1.0, monotone | reproduces 3A optimum (profit within 1.4 USD/h) |
+| 3B.1 GPR vs quadratic | ~equal on binary surface | GPR value = variance + flexibility, not fit gain |
+| 3B.2 one-sided coverage | 0.90 (synthetic, mean of seeds) | **[pending]** real value on z-campaign |
+| 3B.2 width heteroscedasticity (CV) | ~0.23 (synthetic) | >0 required; cliff width ~2x sharp-region |
+| 3B.3 profit delta @ matched violation | **[pending]** | synthetic with consistent surfaces: +6.6 USD/h (favourable geometry) to ~0 (1-D geometry) |
+| coverage as a gate | enforced | scoping D3; no profit claim until coverage holds |
+
+### Observations
+- The interval-driven mechanism is the *adaptivity*, not the conformal label:
+  plain split conformal yields a constant width — identical to a fixed margin —
+  so any advantage comes entirely from the local scale model `sigma_hat(x)`
+  making the back-off heteroscedastic (tight where the sensor is sharp, wide at
+  the cliff / outside the trained envelope).
+- The RTO optimum sits in the high-reflux region, which is where the sensor is
+  sharpest (over-purified column, weak feed-z sensitivity), so the interval-
+  driven back-off there is small relative to a worst-case fixed margin — the
+  source of any profit upside.
+- Coverage is a random variable centred on the target; single-split estimates
+  scatter (±~0.03 at the campaign's calibration size), so the gate reads a
+  finite-sample band, not a single exceedance.
+
+### Unexpected findings
+- **The frontiers can coincide.** When the setpoint decision is effectively 1-D
+  (violation monotone in one effective variable, here reflux), every back-off
+  scheme that hits a target violation rate selects ~the same setpoint and earns
+  the same profit — the scheme changes only the parameterization (b vs alpha),
+  not the achievable frontier. The interval-driven *profit* win is therefore
+  conditional on multi-D setpoint freedom and on low-uncertainty regions being
+  profitable; in a synthetic where these were anti-correlated, the delta was ~0.
+  This is why the contribution leads with calibrated risk control (tier 1), which
+  is geometry-independent, and treats the profit delta (tier 2) as a measured
+  result whose magnitude the twin will decide.
+- **alpha does not equal the realized violation rate at the selected setpoint.**
+  Setpoint selection introduces a selection effect, so the conformal coverage
+  level and the RTO's realized violation rate are related but not identical —
+  the harness measures the realized rate directly rather than assuming it.

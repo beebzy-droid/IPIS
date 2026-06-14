@@ -716,6 +716,10 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-13 (3B results scaffold)** — Phase 3B section added to
+  docs/module3/results.md with the dual framing (calibrated risk control primary,
+  profit delta secondary/conditional) and [pending] slots for the z-campaign
+  numbers. Narrative locked; seeds paper-2 results. Resume = z-campaign -> fill.
 - **2026-06-13 (3B.3 harness + design finding)** — Built the head-to-head harness
   (3D truth surface, alpha-swept interval frontier, fixed-margin frontier, matched-
   violation delta). Synthetic test exposed that the frontiers can coincide when the
