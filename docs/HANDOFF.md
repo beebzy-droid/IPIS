@@ -709,6 +709,26 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
 
 ---
 
+- 3B AUDIT + SOURCES 2026-06-13: docs/module3/audit-and-source-requests.md.
+  VERIFIED CPP + CQR present in project files (read at formula level). PRINCIPLE
+  REAFFIRMED: synthetic validates CODE only; all closed results (G1a-G4, 3B.1)
+  are on real twin data; 3B.2/3B.3 synthetic is code-check, [pending] real.
+  AUDIT changes (do AFTER sources uploaded): (A) lead with calibrated risk
+  control [CPP a priori+a posteriori guarantees]; (B) adopt CPP two-step =>
+  a posteriori coverage validation at the selected setpoint (fixes alpha !=
+  realized-violation selection effect); (C) add CQR interval-engine variant +
+  A/B vs normalized; (D) pin EIA series IDs in EconomicsAnchor; (E) state the
+  DWSIM stage-composition limitation (V4 dropped); (F) add LOO-CV of the
+  surrogate. SOURCES TO UPLOAD (Tier 1): del Rio Chanona 2021 (closest prior
+  art), Marchetti/Chachuat/Bonvin 2009 (modifier adaptation), Chachuat/
+  Srinivasan/Bonvin 2009 (RTO adaptation survey), Li/Arellano-Garcia/Wozny 2008
+  (CC process opt), Fortuna 2007 (Debutanizer benchmark source). Tier 2: Lei
+  2018 (normalized CP), Gibbs/Cherian/Candes 2025 (conditional CP), Angelopoulos
+  & Bates 2023 (CP intro), Safe-BOCP 2024. DWSIM z-campaign walkthrough in the
+  doc (feed saturated-liquid PVF=0; MCP flash as independent T-vs-z check;
+  Automation3 sweep; xB-responds-to-z is the arbiter). Resume = user uploads
+  Tier-1 sources -> implement audit changes A-F -> run z-campaign -> close 3B.
+
 ## Lessons
 - **Run the exact CI command, not piecemeal.** A test-file edit was black-formatted
   but ruff was only run on the changed src files, missing an I001 import-order
@@ -716,6 +736,17 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-13 (3B literature map)** — Added docs/module3/literature-3b.md:
+  curated/annotated, positions 3B against modifier adaptation (ChemE) AND
+  conformal-optimization (CPP/Safe-BOCP). Key finds: del Rio Chanona 2021
+  (closest prior art, GP-posterior -> conformal is the calibration wedge), CPP
+  (formal backbone), CQR (interval-engine upgrade), Gibbs/Cherian/Candes 2025
+  (explains the alpha-vs-violation finding). Web-searched (post-cutoff aware).
+- **2026-06-13 (3B.3 turnkey driver)** — run_3b3_headtohead.py built: full
+  pipeline from the two CSVs to coverage gate + frontiers + matched-violation
+  delta + paper figure + auto tier verdict. Tested on consistent synthetic.
+  The whole 3B consumption side is turnkey; only the DWSIM z-campaign remains.
+  Resume = run campaign -> run driver -> fill results.md.
 - **2026-06-13 (3B results scaffold)** — Phase 3B section added to
   docs/module3/results.md with the dual framing (calibrated risk control primary,
   profit delta secondary/conditional) and [pending] slots for the z-campaign
