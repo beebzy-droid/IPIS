@@ -3,15 +3,17 @@
 > Companion to Paper 1 (Module 1 soft sensor, submitted CACE-D-26-00944). Paper 2
 > is a single sharp contribution, not a five-part framework — keep it tight.
 
-**Working title (primary):**
-*When conformal prediction is unsafe for real-time optimization: the constraint
-selection effect and a conditionally-calibrated remedy*
+**Working title (primary, selected):**
+*The conformal selection effect in real-time optimisation: why marginally valid
+back-offs over-violate and conditional calibration restores safety*
 
 Alternates:
-- *Conditionally-valid conformal back-offs for chance-constrained real-time
-  optimization*
-- *Calibrated constraint back-offs for RTO under unmeasured disturbances:
-  conformal prediction, the optimizer's selection effect, and a conditional fix*
+- *When conformal prediction is unsafe for real-time optimisation: the constraint
+  selection effect and a conditionally-calibrated remedy*
+- *Conditional validity is necessary for conformal constraint back-offs in real-time
+  optimisation: evidence from a distillation twin*
+- *Distribution-free constraint back-offs for real-time distillation optimisation
+  under an unmeasured feed disturbance*
 
 **Venue (RECOMMENDATION — your call):** **Journal of Process Control** (primary);
 Computers & Chemical Engineering (fallback). Reasoning: the contribution is a

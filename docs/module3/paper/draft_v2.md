@@ -1,7 +1,7 @@
-# Paper 2, draft v2 (polished submission text)
+# The conformal selection effect in real-time optimisation: why marginally valid back-offs over-violate and conditional calibration restores safety
 
-> Target: Journal of Process Control. This is the polished full text; figures F1 to F7 and
-> Table 1 are referenced in place. Bibliography in references.md.
+> Paper 2, draft v2 (polished submission text). Target: Journal of Process Control.
+> Figures F1 to F7 and Table 1 are referenced in place. Bibliography in references.md.
 
 ---
 
