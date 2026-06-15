@@ -22,6 +22,7 @@ Run:
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 import tempfile
@@ -75,6 +76,11 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--nominal", required=True, help="z=0.35 sweep CSV (nominal surfaces)")
     ap.add_argument("--zvaried", required=True, help="feed-z campaign CSV (truth surface)")
+    ap.add_argument(
+        "--save-json",
+        default=None,
+        help="freeze the regime map to this JSON path (paper-figure evidence)",
+    )
     args = ap.parse_args()
 
     econ = EconomicsAnchor()
@@ -102,6 +108,7 @@ def main() -> int:
     hdr = f"  {'sigma_z':>7} {'method':>13} {'profit$/h':>9} {'viol':>6} {'kappa':>5}  R*    D*"
     print(hdr)
     realistic_rows = {}
+    regime: dict = {}
     for sig in SIGMAS:
         dist = crto.DisturbanceModel(sigma=sig)
         rng = np.random.default_rng(SEED)
@@ -136,6 +143,23 @@ def main() -> int:
         }
         if abs(sig - REALISTIC) < 1e-9:
             realistic_rows = methods
+        regime[f"{sig:.3f}"] = {
+            name: {
+                "feasible": res.feasible_found,
+                "profit_usd_per_h": (
+                    round(res.profit_usd_per_h, 1) if res.feasible_found else None
+                ),
+                "realized_violation": (
+                    round(res.realized_violation, 4) if res.feasible_found else None
+                ),
+                "kappa": round(res.kappa, 3) if res.feasible_found else None,
+                "reflux_ratio": round(res.reflux_ratio, 3) if res.feasible_found else None,
+                "distillate_kmol_h": (
+                    round(res.distillate_kmol_h, 2) if res.feasible_found else None
+                ),
+            }
+            for name, res in methods.items()
+        }
         for name, res in methods.items():
             tag = " <-realistic" if abs(sig - REALISTIC) < 1e-9 else ""
             if not res.feasible_found:
@@ -166,6 +190,33 @@ def main() -> int:
         ok &= passed
         print(f"  {'PASS' if passed else 'FAIL'}  {label}")
     print(f"\n3B.3 {'PASS' if ok else 'FAIL'}")
+
+    if args.save_json:
+        payload = {
+            "metadata": {
+                "spec_xb": SPEC,
+                "alpha": ALPHA,
+                "seed": SEED,
+                "realistic_sigma_z": REALISTIC,
+                "decision_box": {"reflux_ratio": [0.8, 3.0], "distillate_kmol_h": [33.0, 37.0]},
+                "truth_surface_leave_z_out": {
+                    "held_z": 0.375,
+                    "r2": round(r2, 4),
+                    "mae": round(mae, 5),
+                    "n": n,
+                },
+                "n_cal_rule": "int(1500 * max(1, sigma_z / 0.006))",
+                "violation_mc_band": 0.02,
+                "gate_pass": bool(ok),
+            },
+            "methods": ["oracle", "cqr+apost", "naive-fixed", "naive-adapt"],
+            "regime": regime,
+        }
+        os.makedirs(os.path.dirname(os.path.abspath(args.save_json)), exist_ok=True)
+        with open(args.save_json, "w") as fh:
+            json.dump(payload, fh, indent=2)
+        print(f"  frozen regime map -> {args.save_json}")
+
     return 0 if ok else 1
 
 

@@ -1,0 +1,273 @@
+{
+  "metadata": {
+    "spec_xb": 0.02,
+    "alpha": 0.1,
+    "seed": 20260614,
+    "realistic_sigma_z": 0.006,
+    "decision_box": {
+      "reflux_ratio": [
+        0.8,
+        3.0
+      ],
+      "distillate_kmol_h": [
+        33.0,
+        37.0
+      ]
+    },
+    "truth_surface_leave_z_out": {
+      "held_z": 0.375,
+      "r2": 0.9174,
+      "mae": 0.00526,
+      "n": 15
+    },
+    "n_cal_rule": "int(1500 * max(1, sigma_z / 0.006))",
+    "violation_mc_band": 0.02,
+    "gate_pass": true
+  },
+  "methods": [
+    "oracle",
+    "cqr+apost",
+    "naive-fixed",
+    "naive-adapt"
+  ],
+  "regime": {
+    "0.004": {
+      "oracle": {
+        "feasible": true,
+        "profit_usd_per_h": 5383.3,
+        "realized_violation": 0.0835,
+        "kappa": 1.0,
+        "reflux_ratio": 3.0,
+        "distillate_kmol_h": 34.07
+      },
+      "cqr+apost": {
+        "feasible": true,
+        "profit_usd_per_h": 5381.0,
+        "realized_violation": 0.0627,
+        "kappa": 1.0,
+        "reflux_ratio": 3.0,
+        "distillate_kmol_h": 34.13
+      },
+      "naive-fixed": {
+        "feasible": true,
+        "profit_usd_per_h": 5387.8,
+        "realized_violation": 0.19,
+        "kappa": 1.0,
+        "reflux_ratio": 3.0,
+        "distillate_kmol_h": 33.93
+      },
+      "naive-adapt": {
+        "feasible": true,
+        "profit_usd_per_h": 5394.1,
+        "realized_violation": 0.429,
+        "kappa": 1.0,
+        "reflux_ratio": 2.833,
+        "distillate_kmol_h": 33.73
+      }
+    },
+    "0.006": {
+      "oracle": {
+        "feasible": true,
+        "profit_usd_per_h": 5373.9,
+        "realized_violation": 0.0788,
+        "kappa": 1.0,
+        "reflux_ratio": 3.0,
+        "distillate_kmol_h": 34.33
+      },
+      "cqr+apost": {
+        "feasible": true,
+        "profit_usd_per_h": 5376.3,
+        "realized_violation": 0.1008,
+        "kappa": 1.532,
+        "reflux_ratio": 3.0,
+        "distillate_kmol_h": 34.27
+      },
+      "naive-fixed": {
+        "feasible": true,
+        "profit_usd_per_h": 5381.0,
+        "realized_violation": 0.1668,
+        "kappa": 1.0,
+        "reflux_ratio": 3.0,
+        "distillate_kmol_h": 34.13
+      },
+      "naive-adapt": {
+        "feasible": true,
+        "profit_usd_per_h": 5394.1,
+        "realized_violation": 0.4487,
+        "kappa": 1.0,
+        "reflux_ratio": 2.833,
+        "distillate_kmol_h": 33.73
+      }
+    },
+    "0.008": {
+      "oracle": {
+        "feasible": true,
+        "profit_usd_per_h": 5363.8,
+        "realized_violation": 0.1013,
+        "kappa": 1.0,
+        "reflux_ratio": 2.833,
+        "distillate_kmol_h": 34.6
+      },
+      "cqr+apost": {
+        "feasible": true,
+        "profit_usd_per_h": 5363.8,
+        "realized_violation": 0.0967,
+        "kappa": 1.0,
+        "reflux_ratio": 2.833,
+        "distillate_kmol_h": 34.6
+      },
+      "naive-fixed": {
+        "feasible": true,
+        "profit_usd_per_h": 5373.9,
+        "realized_violation": 0.1588,
+        "kappa": 1.0,
+        "reflux_ratio": 3.0,
+        "distillate_kmol_h": 34.33
+      },
+      "naive-adapt": {
+        "feasible": true,
+        "profit_usd_per_h": 5396.2,
+        "realized_violation": 0.4725,
+        "kappa": 1.0,
+        "reflux_ratio": 3.0,
+        "distillate_kmol_h": 33.67
+      }
+    },
+    "0.010": {
+      "oracle": {
+        "feasible": true,
+        "profit_usd_per_h": 5350.8,
+        "realized_violation": 0.1057,
+        "kappa": 1.0,
+        "reflux_ratio": 2.8,
+        "distillate_kmol_h": 34.93
+      },
+      "cqr+apost": {
+        "feasible": true,
+        "profit_usd_per_h": 5334.8,
+        "realized_violation": 0.0657,
+        "kappa": 1.0,
+        "reflux_ratio": 2.6,
+        "distillate_kmol_h": 35.33
+      },
+      "naive-fixed": {
+        "feasible": true,
+        "profit_usd_per_h": 5356.0,
+        "realized_violation": 0.1123,
+        "kappa": 1.0,
+        "reflux_ratio": 2.933,
+        "distillate_kmol_h": 34.8
+      },
+      "naive-adapt": {
+        "feasible": true,
+        "profit_usd_per_h": 5396.1,
+        "realized_violation": 0.4878,
+        "kappa": 1.0,
+        "reflux_ratio": 2.933,
+        "distillate_kmol_h": 33.67
+      }
+    },
+    "0.015": {
+      "oracle": {
+        "feasible": true,
+        "profit_usd_per_h": 5310.2,
+        "realized_violation": 0.0953,
+        "kappa": 1.0,
+        "reflux_ratio": 2.433,
+        "distillate_kmol_h": 35.93
+      },
+      "cqr+apost": {
+        "feasible": true,
+        "profit_usd_per_h": 5297.8,
+        "realized_violation": 0.1052,
+        "kappa": 5.778,
+        "reflux_ratio": 3.0,
+        "distillate_kmol_h": 36.2
+      },
+      "naive-fixed": {
+        "feasible": false,
+        "profit_usd_per_h": null,
+        "realized_violation": null,
+        "kappa": null,
+        "reflux_ratio": null,
+        "distillate_kmol_h": null
+      },
+      "naive-adapt": {
+        "feasible": true,
+        "profit_usd_per_h": 5396.2,
+        "realized_violation": 0.4805,
+        "kappa": 1.0,
+        "reflux_ratio": 3.0,
+        "distillate_kmol_h": 33.67
+      }
+    },
+    "0.020": {
+      "oracle": {
+        "feasible": true,
+        "profit_usd_per_h": 5287.8,
+        "realized_violation": 0.0872,
+        "kappa": 1.0,
+        "reflux_ratio": 2.2,
+        "distillate_kmol_h": 36.47
+      },
+      "cqr+apost": {
+        "feasible": true,
+        "profit_usd_per_h": 5282.3,
+        "realized_violation": 0.0938,
+        "kappa": 1.0,
+        "reflux_ratio": 2.367,
+        "distillate_kmol_h": 36.6
+      },
+      "naive-fixed": {
+        "feasible": false,
+        "profit_usd_per_h": null,
+        "realized_violation": null,
+        "kappa": null,
+        "reflux_ratio": null,
+        "distillate_kmol_h": null
+      },
+      "naive-adapt": {
+        "feasible": true,
+        "profit_usd_per_h": 5394.2,
+        "realized_violation": 0.4825,
+        "kappa": 1.0,
+        "reflux_ratio": 3.0,
+        "distillate_kmol_h": 33.73
+      }
+    },
+    "0.025": {
+      "oracle": {
+        "feasible": true,
+        "profit_usd_per_h": 5270.9,
+        "realized_violation": 0.1047,
+        "kappa": 1.0,
+        "reflux_ratio": 2.233,
+        "distillate_kmol_h": 36.87
+      },
+      "cqr+apost": {
+        "feasible": false,
+        "profit_usd_per_h": null,
+        "realized_violation": null,
+        "kappa": null,
+        "reflux_ratio": null,
+        "distillate_kmol_h": null
+      },
+      "naive-fixed": {
+        "feasible": false,
+        "profit_usd_per_h": null,
+        "realized_violation": null,
+        "kappa": null,
+        "reflux_ratio": null,
+        "distillate_kmol_h": null
+      },
+      "naive-adapt": {
+        "feasible": true,
+        "profit_usd_per_h": 5396.2,
+        "realized_violation": 0.5018,
+        "kappa": 1.0,
+        "reflux_ratio": 3.0,
+        "distillate_kmol_h": 33.67
+      }
+    }
+  }
+}

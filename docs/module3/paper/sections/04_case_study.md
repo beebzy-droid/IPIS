@@ -1,0 +1,72 @@
+# 4. Case-study design
+
+## 4.1 Plant evaluations: the feed-composition campaign
+
+The twin of Section 3.5 is exercised over a grid in the decision and disturbance
+variables to produce the plant evaluations all results rest on. The campaign spans
+feed light-key fractions $z\in\{0.30,0.325,0.35,0.375,0.40\}$ crossed with reflux
+ratios and distillate flows covering the decision box, each case solved to convergence
+in DWSIM and screened for mass-balance closure and solver staleness. The accepted set
+is $77$ operating points. A nominal sub-sweep at $z_0=0.35$ supplies the $15$ points
+that fit the optimiser's nominal surfaces $\hat g$, distillate purity, and reboiler
+duty; the full $77$-point set fits the truth surface $g(u,z)$.
+
+Two campaign facts shape the design. First, the bottoms composition responds strongly
+and monotonically to feed composition: at a fixed mid-box setpoint $x_B$ rises by an
+order of magnitude across the sampled $z$ range, confirming that the disturbance
+genuinely propagates to the constrained quantity and that the monotone-$z$ oracle of
+Section 3.1 is well-founded. Second, the specification is **physically unattainable for
+large feed excursions**: for $z\gtrsim0.38$ the minimum achievable $x_B$ within the
+distillate-flow bounds exceeds the spec (at $z=0.40$ the column floor is $x_B\approx
+0.048$, well above $\bar g=0.02$), because removing enough light key to meet spec would
+require a distillate flow outside the operable range. The whole $[0.30,0.40]$ ensemble
+is therefore infeasible for *any* back-off, which is itself the design rationale for a
+tightly controlled feed: the operational disturbance must be small, consistent with the
+realistic $\sigma_z\approx0.006$ anchor below.
+
+## 4.2 Disturbance sweep and calibration
+
+The disturbance magnitude is swept over
+$\sigma_z\in\{0.004,0.006,0.008,0.010,0.015,0.020,0.025\}$, with $\sigma_z=0.006$ taken
+as the operationally realistic centre (a well-controlled upstream feed) and the larger
+values probing how each method degrades as the feed becomes more variable. For each
+$\sigma_z$ the calibration set of Section 3.2 is drawn with size scaled to the
+disturbance, $n=\lfloor 1500\cdot\max(1,\sigma_z/0.006)\rfloor$, reflecting that the
+conditional-quantile estimate needs more data as the disturbance widens; at the
+realistic centre $n=1500$. All draws use a fixed seed so the regime map reproduces
+exactly on a given platform.
+
+## 4.3 Methods compared
+
+Four back-off constructions enter the comparison: the **oracle** (the true conditional
+quantile, Section 3.1) as the achievable benchmark; the **constant margin**
+($C_{\mathrm{fix}}$) and the **normalised/adaptive** back-off ($C_{\mathrm{nrm}}$) as
+the two marginally-valid baselines — the latter being the soft-sensor-style interval our
+earlier design used; and the **conditional method**, CQR with a-posteriori calibration
+($C_{\mathrm{cqr}}$ followed by the $\kappa$-step of Section 3.4), as the proposed
+remedy. Each method produces a back-off field over the decision box; the RTO of Eq. (2)
+selects the profit-maximising feasible setpoint; that setpoint is then scored against
+the truth surface.
+
+## 4.4 Metrics and protocol
+
+The **primary** metric is the realised constraint-violation rate at the selected
+setpoint, $\hat v(u^\star)=\widehat{\mathbb P}_z[g(u^\star,z)>\bar g]$, estimated by
+Monte-Carlo over the disturbance ($4\text{–}6\times10^{3}$ draws); the target is
+$\hat v\le\alpha=0.10$. The **secondary** metric is the operating profit
+$\pi(u^\star)$, reported only to show that calibrated safety is not bought at a profit
+cost — never as a performance claim in its own right, because at realistic disturbance
+the constraint is barely active and all methods sit within a fraction of a percent of
+the deterministic optimum. Feasibility is itself an outcome: a method is reported
+infeasible at a given $\sigma_z$ when no back-off (after a-posteriori inflation, where
+applicable) admits a setpoint meeting the target. The a-posteriori inflation factor
+$\kappa^\star$ is logged as a data-adequacy diagnostic.
+
+Because the realised violation is a Monte-Carlo quantity, the reported rates carry
+sampling noise of order $\pm0.01\text{–}0.02$ across platforms even though they are
+seeded within a platform; the regime *structure* and the magnitude of the selection
+effect are stable to this noise. The truth surface itself is validated by a
+leave-one-feed-composition-slice-out test — fitting on all $z\neq0.375$ and predicting
+the held-out $z=0.375$ slice — which bounds the accuracy of every violation estimate
+(Section 5.6). The specification is $\bar g=0.02$, the miss level $\alpha=0.10$, the
+decision box $[0.8,3.0]\times[33,37]$, and the master seed $20260614$ throughout.
