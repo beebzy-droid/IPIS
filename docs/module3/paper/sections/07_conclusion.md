@@ -1,0 +1,29 @@
+# 7. Conclusion
+
+Real-time optimisation must subtract a back-off from a quality specification to protect a
+constraint it cannot measure, and conformal prediction is the natural distribution-free
+way to size that back-off. We have shown that the natural choice is unsafe: an optimiser
+pressing on a marginally-valid conformal margin — even a locally-adaptive one — is a
+selection mechanism that drives the operating point to where the margin under-covers the
+conditional constraint quantile, so the realised violation reaches roughly five times the
+nominal level across the disturbance range. An oracle margin built from the true
+conditional quantile holds the violation at the target, confirming that the failure is in
+the back-off, not the chance-constrained formulation. The remedy is conditional validity:
+a conformalised-quantile-regression back-off, with an a-posteriori calibration step at the
+selected setpoint, returns the realised violation to the oracle level at near-oracle
+profit over the operationally realistic disturbance range, and degrades only — and
+diagnosably, through a climbing inflation factor — when the disturbance widens beyond
+several times the realistic level and the conditional estimate runs out of calibration
+data. A regime map over disturbance magnitude characterises where each margin controls
+violation, where a constant margin becomes infeasible, and where even the conditional
+method can no longer certify the target.
+
+The contribution is calibrated safety, not profit: at a well-controlled feed the
+constraint is barely active and all methods earn within half a percent of the
+deterministic optimum, so the value of the conditional method is the violation it
+removes, not the profit it adds. The mechanism is general — any conformal interval used
+as a hard optimisation constraint is exposed to the same selection effect — and the
+portable design rule is to size the margin conditionally and to read the a-posteriori
+inflation as a data-adequacy signal. Demonstrated here on a rigorous binary-distillation
+twin, the approach sets up a closed-loop extension in which an online soft sensor of the
+unmeasured quality feeds the back-off as the disturbance is partially observed.
