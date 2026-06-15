@@ -15,9 +15,10 @@ unmeasured disturbance; safety against constraint violation is handled implicitl
 through conservative tuning or filtering of the modifiers.
 
 A data-driven branch replaces or augments the modifiers with learned surrogates. del
-Río Chanona et al. (2021), building on Ferreira et al. (2018) and del Río-Chanona et al.
-(2019), use Gaussian-process regression to capture the cost- and constraint-mismatch
-non-parametrically and embed trust-region and acquisition-function ideas from Bayesian
+Río Chanona et al. (2021), extending the Gaussian-process modifier-adaptation line (del
+Río-Chanona et al., 2019), use Gaussian-process regression to capture the cost- and
+constraint-mismatch non-parametrically and embed trust-region and acquisition-function
+ideas from Bayesian
 optimization to manage risk during exploration. There, the GP *mean* corrects the
 constraint and the GP *variance* drives excitation and sizes the trust region; the
 scheme is probabilistic in its exploration but does not issue a distribution-free,

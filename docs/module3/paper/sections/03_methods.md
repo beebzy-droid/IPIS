@@ -153,7 +153,7 @@ tracks the oracle.
 
 Conditional targeting removes the *systematic* selection bias but not the finite-sample
 residual: at a given calibration size the CQR optimum may still violate slightly. We
-close the gap with a conformal-predictive-programming a-posteriori step (Lindemann et
+close the gap with a conformal-predictive-programming a-posteriori step (Zhao et
 al.), adapted to the feasibility structure of (2). After solving (2) with a base
 back-off $C_0(\cdot)$ and obtaining $u^\star$, we inflate the back-off by a scalar
 $\kappa\ge 1$, re-solve, and seek the smallest $\kappa$ for which the realised violation
