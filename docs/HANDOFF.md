@@ -45,7 +45,8 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
   next track.** Independent of M1/M3 (~10–20% asset reuse); the designated work for
   review-wait periods. **Resume = scope it before any code:** dataset choice (candidates:
   the TEP IDV fault modes already in `data/raw/tep/`, or a bearing / NASA C-MAPSS RUL set),
-  the failure-mode taxonomy, success metric, and an ADR (**next ADR id = 015**). Apply the
+  the failure-mode taxonomy, success metric, then write `docs/module2/spec.md` (mirror the
+  Module 1/3 spec format) and **ADR-015** before any code. Apply the
   house disciplines — verify-before-load-bearing, option-scale deliberation before code,
   blocked CV, numbers-first, conformal intervals where they matter.
 
@@ -808,8 +809,12 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   delivered as `.docx` for the Elsevier portal (no `.md` upload). Affiliation aligned to
   Paper 1 ("Chemical Engineer, Quezon City, Philippines"). Repo hygiene: README status
   refreshed (both papers under review), root `.gitignore` gains LaTeX-aux patterns,
-  `PROJECT_STRUCTURE.md` added. Both papers now under review.
-  **Resume = Module 2 (Predictive Maintenance) scoping — see §0.5.**
+  `PROJECT_STRUCTURE.md` added. Per-module specs brought current: `docs/module1/spec.md`
+  refreshed to complete (Paper 1 recorded), new `docs/module3/spec.md` written in the same
+  format (D1–D5, T1–T6, 3A/3B results, Paper 2 recorded), both linked from the README
+  Documentation section alongside `PROJECT_STRUCTURE.md` and this handoff. Both papers now
+  under review. **SESSION CLOSED 2026-06-16 — next session opens at Module 2 (Predictive
+  Maintenance) scoping; see §0.5.**
 - **2026-06-13 (3B literature map)** — Added docs/module3/literature-3b.md:
   curated/annotated, positions 3B against modifier adaptation (ChemE) AND
   conformal-optimization (CPP/Safe-BOCP). Key finds: del Rio Chanona 2021
