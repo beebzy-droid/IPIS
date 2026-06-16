@@ -28,7 +28,39 @@ this committed file.
 3. `docs/module1/results.md` + `docs/module1/lessons-learned.md`.
 4. `docs/sources/source-map.md` before building anything that needs a number.
 
-Then jump to **§9 Resume here**.
+Then jump to **§0.5 Current state & resume here** (immediately below).
+
+---
+
+## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-16)
+
+**Both papers submitted. Modules 1 and 3 closed. Next track: Module 2 (Predictive Maintenance).**
+
+- **Paper 1 (Module 1, soft sensor)** — submitted to *Computers & Chemical Engineering*,
+  **CACE-D-26-00944** (2026-06-12). Source: `paper/` (elsarticle, split sections). Under review.
+- **Paper 2 (Module 3, RTO — the conformal selection effect)** — submitted to *Journal of
+  Process Control*, **JPROCONT-D-26-00565** (2026-06-16). Source: `paper2/`. Markdown working
+  copy, figures, and frozen evidence: `docs/module3/paper/`. Under review.
+- **Module 2 — Predictive Maintenance (anomaly detection + RUL): NOT STARTED — this is the
+  next track.** Independent of M1/M3 (~10–20% asset reuse); the designated work for
+  review-wait periods. **Resume = scope it before any code:** dataset choice (candidates:
+  the TEP IDV fault modes already in `data/raw/tep/`, or a bearing / NASA C-MAPSS RUL set),
+  the failure-mode taxonomy, success metric, and an ADR (**next ADR id = 015**). Apply the
+  house disciplines — verify-before-load-bearing, option-scale deliberation before code,
+  blocked CV, numbers-first, conformal intervals where they matter.
+
+**When reviews arrive (either paper):** build the point-by-point response letter + a
+tracked-changes revision.
+
+**House paper standard (any future paper mirrors `paper/` and `paper2/`):** one top-level
+folder; `main.tex` `\input`s `01–07` + `abstract.tex`; `\usepackage{lineno}` + `\linenumbers`;
+`\graphicspath` to the module's `docs/.../figures/`; `\bibliographystyle{elsarticle-num-names}`;
+end-matter sections (Data and code availability, CRediT, competing interest, generative-AI
+disclosure); plus `highlights.md`, `cover_letter.md`, `.gitignore`, `references.bib`. Elsevier
+portals reject `.md` — convert `highlights.md` and `cover_letter.md` to `.docx` for upload.
+
+The detailed Module 1 (§5–§9) and Module 3 (§10) records below are HISTORY, preserved for
+reference. Start here, not there.
 
 ---
 
@@ -76,9 +108,9 @@ benchmark data are **not** CI-tested; library code + unit tests **are**.
 framework with three modules on a first-principles physics layer:
 
 1. **Module 1 — Soft Sensor** — real-time prediction of hard-to-measure quality
-   variables. **(in progress)**
-2. **Module 2 — Predictive Maintenance** — anomaly detection + RUL. **(planned)**
-3. **Module 3 — RTO** — constrained setpoint recommendations. **(planned)**
+   variables. **(✅ complete; paper under review, CACE-D-26-00944)**
+2. **Module 2 — Predictive Maintenance** — anomaly detection + RUL. **(▶ NEXT)**
+3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; paper under review, JPROCONT-D-26-00565)**
 
 Digital twin layer = **DWSIM + GEKKO + CoolProp**. Operational bus = MQTT +
 InfluxDB. Front = Streamlit + FastAPI.
@@ -133,10 +165,10 @@ cleanup task.
 |---|---|---|---|
 | **1A** | Hybrid model on Debutanizer | **✅ Complete** (ADR-007) | Wks 1–4 |
 | **1B** | Drift detection + adaptive correction | **✅ Complete** (ADR-008) | Wks 5–7 |
-| **1C** | Cross-process transfer (Debutanizer → TEP) | **▶ NEXT** | Wks 8–12 |
-| 1D | Production deployment stack | Not started | Wks 13–16 |
-| 1E | SECOM stress test | Not started | Wks 17–18 |
-| 1F | Writing & submission | Not started | Wks 19–20 |
+| **1C** | Cross-process transfer (Debutanizer → TEP) | **✅ Complete** (ADR-009) | Wks 8–12 |
+| 1D | Production deployment stack | **✅ Complete** (ADR-010/011) | Wks 13–16 |
+| 1E | SECOM stress test | **✅ Complete** (ADR-012) | Wks 17–18 |
+| 1F | Writing & submission | **✅ Complete** (CACE-D-26-00944) | Wks 19–20 |
 
 1C target (publishable contribution): fine-tune the Debutanizer model on TEP with
 **<30% of the data a full retrain needs**. 1D includes the conformal/MAPIE work
@@ -293,7 +325,7 @@ and Wang et al. 2021 (DTDE-WRVM) were the 1B soft-sensor-delay backbone.
 
 ---
 
-## 10. RESUME HERE → Module 3 / 3A twin build (skeleton committed, DWSIM next)
+## 10. Module 3 history (RTO → Paper 2, JPROCONT-D-26-00565) — COMPLETE  (live resume is §0.5)
 
 **Status (2026-06-13):** The two 3A blocking asks are ANSWERED (DWSIM installed
 and launches; economics = literature defaults now, plant figures slot in later).
@@ -763,6 +795,21 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-16 (Paper 2 submitted — Module 3 closed)** — Built the full Paper 2
+  submission package and SUBMITTED to *Journal of Process Control*
+  (**JPROCONT-D-26-00565**). elsarticle LaTeX from the polished dash-free draft; 7
+  figures (incl. new F1 RTO-loop + F2 column schematics), Table 1 regime map; verified
+  `references.bib` (Zhang/Park/Simeone IEEE J-STSP, Zhao CPP arXiv:2402.07407, Gibbs
+  arXiv:2305.12616, DWSIM software cite, companion CACE-D-26-00944). RESTRUCTURED to
+  mirror the Paper 1 house style: top-level `paper2/` with split `01–07` +
+  `abstract.tex`, `\usepackage{lineno}`+`\linenumbers`, `elsarticle-num-names`,
+  end-matter (Data/code availability, CRediT, competing interest, generative-AI),
+  `highlights.md`; retired `docs/module3/paper/latex/`. Highlights + cover letter
+  delivered as `.docx` for the Elsevier portal (no `.md` upload). Affiliation aligned to
+  Paper 1 ("Chemical Engineer, Quezon City, Philippines"). Repo hygiene: README status
+  refreshed (both papers under review), root `.gitignore` gains LaTeX-aux patterns,
+  `PROJECT_STRUCTURE.md` added. Both papers now under review.
+  **Resume = Module 2 (Predictive Maintenance) scoping — see §0.5.**
 - **2026-06-13 (3B literature map)** — Added docs/module3/literature-3b.md:
   curated/annotated, positions 3B against modifier adaptation (ChemE) AND
   conformal-optimization (CPP/Safe-BOCP). Key finds: del Rio Chanona 2021
