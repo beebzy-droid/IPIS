@@ -84,9 +84,12 @@ python scripts/download_datasets.py --all
 
 ## Documentation
 
+- [Project structure map](PROJECT_STRUCTURE.md)
+- [Continuity / handoff doc](docs/HANDOFF.md)
 - [System architecture](docs/architecture/system-overview.md)
 - [Architecture Decision Records (ADRs)](docs/architecture/decisions/)
-- [Module 1 specification](docs/module1/spec.md)
+- [Module 1 specification](docs/module1/spec.md) — Soft Sensor
+- [Module 3 specification](docs/module3/spec.md) — Real-Time Optimization
 
 ## Tech stack
 
