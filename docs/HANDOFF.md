@@ -68,11 +68,18 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     published bearing data + Smith & Randall, and are **verified by reproducing CWRU's
     published defect-frequency multipliers** from the geometry (self-consistency check at 2A).
     SKF datasheet still pulled as a supporting/identity source.
-  - **Phase tracker:** 2A features+health+diagnosis (CWRU then FEMTO) >> next . 2B RUL +
-    one-sided conformal bound . 2C TEP cross-domain anomaly . 2D serving + state-bus.
-  - **Immediate next:** Phase 2A — vibration feature pipeline + physics-anchored fault-freq
-    layer + health index under blocked CV. Reuse `evaluation/{conformal,drift,blocked_cv}.py`
-    and the serving stack. Start with CWRU (clean signatures) to validate the physics layer.
+  - **Phase tracker:** 2A IN PROGRESS — physics layer landed (`module2_pdm/physics/`,
+    11 tests, self-consistency gate residual 0.012% vs Smith & Randall Table 2). Remaining
+    2A: CWRU loader, envelope feature pipeline, health index. . 2B RUL + one-sided conformal
+    bound . 2C TEP cross-domain anomaly . 2D serving + state-bus.
+  - **2A progress log:** physics layer (`bearing_frequencies.py`) pins BPFO/BPFI/BSF/FTF
+    kinematics; CWRU 6205 multipliers VERIFIED from Smith & Randall Table 2; geometry
+    back-validated by self-consistency (0.012%). Sources registered Tier-1 in source-map.
+    BSF f_r-term ambiguity resolved (Verification Record #7).
+  - **Immediate next:** CWRU loader (`.mat` schema: `X{nnn}_DE_time` / `_FE_time` / `RPM`;
+    pin usable-file manifest vs Smith & Randall, drop 0.028 in. NTN + any corrupt files) +
+    envelope squared-envelope feature pipeline (bandpass→Hilbert→spectrum, Randall & Antoni)
+    + health index. Then a design-choice ratification (HI form, anomaly detector) before 2B.
 
 **When reviews arrive (either paper):** build the point-by-point response letter + a
 tracked-changes revision.

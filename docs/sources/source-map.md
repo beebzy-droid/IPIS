@@ -181,6 +181,26 @@ coverage, not marginal, is the validation instrument.
 
 ---
 
+## Tier 1 (cont.) — Bearing PdM / RUL prognostics (Module 2)
+
+All registered 2026-06-16 at first use in Phase 2A. PDFs in the project library.
+
+| Source | Authoritative for | Used in |
+|---|---|---|
+| **Randall & Antoni (2011)**, "Rolling element bearing diagnostics — A tutorial," MSSP 25(2) | Fault-frequency kinematics (BPFO/BPFI/BSF/FTF); envelope/squared-envelope analysis pipeline (bandpass at resonance → Hilbert → spectrum) | 2A physics + features |
+| **Smith & Randall (2015)**, "...CWRU data: A benchmark study," MSSP 64–65 | **VERIFIED Table 2:** CWRU DE 6205-2RS JEM multipliers BPFO 3.585 / BPFI 5.415 / FTF 0.3983 / BSF 2.357; FE 6203 BPFO 3.053 / BPFI 4.947 / FTF 0.3816 / BSF 1.994; n=9. Note: BSF requires the f_r term (missing in their Ref [1]); 0.028 in. DE faults used an equivalent NTN bearing. Table 1 = envelope-spectrum expectations per fault. CWRU file usability caveats. | 2A physics gate + CWRU manifest |
+| **Nectoux et al. (2012)**, "PRONOSTIA..." IEEE PHM | FEMTO dataset structure, 20 g EOL, PHM-2012 score | 2A/2B |
+| **Lei et al. (2018)**, "Machinery health prognostics..." MSSP 104 | Health-indicator construction, degradation stages, RUL methodology | 2B |
+| **Si et al. (2011)**, "RUL estimation — statistical data-driven," EJOR 213(1) | Statistical RUL + uncertainty framing | 2B |
+| **ISO 15243 / 13374 / 13381-1 / 20816-3** | Failure-mode taxonomy; CM data-processing architecture; prognostics; vibration-severity zones (WARN/ALARM thresholds) | 2A taxonomy, 2D thresholds |
+
+VERIFIED from Smith & Randall Table 2 (2026-06-16): the 6205 geometry
+(n=9, d=0.3126 in, D=1.537 in, φ=0) reproduces the published multipliers to a max
+relative error of **0.012%** — the physics-layer self-consistency gate
+(`test_cwru_6205_self_consistency`).
+
+---
+
 ## Verification Record (errors caught by the protocol)
 
 1. **GPR misplacement** — synthesized doc placed GPR as M1 ML layer; primary source (Kajero S4.2) shows it belongs to M3/transfer. (ADR-006)
@@ -189,6 +209,7 @@ coverage, not marginal, is the validation instrument.
 4. **Static single-tray physics misframed as the predictor** — initial bridge applied bubble-point physics at lag 0 (R^2 = 0.018); diagnosis showed the problem is dynamic (transport delay ~15) and that single-tray physics ~= lagged u5. Corrected to a dynamic, physics-anchored model evaluated under blocked CV (ADR-007).
 5. **SBC mis-scoped for Debutanizer->TEP** — the staged migration papers were lined up for a literal Debutanizer->TEP migration, but the SBC equation requires a shared input space (verified from Lu 2008/2009, Luo 2015, Yan 2011). Debutanizer and TEP share no variables -> literal parameter migration inapplicable. Re-scoped Phase 1C to A (methodology transfer) + C (within-TEP regime migration), where the papers validly apply.
 6. **COSTEP unusable for headless data gen** — COSTEP (Simulink) had a non-reproducible reactor-pressure startup trip (~0.40 h) under Ricker with disturbances off, plus a discrete-in-continuous-If sample-time conflict in the analyzer-delay block; not fixable without interactive access. Pivoted to the Russell/Braatz closed-loop FORTRAN (compiles headless, stable, more cited for data gen), which became the data of record.
+7. **BSF prefactor / geometry back-validation (M2)** — the BSF formula appears in two forms in the literature (with/without the f_r term); Smith & Randall 2015 explicitly note f_r is missing from their Ref [1]. Resolved in favour of the f_r-inclusive form. The 6205 geometry (d, D not published in any primary) was confirmed only by self-consistency: it reproduces Smith & Randall Table 2 multipliers to 0.012%. Geometry is back-validated, not assumed; the published multipliers remain the ground truth for CWRU.
 
 ---
 
