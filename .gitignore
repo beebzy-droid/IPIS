@@ -153,3 +153,17 @@ conformal_synthetic_check.png
 conformal_coverage_tep.png
 tennessee-eastman-dataset/
 docs/module3/twin-validation-selftest.md
+
+# ---------- LaTeX build artifacts ----------
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.out
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.spl
+

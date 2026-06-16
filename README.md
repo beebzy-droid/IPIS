@@ -51,10 +51,15 @@ IPIS addresses all three with one architecture, validated across heterogeneous b
 
 | Module | Status | Target |
 |---|---|---|
-| Module 1 — Soft Sensor | 🚧 In progress (Phase 1C); 1A–1B complete | 16–20 weeks |
-| Module 2 — Predictive Maintenance | ⏳ Planned | After Module 1 |
-| Module 3 — RTO | ⏳ Planned | After Module 2 |
-| Integration (full IPIS) | ⏳ Planned | After Module 3 |
+| Module 1 — Soft Sensor | ✅ Complete; paper under review (CACE-D-26-00944) |
+| Module 2 — Predictive Maintenance | ⏳ Planned | After Module 3 |
+| Module 3 — RTO | ✅ Complete; paper under review (JPROCONT-D-26-00565) |
+| Integration (full IPIS) | ⏳ Planned | After Module 2 |
+
+## Publications
+
+- **Paper 1 (soft sensor):** under review, *Computers & Chemical Engineering* (CACE-D-26-00944). Source in `paper/`.
+- **Paper 2 (RTO):** "The conformal selection effect in real-time optimisation…" — under review, *Journal of Process Control* (JPROCONT-D-26-00565). Source in `paper2/`
 
 ## Quick start
 
