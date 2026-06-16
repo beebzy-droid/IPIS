@@ -1,6 +1,7 @@
 # ADR-015 — Module 2 (Predictive Maintenance): dataset, taxonomy, and success metric
 
-**Status:** Proposed (ratify-on-read; D2 is the load-bearing decision)
+**Status:** Accepted (D2 ratified by action — FEMTO + CWRU downloaded and placed
+2026-06-16; build proceeds to Phase 2A)
 **Date:** 2026-06-16
 **Decision owner:** Bien Busico
 **Module:** 2 (predictive maintenance) — anomaly detection + RUL

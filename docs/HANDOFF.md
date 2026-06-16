@@ -32,23 +32,47 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 
 ---
 
-## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-16)
+## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-16b)
 
-**Both papers submitted. Modules 1 and 3 closed. Next track: Module 2 (Predictive Maintenance).**
+**Both papers submitted. Modules 1 and 3 closed. Module 2 (Predictive Maintenance) SCOPED —
+spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.**
 
 - **Paper 1 (Module 1, soft sensor)** — submitted to *Computers & Chemical Engineering*,
   **CACE-D-26-00944** (2026-06-12). Source: `paper/` (elsarticle, split sections). Under review.
 - **Paper 2 (Module 3, RTO — the conformal selection effect)** — submitted to *Journal of
   Process Control*, **JPROCONT-D-26-00565** (2026-06-16). Source: `paper2/`. Markdown working
   copy, figures, and frozen evidence: `docs/module3/paper/`. Under review.
-- **Module 2 — Predictive Maintenance (anomaly detection + RUL): NOT STARTED — this is the
-  next track.** Independent of M1/M3 (~10–20% asset reuse); the designated work for
-  review-wait periods. **Resume = scope it before any code:** dataset choice (candidates:
-  the TEP IDV fault modes already in `data/raw/tep/`, or a bearing / NASA C-MAPSS RUL set),
-  the failure-mode taxonomy, success metric, then write `docs/module2/spec.md` (mirror the
-  Module 1/3 spec format) and **ADR-015** before any code. Apply the
-  house disciplines — verify-before-load-bearing, option-scale deliberation before code,
-  blocked CV, numbers-first, conformal intervals where they matter.
+- **Module 2 — Predictive Maintenance (anomaly detection + RUL): SCOPED, build not yet
+  started.** Independent of M1/M3 (~10–20% asset reuse); the designated review-wait work.
+  - **Scope locked.** `docs/module2/spec.md` (D1–D6) and **ADR-015** written. **D2 ratified
+    by action** (datasets downloaded) → ADR-015 status **Accepted**. M2 = two sub-tasks the
+    `state_bus` already contracts: health score ∈[0,1], flag OK/WARN/ALARM, RUL (hours).
+  - **Dataset hierarchy (ADR-003 pattern):** FEMTO-PRONOSTIA **primary** (health + RUL);
+    CWRU **secondary** (clean seeded-fault diagnosis — validates the physics layer);
+    TEP IDV **cross-domain anomaly stress** (Phase 2C, no RUL). Chose bearing-vibration
+    primary over TEP/C-MAPSS to (a) cover both sub-tasks in one set, (b) pre-align with the
+    v2 bearing-vibration hardware, (c) keep the physics-anchored signature (BPFO/BPFI/BSF/FTF
+    kinematics = M2's VLE analogue).
+  - **Data on disk (Bien, 2026-06-16):** FEMTO at `data/raw/femto/` (validated in-sandbox:
+    Learning_set 6 / Test_set 11 / Full_Test_Set 11 bearings; acc_*.csv = 2560x6 @25.6 kHz;
+    20 g EOL) and CWRU at `data/raw/cwru/` (12k Drive End + Normal baseline, 40 .mat). Both
+    gitignored; acquisition READMEs tracked. CWRU usable-file manifest to be pinned vs
+    Smith & Randall at 2A (some CWRU files are corrupt — do not trust file numbers blind).
+  - **Sources acquired (all in project library; register Tier-1 in source-map at first use):**
+    Randall & Antoni 2011 (tutorial — pins fault-freq kinematics + envelope pipeline),
+    Nectoux 2012 (FEMTO), Smith & Randall 2015 (CWRU benchmark + usability), Lei 2018 +
+    Si 2011 (RUL methodology), Wang (hybrid RUL), ISO 15243/13374/13381-1/20816-3.
+  - **SKF 6205 geometry provenance (decided):** SKF public datasheet gives boundary dims
+    (25x52x15 mm, confirmed) + load ratings only — it does **not** publish ball count /
+    ball dia / pitch dia. Fault-frequency internals (N=9, d, D, phi~0deg) come from CWRU's
+    published bearing data + Smith & Randall, and are **verified by reproducing CWRU's
+    published defect-frequency multipliers** from the geometry (self-consistency check at 2A).
+    SKF datasheet still pulled as a supporting/identity source.
+  - **Phase tracker:** 2A features+health+diagnosis (CWRU then FEMTO) >> next . 2B RUL +
+    one-sided conformal bound . 2C TEP cross-domain anomaly . 2D serving + state-bus.
+  - **Immediate next:** Phase 2A — vibration feature pipeline + physics-anchored fault-freq
+    layer + health index under blocked CV. Reuse `evaluation/{conformal,drift,blocked_cv}.py`
+    and the serving stack. Start with CWRU (clean signatures) to validate the physics layer.
 
 **When reviews arrive (either paper):** build the point-by-point response letter + a
 tracked-changes revision.
@@ -75,6 +99,28 @@ reference. Start here, not there.
   finished files for Bien to place (usually via `%USERPROFILE%\Downloads\`) and
   commit. Claude never assumes it can run the repo's tests directly against
   Bien's machine; it validates in-sandbox against a faithful local copy.
+- Repo root in Bien's terminal: `C:\Users\yubyu\Projects\IPIS`.
+
+**Commit + push every task (standing rule, 2026-06-16).** Every task ends with a
+commit **and a `git push`** to `github.com/beebzy-droid/IPIS`. Claude then verifies
+the pushed state from the remote (raw URL / tarball) to confirm Bien is on track and
+nothing was missed. Nothing sits uncommitted except the deliberately-excluded
+canonical-TEP WIP.
+
+**Document every task + update HANDOFF (standing rule, 2026-06-16).** Every task
+updates its doc trail (spec / results / lessons-learned / ADR as appropriate) **and**
+`docs/HANDOFF.md` §0.5 in the same commit, so the resume-point is always current.
+
+**File hand-off convention (standing rule, 2026-06-16).** Claude never makes Bien
+hand-place files. Two mechanisms:
+- *Claude-generated deliverables (code/docs):* shipped as individual artifacts with
+  **distinct download-safe names** — no two `README.md` in one batch (prefix them,
+  e.g. `femto_README.md`); `.gitignore` ships as `gitignore.txt` — plus a **single
+  paste-able `cmd` block** that `mkdir`s targets, `copy /Y`s each Downloads file to
+  its repo path, then `git add` / `commit` / `push`. One paste, no dragging.
+- *Large external datasets Bien downloads:* `scripts/place_dataset.cmd` copies a
+  folder from `%USERPROFILE%\Downloads\` into `data\raw\<target>\` (too big to ship
+  as a deliverable).
 
 **Verify-before-load-bearing.** No equation, coefficient, threshold, or algorithm
 enters the repo until it's checked against a primary source *at the moment of

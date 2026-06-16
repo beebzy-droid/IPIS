@@ -40,6 +40,15 @@ dropping every file they flag — no CWRU file is treated as ground truth before
 ## Format (for the 2A loader)
 
 CWRU files are MATLAB `.mat` containing drive-end (`DE`), fan-end (`FE`), and sometimes base
-(`BA`) acceleration vectors plus motor RPM, sampled at 12 kHz (DE fault set). Bearing
-geometry for the SKF 6205-2RS JEM DE bearing (for BPFO/BPFI/BSF/FTF) is taken from the CWRU
-site / Smith & Randall and pinned against Randall & Antoni (2011) at 2A.
+(`BA`) acceleration vectors plus motor RPM, sampled at 12 kHz (DE fault set).
+
+**Bearing geometry provenance (for BPFO/BPFI/BSF/FTF).** DE bearing = SKF 6205-2RS JEM.
+The SKF public datasheet (`skf.com/.../productid-6205`) confirms boundary dims
+(25 x 52 x 15 mm) + load ratings, but does **not** publish ball count, ball diameter, or
+pitch diameter. The fault-frequency internals (N = 9 balls, ball dia d, pitch dia D,
+contact angle phi ~ 0deg) are taken from CWRU's published bearing data cross-checked against
+Smith & Randall (2015), and **verified by reproducing CWRU's published defect-frequency
+multipliers** (BPFO/BPFI/FTF/BSF as multiples of shaft speed) from the geometry — if computed
+multipliers match CWRU's published values, the geometry is confirmed (self-consistency check,
+done at 2A). The SKF datasheet is retained as a supporting identity/boundary-geometry source,
+not the source of the fault-frequency internals. All pinned against Randall & Antoni (2011).
