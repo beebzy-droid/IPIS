@@ -1,0 +1,90 @@
+\section{Introduction}
+\label{sec:intro}
+
+Real-time optimisation (RTO) recomputes the operating point of a process to maximise an
+economic objective as conditions drift. Its value comes from pushing the process against
+its constraints; a distillation column earns more as it drives a product composition to
+the edge of specification. The constraints that matter most, however, are often on quality
+variables that are not measured online. A laboratory assay or an inferential estimate
+stands in for a true composition that the controller never sees in real time. To operate
+safely against such a constraint, an RTO must subtract a back-off from the specification: a
+margin that absorbs the gap between the model's nominal prediction and the realised quality
+under an unmeasured disturbance. Sizing that margin is the central difficulty of RTO under
+uncertainty. Set it too small and the process violates specification whenever the
+disturbance is adverse. Set it too large and the economic benefit of the optimisation is
+given away.
+
+Conformal prediction is the natural tool for the job. It turns any predictor into an
+interval with a finite-sample, distribution-free coverage guarantee, assuming only that the
+data are exchangeable, with no Gaussian residuals and no parametric disturbance law. Taking
+the upper edge of a conformal interval as the back-off promises exactly what a chance
+constraint asks for, namely coverage of the realised quality at the nominal level, learned
+from data, without distributional assumptions. This paper asks whether that promise survives
+contact with the optimiser. It does not.
+
+We show that an RTO optimising against a marginally valid conformal back-off is unsafe. A
+conformal margin guarantees coverage on average over the calibration distribution of
+operating points, but the optimiser does not sample that distribution. It deliberately
+seeks the boundary of the feasible region, which is where the margin is tightest relative
+to the local risk and therefore where coverage is worst. The argmax is a selection
+operator, and it selects for under-coverage. On a rigorous binary-distillation twin
+(Figure~\ref{fig:rto}), a back-off that is marginally valid, including a locally adaptive
+heteroscedastic one that widens where the data are noisier, yields a realised violation
+rate of roughly five times the nominal level across the entire disturbance range. The
+failure is structural rather than a consequence of the disturbance being large, and
+adaptivity in the width of the margin does not cure it. We call this the conformal
+selection effect: the optimisation-induced loss of the marginal coverage guarantee, a
+constraint-space analogue of the winner's curse in post-selection inference. The phenomenon
+was named in the abstract by the conformal-predictive-programming literature
+\citep{zhao2024cpp}, which observed that a decision optimised against sampled constraints is
+no longer independent of them. Our contribution is to instantiate it in a process-RTO loop,
+to quantify its severity, and to isolate what fixes it.
+
+What fixes it is conditional validity. A back-off built from conformalised quantile
+regression \citep{romano2019} targets the conditional constraint quantile at each operating
+point rather than a calibration average, so there is no systematic gap between margin and
+risk for the optimiser to exploit. The residual finite-sample error is closed by an
+a-posteriori calibration at the selected setpoint, in the manner of conformal predictive
+programming. On the twin, this conditional method returns the realised violation to the
+level of an oracle that knows the true conditional quantile, to within the Monte-Carlo
+estimation band, at near-oracle profit over the operationally realistic disturbance range.
+The oracle margin, available here because the twin furnishes the plant response, holds the
+violation at the nominal level by construction. That it does so confirms that the failure
+of the marginal methods lies in the back-off, not in the chance-constrained formulation.
+
+The method is not unconditionally safe, and we map where it holds. Sweeping the disturbance
+magnitude produces a regime map. The conditional method tracks the oracle up to roughly
+three times the realistic disturbance. A constant margin over-violates and then becomes
+infeasible. The a-posteriori inflation factor climbs from near unity to nearly sixfold
+before the conditional estimate, too, runs out of calibration data and can no longer
+certify the target. That inflation factor is an interpretable diagnostic, since the operator
+sees the safety margin being stretched before it breaks. Finally, we are explicit that the
+contribution is calibrated safety, not profit. At a well-controlled feed the constraint is
+barely active and every method earns within half a percent of the deterministic optimum, so
+the value of the conditional method is the violation it removes, not any profit it adds.
+
+The contributions are as follows.
+\begin{itemize}
+\item \textbf{R1.} We identify and quantify the conformal selection effect in RTO. A
+  marginally valid back-off, fixed or locally adaptive, realises roughly five times the
+  nominal violation under optimisation, while an oracle conditional margin holds the target.
+  This establishes that the failure is the selection effect and not the chance-constraint
+  formulation (Sections~\ref{sec:results-selection} and \ref{sec:results-oracle}).
+\item \textbf{R2.} We show that conditional validity is the structural remedy. A CQR
+  back-off with an a-posteriori calibration step tracks the oracle to within the
+  Monte-Carlo band at near-oracle profit over the realistic disturbance range, with the
+  a-posteriori inflation reduced from a primary guarantee to a small residual correction
+  (Section~\ref{sec:results-fix}).
+\item \textbf{R3.} We characterise the disturbance-magnitude regime over which each margin
+  controls violation, where a constant margin becomes infeasible, and where the conditional
+  method itself is data-starved, reading the a-posteriori inflation as a diagnostic of data
+  adequacy (Sections~\ref{sec:results-boundary} and \ref{sec:results-profit}).
+\end{itemize}
+
+Section~\ref{sec:related} places the work against RTO under uncertainty, conformal
+prediction, and conformal optimisation. Section~\ref{sec:methods} formalises the
+chance-constrained RTO, the four back-offs, the selection-effect argument, and the
+a-posteriori step. Section~\ref{sec:case} describes the twin and the experimental design,
+Section~\ref{sec:results} reports the regime map, and Section~\ref{sec:discussion} draws out
+the general design rule, the limitations, and the bridge to a closed-loop extension with an
+online soft sensor.

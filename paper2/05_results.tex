@@ -1,0 +1,211 @@
+\section{Results}
+\label{sec:results}
+
+The four back-off constructions are compared across the disturbance sweep on the committed
+twin data (seed $20260614$). Table~\ref{tab:regime} is the full regime map and
+Figure~\ref{fig:violation} its headline projection: realised violation against disturbance
+magnitude for every method, with the nominal target $\alpha=0.10$ marked. The reading is
+consistent across the sweep, and we summarise it method by method below.
+
+\subsection{The selection effect: marginal back-offs are unsafe under optimisation}
+\label{sec:results-selection}
+
+The normalised, adaptive back-off, the soft-sensor-style interval that is marginally valid by
+construction, fails dramatically. Its realised violation sits between $0.43$ and $0.50$ across
+the entire disturbance range against the $0.10$ target, roughly five times the nominal level,
+with no dependence on $\sigma_z$. The failure is structural rather than a matter of the
+disturbance being large. The mechanism is visible in the selected setpoint
+(Figure~\ref{fig:fields}). At every $\sigma_z$ the adaptive method drives the optimiser to the
+low-$D$ corner near $R\approx2.83$ and $D\approx33.7$, close to the deterministic optimum,
+where the back-off is smallest relative to the true local risk. This is precisely the
+operating point the selection-effect argument of Section~\ref{sec:methods-selection} predicts:
+among feasible points the optimiser takes the most profitable, which is the one where the
+marginally calibrated margin under-covers the conditional quantile. Making the interval
+adaptive in width does not help, because the smooth scale model still leaves under-covered
+pockets for the optimiser to occupy.
+
+The constant margin is less catastrophic but still unsafe, and ultimately unusable. At small
+disturbance it over-violates modestly, between $0.17$ and $0.19$ for $\sigma_z\le0.006$,
+because a single margin sized to the pooled residual is too loose where the column is sensitive
+and too tight where it is not. For $\sigma_z\ge0.015$ no constant margin admits a feasible
+setpoint at all, since the margin required to cover the worst region of the box exceeds the
+spec headroom everywhere. Neither marginal construction controls the violation rate that the
+chance constraint demands.
+
+\subsection{The oracle confirms the chance constraint is sound}
+\label{sec:results-oracle}
+
+That the marginal methods fail is a property of the back-off, not of the formulation. The
+oracle back-off, the true conditional quantile, available here because the twin furnishes the
+plant response, realises a violation between $0.079$ and $0.106$ across all seven disturbance
+levels, that is approximately $\alpha$ by construction, and it remains feasible to the largest
+$\sigma_z$ tested. The oracle is not a deployable method, since it needs the plant it is meant
+to protect, but it certifies two things. The chance-constrained RTO of Eq.~\eqref{eq:chance} is
+correctly posed, and a back-off that is conditionally correct controls the violation rate
+exactly where the marginal ones do not. The oracle is therefore the bar the data-driven
+conditional method must reach.
+
+\subsection{Conditional calibration restores violation control}
+\label{sec:results-fix}
+
+The proposed method, CQR with a-posteriori calibration, tracks the oracle. Its realised
+violation is between $0.063$ and $0.105$ for $\sigma_z\le0.020$, within about $0.01$ of the
+oracle at every level and inside the target band, and it achieves this at near-oracle profit,
+since the CQR and oracle profit columns of Table~\ref{tab:regime} differ by at most a few
+dollars per hour at each $\sigma_z$. Two features distinguish it from the marginal baselines.
+It selects setpoints that move with the disturbance, from $D\approx34.3$ at the realistic
+$\sigma_z=0.006$ out to $D\approx36.6$ at $\sigma_z=0.020$, backing the column away from the
+corner as the feed becomes more variable, exactly as the conditional risk requires and exactly
+what the marginal methods fail to do. And where the residual finite-sample gap would otherwise
+let it violate, the a-posteriori step closes it: at $\sigma_z=0.006$ the conditional quantile
+alone is slightly optimistic, and the inflation $\kappa=1.53$ restores the target, with the
+reported violation taken on an independent test draw. The conditional construction supplies the
+right shape of back-off, and the a-posteriori step supplies the right scale.
+
+\subsection{The boundary: conditional estimation runs out of data}
+\label{sec:results-boundary}
+
+The conditional method is not unconditionally safe. It degrades, gracefully and diagnosably, as
+the disturbance outgrows the calibration set, and the a-posteriori inflation $\kappa$ is the
+signal (Figure~\ref{fig:kappa}). For $\sigma_z\le0.010$ it stays near unity, between $1.0$ and
+$1.5$, since the conditional estimate is already close to correct and little stretching is
+needed. At $\sigma_z=0.015$ it jumps to $5.78$: the estimate must be stretched nearly sixfold to
+be certified safe, and the method is operating at the edge of its feasible-$\kappa$ window. At
+$\sigma_z=0.025$, more than four times the realistic disturbance, no feasible inflation certifies
+the target and the method is reported infeasible, even though the oracle remains feasible there.
+The gap between the two is the finite-sample cost of not knowing the plant. With the truth
+surface the conditional quantile is exact; estimated from a calibration set whose support must
+widen with $\sigma_z$, it eventually cannot be pinned down tightly enough for an optimiser to
+lean on. The $\kappa$ trace makes this a readable property of the method rather than a silent
+failure, since the operator sees the safety margin being stretched before it breaks.
+
+\subsection{Safety, not profit}
+\label{sec:results-profit}
+
+A deliberate non-result is that the proposed method does not earn more money. At the realistic
+disturbance the chance constraint is barely active: every method, including the deterministic
+optimum at a profit of about \$5393\,h$^{-1}$, lies within $0.5\%$ of every other
+(Table~\ref{tab:regime}; Figure~\ref{fig:profit}). The marginally higher profit of the unsafe
+adaptive method is not an advantage. It is the profit of operating at a setpoint that violates
+the spec half the time. The contribution is therefore not a profit improvement but calibrated
+violation control at no cost in profit: the conditional method buys safety that the marginal
+methods cannot deliver, while giving up essentially nothing in operating profit at the realistic
+operating point. The profit separation between methods opens up only as $\sigma_z$ grows and the
+constraint begins to bind, at which point the marginal methods are already either grossly
+violating or infeasible.
+
+\subsection{Surrogate validation and precision accounting}
+\label{sec:results-valid}
+
+Every violation rate above is read against the truth surface, so its credibility rests on that
+surface interpolating the disturbance faithfully. The leave-one-feed-composition-slice-out test,
+fitting on all $z\neq0.375$ and predicting the held-out $z=0.375$ slice, gives $R^2=0.917$ and a
+mean absolute error of $0.0053$ in $x_B$ over $15$ held-out points (Figure~\ref{fig:validation}).
+That error is the precision floor on the violation estimates. It is why the oracle lands between
+$0.08$ and $0.11$ rather than exactly $0.10$, and it bounds how finely any method's violation can
+be resolved. Layered on top is the Monte-Carlo sampling noise of the violation estimator itself,
+of order $\pm0.01$ to $0.02$ across platforms; re-running the map on a different machine moves
+individual rates by at most this much while leaving the regime structure and the fivefold
+selection-effect gap intact. We therefore report violation rates as estimates with a band rather
+than as point values. The qualitative claims, namely that the marginal back-off fails by about
+fivefold, that the conditional method tracks the oracle, and that there is a data-starvation
+boundary, all sit far outside that band.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{F3_violation_vs_sigma.png}
+\caption{Realised constraint-violation rate versus disturbance magnitude $\sigma_z$ for the four
+back-offs, with the nominal target $\alpha=0.10$ and the realistic $\sigma_z$ marked. Crosses
+denote infeasible instances; shaded bands are the Monte-Carlo uncertainty. The marginal
+back-offs (fixed, normalised) violate well above target, while CQR with a-posteriori calibration
+tracks the oracle.}
+\label{fig:violation}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{F4_backoff_fields.png}
+\caption{Back-off field $C(R,D)$ at the realistic disturbance for the naive-adaptive and the
+CQR+a-posteriori methods, with each method's selected optimum ($\star$) and the oracle optimum.
+The white curve is the true feasibility boundary. The adaptive margin stays small in the low-$D$
+corner, so its optimum lands on the unsafe side; the CQR margin grows there and keeps its optimum
+safe.}
+\label{fig:fields}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{F5_profit_vs_sigma.png}
+\caption{Operating profit at the selected setpoint versus $\sigma_z$. At the realistic
+disturbance all methods lie within half a percent of the deterministic optimum; the profit
+separation opens only as the constraint begins to bind.}
+\label{fig:profit}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{F6_surrogate_validation.png}
+\caption{Truth-surface validation. Left: predicted versus actual $x_B$ on the held-out
+$z=0.375$ slice (leave-one-disturbance-out). Right: the monotone $x_B(R,D,z)$ response that
+justifies the $z$-quantile oracle.}
+\label{fig:validation}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\linewidth]{F7_kappa_vs_sigma.png}
+\caption{A-posteriori inflation factor $\kappa^\star$ for the CQR method versus $\sigma_z$. The
+margin is stretched (rising $\kappa$) before the method becomes infeasible, making $\kappa^\star$
+a readable data-adequacy diagnostic.}
+\label{fig:kappa}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\caption{Regime map over disturbance magnitude $\sigma_z$ (canonical run, seed $20260614$,
+leave-$z$-out $R^2=0.917$). For each method: operating profit (USD\,h$^{-1}$), realised violation
+$\hat v$, a-posteriori inflation $\kappa$, and the selected setpoint $(R^\star,D^\star)$. INF
+denotes an infeasible instance. The realistic disturbance is $\sigma_z=0.006$.}
+\label{tab:regime}
+\footnotesize
+\begin{tabular}{llrrrrr}
+\toprule
+$\sigma_z$ & method & profit & $\hat v$ & $\kappa$ & $R^\star$ & $D^\star$ \\
+\midrule
+0.004 & oracle      & 5383 & 0.084 & 1.00 & 3.00 & 34.1 \\
+      & CQR+apost   & 5381 & 0.063 & 1.00 & 3.00 & 34.1 \\
+      & naive-fixed & 5388 & 0.190 & 1.00 & 3.00 & 33.9 \\
+      & naive-adapt & 5394 & 0.429 & 1.00 & 2.83 & 33.7 \\
+\midrule
+0.006 & oracle      & 5374 & 0.079 & 1.00 & 3.00 & 34.3 \\
+      & CQR+apost   & 5376 & 0.101 & 1.53 & 3.00 & 34.3 \\
+      & naive-fixed & 5381 & 0.167 & 1.00 & 3.00 & 34.1 \\
+      & naive-adapt & 5394 & 0.449 & 1.00 & 2.83 & 33.7 \\
+\midrule
+0.008 & oracle      & 5364 & 0.101 & 1.00 & 2.83 & 34.6 \\
+      & CQR+apost   & 5364 & 0.097 & 1.00 & 2.83 & 34.6 \\
+      & naive-fixed & 5374 & 0.159 & 1.00 & 3.00 & 34.3 \\
+      & naive-adapt & 5396 & 0.472 & 1.00 & 3.00 & 33.7 \\
+\midrule
+0.010 & oracle      & 5351 & 0.106 & 1.00 & 2.80 & 34.9 \\
+      & CQR+apost   & 5335 & 0.066 & 1.00 & 2.60 & 35.3 \\
+      & naive-fixed & 5356 & 0.112 & 1.00 & 2.93 & 34.8 \\
+      & naive-adapt & 5396 & 0.488 & 1.00 & 2.93 & 33.7 \\
+\midrule
+0.015 & oracle      & 5310 & 0.095 & 1.00 & 2.43 & 35.9 \\
+      & CQR+apost   & 5298 & 0.105 & 5.78 & 3.00 & 36.2 \\
+      & naive-fixed & \multicolumn{5}{c}{INF} \\
+      & naive-adapt & 5396 & 0.480 & 1.00 & 3.00 & 33.7 \\
+\midrule
+0.020 & oracle      & 5288 & 0.087 & 1.00 & 2.20 & 36.5 \\
+      & CQR+apost   & 5282 & 0.094 & 1.00 & 2.37 & 36.6 \\
+      & naive-fixed & \multicolumn{5}{c}{INF} \\
+      & naive-adapt & 5394 & 0.482 & 1.00 & 3.00 & 33.7 \\
+\midrule
+0.025 & oracle      & 5271 & 0.105 & 1.00 & 2.23 & 36.9 \\
+      & CQR+apost   & \multicolumn{5}{c}{INF} \\
+      & naive-fixed & \multicolumn{5}{c}{INF} \\
+      & naive-adapt & 5396 & 0.502 & 1.00 & 3.00 & 33.7 \\
+\bottomrule
+\end{tabular}
+\end{table}

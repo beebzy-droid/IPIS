@@ -1,0 +1,93 @@
+\section{Related work}
+\label{sec:related}
+
+This work sits at the meeting point of three lines: real-time optimisation under
+uncertainty, conformal prediction and its conditional-validity theory, and the recent use
+of conformal prediction inside optimisation. We review each in turn and then state the gap.
+
+\subsection{Real-time optimisation under uncertainty}
+
+The dominant paradigm for steady-state RTO under plant--model mismatch is modifier adaptation
+\citep{marchetti2009,chachuat2009}, which adds first-order correction terms to the model cost
+and constraints so that, on convergence, the model-based optimum is a KKT point of the plant.
+Modifier adaptation corrects the nominal prediction, but it does not by itself supply a
+probabilistic margin against an unmeasured disturbance. Safety against violation is handled
+implicitly, through conservative tuning or through filtering of the modifiers.
+
+A data-driven branch replaces or augments the modifiers with learned surrogates.
+\citet{delrio2021}, extending the Gaussian-process modifier-adaptation line
+\citep{delrio2019}, use Gaussian-process regression to capture the cost and constraint
+mismatch non-parametrically, and they embed trust-region and acquisition-function ideas from
+Bayesian optimisation to manage risk during exploration. There the GP mean corrects the
+constraint and the GP variance drives excitation and sizes the trust region. The scheme is
+probabilistic in its exploration, yet it does not issue a distribution-free, finite-sample
+coverage guarantee on the constraint, and its risk control is trust-region containment rather
+than a calibrated back-off. The closely related stochastic-MPC line
+\citep{bradford2019,bradford2020} does subtract explicit GP-posterior back-offs from
+constraints, but in a receding-horizon control setting and under a Gaussian posterior
+assumption.
+
+The classical route to explicit probabilistic constraints is chance-constrained programming
+\citep{li2008}, which constrains the probability of satisfaction directly, computes
+joint-constraint probabilities by sampling under an assumed, typically multivariate-normal,
+disturbance law, and trades feasibility against profitability through the miss level. This is
+the formulation we adopt in Eq.~\eqref{eq:chance}. The difference here is that the back-off
+enforcing it is built distribution-free from data rather than from an assumed Gaussian law.
+
+\subsection{Conformal prediction and conditional validity}
+
+Conformal prediction \citep{vovk2005,angelopoulos2023} converts any point predictor into a
+set with a finite-sample, distribution-free marginal coverage guarantee under
+exchangeability. Split conformal and its locally weighted variants \citep{lei2018} rescale
+the residual by a spread estimate so that the interval width adapts to the input, and
+conformalised quantile regression \citep{romano2019} goes further by conformalising a
+quantile-regression estimate so that the interval targets the conditional quantile while
+retaining the marginal guarantee. All of these methods deliver coverage on average over the
+calibration distribution.
+
+The limit of that guarantee is the subject of a conditional-validity literature. Exact
+distribution-free conditional coverage is impossible without further assumptions
+\citep{vovk2012,leiwasserman2014}, and recent work characterises and partially restores
+conditional guarantees \citep{gibbscherian2023}. A parallel strand relaxes exchangeability
+itself, for distribution shift and dependent data
+\citep{tibshirani2019,barber2023,gibbs2021}. The gap between marginal and conditional
+validity is precisely what an optimiser exploits in this paper, because a margin calibrated
+on average under-covers at the specific operating point an optimiser selects.
+
+\subsection{Conformal prediction inside optimisation}
+
+Conformal prediction has recently been brought inside chance-constrained optimisation.
+Conformal predictive programming (CPP; \citealt{zhao2024cpp}) uses the conformal quantile
+lemma to reformulate a chance-constrained program as a deterministic quantile-constrained
+one, supporting any conformal variant and providing feasibility guarantees. Of central
+importance for the present work, CPP observes that once a decision is optimised against
+sampled constraint evaluations those evaluations are no longer independent of the decision,
+so the exchangeability that underwrites the conformal guarantee is broken by the optimisation
+itself, and it restores a guarantee a posteriori by recalibrating the selected solution on a
+second, independent dataset. Related uses of conformal sets to certify safety in optimisation
+and control include online-conformal safety guarantees for Bayesian optimisation
+\citep{zhang2024} and conformal back-offs proposed for predictive control.
+
+CPP supplies the a-posteriori calibration machinery this paper uses
+(Section~\ref{sec:methods-apost}) and names the loss-of-independence mechanism in the
+abstract. What it does not do, and what no work in the RTO literature above does, is
+instantiate the mechanism in a process real-time optimisation loop, quantify how severely a
+marginally valid, including locally adaptive, back-off is degraded by the optimiser, or
+separate the two remedies the problem actually needs: a conditional construction to remove
+the systematic selection bias, with a-posteriori calibration left to cover only the
+finite-sample residual. CPP treats the a-posteriori step as the primary guarantee. We show
+that without conditional validity that step is either large or infeasible, and that a
+conditional back-off makes it small.
+
+\subsection{Gap}
+
+No existing treatment does three things together. It does not place a distribution-free
+conformal constraint back-off inside a chemical-process RTO loop; it does not expose and
+quantify the optimiser-induced selection effect that drives a marginally valid margin to
+several times its nominal violation; and it does not identify conditional validity as the
+structural remedy, relegating a-posteriori calibration to a residual correction and reading
+its inflation factor as a diagnostic of data adequacy. This paper provides that treatment on
+a rigorous debutaniser twin, and it maps the disturbance regime over which the treatment
+holds. The soft-sensor framework of the companion paper \citep{companion2026} supplies the
+model-based estimate of the unmeasured constraint that the back-off corrects; here that
+estimate is taken as given and the focus is the back-off itself.
