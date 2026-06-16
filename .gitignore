@@ -16,11 +16,17 @@ data/external/*
 !data/raw/tep/
 !data/raw/secom/
 
-# Re-include placeholder files
+# Re-include the new M2 dataset dirs so git can descend into them
+!data/raw/femto/
+!data/raw/cwru/
+
+# Re-include placeholder / acquisition-note files
 !data/README.md
 !data/raw/debutanizer/.gitkeep
 !data/raw/tep/.gitkeep
 !data/raw/secom/.gitkeep
+!data/raw/femto/README.md
+!data/raw/cwru/README.md
 
 # Industrial partner data — ALWAYS gitignored
 # (Coca-Cola or other partner data must never reach the public repo)
