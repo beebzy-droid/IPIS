@@ -68,26 +68,31 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     published bearing data + Smith & Randall, and are **verified by reproducing CWRU's
     published defect-frequency multipliers** from the geometry (self-consistency check at 2A).
     SKF datasheet still pulled as a supporting/identity source.
-  - **Phase tracker:** 2A IN PROGRESS — physics layer + CWRU loader + vibration feature
-    pipeline landed (37 M2 tests). Remaining 2A: health index, and the real-data validation
-    RUN (`validate_cwru_physics.py` against actual CWRU files). . 2B RUL + one-sided conformal
-    bound . 2C TEP cross-domain anomaly . 2D serving + state-bus.
-  - **2A progress log:** (1) physics layer pins BPFO/BPFI/BSF/FTF; CWRU 6205 multipliers
-    VERIFIED from Smith & Randall Table 2; geometry back-validated by self-consistency
-    (0.012%); BSF f_r-term ambiguity resolved (Verification Record #7). (2) CWRU loader
-    (`data/cwru_loader.py`) pinned to the confirmed real schema `X{n}_DE_time/_FE_time/
-    _BA_time` + `X{n}RPM` (suffix-matched — prefix can differ from filename; fs explicit,
-    default 12 kHz). (3) Vibration features (`features/vibration_features.py`): time-domain
-    set + squared-envelope spectrum (Randall & Antoni) + fault-band energy ratios.
-    Synthetic IR-fault validation: envelope peak 162.0 Hz vs physics BPFI 162.2 Hz (0.1%).
+  - **Phase tracker:** 2A CWRU side COMPLETE — physics layer + CWRU loader + vibration
+    features + health index (Option C) + usable-file manifest (50 M2 tests). Remaining before
+    2B: FEMTO loader + apply the health index to FEMTO run-to-failure (degradation trend).
+    . 2B RUL + one-sided conformal bound . 2C TEP cross-domain anomaly . 2D serving + state-bus.
+  - **2A progress log:** (1) physics layer (gate 0.012% vs S&R T2). (2) CWRU loader (real
+    schema `X{n}_DE/_FE/_BA_time` + `X{n}RPM`, suffix-matched, fs explicit). (3) Vibration
+    features: time-domain + squared-envelope + fault-band ratios + combined `feature_vector`
+    (13 features). (4) **Real-data validation on 3 fault types** — IR(105)/OR(130)/Ball(222):
+    physics predicts the envelope peak to 0.1-0.3% (slip-level). Energy-ratio diagnosis correct
+    on all 3; naive peak-picking fails only on Ball (lands on BPFI) — documented CWRU difficulty
+    (S&R), which justifies the ratio features in the HI. (5) Health index
+    (`health/health_index.py`): Hotelling T2 over the combined vector, chi2 control limits
+    (95/99 -> WARN/ALARM), health_score in [0,1] anchored so healthy->1.0, mapped to `state_bus`
+    equipment_health/health_flags; raw T2 is the 2B RUL feature. Healthy->OK / fault->ALARM
+    integration passes. (6) CWRU manifest pinned to S&R Tables 3 & 6 -> 32 usable DE files
+    (dropped 118/119/120/200/224/225/236/237; 0.028 in. NTN 3001-3004 excluded by geometry).
+  - **Deferred 2A enhancement:** kurtogram / spectral-kurtosis band selection (the fixed
+    2-5 kHz band gives correct diagnosis but soft energy-ratio separation; sharpening only).
   - **Tooling:** test-suite warnings silenced via `pyproject` `filterwarnings` —
     sklearn `ConvergenceWarning` (M3 GP bounds are intentional MAP regularization, not a
     fit failure; not widened, to protect crossover reproducibility) and the MLflow
     file-store `FutureWarning` (the loader test deliberately exercises the file store).
-  - **Immediate next:** Bien runs `python scripts/validate_cwru_physics.py 105.mat` on the
-    REAL CWRU data (expect dominant peak on BPFI for inner-race; paste output). Then build the
-    health index + pin the CWRU usable-file manifest vs Smith & Randall (drop 0.028 in. NTN +
-    any corrupt files). Then a design-choice ratification (HI form, anomaly detector) before 2B.
+  - **Immediate next:** FEMTO loader (`acc_*.csv` snapshots -> per-bearing time series), then
+    apply the health index across a FEMTO bearing's life to get a degradation HI trend (the
+    bridge into 2B RUL + one-sided conformal bound).
 
 **When reviews arrive (either paper):** build the point-by-point response letter + a
 tracked-changes revision.

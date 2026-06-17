@@ -178,3 +178,57 @@ def dominant_frequency(
         return float("nan")
     idx = np.argmax(amp[mask])
     return float(freqs[mask][idx])
+
+
+# Order of the combined feature vector used by the health index (Option C).
+FEATURE_VECTOR_NAMES: tuple[str, ...] = (
+    "rms",
+    "peak",
+    "std",
+    "crest_factor",
+    "shape_factor",
+    "impulse_factor",
+    "clearance_factor",
+    "kurtosis",
+    "skewness",
+    "bpfo_ratio",
+    "bpfi_ratio",
+    "bsf_ratio",
+    "ftf_ratio",
+)
+
+
+def feature_vector(
+    x: np.ndarray,
+    fs: float,
+    defects: DefectFrequencies,
+    band: tuple[float, float] | None = None,
+    n_harmonics: int = 3,
+    bw_hz: float = 5.0,
+) -> np.ndarray:
+    """Combined time-domain + fault-band-ratio feature vector (Option C).
+
+    Returns a 1-D array ordered as `FEATURE_VECTOR_NAMES`. This is the vector the
+    health index models with Hotelling T^2; it captures both impulsiveness
+    (time-domain) and fault-specific energy (envelope ratios).
+    """
+    tf = time_features(x)
+    fb = fault_band_features(x, fs, defects, band=band, n_harmonics=n_harmonics, bw_hz=bw_hz)
+    return np.array(
+        [
+            tf.rms,
+            tf.peak,
+            tf.std,
+            tf.crest_factor,
+            tf.shape_factor,
+            tf.impulse_factor,
+            tf.clearance_factor,
+            tf.kurtosis,
+            tf.skewness,
+            fb["bpfo_ratio"],
+            fb["bpfi_ratio"],
+            fb["bsf_ratio"],
+            fb["ftf_ratio"],
+        ],
+        dtype=float,
+    )
