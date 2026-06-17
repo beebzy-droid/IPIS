@@ -186,6 +186,16 @@ markers = [
     "integration: marks integration tests (require services)",
     "gpu: marks tests requiring a GPU",
 ]
+filterwarnings = [
+    # GP hyperparameter bounds in M3 (soft_sensor/surrogate Matern + WhiteKernel) are
+    # intentional MAP-style regularization; the optimizer settling on a bound is by
+    # design, not a fit failure. Suppress the cosmetic ConvergenceWarning rather than
+    # widen bounds (widening would risk M3 crossover reproducibility).
+    "ignore::sklearn.exceptions.ConvergenceWarning",
+    # The MLflow loader roundtrip test deliberately exercises the (now-deprecated)
+    # file-store backend via MLFLOW_ALLOW_FILE_STORE; not migrating to sqlite here.
+    "ignore:The filesystem tracking backend:FutureWarning",
+]
 
 [tool.coverage.run]
 source = ["src/ipis"]

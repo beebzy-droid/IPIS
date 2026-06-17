@@ -80,6 +80,10 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     default 12 kHz). (3) Vibration features (`features/vibration_features.py`): time-domain
     set + squared-envelope spectrum (Randall & Antoni) + fault-band energy ratios.
     Synthetic IR-fault validation: envelope peak 162.0 Hz vs physics BPFI 162.2 Hz (0.1%).
+  - **Tooling:** test-suite warnings silenced via `pyproject` `filterwarnings` —
+    sklearn `ConvergenceWarning` (M3 GP bounds are intentional MAP regularization, not a
+    fit failure; not widened, to protect crossover reproducibility) and the MLflow
+    file-store `FutureWarning` (the loader test deliberately exercises the file store).
   - **Immediate next:** Bien runs `python scripts/validate_cwru_physics.py 105.mat` on the
     REAL CWRU data (expect dominant peak on BPFI for inner-race; paste output). Then build the
     health index + pin the CWRU usable-file manifest vs Smith & Randall (drop 0.028 in. NTN +
