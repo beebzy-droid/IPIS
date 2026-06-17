@@ -21,10 +21,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from ipis.module1_soft_sensor.migration.functional_sbc import YanFunctionalSBC
-from ipis.module1_soft_sensor.migration.matrix_sbc import LuoMatrixSBC
-from ipis.module1_soft_sensor.migration.sbc import LuOSBC
-from ipis.module1_soft_sensor.migration.sweep import data_fraction_sweep
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
 
@@ -35,6 +31,10 @@ from ipis.module1_soft_sensor.features.tep_physics_features import (
     diagnose_transport_lag,
     make_tep_physics_features,
 )
+from ipis.module1_soft_sensor.migration.functional_sbc import YanFunctionalSBC
+from ipis.module1_soft_sensor.migration.matrix_sbc import LuoMatrixSBC
+from ipis.module1_soft_sensor.migration.sbc import LuOSBC
+from ipis.module1_soft_sensor.migration.sweep import data_fraction_sweep
 
 TEP_FAST_INPUTS = [f"XMEAS_{i}" for i in range(1, 23)]
 MIGRATORS = {

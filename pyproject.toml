@@ -122,6 +122,13 @@ ipis = ["py.typed"]
 line-length = 100
 target-version = "py311"
 src = ["src"]
+extend-exclude = [
+    "scripts/_*.py",            # one-off DWSIM interop probes (hardcoded paths, reflection)
+    "scripts/probe_g1c.py",
+    "scripts/run_g1c.py",
+    "scripts/run_g2_sweep.py",
+    "scripts/run_zvaried_sweep.py",
+]
 
 [tool.ruff.lint]
 select = [
