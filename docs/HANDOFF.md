@@ -68,18 +68,22 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     published bearing data + Smith & Randall, and are **verified by reproducing CWRU's
     published defect-frequency multipliers** from the geometry (self-consistency check at 2A).
     SKF datasheet still pulled as a supporting/identity source.
-  - **Phase tracker:** 2A IN PROGRESS — physics layer landed (`module2_pdm/physics/`,
-    11 tests, self-consistency gate residual 0.012% vs Smith & Randall Table 2). Remaining
-    2A: CWRU loader, envelope feature pipeline, health index. . 2B RUL + one-sided conformal
+  - **Phase tracker:** 2A IN PROGRESS — physics layer + CWRU loader + vibration feature
+    pipeline landed (37 M2 tests). Remaining 2A: health index, and the real-data validation
+    RUN (`validate_cwru_physics.py` against actual CWRU files). . 2B RUL + one-sided conformal
     bound . 2C TEP cross-domain anomaly . 2D serving + state-bus.
-  - **2A progress log:** physics layer (`bearing_frequencies.py`) pins BPFO/BPFI/BSF/FTF
-    kinematics; CWRU 6205 multipliers VERIFIED from Smith & Randall Table 2; geometry
-    back-validated by self-consistency (0.012%). Sources registered Tier-1 in source-map.
-    BSF f_r-term ambiguity resolved (Verification Record #7).
-  - **Immediate next:** CWRU loader (`.mat` schema: `X{nnn}_DE_time` / `_FE_time` / `RPM`;
-    pin usable-file manifest vs Smith & Randall, drop 0.028 in. NTN + any corrupt files) +
-    envelope squared-envelope feature pipeline (bandpass→Hilbert→spectrum, Randall & Antoni)
-    + health index. Then a design-choice ratification (HI form, anomaly detector) before 2B.
+  - **2A progress log:** (1) physics layer pins BPFO/BPFI/BSF/FTF; CWRU 6205 multipliers
+    VERIFIED from Smith & Randall Table 2; geometry back-validated by self-consistency
+    (0.012%); BSF f_r-term ambiguity resolved (Verification Record #7). (2) CWRU loader
+    (`data/cwru_loader.py`) pinned to the confirmed real schema `X{n}_DE_time/_FE_time/
+    _BA_time` + `X{n}RPM` (suffix-matched — prefix can differ from filename; fs explicit,
+    default 12 kHz). (3) Vibration features (`features/vibration_features.py`): time-domain
+    set + squared-envelope spectrum (Randall & Antoni) + fault-band energy ratios.
+    Synthetic IR-fault validation: envelope peak 162.0 Hz vs physics BPFI 162.2 Hz (0.1%).
+  - **Immediate next:** Bien runs `python scripts/validate_cwru_physics.py 105.mat` on the
+    REAL CWRU data (expect dominant peak on BPFI for inner-race; paste output). Then build the
+    health index + pin the CWRU usable-file manifest vs Smith & Randall (drop 0.028 in. NTN +
+    any corrupt files). Then a design-choice ratification (HI form, anomaly detector) before 2B.
 
 **When reviews arrive (either paper):** build the point-by-point response letter + a
 tracked-changes revision.
