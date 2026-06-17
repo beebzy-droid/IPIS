@@ -68,9 +68,10 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     published bearing data + Smith & Randall, and are **verified by reproducing CWRU's
     published defect-frequency multipliers** from the geometry (self-consistency check at 2A).
     SKF datasheet still pulled as a supporting/identity source.
-  - **Phase tracker:** 2A COMPLETE — CWRU diagnosis (physics + loader + features + health
-    index + manifest) AND the FEMTO bridge (loader + degradation HI trend). 58 M2 tests.
-    >> NEXT: 2B RUL + one-sided conformal bound . 2C TEP cross-domain anomaly . 2D serving.
+  - **Phase tracker:** 2A COMPLETE. 2B RUL ENGINE BUILT (degradation index + RUL regressor +
+    one-sided lower conformal bound + PHM-2012 score; 13 tests). 71 M2 tests. PENDING: real-FEMTO
+    LOBO evaluation (Bien runs `run_femto_rul.py`) + RUL-model iteration.
+    >> NEXT: real-FEMTO RUL numbers . 2C TEP cross-domain anomaly . 2D serving.
   - **2A progress log:** (1) physics layer (gate 0.012% vs S&R T2). (2) CWRU loader (real
     schema `X{n}_DE/_FE/_BA_time` + `X{n}RPM`, suffix-matched, fs explicit). (3) Vibration
     features: time-domain + squared-envelope + fault-band ratios + combined `feature_vector`
@@ -97,10 +98,31 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     sklearn `ConvergenceWarning` (M3 GP bounds are intentional MAP regularization, not a
     fit failure; not widened, to protect crossover reproducibility) and the MLflow
     file-store `FutureWarning` (the loader test deliberately exercises the file store).
-  - **Immediate next (Phase 2B):** RUL regression on the FEMTO degradation HI trend with a
-    one-sided (lower-bound) conformal interval; PHM-2012 asymmetric score as the headline metric.
-    Reuse `evaluation/{conformal,blocked_cv}.py`. Bien first runs `build_femto_hi_trend.py` on a
-    few real Full_Test_Set bearings (paste output) to confirm the trend shape on real data.
+  - **2B progress log (RUL engine):** `rul/degradation.py` — `degradation_index` =
+    cummax(EMA(T2)) (Option E: smoothed + monotone + causal, no EOL normalization -> no leakage);
+    `first_prediction_time` = onset where smoothed T2 stays > WARN limit (persist=3); RUL predicted
+    only for t>=FPT. `rul/rul_model.py` — `rul_feature_matrix` = [log1p(DI), causal slope];
+    `RULModel` (sklearn regressor, default LinearRegression) + one-sided LOWER conformal bound
+    (reuses M1 `conformal_quantile`: L = pred - q, P(RUL>=L)>=1-alpha); `phm2012_score` (verified
+    asymmetric: 0 err->1.0, 5% late->0.5, 20% early->0.5, late ~4x harsher). `scripts/run_femto_rul.py`
+    — LOBO over femto_hi_*.csv, PHM(full) + PHM(horizon, RUL>=10% max) + pooled coverage.
+    13 unit tests incl. PHM anchors and a marginal-coverage test (pooled exchangeable split ->
+    coverage>=1-alpha, model-agnostic). Synthetic LOBO: mean horizon PHM ~0.36, pooled cover ~0.74.
+  - **2B honest findings (carry):** (a) PHM-2012 is brutal as RUL->0 (1-snapshot abs error =
+    huge % error); always report the horizon score, matching the challenge truncation-point
+    protocol. (b) The one-sided lower bound may sit ABOVE the point prediction when the regressor
+    is biased low — its guarantee is COVERAGE, not position vs the point estimate. (c) Split
+    conformal gives only MARGINAL coverage under exchangeability; LOBO breaks it, so per-bearing
+    coverage varies and pooled coverage (<0.90 on the weak baseline) is the fair estimate ->
+    future: Mondrian/adaptive conformal per degradation level. (d) The global linear DI->RUL model
+    is a transparent baseline; the map is bearing-specific (rate/length), so accuracy is limited
+    -> RUL-model iteration is the next lever (per-bearing degradation-model extrapolation to the
+    failure threshold, or similarity-based RUL).
+  - **Immediate next (Phase 2B eval + iterate):** Bien runs `build_femto_hi_trend.py` on several
+    run-to-failure bearings (Learning_set 1_1/1_2/2_1/2_2/3_1/3_2 + Full_Test_Set), then
+    `run_femto_rul.py` (paste the per-bearing PHM + pooled coverage). Watch the FPT column — if
+    run-in pushes FPT very early, the degradation phase is contaminated and we revisit the FPT
+    rule. Then iterate the RUL model toward the per-bearing extrapolation / similarity approach.
 
 **When reviews arrive (either paper):** build the point-by-point response letter + a
 tracked-changes revision.
