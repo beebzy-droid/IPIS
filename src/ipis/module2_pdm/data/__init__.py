@@ -8,6 +8,13 @@ from ipis.module2_pdm.data.cwru_manifest import (
     normal_baseline_files,
     usable_de_files,
 )
+from ipis.module2_pdm.data.femto_loader import (
+    FEMTO_FS,
+    FEMTO_SNAPSHOT_INTERVAL_S,
+    FEMTOBearing,
+    load_femto_bearing,
+    load_femto_snapshot,
+)
 
 __all__ = [
     "CWRURecord",
@@ -17,4 +24,9 @@ __all__ = [
     "usable_de_files",
     "normal_baseline_files",
     "defect_for_class",
+    "FEMTOBearing",
+    "load_femto_bearing",
+    "load_femto_snapshot",
+    "FEMTO_FS",
+    "FEMTO_SNAPSHOT_INTERVAL_S",
 ]

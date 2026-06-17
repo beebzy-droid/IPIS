@@ -68,10 +68,9 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     published bearing data + Smith & Randall, and are **verified by reproducing CWRU's
     published defect-frequency multipliers** from the geometry (self-consistency check at 2A).
     SKF datasheet still pulled as a supporting/identity source.
-  - **Phase tracker:** 2A CWRU side COMPLETE — physics layer + CWRU loader + vibration
-    features + health index (Option C) + usable-file manifest (50 M2 tests). Remaining before
-    2B: FEMTO loader + apply the health index to FEMTO run-to-failure (degradation trend).
-    . 2B RUL + one-sided conformal bound . 2C TEP cross-domain anomaly . 2D serving + state-bus.
+  - **Phase tracker:** 2A COMPLETE — CWRU diagnosis (physics + loader + features + health
+    index + manifest) AND the FEMTO bridge (loader + degradation HI trend). 58 M2 tests.
+    >> NEXT: 2B RUL + one-sided conformal bound . 2C TEP cross-domain anomaly . 2D serving.
   - **2A progress log:** (1) physics layer (gate 0.012% vs S&R T2). (2) CWRU loader (real
     schema `X{n}_DE/_FE/_BA_time` + `X{n}RPM`, suffix-matched, fs explicit). (3) Vibration
     features: time-domain + squared-envelope + fault-band ratios + combined `feature_vector`
@@ -84,15 +83,24 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     equipment_health/health_flags; raw T2 is the 2B RUL feature. Healthy->OK / fault->ALARM
     integration passes. (6) CWRU manifest pinned to S&R Tables 3 & 6 -> 32 usable DE files
     (dropped 118/119/120/200/224/225/236/237; 0.028 in. NTN 3001-3004 excluded by geometry).
+    (7) **FEMTO loader** (`data/femto_loader.py`): acc_*.csv snapshots (2560x6 @25.6kHz, 10s
+    cadence), per-bearing run, condition map (1/2/3 -> rpm/load), RUL ground truth (time-to-
+    failure from snapshot index). (8) **FEMTO HI trend** (`scripts/build_femto_hi_trend.py`):
+    fits the T2 HI on early life, rolls forward -> rising T2 / falling health + flags + RUL CSV
+    (the (HI, RUL) table for 2B). Persistence-debounced onset + small-baseline guard. FEMTO HI is
+    TIME-DOMAIN only (no verified FEMTO defect frequencies -> fault-band ratios omitted, honest).
   - **Deferred 2A enhancement:** kurtogram / spectral-kurtosis band selection (the fixed
     2-5 kHz band gives correct diagnosis but soft energy-ratio separation; sharpening only).
+    FEMTO covariance shrinkage (Ledoit-Wolf) if a short-run bearing (n_snapshots not >> features)
+    is ever used; real FEMTO bearings have ample snapshots so the sample covariance suffices.
   - **Tooling:** test-suite warnings silenced via `pyproject` `filterwarnings` —
     sklearn `ConvergenceWarning` (M3 GP bounds are intentional MAP regularization, not a
     fit failure; not widened, to protect crossover reproducibility) and the MLflow
     file-store `FutureWarning` (the loader test deliberately exercises the file store).
-  - **Immediate next:** FEMTO loader (`acc_*.csv` snapshots -> per-bearing time series), then
-    apply the health index across a FEMTO bearing's life to get a degradation HI trend (the
-    bridge into 2B RUL + one-sided conformal bound).
+  - **Immediate next (Phase 2B):** RUL regression on the FEMTO degradation HI trend with a
+    one-sided (lower-bound) conformal interval; PHM-2012 asymmetric score as the headline metric.
+    Reuse `evaluation/{conformal,blocked_cv}.py`. Bien first runs `build_femto_hi_trend.py` on a
+    few real Full_Test_Set bearings (paste output) to confirm the trend shape on real data.
 
 **When reviews arrive (either paper):** build the point-by-point response letter + a
 tracked-changes revision.

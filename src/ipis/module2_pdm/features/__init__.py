@@ -2,12 +2,14 @@
 
 from ipis.module2_pdm.features.vibration_features import (
     FEATURE_VECTOR_NAMES,
+    TIME_FEATURE_NAMES,
     TimeFeatures,
     band_energy,
     dominant_frequency,
     envelope_spectrum,
     fault_band_features,
     feature_vector,
+    time_feature_vector,
     time_features,
 )
 
@@ -20,4 +22,6 @@ __all__ = [
     "dominant_frequency",
     "feature_vector",
     "FEATURE_VECTOR_NAMES",
+    "time_feature_vector",
+    "TIME_FEATURE_NAMES",
 ]

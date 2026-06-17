@@ -19,7 +19,7 @@ stack and the `state_bus` contract — versus ≈70–80 % for M3).
 
 | Phase | Scope | Status |
 |---|---|---|
-| 2A — Health index + anomaly detection (FEMTO + CWRU) | Vibration feature pipeline, physics-anchored fault-frequency features, health index, ADWIN/SPC alarming | ◐ CWRU side complete — physics (gate 0.012%), loader, features, health index (Hotelling T², χ² limits, state-bus mapping), manifest (32 usable DE files). Real-data validation: IR/OR/Ball peaks within 0.1–0.3% of physics. Remaining: FEMTO loader + HI degradation trend |
+| 2A — Health index + anomaly detection (FEMTO + CWRU) | Vibration feature pipeline, physics-anchored fault-frequency features, health index, ADWIN/SPC alarming | ✅ Complete — CWRU diagnosis (physics gate 0.012%, loader, features, Hotelling-T² health index, 32-file manifest; IR/OR/Ball validated within 0.1–0.3%) + FEMTO bridge (loader, degradation HI trend feeding 2B) |
 | 2B — RUL prognosis with calibrated bounds | RUL regressor on FEMTO; conformal one-sided lower bound on RUL; PHM-2012 scoring; coverage across the 3 operating conditions | Planned |
 | 2C — Cross-domain anomaly stress (TEP IDV) | Detector methodology transfer to a process fault set; FDR/FAR per IDV mode; **no RUL claim** | Planned |
 | 2D — Serving + state-bus integration | M2 writes `equipment_health` / `health_flags` / `remaining_useful_life`; reuse FastAPI/Streamlit/conformal stack | Planned |

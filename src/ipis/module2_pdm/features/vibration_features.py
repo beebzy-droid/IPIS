@@ -197,6 +197,30 @@ FEATURE_VECTOR_NAMES: tuple[str, ...] = (
     "ftf_ratio",
 )
 
+# Time-domain-only vector (the first 9 of FEATURE_VECTOR_NAMES). Used for the FEMTO
+# health index, where verified defect frequencies are unavailable so fault-band
+# ratios are omitted.
+TIME_FEATURE_NAMES: tuple[str, ...] = FEATURE_VECTOR_NAMES[:9]
+
+
+def time_feature_vector(x: np.ndarray) -> np.ndarray:
+    """Time-domain feature vector ordered as `TIME_FEATURE_NAMES` (FEMTO HI input)."""
+    tf = time_features(x)
+    return np.array(
+        [
+            tf.rms,
+            tf.peak,
+            tf.std,
+            tf.crest_factor,
+            tf.shape_factor,
+            tf.impulse_factor,
+            tf.clearance_factor,
+            tf.kurtosis,
+            tf.skewness,
+        ],
+        dtype=float,
+    )
+
 
 def feature_vector(
     x: np.ndarray,
