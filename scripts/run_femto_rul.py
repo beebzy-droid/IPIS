@@ -38,18 +38,20 @@ INTERVAL_S = 10.0
 
 
 def _load(path: Path):
-    t2, rul = [], []
+    t2, rul, fpt = [], [], -1
     with path.open() as f:
         for row in csv.DictReader(f):
             t2.append(float(row["t2"]))
             rul.append(float(row["rul_s"]))
-    return path.stem.replace("femto_hi_", ""), np.asarray(t2), np.asarray(rul)
+            if "fpt" in row:
+                fpt = int(row["fpt"])
+    return path.stem.replace("femto_hi_", ""), np.asarray(t2), np.asarray(rul), fpt
 
 
-def _arc(t2, rul):
+def _arc(t2, rul, fpt):
     di = degradation_index(t2, alpha=0.05)
-    fpt = first_prediction_time(t2, warn_limit=WARN_LIMIT_DF9, persist=3)
-    fpt = 0 if fpt is None else fpt
+    if fpt is None or fpt < 0:  # legacy CSV without fpt column -> recompute
+        fpt = first_prediction_time(t2, warn_limit=WARN_LIMIT_DF9, persist=3) or 0
     return di[fpt:], np.log1p(di[fpt:]), rul[fpt:], fpt
 
 
@@ -115,11 +117,11 @@ def eval_regression(bearings, names):
 def main() -> int:
     bearings = {}
     for fp in sorted(glob.glob("data/processed/femto_hi_*.csv")):
-        name, t2, rul = _load(Path(fp))
+        name, t2, rul, fpt_meta = _load(Path(fp))
         if name in EXCLUDE:
             print(f"[excluded] {name}: non-monotone / atypical failure (flagged separately)")
             continue
-        di_arc, hi_arc, rul_arc, fpt = _arc(t2, rul)
+        di_arc, hi_arc, rul_arc, fpt = _arc(t2, rul, fpt_meta)
         bearings[name] = {"di": di_arc, "hi": hi_arc, "rul": rul_arc, "fpt": fpt, "n": len(t2)}
 
     if len(bearings) < 3:

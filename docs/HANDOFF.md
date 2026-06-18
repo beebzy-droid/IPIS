@@ -135,21 +135,33 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     a 3-method LOBO comparison (sim-phase, sim-abs, regression) with CROSS-conformal lower
     bounds at truncation-point fractions. 8 similarity tests incl. scale-invariance across a
     100,000x spread. Also FIXED: `phm2012_score` np.where overflow (now mask-based branches).
-  - **2B mode trade-off (synthetic torture test, 16,000x scale + varied lives):** sim-abs higher
-    point PHM but craters on rate-mismatched bearings + weaker coverage; sim-phase best coverage
-    (~0.98) and no per-bearing collapse but lower point PHM; both beat regression. Real FEMTO
-    picks the winner. Note recurring FPT contamination (early onset from run-in / fast bearings)
-    couples with this -- if real numbers are FPT-limited, fixing the onset rule is the next lever.
+  - **2B real-FEMTO 3-method result (6 bearings, 3_1 excluded):** sim-PHASE WON --
+    mean horizon PHM 0.174 @ pooled cover 0.917 (>= target); sim-abs 0.086 @ 0.931;
+    regression 0.090 @ 0.986 (over-covers because point preds are garbage -> huge
+    conformal back-off -> vacuous bound; NOT calibration). DECISION: phase is the
+    default read-off; absolute kept as the ablation showing rate-invariance is needed.
+  - **2B FPT diagnostic (probe_femto_fpt.py) -> robust FPT BUILT:** the early-FPT bug
+    is run-in START TRANSIENTS, not in-window degradation: Bearing1_2 = run-in amplitude
+    spike (RMS 0.54->0.34 over ~20 snaps); Bearing2_2 = run-in SHAPE transient (RMS flat
+    but higher-moment features off at snap0). Also a small (30-sample) baseline is
+    catastrophic (under-determined cov, T2 explodes). FIX (`degradation.robust_baseline_window`
+    + `robust_first_prediction_time`): baseline = the quietest adequately-sized (>=100)
+    early window (min standardized variance -> auto-skips run-in AND onset); FPT detected
+    only AFTER that window so the run-in head can't trip it. `build_femto_hi_trend.py` now
+    uses it by default and writes an `fpt` column; `run_femto_rul.py` reads it. Validated
+    on synthetic-with-run-in: FPTs land near true onset, not 0. (--healthy-frac forces the
+    legacy first-fraction baseline for comparison.)
   - **Novelty unchanged (PM-confirmed):** neither base RUL method was ever the contribution
     (both are textbook); the differentiator is the CALIBRATED conformal lower bound with
     validated coverage + IPIS integration + the 2A physics-informed HI. The A->B pivot and the
     negative result are honest engineering-judgment evidence, not a novelty loss. Position the
     paper on UQ + integration + rigor, never point accuracy (FEMTO PHM ceiling ~0.3-0.5).
-  - **Immediate next (Phase 2B eval -> decide):** Bien runs `build_femto_hi_trend.py` on several
-    run-to-failure bearings (Learning_set 1_1/1_2/2_1/2_2/3_2 + Full_Test_Set; SKIP 3_1), then
-    `run_femto_rul.py` (paste the 3-method table + pooled coverage). Decision from the real
-    numbers: (a) read-off mode (phase vs absolute), (b) whether FPT needs fixing (watch the FPT
-    column), (c) whether to add Mondrian/adaptive conformal for the LOBO coverage gap.
+  - **Immediate next (re-run with robust FPT):** Bien RE-RUNS `build_femto_hi_trend.py` on ALL
+    usable bearings (Learning_set 1_1/1_2/2_1/2_2/3_2 + Full_Test_Set 1_3; SKIP 3_1) to
+    regenerate CSVs with the robust baseline + fpt column, then `run_femto_rul.py`. Check:
+    (a) FPT column now lands mid-life (not 0) -- esp. 1_2 & 2_2; (b) sim-phase PHM rises off
+    the 0.174 FPT-limited floor; (c) coverage holds. THEN decide if the residual gap warrants
+    Mondrian/adaptive conformal (deferred -- phase coverage already 0.917).
 
 **When reviews arrive (either paper):** build the point-by-point response letter + a
 tracked-changes revision.

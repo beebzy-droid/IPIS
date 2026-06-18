@@ -4,6 +4,8 @@ from ipis.module2_pdm.rul.degradation import (
     degradation_index,
     ema,
     first_prediction_time,
+    robust_baseline_window,
+    robust_first_prediction_time,
 )
 from ipis.module2_pdm.rul.rul_model import (
     RULModel,
@@ -17,6 +19,8 @@ __all__ = [
     "ema",
     "degradation_index",
     "first_prediction_time",
+    "robust_baseline_window",
+    "robust_first_prediction_time",
     "RULModel",
     "rul_feature_matrix",
     "phm2012_score",

@@ -30,6 +30,10 @@ from ipis.module2_pdm.features.vibration_features import (
     time_feature_vector,
 )
 from ipis.module2_pdm.health.health_index import HealthIndexModel
+from ipis.module2_pdm.rul.degradation import (
+    robust_baseline_window,
+    robust_first_prediction_time,
+)
 
 
 def main() -> int:
@@ -38,8 +42,8 @@ def main() -> int:
     ap.add_argument(
         "--healthy-frac",
         type=float,
-        default=0.2,
-        help="fraction of early snapshots used as the healthy baseline",
+        default=None,
+        help="force legacy first-fraction baseline (default: robust quietest-window)",
     )
     ap.add_argument("--channel", choices=["horizontal", "vertical"], default="horizontal")
     ap.add_argument(
@@ -71,35 +75,44 @@ def main() -> int:
     ch = 0 if args.channel == "horizontal" else 1
     feats = np.vstack([time_feature_vector(bearing.snapshot(i)[ch]) for i in range(n)])
 
-    n_healthy = max(2, int(args.healthy_frac * n))
-    model = HealthIndexModel.fit(feats[:n_healthy], TIME_FEATURE_NAMES)
+    # Robust healthy baseline: the quietest adequately-sized early window (auto-skips
+    # run-in transients and degradation onset). --healthy-frac forces the legacy
+    # first-fraction window for comparison.
+    if args.healthy_frac is not None:
+        bstart, bw = 0, max(2, int(args.healthy_frac * n))
+        baseline_desc = f"first {bw} (frac {args.healthy_frac})"
+    else:
+        bstart, bw = robust_baseline_window(feats)
+        baseline_desc = f"snapshots {bstart}-{bstart + bw} (quietest window)"
+    model = HealthIndexModel.fit(feats[bstart : bstart + bw], TIME_FEATURE_NAMES)
     print(
-        f"Healthy fit   : first {n_healthy} snapshots; "
+        f"Healthy fit   : {baseline_desc}; "
         f"WARN T2={model.warn_t2:.1f}  ALARM T2={model.alarm_t2:.1f}"
     )
-    if n_healthy < 10 * feats.shape[1]:
+    if bw < 10 * feats.shape[1]:
         print(
-            f"[WARN] healthy baseline ({n_healthy}) < 10x features ({feats.shape[1]}); "
-            f"covariance may be under-determined -> noisy T2. Real FEMTO bearings have "
-            f"ample snapshots; for short runs raise --healthy-frac."
+            f"[WARN] baseline ({bw}) < 10x features ({feats.shape[1]}); "
+            f"covariance may be under-determined -> noisy T2."
         )
 
-    rows = []
-    flags = []
-    for i in range(n):
-        t2 = model.t2(feats[i])
-        flag = model.flag(feats[i]).value
-        flags.append(flag)
-        rows.append(
-            {
-                "index": i,
-                "elapsed_s": f"{bearing.elapsed_s(i):.1f}",
-                "rul_s": f"{bearing.time_to_failure_s(i):.1f}",
-                "t2": f"{t2:.4f}",
-                "health_score": f"{model.health_score(feats[i]):.4f}",
-                "flag": flag,
-            }
-        )
+    t2 = np.array([model.t2(feats[i]) for i in range(n)])
+    fpt = robust_first_prediction_time(
+        t2, baseline_end=bstart + bw, warn_limit=model.warn_t2, persist=args.persist
+    )
+    fpt_val = -1 if fpt is None else fpt
+
+    rows = [
+        {
+            "index": i,
+            "elapsed_s": f"{bearing.elapsed_s(i):.1f}",
+            "rul_s": f"{bearing.time_to_failure_s(i):.1f}",
+            "t2": f"{t2[i]:.4f}",
+            "health_score": f"{model.health_score(feats[i]):.4f}",
+            "flag": model.flag(feats[i]).value,
+            "fpt": fpt_val,
+        }
+        for i in range(n)
+    ]
 
     out = Path(args.out) if args.out else Path("data/processed") / f"femto_hi_{bearing.name}.csv"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -108,15 +121,6 @@ def main() -> int:
         w.writeheader()
         w.writerows(rows)
 
-    def first_persistent(levels: set[str]) -> int | None:
-        """First index where `flag` stays in `levels` for `args.persist` snapshots."""
-        run = 0
-        for i, fl in enumerate(flags):
-            run = run + 1 if fl in levels else 0
-            if run >= args.persist:
-                return i - args.persist + 1
-        return None
-
     def lead(idx):
         return (
             "n/a"
@@ -124,12 +128,9 @@ def main() -> int:
             else f"snapshot {idx} (RUL {bearing.time_to_failure_s(idx) / 60:.1f} min)"
         )
 
-    warn_onset = first_persistent({"warn", "alarm"})
-    alarm_onset = first_persistent({"alarm"})
-    print(f"WARN onset    : {lead(warn_onset)}  (>= {args.persist} consecutive)")
-    print(f"ALARM onset   : {lead(alarm_onset)}  (>= {args.persist} consecutive)")
-    print(f"End T2        : {float(rows[-1]['t2']):.1f}  (healthy fit median ~ {feats.shape[1]})")
-    print(f"Wrote         : {out}  ({n} rows; raw per-snapshot flags)  -> feeds Phase 2B RUL")
+    print(f"FPT (onset)   : {lead(fpt)}  (after baseline, >= {args.persist} consecutive)")
+    print(f"End T2        : {t2[-1]:.1f}  (healthy fit median ~ {feats.shape[1]})")
+    print(f"Wrote         : {out}  ({n} rows incl. fpt col)  -> feeds Phase 2B RUL")
     return 0
 
 
