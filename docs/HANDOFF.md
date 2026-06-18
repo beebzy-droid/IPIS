@@ -68,10 +68,11 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     published bearing data + Smith & Randall, and are **verified by reproducing CWRU's
     published defect-frequency multipliers** from the geometry (self-consistency check at 2A).
     SKF datasheet still pulled as a supporting/identity source.
-  - **Phase tracker:** 2A COMPLETE. 2B RUL LOCKED — method = similarity-PHASE + robust FPT +
-    calibrated one-sided conformal lower bound; 72 M2 tests. PHM plateaued ~0.16 (library
-    expansion 6 -> 16 run-to-failure bearings did NOT help -> data/method ceiling, not coverage);
-    pooled coverage ~0.90 (the deliverable). >> NEXT: 2C TEP cross-domain anomaly . 2D serving.
+  - **Phase tracker:** 2A COMPLETE. 2B RUL CLOSED — method = similarity-PHASE + robust FPT +
+    calibrated one-sided conformal lower bound; 72 M2 tests. CANONICAL (16 run-to-failure bearings,
+    LOBO): sim-phase mean PHM 0.179, pooled coverage 0.911 (>= 0.90 target); sim-abs 0.096,
+    regression 0.101. PHM at the data/method ceiling (expansion 6->16 bearings: 0.172->0.179);
+    coverage is the deliverable. >> NEXT: 2C TEP cross-domain anomaly . 2D serving.
   - **2A progress log:** (1) physics layer (gate 0.012% vs S&R T2). (2) CWRU loader (real
     schema `X{n}_DE/_FE/_BA_time` + `X{n}RPM`, suffix-matched, fs explicit). (3) Vibration
     features: time-domain + squared-envelope + fault-band ratios + combined `feature_vector`
@@ -171,12 +172,18 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     failure => invalid RUL) AND share names with Full_Test_Set (CSV-by-name collision overwrote
     correct trends, polluting an eval to 0.147). Canonical usable set = Learning(6) + Full_Test(11)
     - Bearing3_1 (non-monotone) = 16 run-to-failure bearings.
-  - **Immediate next (1 clean re-run, then 2C):** Bien re-runs `build_all_femto_trends.py` (now
-    Test_set-free, 1_4 recovered) + `run_femto_rul.py` once to record the canonical 16-bearing
-    number (expected sim-phase ~0.16 / cover ~0.90 = the locked result). THEN Phase 2C: TEP
-    cross-domain anomaly detection -- apply the 2A health index (Hotelling T2 + chi2 limits) to
-    TEP IDV fault scenarios via the in-repo Russell/Braatz FORTRAN sim (NOT DWSIM), as a
-    cross-domain stress of the anomaly detector. No RUL in 2C. Then 2D serving + state-bus.
+  - **2B CLOSED (canonical run recorded):** corrected build_all (17 run-to-failure folders, 11
+    truncated Test_set skipped, Bearing1_4 recovered via the semicolon fix) -> 16 usable bearings
+    (3_1 excluded). LOBO: sim-phase 0.179 PHM / 0.911 coverage; sim-abs 0.096; regression 0.101.
+    sim-phase wins ~1.8x and is the only method that doesn't collapse to 0.000 on multiple
+    bearings. This is the locked 2B result; M2 paper will report it as calibrated-UQ RUL, not a
+    point-accuracy SOTA claim.
+  - **Active next — Phase 2C (TEP cross-domain anomaly):** stress the 2A anomaly detector
+    (Hotelling T2 + chi2 WARN/ALARM limits, fit on a healthy baseline) on Tennessee Eastman
+    Process IDV fault scenarios via the IN-REPO Russell/Braatz FORTRAN simulator (NOT DWSIM).
+    Goal: show the physics-informed health index detects process faults cross-domain (chemical
+    process vs bearings). No RUL in 2C. Scope pending Bien ratification: TEP variable set + which
+    IDV faults + detection-latency / false-alarm metrics. Then 2D serving + state-bus integration.
 
 **When reviews arrive (either paper):** build the point-by-point response letter + a
 tracked-changes revision.
