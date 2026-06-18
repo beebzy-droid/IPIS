@@ -11,6 +11,7 @@ from ipis.module2_pdm.rul.rul_model import (
     phm2012_score,
     rul_feature_matrix,
 )
+from ipis.module2_pdm.rul.similarity import SimilarityRUL
 
 __all__ = [
     "ema",
@@ -20,4 +21,5 @@ __all__ = [
     "rul_feature_matrix",
     "phm2012_score",
     "lower_bound_coverage",
+    "SimilarityRUL",
 ]

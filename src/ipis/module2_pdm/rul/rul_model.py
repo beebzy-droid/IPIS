@@ -52,7 +52,12 @@ def phm2012_score(rul_pred: np.ndarray, rul_true: np.ndarray) -> float:
         raise ValueError("phm2012_score needs at least one point with rul_true > 0")
     p, t = p[m], t[m]
     er = 100.0 * (t - p) / t  # >0 early (under-estimate), <=0 late (over-estimate)
-    a = np.where(er <= 0.0, np.exp(-_LN_HALF * er / 5.0), np.exp(_LN_HALF * er / 20.0))
+    # Evaluate each branch only where it applies: np.where would compute both for
+    # every element and overflow exp() on the discarded (extreme-error) branch.
+    a = np.empty_like(er)
+    late = er <= 0.0
+    a[late] = np.exp(-_LN_HALF * er[late] / 5.0)
+    a[~late] = np.exp(_LN_HALF * er[~late] / 20.0)
     return float(np.mean(a))
 
 

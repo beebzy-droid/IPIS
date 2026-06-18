@@ -68,10 +68,9 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     published bearing data + Smith & Randall, and are **verified by reproducing CWRU's
     published defect-frequency multipliers** from the geometry (self-consistency check at 2A).
     SKF datasheet still pulled as a supporting/identity source.
-  - **Phase tracker:** 2A COMPLETE. 2B RUL ENGINE BUILT (degradation index + RUL regressor +
-    one-sided lower conformal bound + PHM-2012 score; 13 tests). 71 M2 tests. PENDING: real-FEMTO
-    LOBO evaluation (Bien runs `run_femto_rul.py`) + RUL-model iteration.
-    >> NEXT: real-FEMTO RUL numbers . 2C TEP cross-domain anomaly . 2D serving.
+  - **Phase tracker:** 2A COMPLETE. 2B RUL: regression baseline + SIMILARITY RUL (Option B,
+    phase + absolute modes) built; 69 M2 tests. PENDING: real-FEMTO 3-method eval to pick the
+    read-off mode and decide whether to fix FPT. >> NEXT: real-FEMTO RUL numbers . 2C . 2D.
   - **2A progress log:** (1) physics layer (gate 0.012% vs S&R T2). (2) CWRU loader (real
     schema `X{n}_DE/_FE/_BA_time` + `X{n}RPM`, suffix-matched, fs explicit). (3) Vibration
     features: time-domain + squared-envelope + fault-band ratios + combined `feature_vector`
@@ -118,11 +117,39 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     is a transparent baseline; the map is bearing-specific (rate/length), so accuracy is limited
     -> RUL-model iteration is the next lever (per-bearing degradation-model extrapolation to the
     failure threshold, or similarity-based RUL).
-  - **Immediate next (Phase 2B eval + iterate):** Bien runs `build_femto_hi_trend.py` on several
-    run-to-failure bearings (Learning_set 1_1/1_2/2_1/2_2/3_1/3_2 + Full_Test_Set), then
-    `run_femto_rul.py` (paste the per-bearing PHM + pooled coverage). Watch the FPT column — if
-    run-in pushes FPT very early, the degradation phase is contaminated and we revisit the FPT
-    rule. Then iterate the RUL model toward the per-bearing extrapolation / similarity approach.
+  - **2B real-FEMTO finding + A->B pivot (carry):** Global regression FAILED on real FEMTO
+    (mean horizon PHM 0.054, pooled cover 0.61). Root cause is QUANTIFIED: the degradation
+    index at failure (End T2) spans 66 -> 1,069,298 = ~16,000x across bearings, so a global
+    f(log1p(DI))->RUL is structurally impossible (Bearing3_1 at RUL=0 has the same DI as others
+    early in life). Option A (extrapolate amplitude to the physical 20 g threshold) was then
+    REFUTED by probe_femto_eol.py: EOL peak |accel| = 7-48 g (RMS 1-8 g), no fixed threshold
+    exists in this data. Pivoted to Option B (trajectory similarity, Wang 2008) -- needs no
+    threshold. Bearing3_1 EXCLUDED (life peak 41 g, EOL peak 7 g: degrades mid-life then quiets;
+    non-monotone -> poisons RUL; flagged atypical-failure).
+  - **2B similarity engine (`rul/similarity.py`):** shape-normalized (mean-centered, in
+    log1p(DI) space -> the 16,000x multiplicative scale becomes an additive offset, removed)
+    sliding-window matching against a library of run-to-failure arcs; vectorized via
+    sliding_window_view. Two read-off modes: `phase` (rate-invariant time-scaling, RUL =
+    elapsed*(1-phi)/phi from the test's own clock -- fixes the long-bearing crater) and
+    `absolute` (library RUL at the matched phase). `scripts/run_femto_rul.py` rewritten to
+    a 3-method LOBO comparison (sim-phase, sim-abs, regression) with CROSS-conformal lower
+    bounds at truncation-point fractions. 8 similarity tests incl. scale-invariance across a
+    100,000x spread. Also FIXED: `phm2012_score` np.where overflow (now mask-based branches).
+  - **2B mode trade-off (synthetic torture test, 16,000x scale + varied lives):** sim-abs higher
+    point PHM but craters on rate-mismatched bearings + weaker coverage; sim-phase best coverage
+    (~0.98) and no per-bearing collapse but lower point PHM; both beat regression. Real FEMTO
+    picks the winner. Note recurring FPT contamination (early onset from run-in / fast bearings)
+    couples with this -- if real numbers are FPT-limited, fixing the onset rule is the next lever.
+  - **Novelty unchanged (PM-confirmed):** neither base RUL method was ever the contribution
+    (both are textbook); the differentiator is the CALIBRATED conformal lower bound with
+    validated coverage + IPIS integration + the 2A physics-informed HI. The A->B pivot and the
+    negative result are honest engineering-judgment evidence, not a novelty loss. Position the
+    paper on UQ + integration + rigor, never point accuracy (FEMTO PHM ceiling ~0.3-0.5).
+  - **Immediate next (Phase 2B eval -> decide):** Bien runs `build_femto_hi_trend.py` on several
+    run-to-failure bearings (Learning_set 1_1/1_2/2_1/2_2/3_2 + Full_Test_Set; SKIP 3_1), then
+    `run_femto_rul.py` (paste the 3-method table + pooled coverage). Decision from the real
+    numbers: (a) read-off mode (phase vs absolute), (b) whether FPT needs fixing (watch the FPT
+    column), (c) whether to add Mondrian/adaptive conformal for the LOBO coverage gap.
 
 **When reviews arrive (either paper):** build the point-by-point response letter + a
 tracked-changes revision.
