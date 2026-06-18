@@ -42,11 +42,20 @@ _ACC_RE = re.compile(r"acc_(\d+)\.csv$", re.IGNORECASE)
 
 
 def _read_acc(path: Path) -> np.ndarray:
-    """Read an acc_*.csv as a (rows, 6) float array, robust to delimiter."""
-    try:
-        a = np.loadtxt(path, delimiter=",")
-    except ValueError:
-        a = np.loadtxt(path)  # whitespace fallback
+    """Read an acc_*.csv as a (rows, 6) float array, robust to delimiter.
+
+    FEMTO files are inconsistent: most are comma-delimited, some (e.g. Bearing1_4)
+    are semicolon-delimited; whitespace is the last fallback.
+    """
+    a = None
+    for delim in (",", ";", None):
+        try:
+            a = np.loadtxt(path, delimiter=delim)
+            break
+        except ValueError:
+            continue
+    if a is None:
+        raise ValueError(f"{path.name}: could not parse with ',', ';', or whitespace")
     a = np.atleast_2d(a)
     if a.shape[1] < 6:
         raise ValueError(f"{path.name}: expected >=6 columns, got {a.shape[1]}")

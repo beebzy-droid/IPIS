@@ -1,10 +1,15 @@
-"""Build degradation HI trends for every FEMTO bearing found on disk, then point at
-the RUL evaluation.
+"""Build degradation HI trends for every run-to-failure FEMTO bearing on disk.
 
-Auto-discovers data/raw/femto/<set>/Bearing*/ across Learning_set, Test_set and
-Full_Test_Set, runs build_femto_hi_trend.py for each (robust baseline + fpt column),
-and prints a one-line FPT/arc summary table so early-degrading or non-monotone
-bearings are easy to spot before the eval. Then run scripts/run_femto_rul.py.
+Auto-discovers data/raw/femto/<set>/Bearing*/ but ONLY for the run-to-failure sets
+(Learning_set, Full_Test_Set). Test_set is deliberately skipped: its bearings are
+TRUNCATED (the PHM-2012 challenge cuts them before failure and withholds the true
+RUL), so last-snapshot != failure and the RUL ground truth our pipeline assumes is
+invalid for them. They also share bearing names with Full_Test_Set, which would
+overwrite the correct CSVs (keyed by bearing name).
+
+Runs build_femto_hi_trend.py for each (robust baseline + fpt column) and prints a
+one-line FPT/arc summary so early-degrading / non-monotone bearings are easy to
+spot before the eval. Then run scripts/run_femto_rul.py.
 
     set PYTHONPATH=src
     python scripts/build_all_femto_trends.py
@@ -19,14 +24,29 @@ import sys
 from pathlib import Path
 
 ROOT = Path("data/raw/femto")
+# run-to-failure sets only; Test_set is truncated (no valid failure-time ground truth)
+RUN_TO_FAILURE_SETS = {"Learning_set", "Full_Test_Set"}
 
 
 def main() -> int:
-    dirs = sorted(d for d in glob.glob(str(ROOT / "*" / "Bearing*")) if Path(d).is_dir())
+    dirs = sorted(
+        d
+        for d in glob.glob(str(ROOT / "*" / "Bearing*"))
+        if Path(d).is_dir() and Path(d).parts[-2] in RUN_TO_FAILURE_SETS
+    )
     if not dirs:
-        print(f"[ERROR] no bearings found under {ROOT}/<set>/Bearing*")
+        print(
+            f"[ERROR] no run-to-failure bearings under {ROOT}/{{Learning_set,Full_Test_Set}}/Bearing*"
+        )
         return 1
-    print(f"Found {len(dirs)} bearing folders under {ROOT}\n")
+    skipped = sorted(
+        Path(d).parts[-2]
+        for d in glob.glob(str(ROOT / "*" / "Bearing*"))
+        if Path(d).is_dir() and Path(d).parts[-2] not in RUN_TO_FAILURE_SETS
+    )
+    print(f"Found {len(dirs)} run-to-failure bearing folders under {ROOT}")
+    if skipped:
+        print(f"Skipped {len(skipped)} truncated Test_set bearings (no valid RUL ground truth)\n")
     ok, failed = 0, []
     for d in dirs:
         sub = "/".join(Path(d).parts[-2:])  # e.g. Learning_set/Bearing1_1

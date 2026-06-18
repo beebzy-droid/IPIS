@@ -68,9 +68,10 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     published bearing data + Smith & Randall, and are **verified by reproducing CWRU's
     published defect-frequency multipliers** from the geometry (self-consistency check at 2A).
     SKF datasheet still pulled as a supporting/identity source.
-  - **Phase tracker:** 2A COMPLETE. 2B RUL: regression baseline + SIMILARITY RUL (Option B,
-    phase + absolute modes) built; 69 M2 tests. PENDING: real-FEMTO 3-method eval to pick the
-    read-off mode and decide whether to fix FPT. >> NEXT: real-FEMTO RUL numbers . 2C . 2D.
+  - **Phase tracker:** 2A COMPLETE. 2B RUL LOCKED — method = similarity-PHASE + robust FPT +
+    calibrated one-sided conformal lower bound; 72 M2 tests. PHM plateaued ~0.16 (library
+    expansion 6 -> 16 run-to-failure bearings did NOT help -> data/method ceiling, not coverage);
+    pooled coverage ~0.90 (the deliverable). >> NEXT: 2C TEP cross-domain anomaly . 2D serving.
   - **2A progress log:** (1) physics layer (gate 0.012% vs S&R T2). (2) CWRU loader (real
     schema `X{n}_DE/_FE/_BA_time` + `X{n}RPM`, suffix-matched, fs explicit). (3) Vibration
     features: time-domain + squared-envelope + fault-band ratios + combined `feature_vector`
@@ -156,12 +157,26 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     validated coverage + IPIS integration + the 2A physics-informed HI. The A->B pivot and the
     negative result are honest engineering-judgment evidence, not a novelty loss. Position the
     paper on UQ + integration + rigor, never point accuracy (FEMTO PHM ceiling ~0.3-0.5).
-  - **Immediate next (re-run with robust FPT):** Bien RE-RUNS `build_femto_hi_trend.py` on ALL
-    usable bearings (Learning_set 1_1/1_2/2_1/2_2/3_2 + Full_Test_Set 1_3; SKIP 3_1) to
-    regenerate CSVs with the robust baseline + fpt column, then `run_femto_rul.py`. Check:
-    (a) FPT column now lands mid-life (not 0) -- esp. 1_2 & 2_2; (b) sim-phase PHM rises off
-    the 0.174 FPT-limited floor; (c) coverage holds. THEN decide if the residual gap warrants
-    Mondrian/adaptive conformal (deferred -- phase coverage already 0.917).
+  - **2B library-expansion result + LOCK (decision made):** expanded the library from 6 to the
+    full run-to-failure set; sim-phase mean PHM 0.172 (6) -> 0.164 (15 valid) -- FLAT. More data
+    did not help -> the ~0.16 floor is the matching/data CEILING, not library coverage. Decision
+    (pre-agreed tree): LOCK 2B on similarity-PHASE (decisively beats sim-abs 0.09 and regression
+    0.08-0.11; both collapse to 0.000 on many bearings). Pooled coverage ~0.90 holds across the
+    16-bearing set -- the calibrated lower bound is the deliverable, point accuracy is not (FEMTO
+    PHM ceiling ~0.3-0.5 needs per-condition ensembles + test-set tuning, out of scope).
+  - **2B bug fixes (this drop):** (1) FEMTO loader now reads SEMICOLON-delimited files
+    (Bearing1_4 is `;`-delimited -> was crashing and being dropped; recovered). (2) `build_all_
+    femto_trends.py` restricted to RUN-TO-FAILURE sets {Learning_set, Full_Test_Set}; Test_set is
+    EXCLUDED -- its bearings are truncated (challenge withholds failure time, so last-snapshot !=
+    failure => invalid RUL) AND share names with Full_Test_Set (CSV-by-name collision overwrote
+    correct trends, polluting an eval to 0.147). Canonical usable set = Learning(6) + Full_Test(11)
+    - Bearing3_1 (non-monotone) = 16 run-to-failure bearings.
+  - **Immediate next (1 clean re-run, then 2C):** Bien re-runs `build_all_femto_trends.py` (now
+    Test_set-free, 1_4 recovered) + `run_femto_rul.py` once to record the canonical 16-bearing
+    number (expected sim-phase ~0.16 / cover ~0.90 = the locked result). THEN Phase 2C: TEP
+    cross-domain anomaly detection -- apply the 2A health index (Hotelling T2 + chi2 limits) to
+    TEP IDV fault scenarios via the in-repo Russell/Braatz FORTRAN sim (NOT DWSIM), as a
+    cross-domain stress of the anomaly detector. No RUL in 2C. Then 2D serving + state-bus.
 
 **When reviews arrive (either paper):** build the point-by-point response letter + a
 tracked-changes revision.

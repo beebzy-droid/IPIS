@@ -75,6 +75,17 @@ def test_whitespace_delimiter_fallback(tmp_path):
     assert h.shape == (2560,)
 
 
+def test_semicolon_delimiter(tmp_path):
+    # some FEMTO files (e.g. Bearing1_4) are semicolon-delimited
+    d = tmp_path / "Bearing1_4"
+    d.mkdir()
+    _write_snapshot(d / "acc_00001.csv", h=0.6, v=-0.2, delimiter=";")
+    b = load_femto_bearing(d)
+    h, v = b.snapshot(0)
+    assert h.shape == (2560,)
+    assert abs(h.mean() - 0.6) < 0.05
+
+
 def test_iter_snapshots(tmp_path):
     b = load_femto_bearing(_make_bearing(tmp_path, "Bearing1_1", n_snaps=4))
     seen = [(i, h.shape, v.shape) for i, h, v in b.iter_snapshots()]
