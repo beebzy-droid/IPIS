@@ -32,10 +32,13 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 
 ---
 
-## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-16b)
+## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-18)
 
-**Both papers submitted. Modules 1 and 3 closed. Module 2 (Predictive Maintenance) SCOPED —
-spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.**
+**Both papers submitted (Modules 1 and 3, under review). Module 2 (Predictive Maintenance):
+Phases 2A + 2B + 2C COMPLETE — physics + health index (2A), calibrated-UQ similarity RUL (2B,
+sim-phase 0.179 PHM / 0.911 coverage), TEP cross-domain fault detection (2C, FAR 2.0% / 30-min
+mean delay / 96% detection on the 17 detectable faults). Next action is 2D serving/state-bus
+integration or the Module 2 paper draft.**
 
 - **Paper 1 (Module 1, soft sensor)** — submitted to *Computers & Chemical Engineering*,
   **CACE-D-26-00944** (2026-06-12). Source: `paper/` (elsarticle, split sections). Under review.
@@ -178,12 +181,29 @@ spec + ADR-015 done, datasets + sources acquired; next action is Phase 2A code.*
     sim-phase wins ~1.8x and is the only method that doesn't collapse to 0.000 on multiple
     bearings. This is the locked 2B result; M2 paper will report it as calibrated-UQ RUL, not a
     point-accuracy SOTA claim.
-  - **Active next — Phase 2C (TEP cross-domain anomaly):** stress the 2A anomaly detector
-    (Hotelling T2 + chi2 WARN/ALARM limits, fit on a healthy baseline) on Tennessee Eastman
-    Process IDV fault scenarios via the IN-REPO Russell/Braatz FORTRAN simulator (NOT DWSIM).
-    Goal: show the physics-informed health index detects process faults cross-domain (chemical
-    process vs bearings). No RUL in 2C. Scope pending Bien ratification: TEP variable set + which
-    IDV faults + detection-latency / false-alarm metrics. Then 2D serving + state-bus integration.
+  - **Phase 2C DONE (TEP cross-domain fault detection):** the 2A health index (Hotelling T2 +
+    chi2 limits, fit on a fault-free baseline) applied UNCHANGED to Tennessee Eastman IDV faults.
+    Result (33 continuous+manipulated vars XMEAS 1-22 + XMV 1-11, fault-free d00 baseline, 99%
+    chi2 alarm, 3-sample persistence): FAR 2.0%; detectable 17 faults (excl. IDV-3/9/15) mean
+    detection delay 30 min @ 96% mean detection rate; IDV-3/9/15 ~0% (correct -- the canonical
+    near-undetectable faults). IDV-4 (control-compensated cooling step) caught at delay 0, which
+    validates including the manipulated variables (XMV). Positioned as cross-domain TRANSFER of
+    the IPIS detector, NOT a TEP-FDD SOTA claim (plain T2 is the classical FDD baseline that
+    DPCA/ICA/deep methods beat). New code: detection scoring factored into
+    `src/ipis/module2_pdm/health/fdd.py` (`first_sustained` / `score_run` / `false_alarm_rate`;
+    10 tests); `scripts/run_tep_fdd.py` (scorecard harness); `scripts/generate_tep_faults.py`
+    (fault-data generator). M2 suite now 82 tests.
+    >> CORRECTION (verify-before-load-bearing): the TEP simulator is NOT in the repo. The
+    Russell/Braatz FORTRAN (`temain_mod.f`, `teprob.f`) is cloned EXTERNALLY from
+    github.com/camaramm/tennessee-eastman-profBraatz and needs gfortran; this version exposes
+    IDV(1..20) only (no IDV-21). `generate_tep_modes.py` produces operating MODES (IDVs used as
+    excitation), not clean per-IDV faults -- hence the new `generate_tep_faults.py`, which injects
+    one IDV at 8 h (sample 160) per 960-sample run and writes one 54-col CSV (time, XMEAS_1..41,
+    XMV_1..12). The d00-d20 CSVs are gitignored data in `data/raw/tep/fdd/`, generated in-sandbox
+    (Path A) and shipped to Bien to drop in.
+  - **Active next — Phase 2D (serving + state-bus integration)** or the Module 2 paper draft
+    (Paper 1 house standard). 2C gives the cross-domain breadth section, 2B the calibrated-UQ
+    RUL core, 2A the physics-informed health index.
 
 **When reviews arrive (either paper):** build the point-by-point response letter + a
 tracked-changes revision.
@@ -953,6 +973,19 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-18 (Phase 2C done — TEP cross-domain fault detection)** — Applied the 2A
+  Hotelling-T2 health index UNCHANGED to Tennessee Eastman IDV faults. Built
+  `scripts/generate_tep_faults.py` (compiles the Russell/Braatz FORTRAN cloned from
+  camaramm/tennessee-eastman-profBraatz — IDV(1..20), no IDV-21 — injecting one IDV at
+  8 h/sample 160 per 960-sample run, single 54-col CSV) and `scripts/run_tep_fdd.py`
+  (scorecard); factored detection scoring into `src/ipis/module2_pdm/health/fdd.py`
+  (`first_sustained`/`score_run`/`false_alarm_rate`, 10 tests; M2 suite 82). RESULT (33 vars
+  XMEAS 1-22 + XMV 1-11, d00 baseline, 99% chi2, persist=3): FAR 2.0%; 17 detectable faults
+  mean delay 30 min @ 96% detection; IDV-3/9/15 ~0% (correct); IDV-4 control-compensated fault
+  caught at delay 0 (validates XMV inclusion). Framed as cross-domain TRANSFER, not TEP-FDD
+  SOTA. CORRECTED a stale §0.5 claim: the TEP simulator is NOT in the repo (external FORTRAN +
+  gfortran); `generate_tep_modes.py` makes modes, not faults. d00-d20 are gitignored data
+  (`data/raw/tep/fdd/`), generated in-sandbox (Path A), shipped for Bien to drop in.
 - **2026-06-16 (Paper 2 submitted — Module 3 closed)** — Built the full Paper 2
   submission package and SUBMITTED to *Journal of Process Control*
   (**JPROCONT-D-26-00565**). elsarticle LaTeX from the polished dash-free draft; 7
