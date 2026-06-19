@@ -32,13 +32,14 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 
 ---
 
-## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-18)
+## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-18b)
 
 **Both papers submitted (Modules 1 and 3, under review). Module 2 (Predictive Maintenance):
-Phases 2A + 2B + 2C COMPLETE — physics + health index (2A), calibrated-UQ similarity RUL (2B,
-sim-phase 0.179 PHM / 0.911 coverage), TEP cross-domain fault detection (2C, FAR 2.0% / 30-min
-mean delay / 96% detection on the 17 detectable faults). Next action is 2D serving/state-bus
-integration or the Module 2 paper draft.**
+Phases 2A + 2B + 2C + 2D COMPLETE — physics + health index (2A), calibrated-UQ similarity RUL
+(2B, sim-phase 0.179 PHM / 0.911 coverage), TEP cross-domain fault detection (2C, FAR 2.0% /
+30-min mean delay / 96% detection on the 17 detectable faults), and serving/state-bus
+integration (2D, PdMService -> OperationalState + FastAPI). Module 2 is feature-complete; next
+action is the Module 2 paper draft.**
 
 - **Paper 1 (Module 1, soft sensor)** — submitted to *Computers & Chemical Engineering*,
   **CACE-D-26-00944** (2026-06-12). Source: `paper/` (elsarticle, split sections). Under review.
@@ -201,9 +202,25 @@ integration or the Module 2 paper draft.**
     one IDV at 8 h (sample 160) per 960-sample run and writes one 54-col CSV (time, XMEAS_1..41,
     XMV_1..12). The d00-d20 CSVs are gitignored data in `data/raw/tep/fdd/`, generated in-sandbox
     (Path A) and shipped to Bien to drop in.
-  - **Active next — Phase 2D (serving + state-bus integration)** or the Module 2 paper draft
-    (Paper 1 house standard). 2C gives the cross-domain breadth section, 2B the calibrated-UQ
-    RUL core, 2A the physics-informed health index.
+  - **Phase 2D DONE (serving + state-bus integration):** `src/ipis/module2_pdm/serving/` —
+    `PdMService` (framework-agnostic, mirrors M1's service split) composes the 2A health index
+    and the 2B similarity RUL into the three OperationalState M2 fields per equipment_id:
+    `equipment_health` <- health_score, `health_flags` <- OK/WARN/ALARM, `remaining_useful_life`
+    <- 2B calibrated lower bound in HOURS, emitted ONLY after the degradation onset (FPT) per the
+    contract's "when available". Stateful: accumulates per-equipment T2 history, derives the causal
+    DI = cummax(EMA(T2)), detects FPT, then reads RUL off the similarity library + applies the
+    conformal back-off. Files: `serving/service.py`, `serving/api.py` (`create_app` FastAPI factory:
+    GET /health, POST /assess, GET /state; ValueError->422), `serving/loader.py` (`PdMArtifact`
+    JSON save/load + pickle state snapshot, mirroring M1). Tests: `test_pdm_service.py` (9, incl.
+    a synthetic healthy->degrading INTEGRATION test asserting health falls, flag OK->WARN->ALARM,
+    RUL FPT-gated + bounded by longest reference life + trending down) and `test_pdm_api.py` (4,
+    TestClient). M2 suite now 95 tests. RUL carries the 2B caveat: a calibrated lower bound under
+    the library-similarity assumption, not an unconditional point estimate. No new deps
+    (fastapi/pydantic already in the M1 serving stack).
+  - **Active next — Module 2 paper draft (Paper 1 house standard).** Module 2 is feature-complete
+    across 2A (physics-informed HI) + 2B (calibrated-UQ RUL) + 2C (cross-domain breadth) + 2D
+    (IPIS integration). All four novelty-relevant results are locked; the integration pillar is now
+    demonstrated, not aspirational.
 
 **When reviews arrive (either paper):** build the point-by-point response letter + a
 tracked-changes revision.
@@ -973,6 +990,17 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-18b (Phase 2D done — serving + state-bus integration)** — Built
+  `src/ipis/module2_pdm/serving/`: `PdMService` (stateful, framework-agnostic) composing the 2A
+  health index + 2B similarity RUL into the OperationalState M2 fields per equipment_id
+  (`equipment_health`, `health_flags`, `remaining_useful_life` in hours, RUL emitted only post-FPT);
+  `api.py` `create_app` FastAPI factory (GET /health, POST /assess, GET /state; ValueError->422);
+  `loader.py` `PdMArtifact` JSON save/load + pickle state snapshot (mirrors M1's model/state split).
+  Added `test_pdm_service.py` (9, incl. a healthy->degrading integration test: health falls, flag
+  OK->WARN->ALARM, RUL FPT-gated + bounded + trending down) and `test_pdm_api.py` (4, TestClient).
+  M2 suite 82 -> 95. No new deps (fastapi/pydantic already in M1 serving). Module 2 now
+  feature-complete (2A+2B+2C+2D); the IPIS-integration novelty pillar is demonstrated, not
+  aspirational. Next: Module 2 paper draft.
 - **2026-06-18 (Phase 2C done — TEP cross-domain fault detection)** — Applied the 2A
   Hotelling-T2 health index UNCHANGED to Tennessee Eastman IDV faults. Built
   `scripts/generate_tep_faults.py` (compiles the Russell/Braatz FORTRAN cloned from
