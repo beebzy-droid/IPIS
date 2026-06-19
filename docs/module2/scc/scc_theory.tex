@@ -1,0 +1,177 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\DeclareMathOperator{\dtv}{d_{\mathrm{TV}}}
+\newcommand{\Pibf}{\boldsymbol{\Pi}}
+\newcommand{\law}[1]{\mathcal{V}_{#1}}
+\newcommand{\lawt}[1]{\tilde{\mathcal{V}}_{#1}}
+\title{Similarity-Calibrated Conformal Prediction:\\
+a physics-derived, a-priori coverage certificate for transfer across operating regimes}
+\author{Theory note for internal review}
+\date{\today}
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status of this note.} This is the formal core for review. The
+guarantee (Theorem~\ref{thm:scc}) is \emph{rigorous given} the modeling hypotheses
+H1--H2; H1--H2 are themselves falsifiable physical content, not theorems, and the
+diagnostic of \S\ref{sec:diag} tests whether they are operative on given data.
+
+\section{Setup and notation}
+A population of units is indexed by operating condition $c\in\mathcal C$, each with
+known physical parameters $\theta_c$ (e.g.\ load $P_c$, speed $n_c$, temperature $T_c$).
+A unit under condition $c$, monitored at a given instant, yields features $X$ and true
+remaining useful life $Y$, with joint law $\mathbb P_c$. A model trained on held-out
+data supplies a point predictor $\hat y(\cdot)$ and a nonconformity score $V=s(X,Y)$;
+we use the one-sided over-prediction score $V=\hat y(X)-Y$ throughout (a lower RUL
+bound). Write $\law c$ for the law of $V$ under $\mathbb P_c$, and $\dtv$ for total
+variation distance.
+
+\begin{definition}[Dimensionless reduction]\label{def:pi}
+From the governing physics, the Buckingham $\Pi$ theorem yields a set of dimensionless
+groups. We partition them into (i) \emph{scale-setting} groups, used to build a
+characteristic score scale $\sigma(\theta_c)>0$ such that the \emph{dimensionless
+score} $\tilde V=V/\sigma(\theta_c)$ has a condition-invariant law under exact
+similitude, and (ii) a \emph{similitude-departure parameter}
+$\boldsymbol\psi(\theta_c)\in\mathbb R^m$ collecting any residual groups that the scale
+does not absorb (incompletely modeled or unmodeled physics). Write $\lawt c$ for the
+law of $\tilde V$ under $\mathbb P_c$. By construction $\sigma$ absorbs the dominant
+operating-parameter scaling; $\boldsymbol\psi$ is constant across $\mathcal C$ when the
+dimensionless model is complete.
+\end{definition}
+
+\paragraph{Two instantiations.}
+\emph{(i) Rolling-contact fatigue} (Lundberg--Palmgren / ISO 281): rating life
+$\propto (C/P)^p$, $p=3$; the scale $\sigma(\theta_c)=T_L(c)\propto (C/P)^p/n$
+\emph{absorbs} the load--speed group $P/C$, so large load/speed differences do not by
+themselves induce residual mismatch; $\boldsymbol\psi$ collects residual effects (e.g.\
+lubrication regime, the ISO 281 $a_{\mathrm{ISO}}$ modifiers). \emph{(ii) Catalyst
+deactivation} (first order, Arrhenius $k(T)=A\,e^{-E/RT}$): the scale
+$\sigma(\theta_c)=T_L(c)=1/k_{\mathrm{nom}}(T_c)$ \emph{contains} the primary rate group
+$e^{-E/RT}$, so the post-normalisation law is invariant under temperature alone;
+$\boldsymbol\psi$ captures unmodeled rate channels. In both, matching the scale-setting
+groups enforces dynamic similitude: the dimensionless trajectory is condition-invariant
+and conditions differ only through $\sigma$.
+
+\section{Hypotheses}
+\begin{assumption}[Lipschitz similitude departure]\label{ass:lip}
+There exists $L<\infty$ such that
+$\dtv\!\big(\lawt c,\lawt{c'}\big)\le L\,\lVert\boldsymbol\psi(\theta_c)-\boldsymbol\psi(\theta_{c'})\rVert$
+for all $c,c'\in\mathcal C$.
+\end{assumption}
+\noindent The bound is on the \emph{residual} dependence after scale absorption. The
+boundary case (exact similitude, ``H1'') is $\boldsymbol\psi\equiv\text{const}
+\Rightarrow\lawt c=\lawt{c'}$ for all $c,c'$, \emph{irrespective of how far apart the
+scale-setting parameters are}; the global Lipschitz form (``H2'') is the regularity
+needed away from exact similitude. Crucially the certificate is \emph{not} loosened by
+large differences in the dominant operating parameters (load, speed, temperature)
+---those are absorbed by $\sigma$--- but only by departure from similitude,
+$\lVert\Delta\boldsymbol\psi\rVert$.
+
+\section{The SCC procedure}
+Split conformal performed in dimensionless coordinates:
+\begin{enumerate}\itemsep2pt
+\item Calibration $\{(X_i,Y_i)\}_{i=1}^n\stackrel{\text{i.i.d.}}{\sim}\mathbb P_S$
+(source); scores $\tilde V_i=s(X_i,Y_i)/\sigma(\theta_S)$.
+\item Dimensionless quantile $\tilde q=\tilde V_{(\lceil(1-\alpha)(n+1)\rceil)}$
+(order statistic of the $\tilde V_i$).
+\item For a target unit under condition $T$, return, in original units,
+$\mathcal C(X_{n+1})=\{y:\ s(X_{n+1},y)\le \sigma(\theta_T)\,\tilde q\}$
+(the quantile is re-dimensionalised by the \emph{target} scale).
+\end{enumerate}
+Naive conformal is the special case $\sigma\equiv1$ (calibrate on raw $V$): it ignores
+the scale change across conditions and miscovers when $\sigma(\theta_S)\neq\sigma(\theta_T)$.
+
+\section{Coverage certificate}
+\begin{lemma}[Barber et al., 2023; non-exchangeable coverage]\label{lem:barber}
+For split conformal with weights $w_i$ and pre-fitted scores, the coverage gap obeys
+$\;(1-\alpha)-\mathbb P(Y_{n+1}\in\mathcal C)\le
+\big(1+\textstyle\sum_{i=1}^n w_i\big)^{-1}\sum_{i=1}^n w_i\,\dtv\!\big(R(Z),R(Z^i)\big)$,
+where $R(Z)$ is the score vector and $R(Z^i)$ swaps test point with point $i$. For
+independent data, $\dtv(R(Z),R(Z^i))\le 2\,\dtv(Z_i,Z_{n+1})$.
+\end{lemma}
+
+\begin{theorem}[SCC certificate]\label{thm:scc}
+Under Assumption~\ref{ass:lip}, with calibration i.i.d.\ from $S$ and target
+$(X_{n+1},Y_{n+1})\sim\mathbb P_T$ independent of calibration,
+\[
+\mathbb P\big(Y_{n+1}\in\mathcal C(X_{n+1})\big)\;\ge\;
+1-\alpha-\frac{2n}{n+1}\,L\,\big\lVert\boldsymbol\psi(\theta_S)-\boldsymbol\psi(\theta_T)\big\rVert
+\;\ge\;1-\alpha-2L\,\big\lVert\boldsymbol\psi(\theta_S)-\boldsymbol\psi(\theta_T)\big\rVert .
+\]
+\end{theorem}
+\begin{proof}
+Coverage is the event $\{s(X_{n+1},Y_{n+1})\le\sigma(\theta_T)\tilde q\}
+=\{\tilde V_{n+1}\le\tilde q\}$ with $\tilde V_{n+1}=s(X_{n+1},Y_{n+1})/\sigma(\theta_T)
+\sim\lawt T$. Were $\tilde V_1,\dots,\tilde V_{n+1}$ exchangeable (all $\lawt S$),
+split conformal gives $\mathbb P(\tilde V_{n+1}\le\tilde q)\ge1-\alpha$. They are not:
+$\tilde V_{n+1}\sim\lawt T\neq\lawt S$. Apply Lemma~\ref{lem:barber} with $w_i\equiv1$
+(denominator $n+1$). The pre-fitted scores are independent scalars; swapping
+calibration point $i$ with the test point exchanges $\tilde V_i\sim\lawt S$ and
+$\tilde V_{n+1}\sim\lawt T$, while the other $n-1$ coordinates are unchanged. The two
+joint laws are product measures differing only in those two independent coordinates;
+by subadditivity of TV over independent coordinates,
+$\dtv(R(Z),R(Z^i))\le\dtv(\lawt S,\lawt T)+\dtv(\lawt T,\lawt S)=2\,\dtv(\lawt S,\lawt T)$
+for every $i$ (the independent-data case of Lemma~\ref{lem:barber}). Summing $n$
+identical terms, the gap is $\le \tfrac{2n}{n+1}\dtv(\lawt S,\lawt T)$.
+Assumption~\ref{ass:lip} gives
+$\dtv(\lawt S,\lawt T)\le L\lVert\boldsymbol\psi(\theta_S)-\boldsymbol\psi(\theta_T)\rVert$.
+\end{proof}
+
+\begin{corollary}[A-priori certificate, two regimes]\label{cor:apriori}
+$\lVert\boldsymbol\psi(\theta_S)-\boldsymbol\psi(\theta_T)\rVert$ is a physical quantity,
+not a function of target failure data.
+\emph{(a) Complete similitude} ($\boldsymbol\psi\equiv\text{const}$): the bound is
+$0$ and target coverage is $\ge1-\alpha$ \emph{for arbitrary differences in the
+scale-setting parameters} (load, speed, temperature), requiring only the target scale
+$\sigma(\theta_T)$ from $\theta_T$. \emph{(b) Incomplete similitude}: coverage is
+certified a priori up to $2L\lVert\Delta\boldsymbol\psi\rVert$, given a bound on the
+departure (the magnitude of unmodeled physics). In both regimes no density ratio is
+estimated --- the property that distinguishes SCC from weighted/shift conformal, whose
+coverage control requires likelihood ratios of $\mathbb P_T$ to $\mathbb P_S$ from
+target data. The diagnostic of \S\ref{sec:diag} certifies which regime holds.
+\end{corollary}
+
+\begin{remark}[Estimating $L$ and the departure]
+With $m\ge2$ source conditions one estimates $L$ and a finite-sample intercept $a$
+(the $\dtv$ floor, $a\to0$ as $n^{-1/2}$) by regressing the empirical
+$\dtv(\lawt S,\lawt{S'})$ on $\lVert\Delta\boldsymbol\psi\rVert$ over source pairs; the
+operational bound $2(a+L\lVert\Delta\boldsymbol\psi\rVert)$ then upper-bounds the target
+gap. This uses only source data --- it is a priori with respect to the target.
+
+\end{remark}
+
+\section{Similitude diagnostic: knowing when the certificate applies}\label{sec:diag}
+Assumption~\ref{ass:lip} bites when $\boldsymbol\psi$ is non-constant across conditions
+(a governing group is unmodeled). Because exact similitude implies the dimensionless score (equivalently, for
+RUL, the dimensionless life $D=Y\,\sigma(\theta_c)^{-1}$) is condition-invariant, it is
+testable from source data alone. For each pair $(c,c')$ form
+$g=\big[\text{median}(D\mid c)/\text{median}(D\mid c')\big]$; under similitude $g=1$
+(the bearing capacity / common scale constant cancels). A bootstrap CI on $g$ yields a
+three-way verdict: $1$ inside a tight CI $\Rightarrow$ \emph{holds}; $1$ outside
+$\Rightarrow$ \emph{violated}; CI wider than a preset fold $\Rightarrow$
+\emph{indeterminate} (underpowered). On \emph{indeterminate} or \emph{violated} data,
+SCC declines the a-priori certificate and defers to data-driven (weighted) conformal.
+This makes SCC self-aware of its operating envelope rather than silently
+over-certifying.
+
+\section{Scope and limitations}
+(1) Assumptions~H1--H2 are physical hypotheses; the guarantee is conditional on them.
+(2) The certificate bounds the gap for the \emph{modeled} groups; unmodeled physics
+contributes a residual gap, which the controlled-departure study quantifies (the gap
+grows monotonically and remains under the operational bound) and the diagnostic
+detects. (3) Validation here is on controlled physical simulation, where similitude is
+genuine but not assumed by the estimator; demonstration on data whose degradation is
+not similitude-governed (and is underpowered, e.g.\ small bearing cohorts with large
+within-condition spread) returns \emph{indeterminate} by design. (4) Real-process
+validation on adequately-powered field data is the principal item of future work.
+\end{document}

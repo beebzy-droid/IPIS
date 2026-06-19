@@ -32,7 +32,43 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 
 ---
 
-## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-18b)
+## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-19)
+
+**Module 2 paper = Similarity-Calibrated Conformal (SCC), Path-2 gamble at RESS. Method
+DERIVED + VALIDATED in-sandbox (gate GREEN), theory note written + self-checked, code now
+consolidated into the repo (`src/ipis/module2_pdm/scc/`). Entering paper production.**
+
+- **SCC contribution.** Dimensionless (Buckingham-Pi) conformal calibration giving a
+  physics-derived, *a-priori, data-free* coverage certificate for transfer across operating
+  regimes — the empty union between dimensionless transfer learning (point accuracy only) and
+  shift conformal (needs target density ratios). Certificate: gap `<= 2L||Δψ||` in the
+  similitude-departure parameter ψ, composing the dimensionless reduction with Barber et al.
+  (2023). Theory note `docs/module2/scc/scc_theory.(tex|pdf)` — proof self-checked (Barber
+  unweighted bound, factor-2 independent-coordinate step, 2n/(n+1) sum all verified); ψ (not the
+  primary group Π) is the load-bearing quantity (the scale σ absorbs the primary group).
+- **Validation (controlled catalyst-deactivation sim, Levenspiel/Perry's Sec. 7; genuine
+  similitude, not assumed by the estimator):** at η=0 naive conformal miscovers (gap 0.13–0.34,
+  coverage→0.58) while SCC recovers (gap **0.006**); controlled-departure sweep shows graceful
+  degradation (gap 0.006→0.103, efficiency 0.28→1.01, monotone) with the a-priori bound holding
+  **100% of held-out** (pair,η) and δ→d_TV held-out **R²=0.79**; robustness across E2/magnitude/α
+  (kills cherry-picking); certificate intercept shrinks 0.12→0.04 (~n^-1/2). Similitude diagnostic
+  gives a 3-way verdict (holds/violated/indeterminate) and self-validates: **FEMTO→INDETERMINATE**
+  (≈6 bearings/cond, 7× spread, cannot resolve the 1.63× L10 signal) → SCC declines to certify.
+- **Honest posture (in the paper):** simulation-validated, not real-data-validated; FEMTO is an
+  *applicability limit*, not a win; **real plant data (Bien, post-project) is the stated future
+  work / revision lever.** Odds ~40% at RESS, eyes open.
+- **Code (gates pass: black 24.10.0 clean, ruff 0.15.16 clean, 9/9 tests):**
+  `src/ipis/module2_pdm/scc/{deactivation,conformal,diagnostic}.py` + `__init__.py`;
+  `tests/unit/test_scc.py` (9); `scripts/scc_gate.py` + `scripts/scc_robustness.py` reproduce all
+  numbers. M2 suite 95 → 104.
+- **Next:** draft RESS paper (house standard, split sections; theory note = §3); build figures
+  (naive-vs-SCC coverage bars; gap & efficiency vs η; held-out bound-vs-measured; diagnostic CIs);
+  highlights + cover letter (.docx). Structure + claims–evidence map in
+  `docs/module2/scc/scc_paper_outline.md`.
+
+---
+
+### Module 2 feature-complete baseline (2A–2D, pre-SCC; unchanged)
 
 **Both papers submitted (Modules 1 and 3, under review). Module 2 (Predictive Maintenance):
 Phases 2A + 2B + 2C + 2D COMPLETE — physics + health index (2A), calibrated-UQ similarity RUL
@@ -990,6 +1026,20 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-19 (Module 2 paper = SCC; method built + validated, entering paper production)** —
+  Committed to Path 2: **Similarity-Calibrated Conformal (SCC)** at RESS. Derived the coverage
+  certificate (dimensionless Buckingham-Pi reduction composed with Barber et al. 2023; gap
+  `<= 2L||Δψ||` in the similitude-departure parameter ψ — corrected from the primary group Π after
+  a self-check, since the scale σ absorbs Π) and wrote `docs/module2/scc/scc_theory.(tex|pdf)`.
+  Built + validated in-sandbox on a controlled catalyst-deactivation testbed (Levenspiel/Perry's
+  Sec. 7): η=0 naive miscovers (gap 0.13–0.34) / SCC recovers (gap 0.006); controlled-departure
+  graceful degradation with a-priori bound holding 100% held-out and δ→d_TV R²=0.79; robustness
+  across E2/magnitude/α; certificate intercept ~n^-1/2. Similitude diagnostic (3-way verdict)
+  returns FEMTO→INDETERMINATE (underpowered) → SCC declines to certify; FEMTO becomes the honest
+  applicability limit, real plant data the stated future work. Consolidated into the repo:
+  `src/ipis/module2_pdm/scc/{deactivation,conformal,diagnostic}.py` + `__init__.py`,
+  `tests/unit/test_scc.py` (9), `scripts/scc_gate.py` + `scripts/scc_robustness.py`. Gates pass
+  (black/ruff clean, M2 suite 95 -> 104). Hedge lifted (gate was green). Next: RESS paper draft.
 - **2026-06-18b (Phase 2D done — serving + state-bus integration)** — Built
   `src/ipis/module2_pdm/serving/`: `PdMService` (stateful, framework-agnostic) composing the 2A
   health index + 2B similarity RUL into the OperationalState M2 fields per equipment_id
