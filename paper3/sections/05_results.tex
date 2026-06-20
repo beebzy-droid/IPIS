@@ -1,6 +1,6 @@
 \section{Results}\label{sec:results}
 \paragraph{Coverage recovery (Fig.~\ref{fig:cov}).} At $\eta=0$, calibrating on one temperature
-and deploying on another, naive conformal miscovers badly---coverage collapses to 0.58 when
+and deploying on another, naive conformal miscovers badly: coverage collapses to 0.58 when
 calibrating on short-lived and deploying on long-lived units (gap up to 0.34), and wastefully
 over-covers in the reverse direction. SCC recovers coverage to within 0.006 of the 0.90 target
 across all pairs, and Barber's bound $2\dtv(\tilde{\mathcal V})$ contains the SCC gap on every
@@ -15,8 +15,8 @@ Naive miscovers (or over-covers); SCC tracks the 0.90 target.}\label{fig:cov}
 
 \paragraph{Graceful degradation (Fig.~\ref{fig:dep}).} As the unmodeled secondary channel is
 weighted up, the SCC coverage gap rises monotonically (0.006 at $\eta=0$ to 0.103 at $\eta=2$)
-and the interval back-off grows from 0.28 to 1.01---coverage is preserved at a quantified
-efficiency cost, both degrading predictably. Reporting efficiency alongside coverage rules out
+and the interval back-off grows from 0.28 to 1.01. Coverage is preserved at a quantified
+efficiency cost, with both degrading predictably. Reporting efficiency alongside coverage rules out
 the degenerate regime in which coverage is held by trivially wide intervals.
 
 \begin{figure}[t]\centering
@@ -44,22 +44,24 @@ points.}\label{fig:cert}
 temperature-dependence ($E_2=95$--150 kJ/mol at matched magnitude), its magnitude (15--60\%
 perturbation), and the coverage target ($\alpha=0.05$/0.10/0.20). At every setting naive
 miscovers ($\approx0.13$), SCC recovers ($\approx0.009$), the a-priori bound holds 100\%, the gap
-is monotone, and its magnitude orders with the departure's steepness and size---the behavior is a
+is monotone, and its magnitude orders with the departure's steepness and size. This behavior is a
 property of the method, not of one tuning.
 
-\begin{table}[t]\centering\small
-\caption{Robustness of the gate. $g_0$: gap at $\eta=0$; $g_{\max}$: SCC gap at $\eta=2$;
-bound\%: held-out a-priori bound holds.}\label{tab:robust}
+\begin{table*}[t]\centering\footnotesize
+\setlength{\tabcolsep}{12pt}\renewcommand{\arraystretch}{1.2}
+\caption{Robustness of the gate across the departure's temperature-dependence, its magnitude, and
+the coverage level. $g_0$: coverage gap at $\eta=0$; $g_{\max}$: SCC coverage gap at $\eta=2$;
+Bound\,\%: fraction of held-out configurations on which the a-priori bound holds.}\label{tab:robust}
 \begin{tabular}{@{}llcccc@{}}\toprule
-axis & value & naive $g_0$ & SCC $g_0$ & SCC $g_{\max}$ & bound\% \\\midrule
-$E_2$ (kJ) & 95  & 0.130 & 0.009 & 0.046 & 100 \\
-           & 150 & 0.130 & 0.009 & 0.214 & 100 \\
-pert.      & 15\% & 0.130 & 0.009 & 0.049 & 100 \\
-           & 60\% & 0.130 & 0.009 & 0.128 & 100 \\
-$\alpha$   & 0.05 & 0.138 & 0.004 & 0.073 & 100 \\
-           & 0.20 & 0.101 & 0.011 & 0.129 & 100 \\\bottomrule
+Perturbation axis & Value & Naive $g_0$ & SCC $g_0$ & SCC $g_{\max}$ & Bound\,\% \\\midrule
+$E_2$ (kJ/mol) & 95   & 0.130 & 0.009 & 0.046 & 100 \\
+               & 150  & 0.130 & 0.009 & 0.214 & 100 \\
+Perturbation   & 15\,\% & 0.130 & 0.009 & 0.049 & 100 \\
+               & 60\,\% & 0.130 & 0.009 & 0.128 & 100 \\
+Coverage $\alpha$ & 0.05 & 0.138 & 0.004 & 0.073 & 100 \\
+               & 0.20 & 0.101 & 0.011 & 0.129 & 100 \\\bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \paragraph{Diagnostic and a real-data limit (Fig.~\ref{fig:diag}).} On synthetic data the
 diagnostic discriminates correctly: it returns \emph{holds} when lives obey L10, \emph{violated}
@@ -68,7 +70,7 @@ swamps the structural signal. The FEMTO bearing benchmark~\cite{nectoux2012prono
 the last category: with $\approx6$ bearings per condition and a $7\times$ within-condition life
 spread, the bootstrap CI on $g$ spans a factor of 2.6--4.4, far too wide to resolve the
 $1.63\times$ life ratio that L10 predicts between its load/speed conditions. The diagnostic
-therefore returns \emph{indeterminate}, and SCC correctly declines its a-priori certificate---an
+therefore returns \emph{indeterminate}, and SCC correctly declines its a-priori certificate. This is an
 honest applicability limit, consistent with the dataset authors' report that L10 does not govern
 FEMTO lives.
 

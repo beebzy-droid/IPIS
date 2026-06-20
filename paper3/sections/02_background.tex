@@ -3,7 +3,7 @@
 calibration set exchangeable with the test point, the split-conformal prediction set obtained
 from the empirical $(1-\alpha)$ score quantile covers the truth with probability at least
 $1-\alpha$~\cite{papadopoulos2002inductive,lei2018distribution}. The guarantee is marginal and
-finite-sample, and requires no model assumptions---its sole structural requirement is
+finite-sample, and requires no model assumptions; its sole structural requirement is
 exchangeability.
 
 \paragraph{Beyond exchangeability.} Barber et al.~\cite{barber2023conformal} bound the coverage
@@ -30,9 +30,9 @@ principle into the conformal calibration step to obtain a \emph{coverage} guaran
 conformalized RUL estimation, applying split conformal, conformalized quantile regression, and the
 non-exchangeable variant to the C-MAPSS benchmark. Where operating conditions vary, their remedy
 is to cluster them into a finite set of \emph{known, discrete} operating modes and normalize within
-each---a procedure they note becomes inapplicable when the modes are not known in advance or lack
-calibration data---while their non-exchangeable variant weights calibration points by \emph{temporal
-recency}, not operating-regime similarity. SCC instead handles \emph{continuous} operating-regime
+each. They note that this procedure becomes inapplicable when the modes are not known in advance
+or lack calibration data, and their non-exchangeable variant weights calibration points by
+\emph{temporal recency} rather than operating-regime similarity. SCC instead handles \emph{continuous} operating-regime
 transfer through physical scaling, certifies coverage a priori without target-regime data, and
 requires no discrete mode labels. Our concern is orthogonal to point
 accuracy~\cite{lei2018machinery}: the validity of the interval when the operating regime changes

@@ -4,7 +4,7 @@ calibrated statement of its uncertainty: a maintenance decision rests on a \emph
 the true life is unlikely to fall below. Conformal prediction supplies such bounds with a
 finite-sample, distribution-free coverage guarantee~\cite{vovk2005algorithmic,papadopoulos2002inductive,lei2018distribution,angelopoulos2023gentle},
 which has made it attractive for data-driven RUL estimation~\cite{javanmardi2023conformal}.
-That guarantee, however, rests on \emph{exchangeability} of calibration and test data---an
+That guarantee, however, rests on \emph{exchangeability} of calibration and test data, an
 assumption that breaks precisely in the situation reliability engineering cares about most:
 a model calibrated on assets run under one operating regime (load, speed, temperature) is
 deployed on assets run under another. The degradation distribution shifts, exchangeability
@@ -17,8 +17,7 @@ generalization of \emph{point} predictions, including when the similarity betwee
 exact~\cite{therrien2024buckingham,girard2024dimensionless}. None of this literature carries a
 coverage guarantee. The second is \emph{weighted}, or covariate-shift, conformal
 prediction~\cite{tibshirani2019conformal} and its non-exchangeable
-generalization~\cite{barber2023conformal}, which restore coverage under distribution shift---but
-do so by estimating likelihood ratios of the target to the source distribution, which requires
+generalization~\cite{barber2023conformal}, which restore coverage under distribution shift. They do so, however, by estimating likelihood ratios of the target to the source distribution, which requires
 representative target data. For a newly commissioned asset, or a regime with no run-to-failure
 history, that data does not exist.
 
@@ -37,7 +36,7 @@ cross-regime score-exchangeability (\S\ref{sec:method}).
 \textbf{(C2)} An \emph{a-priori coverage certificate} (Theorem~\ref{thm:scc},
 Corollary~\ref{cor:apriori}): the cross-regime coverage gap is at most
 $2L\lVert\Delta\boldsymbol\psi\rVert$ in a similitude-departure parameter computable from
-physical parameters, with no target failure data---obtained by composing the dimensionless
+physical parameters, with no target failure data, obtained by composing the dimensionless
 reduction with the non-exchangeable bound of~\cite{barber2023conformal}.
 \textbf{(C3)} A bootstrap \emph{similitude diagnostic} giving SCC a self-aware operating
 envelope (holds / violated / indeterminate), so it declines to certify when its premise is

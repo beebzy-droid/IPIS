@@ -30,9 +30,9 @@ certificate for prognostics under operating-regime transfer}
 Distribution-free uncertainty quantification by conformal prediction guarantees coverage
 only under exchangeability, which fails when a prognostic model calibrated on one operating
 regime is deployed on another: the remaining-useful-life (RUL) interval silently
-miscovers. Existing remedies fall into two disjoint camps---dimensionless transfer learning,
-which improves point accuracy but offers no coverage guarantee, and weighted (covariate-shift)
-conformal, which restores coverage only by estimating density ratios from target data. We
+miscovers. Existing remedies fall into two disjoint camps. Dimensionless transfer learning improves
+point accuracy but offers no coverage guarantee, while weighted (covariate-shift)
+conformal restores coverage only by estimating density ratios from target data. We
 introduce \emph{Similarity-Calibrated Conformal} (SCC): computing the nonconformity score in
 a dimensionless space obtained from the governing physics (the Buckingham $\Pi$ theorem)
 restores approximate score-exchangeability across regimes, yielding a coverage certificate
@@ -40,8 +40,8 @@ that is computable \emph{a priori from physical parameters alone}, with no targe
 and no density-ratio estimation. We prove the certificate by composing the dimensionless
 reduction with the non-exchangeable conformal bound of Barber et al. (2023): the cross-regime
 coverage gap is at most $2L\lVert\Delta\boldsymbol\psi\rVert$ in a similitude-departure
-parameter $\boldsymbol\psi$. On a controlled catalyst-deactivation testbed---where dynamic
-similitude is genuine but is not assumed by the estimator---naive conformal miscovers (coverage
+parameter $\boldsymbol\psi$. On a controlled catalyst-deactivation testbed, in which dynamic
+similitude is genuine but is not assumed by the estimator, naive conformal miscovers (coverage
 collapses to 0.58, gap up to 0.34) while SCC recovers coverage to within 0.006 of the target;
 under a controlled departure from similitude the gap and the interval back-off degrade
 gracefully and monotonically, the a-priori bound upper-bounds the measured gap on 100\% of
