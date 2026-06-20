@@ -1,31 +1,39 @@
 # Module 2 — Predictive Maintenance (anomaly detection + RUL)
 
-This directory holds Module 2 documentation. **Status: scoping (ADR-015 proposed,
-ratify-on-read). No code yet — this spec and ADR-015 precede the build, per the
-house discipline (option-scale deliberation before code).**
+This directory holds Module 2 documentation. **Status: complete (2A–2D); SCC paper under
+review (JRESS-D-26-04509).**
 
-Module 2 is the designated parallel track for the paper-review-wait period (Paper 1
-CACE-D-26-00944 and Paper 2 JPROCONT-D-26-00565 both under review). It is largely
-independent of Modules 1 and 3 (≈10–20 % asset reuse — the conformal/drift/serving
-stack and the `state_bus` contract — versus ≈70–80 % for M3).
+Module 2 is feature-complete across phases 2A–2D and is largely independent of Modules 1
+and 3 (≈10–20 % asset reuse — the conformal/drift/serving stack and the `state_bus`
+contract — versus ≈70–80 % for M3). A research extension, **Similarity-Calibrated Conformal
+(SCC)**, generalises the calibrated-RUL idea to an a-priori coverage certificate for
+cross-regime transfer and was submitted to RESS (JRESS-D-26-04509); its theory note and code
+live in `docs/module2/scc/` and `src/ipis/module2_pdm/scc/`, with the submission package in `paper3/`.
 
 ## Files
 
-- **spec.md** — This technical specification (scope; updated to as-built per phase).
-- **results.md** — *(created at first result freeze)* per-phase metrics and observations.
-- **lessons-learned.md** — *(created at first phase close)* honest postmortem per phase.
+- **spec.md** — This technical specification (as-built per phase).
+- **scc/** — Similarity-Calibrated Conformal: theory note (`scc_theory.tex`/`.pdf`) + paper outline.
+- **results / lessons-learned** — not split into separate files for M2; per-phase metrics and
+  postmortem are captured in the Status table below and in `docs/HANDOFF.md` §0.5.
 
 ## Status
 
 | Phase | Scope | Status |
 |---|---|---|
 | 2A — Health index + anomaly detection (FEMTO + CWRU) | Vibration feature pipeline, physics-anchored fault-frequency features, health index, ADWIN/SPC alarming | ✅ Complete — CWRU diagnosis (physics gate 0.012%, loader, features, Hotelling-T² health index, 32-file manifest; IR/OR/Ball validated within 0.1–0.3%) + FEMTO bridge (loader, degradation HI trend feeding 2B) |
-| 2B — RUL (remaining useful life) | Trajectory-similarity RUL (shape-matched, phase/absolute modes) + cross-conformal lower bound + PHM-2012; global regression as baseline | ◐ Built: similarity engine + 3-method LOBO eval (69 tests). Global regression refuted on real FEMTO (16,000× DI spread); amplitude-threshold (Opt A) refuted by probe (EOL 7–48 g) → pivoted to similarity (Opt B), 3_1 excluded. Pending real-FEMTO 3-method numbers → pick read-off mode + FPT decision |
-| 2C — Cross-domain anomaly stress (TEP IDV) | Detector methodology transfer to a process fault set; FDR/FAR per IDV mode; **no RUL claim** | Planned |
-| 2D — Serving + state-bus integration | M2 writes `equipment_health` / `health_flags` / `remaining_useful_life`; reuse FastAPI/Streamlit/conformal stack | Planned |
+| 2B — RUL (remaining useful life) | Trajectory-similarity RUL (shape-matched, phase/absolute modes) + cross-conformal lower bound + PHM-2012 | ✅ Complete — similarity-PHASE RUL + robust FPT + calibrated one-sided conformal lower bound. Canonical 16-bearing LOBO: sim-phase mean PHM **0.179**, pooled coverage **0.911** (≥ 0.90 target); 72 M2 tests. Global regression refuted on real FEMTO (16,000× DI spread) and amplitude-threshold refuted by probe (EOL 7–48 g) → similarity (Bearing3\_1 excluded, atypical) |
+| 2C — Cross-domain anomaly stress (TEP IDV) | Detector methodology transfer to a process fault set; FDR/FAR per IDV mode; **no RUL claim** | ✅ Complete — TEP cross-domain detection: FAR **2.0 %**, mean detection delay **30 min**, **96 %** detection on the 17 detectable IDV faults |
+| 2D — Serving + state-bus integration | M2 writes `equipment_health` / `health_flags` / `remaining_useful_life`; reuse FastAPI/Streamlit/conformal stack | ✅ Complete — `PdMService` → `OperationalState` + FastAPI; reuses the M1 serving stack |
 
 The phase letters mirror the Module 1 (1A–1F) and Module 3 (3A–3C) convention. Gating
 and the HANDOFF update-at-every-phase rule apply unchanged.
+
+**Research extension — Similarity-Calibrated Conformal (SCC).** Beyond 2A–2D, the
+calibrated-RUL idea was generalised to an a-priori, physics-derived coverage certificate for
+cross-regime transfer (gap ≤ 2L‖Δψ‖, composing a dimensionless reduction with Barber et al.
+2023). Submitted to *Reliability Engineering & System Safety* (JRESS-D-26-04509). Theory:
+`docs/module2/scc/scc_theory.(tex|pdf)`; code: `src/ipis/module2_pdm/scc/`; submission: `paper3/`.
 
 ## Scope (decisions D1–D6, ADR-015)
 
@@ -126,18 +134,16 @@ bound) → 2C (TEP cross-domain anomaly) → 2D (serving + state-bus). Reuse, do
 too: bearing degradation is non-stationary, so a temporally-adjacent split would over-state
 generalisation exactly as it did in 1A), and the FastAPI/Streamlit/`state_bus` serving layer.
 
-## Open ratification item (read first)
+## ADR-015 status
 
-ADR-015 is **Proposed**. The one decision that genuinely benefits from owner sign-off before
-the build is **D2 (dataset hierarchy)** — specifically electing a bearing run-to-failure
-primary over the §0.5-listed TEP-or-C-MAPSS alternatives. Everything downstream (taxonomy,
-metrics, physics layer) follows from that pick. Ratify D2 → start 2A.
+ADR-015 is **Accepted**. D2 (dataset hierarchy) was ratified by action when FEMTO + CWRU were
+downloaded, and phases 2A–2D were built on that pick.
 
 ## Datasets — acquisition note
 
-FEMTO-PRONOSTIA and CWRU are external downloads (not yet in-repo); they get registered as
-Tier-1 sources in `docs/sources/source-map.md` at first use, and live under
-`data/raw/femto/` and `data/raw/cwru/` (gitignored, like all `data/raw/*`). TEP IDV runs are
+FEMTO-PRONOSTIA and CWRU are on disk under `data/raw/femto/` and `data/raw/cwru/`
+(gitignored, like all `data/raw/*`; acquisition READMEs tracked), registered as Tier-1
+sources in `docs/sources/source-map.md`. TEP IDV runs are
 reproducible from the in-repo `scripts/generate_tep_modes.py` (Russell/Braatz simulator) —
 **note:** what is currently in-repo are feed-ratio operating regimes (IDV 8+10+13 as
 *excitation*); canonical d00–d21 *fault-labelled* runs for the 2C anomaly task are generated

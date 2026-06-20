@@ -51,9 +51,9 @@ IPIS addresses all three with one architecture, validated across heterogeneous b
 
 | Module | Status | Notes |
 |---|---|---|
-| Module 1 — Soft Sensor | ✅ Complete | Paper under review — *Comput. Chem. Eng.* (CACE-D-26-00944) |
-| Module 2 — Predictive Maintenance | ✅ Complete | Feature-complete (2A–2D); SCC paper under review — *Reliab. Eng. Syst. Saf.* (JRESS-D-26-04509) |
-| Module 3 — RTO | ✅ Complete | Paper under review — *J. Process Control* (JPROCONT-D-26-00565) |
+| Module 1 — Soft Sensor | ✅ Complete | Paper under review (CACE-D-26-00944) |
+| Module 2 — Predictive Maintenance | ✅ Complete | Feature-complete (2A–2D); SCC paper under review (JRESS-D-26-04509) |
+| Module 3 — RTO | ✅ Complete | Paper under review (JPROCONT-D-26-00565) |
 | Integration (full IPIS) | ⏳ Next | Wiring M1 + M2 + M3 over the state bus + serving layer |
 
 ## Publications
