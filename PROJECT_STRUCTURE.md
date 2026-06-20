@@ -5,7 +5,7 @@ next, read `docs/HANDOFF.md` (§0.5 is the live resume pointer).
 
 **IPIS (Integrated Process Intelligence System)** — a hybrid, digital-twin-backed framework
 on a first-principles physics layer, in three modules: **Module 1 — Soft Sensor** (complete;
-paper under review, CACE-D-26-00944), **Module 2 — Predictive Maintenance** (next), and
+paper under review, CACE-D-26-00944), **Module 2 — Predictive Maintenance** (complete; SCC paper under review, JRESS-D-26-04509), and
 **Module 3 — Real-Time Optimization** (complete; paper under review, JPROCONT-D-26-00565).
 
 ```
@@ -23,6 +23,12 @@ IPIS/
 │   │   │                           Shardt bias-update, conformal (ACI/EnbPI/split),
 │   │   │                           migration (OSBC/Luo/Yan), FastAPI/Streamlit serving
 │   │   ├── evaluation/  features/  physics_bridge/  migration/  data/  serving/
+│   ├── module2_pdm/              Predictive maintenance: bearing/degradation physics +
+│   │   │                           Hotelling-T² health index (2A), similarity-phase RUL +
+│   │   │                           one-sided conformal lower bound (2B), TEP cross-domain
+│   │   │                           fault detection (2C), PdMService + FastAPI (2D)
+│   │   └── scc/                   Similarity-Calibrated Conformal — dimensionless (Buckingham-Π)
+│   │                               calibration + a-priori coverage certificate (Paper 3)
 │   ├── module3_rto/              RTO: economics, column_model, rto_nlp, surrogate,
 │   │                               rto_surface, chance_rto (conformal back-offs)
 │   └── shared/                   config, state_bus (cross-module wiring)
@@ -42,12 +48,18 @@ IPIS/
 │   ├── main.tex  abstract.tex  01_intro.tex … 07_conclusion.tex
 │   ├── references.bib  highlights.md  cover_letter.md  .gitignore
 │
+├── paper3/                       PAPER 3 submission (SCC) — elsarticle, split sections
+│   ├── scc_paper.tex  sections/01_introduction.tex … 07_conclusions.tex
+│   ├── scc_refs.bib  scc_paper.bbl  figures/fig1…4.pdf
+│   ├── highlights.docx  cover_letter.docx  README.txt
+│
 ├── docs/
 │   ├── HANDOFF.md                Single source of truth for resuming work (read first)
 │   ├── architecture/
 │   │   ├── system-overview.md
 │   │   └── decisions/            ADRs 001–006 (bare) + ADR-007…014 (prefixed) + TEMPLATE
 │   ├── module1/                  spec, results, lessons-learned
+│   ├── module2/                  spec, scc/ (theory note scc_theory.tex/.pdf + paper outline)
 │   ├── module3/                  twin spec, walkthroughs, results, scoping, literature
 │   │   └── paper/                Paper 2 working copy: outline, claims, sections/,
 │   │                               evidence/ (frozen regime_map.json), figures/ (F1–F7)
@@ -68,10 +80,11 @@ IPIS/
 - **Source layout** `src=["src"]`; conda env `ipis` (Python 3.11). Quality gates before every
   commit: `black src tests scripts`, `ruff check src tests`, `pytest tests/unit -q`. CI lints
   `src tests` and runs unit tests; `scripts/` are not CI-tested (they need gitignored data).
-- **Two papers, two layouts each.** `paper/` and `paper2/` hold the LaTeX submission packages
-  (identical structure). The markdown working copies, figures, and frozen evidence live under
-  `docs/paper/` and `docs/module3/paper/`. LaTeX `\graphicspath` points at the `docs/.../figures/`.
-- **ADRs** are the decision log: bare `001`–`006`, prefixed `ADR-007`…`ADR-014`; next id is **015**.
+- **Three papers.** `paper/`, `paper2/`, and `paper3/` hold the LaTeX submission packages.
+  `paper/` and `paper2/` share the markdown-working-copy layout; `paper3/` is self-contained
+  split-section elsarticle. Working copies/frozen evidence for Papers 1–2 live under
+  `docs/paper/` and `docs/module3/paper/`; Paper 3's theory note is `docs/module2/scc/`.
+- **ADRs** are the decision log: bare `001`–`006`, prefixed `ADR-007`…`ADR-015`; next id is **016**.
 - **Never committed:** dataset contents, model checkpoints, secrets/`.env`, `tennessee-eastman-dataset/`,
   LaTeX build artifacts. See `.gitignore`.
 - **Discipline:** verify every load-bearing number against a primary source at the moment of use;

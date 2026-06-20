@@ -49,17 +49,18 @@ IPIS addresses all three with one architecture, validated across heterogeneous b
 
 ## Project status
 
-| Module | Status | Target |
+| Module | Status | Notes |
 |---|---|---|
-| Module 1 — Soft Sensor | ✅ Complete; paper under review (CACE-D-26-00944) |
-| Module 2 — Predictive Maintenance | ⏳ Planned | After Module 3 |
-| Module 3 — RTO | ✅ Complete; paper under review (JPROCONT-D-26-00565) |
-| Integration (full IPIS) | ⏳ Planned | After Module 2 |
+| Module 1 — Soft Sensor | ✅ Complete | Paper under review — *Comput. Chem. Eng.* (CACE-D-26-00944) |
+| Module 2 — Predictive Maintenance | ✅ Complete | Feature-complete (2A–2D); SCC paper under review — *Reliab. Eng. Syst. Saf.* (JRESS-D-26-04509) |
+| Module 3 — RTO | ✅ Complete | Paper under review — *J. Process Control* (JPROCONT-D-26-00565) |
+| Integration (full IPIS) | ⏳ Next | Wiring M1 + M2 + M3 over the state bus + serving layer |
 
 ## Publications
 
 - **Paper 1 (soft sensor):** under review, *Computers & Chemical Engineering* (CACE-D-26-00944). Source in `paper/`.
-- **Paper 2 (RTO):** "The conformal selection effect in real-time optimisation…" — under review, *Journal of Process Control* (JPROCONT-D-26-00565). Source in `paper2/`
+- **Paper 2 (RTO — the conformal selection effect):** under review, *Journal of Process Control* (JPROCONT-D-26-00565). Source in `paper2/`.
+- **Paper 3 (predictive maintenance — Similarity-Calibrated Conformal):** under review, *Reliability Engineering & System Safety* (JRESS-D-26-04509). Source in `paper3/`.
 
 ## Quick start
 
@@ -89,6 +90,7 @@ python scripts/download_datasets.py --all
 - [System architecture](docs/architecture/system-overview.md)
 - [Architecture Decision Records (ADRs)](docs/architecture/decisions/)
 - [Module 1 specification](docs/module1/spec.md) — Soft Sensor
+- [Module 2 specification](docs/module2/spec.md) — Predictive Maintenance
 - [Module 3 specification](docs/module3/spec.md) — Real-Time Optimization
 
 ## Tech stack
