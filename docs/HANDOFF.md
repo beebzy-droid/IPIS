@@ -32,39 +32,74 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 
 ---
 
-## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-19)
+## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-20)
 
-**Module 2 paper = Similarity-Calibrated Conformal (SCC), Path-2 gamble at RESS. Method
-DERIVED + VALIDATED in-sandbox (gate GREEN), theory note written + self-checked, code now
-consolidated into the repo (`src/ipis/module2_pdm/scc/`). Entering paper production.**
+**All three IPIS module papers are SUBMITTED and under review. The Module 2 / SCC paper went to
+RESS on 2026-06-20 as JRESS-D-26-04509. With the publication track now parked on reviewers, the
+next work is FULL IPIS INTEGRATION — wiring Modules 1, 2, and 3 into one coherent system over the
+state bus + serving layer. This is a fresh start: the integration architecture is NOT yet
+decided. Option-scale before building.**
 
-- **SCC contribution.** Dimensionless (Buckingham-Pi) conformal calibration giving a
-  physics-derived, *a-priori, data-free* coverage certificate for transfer across operating
-  regimes — the empty union between dimensionless transfer learning (point accuracy only) and
-  shift conformal (needs target density ratios). Certificate: gap `<= 2L||Δψ||` in the
-  similitude-departure parameter ψ, composing the dimensionless reduction with Barber et al.
-  (2023). Theory note `docs/module2/scc/scc_theory.(tex|pdf)` — proof self-checked (Barber
-  unweighted bound, factor-2 independent-coordinate step, 2n/(n+1) sum all verified); ψ (not the
-  primary group Π) is the load-bearing quantity (the scale σ absorbs the primary group).
-- **Validation (controlled catalyst-deactivation sim, Levenspiel/Perry's Sec. 7; genuine
-  similitude, not assumed by the estimator):** at η=0 naive conformal miscovers (gap 0.13–0.34,
-  coverage→0.58) while SCC recovers (gap **0.006**); controlled-departure sweep shows graceful
-  degradation (gap 0.006→0.103, efficiency 0.28→1.01, monotone) with the a-priori bound holding
-  **100% of held-out** (pair,η) and δ→d_TV held-out **R²=0.79**; robustness across E2/magnitude/α
-  (kills cherry-picking); certificate intercept shrinks 0.12→0.04 (~n^-1/2). Similitude diagnostic
-  gives a 3-way verdict (holds/violated/indeterminate) and self-validates: **FEMTO→INDETERMINATE**
-  (≈6 bearings/cond, 7× spread, cannot resolve the 1.63× L10 signal) → SCC declines to certify.
-- **Honest posture (in the paper):** simulation-validated, not real-data-validated; FEMTO is an
-  *applicability limit*, not a win; **real plant data (Bien, post-project) is the stated future
-  work / revision lever.** Odds ~40% at RESS, eyes open.
-- **Code (gates pass: black 24.10.0 clean, ruff 0.15.16 clean, 9/9 tests):**
-  `src/ipis/module2_pdm/scc/{deactivation,conformal,diagnostic}.py` + `__init__.py`;
-  `tests/unit/test_scc.py` (9); `scripts/scc_gate.py` + `scripts/scc_robustness.py` reproduce all
-  numbers. M2 suite 95 → 104.
-- **Next:** draft RESS paper (house standard, split sections; theory note = §3); build figures
-  (naive-vs-SCC coverage bars; gap & efficiency vs η; held-out bound-vs-measured; diagnostic CIs);
-  highlights + cover letter (.docx). Structure + claims–evidence map in
-  `docs/module2/scc/scc_paper_outline.md`.
+**Papers (all under review — never edit a submitted manuscript without joint review):**
+
+| Paper | Module | Journal | ID | Date | Source |
+|---|---|---|---|---|---|
+| 1 | M1 soft sensor | Computers & Chemical Engineering | CACE-D-26-00944 | 2026-06-12 | `paper/` |
+| 2 | M3 RTO (conformal selection) | Journal of Process Control | JPROCONT-D-26-00565 | 2026-06-16 | `paper2/` |
+| 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04509** | **2026-06-20** | `paper3/` |
+
+- **Paper 3 (SCC) final state.** elsarticle `[5p,times]`, split sections in `paper3/` (`scc_paper.tex`
+  + `sections/01..07` + `figures/fig1..4.pdf` + `scc_refs.bib` + `scc_paper.bbl` + highlights/cover
+  letter `.docx`). Compiles to 6 pp two-column, line-numbered, 0 undefined cites. Abstract finalized
+  at **233 words** (RESS cap 250). The **EM upload used a FLAT variant** (sections inlined,
+  `microtype` removed, bare figure paths, no `.bbl`, `.bib` tagged *Manuscript*) because Editorial
+  Manager cannot read subfolders and rejects same-stem files (`scc_paper.tex`/`.bbl`). EM
+  classifications chosen: Uncertainty Analysis–other; Statistical Analysis; Probabilistic Modelling;
+  Maintenance→Degradation; Stochastic Systems.
+- **Open revision levers (handle jointly when reviews land).** (1) Simulation-only validation —
+  real plant data (Bien, post-project) is the stated future-work lever; (2) affiliation still reads
+  "Chemical Engineer, Quezon City, Philippines" vs. Mapúa Malayan College Mindanao — resolve at
+  revision; (3) two conference refs (Tibshirani 2019 NeurIPS, Nectoux 2012 PHM) lack page numbers
+  in the `.bbl`.
+
+### >> RESUME HERE: IPIS Full Integration (fresh session)
+
+**Goal.** An end-to-end Integrated Process Intelligence System in which the three validated modules
+operate together, not as three separate demos.
+
+**What exists per module (validated components, all under `src/ipis/`):**
+- **M1 soft sensor** — physics-anchored Debutanizer C4 estimator + conformal UQ; serving stack
+  (`SoftSensorService`, FastAPI `/predict`/`/label`/`/health`/`/metrics`/`/state`, `ModelBundle`
+  loader, MLflow, Streamlit dashboard). State-bus output: estimated quality + prediction interval.
+- **M2 PdM** — bearing physics + Hotelling-T² health index (2A), similarity-phase RUL + one-sided
+  conformal lower bound (2B), TEP cross-domain fault detection (2C: FAR 2.0% / 96% / 30-min delay),
+  `PdMService` → `OperationalState` + FastAPI (2D); plus the SCC method in `module2_pdm/scc/`.
+  State-bus output: equipment_health ∈[0,1], health_flags OK/WARN/ALARM, RUL hours + lower bound.
+- **M3 RTO** — modifier-adaptation RTO with the conformal selection effect (Paper 2). Output:
+  optimized setpoints under uncertainty.
+- **`state_bus`** — the contract the modules already write to (quality estimate, health, flags,
+  RUL). This is the integration backbone; read its current schema first.
+
+**First decisions to option-scale BEFORE any build (present tradeoffs; Bien ratifies):**
+1. **Demonstrator process.** The modules use different benchmarks today (Debutanizer for M1;
+   FEMTO/CWRU/TEP for M2; the RTO benchmark for M3). Choose (a) ONE unifying plant — e.g. a DWSIM
+   debutanizer/plantwide model that carries a quality variable, a degrading unit, and an RTO
+   objective — or (b) a FEDERATED demo where each module runs on its own benchmark and integration
+   is the orchestration + shared dashboard. (a) is the stronger story and the likely Paper-4 basis;
+   (b) ships faster.
+2. **Integration depth / the novel claim.** Loose coupling (shared bus, independent services,
+   unified dashboard) vs. TIGHT coupling where **RTO consumes PdM health/RUL as constraints and the
+   soft-sensor estimate as a soft measurement** — i.e. health-aware real-time optimization that
+   trades production rate against remaining useful life. Tight coupling is the genuinely new
+   contribution and a candidate Paper 4.
+3. **Primary deliverable.** Engineering capstone (working integrated system + demo) vs. a 4th paper
+   (IPIS architecture / health-aware RTO). Not exclusive; pick the primary target so scope is bounded.
+
+**Approach reminders (unchanged).** Option-scale before build. Claude builds/validates in sandbox;
+Bien runs all git/terminal on Windows cmd (one command per line, no continuation backslashes).
+present_files → Downloads → `copy /Y` to repo → git. `mkdir` before any new dir. VERIFY-BEFORE-
+LOAD-BEARING (confirm file state via `raw.githubusercontent.com`, never trust commit messages).
+Update this §0.5 + prepend the changelog at every load-bearing decision.
 
 ---
 
@@ -1026,6 +1061,23 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-20** — **PAPER 3 (SCC) SUBMITTED TO RESS — JRESS-D-26-04509.** Module 2 / SCC paper
+  uploaded to *Reliability Engineering & System Safety*. This session: generated the 4 figures from
+  the validated code (overlap-free; Fig 4 verdicts moved above the bars, Fig 1 legend out of the
+  bars); fetched the genuine `elsarticle.cls` + `elsarticle-num-names.bst` from the maintainer's
+  GitHub (CTAN unreachable in sandbox) and compiled the REAL elsarticle — 6 pp two-column,
+  line-numbered, 0 undefined cites; corrected the two flagged refs against Bien's uploaded PDFs
+  (Therrien et al. *Electronics* 13(11):2041; Javanmardi & Hüllermeier *IJPHM* 14(2)) and added
+  Girard 2024 / Oppenheimer 2023; sharpened §2 with the Javanmardi discrete-mode contrast; de-AI'd
+  all 16 em-dashes + the cover letter; made the robustness table a full-width `table*`; produced
+  highlights + cover letter `.docx`; split into `paper3/` (main + `sections/`); built an EM-FLAT
+  upload variant (sections inlined, no microtype, bare figure paths, no `.bbl`, `.bib` as
+  *Manuscript*) after hitting EM's same-stem and no-subfolder rules; trimmed the abstract
+  281 → **233 words** (RESS 250 cap). EM classifications: UA–other / Statistical Analysis /
+  Probabilistic Modelling / Maintenance→Degradation / Stochastic Systems. **All three module papers
+  now submitted and under review.** Publication track parked on reviewers; next work = **full IPIS
+  integration** (see §0.5 resume block). SESSION CLOSED at Bien's request — reopen only on a
+  submission update.
 - **2026-06-19 (Module 2 paper = SCC; method built + validated, entering paper production)** —
   Committed to Path 2: **Similarity-Calibrated Conformal (SCC)** at RESS. Derived the coverage
   certificate (dimensionless Buckingham-Pi reduction composed with Barber et al. 2023; gap
