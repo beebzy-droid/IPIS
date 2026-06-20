@@ -1,0 +1,20 @@
+\section{Discussion}\label{sec:discussion}
+\paragraph{What the certificate buys.} SCC certifies coverage from physical parameters before any
+target failure data exists. Under verified similitude (the diagnostic's \emph{holds}), arbitrarily
+large differences in the dominant operating parameters cost nothing, because the dimensionless
+scale absorbs them; this is the qualitative content of the $10.2\times$-scale recovery. Under
+incomplete similitude the certificate degrades by the departure $\lVert\Delta\boldsymbol\psi\rVert$,
+and the diagnostic flags the regime. This is a different guarantee from weighted
+conformal~\cite{tibshirani2019conformal}: it trades the need for target data for a falsifiable
+physical assumption, which the diagnostic makes checkable.
+
+\paragraph{Limitations.} (i) The guarantee is conditional on H1--H2, physical hypotheses rather
+than theorems. (ii) The certificate bounds the gap for the modeled groups; unmodeled physics
+contributes a residual that the departure study quantifies and the diagnostic detects, but that
+must be bounded a priori to use Corollary~\ref{cor:apriori}(b). (iii) Validation is on controlled
+simulation; the single real benchmark returns indeterminate by design rather than a positive
+result. (iv) The bound is conservative. The decisive next step is validation on adequately
+powered run-to-failure field data, where the diagnostic returns \emph{holds} and the certificate
+can be checked against measured cross-regime coverage---data the authors expect to obtain from an
+industrial process.
+

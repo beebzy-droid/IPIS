@@ -1,0 +1,28 @@
+\section{Experimental design}\label{sec:design}
+\paragraph{Why a controlled testbed.} Demonstrating an a-priori certificate requires data in
+which the governing physics actually controls degradation, so that $\boldsymbol\psi$ is
+meaningful. We therefore use a stochastic catalyst-deactivation
+simulation~\cite{levenspiel1999chemical,perry2008handbook} in which dynamic similitude is
+\emph{genuine} but is not assumed by the estimator; the estimator sees only noisy signals and a
+nominal rate model. This permits a non-circular test: we impose a graded, physically meaningful
+departure from similitude and check that the certificate degrades as predicted.
+
+\paragraph{Simulator.} First-order deactivation $\mathrm{d}a/\mathrm{d}t=-k_{\mathrm{eff}}(T)a$,
+failure at $a\le0.3$; primary Arrhenius channel $k_1=A_1 e^{-E_1/RT}$ ($E_1=80$ kJ/mol); an
+optional secondary channel $k_2=A_2 e^{-E_2/RT}$ of weight $\eta$ (the controlled departure,
+$E_2\neq E_1$). Unit-to-unit variability is a lognormal pre-exponential; the activity signal
+carries additive noise. At $\eta=0$ the dimensionless clock $\tau=t\,k_1(T)$ collapses every
+temperature onto $a(\tau)=e^{-\tau}$: exact similitude, with the characteristic life
+$T_L=1/k_1(T)$ spanning $10.2\times$ across the three temperatures (600/650/700 K).
+
+\paragraph{Predictor, score, metrics.} The predictor extrapolates remaining life from the
+observed activity using the nominal rate; the conformal layer covers the residual. We report:
+\emph{coverage} (target $1-\alpha=0.90$); \emph{coverage gap} $=\max(0,(1-\alpha)-\text{coverage})$;
+\emph{efficiency} as the relative interval back-off $q_T/\overline{\text{RUL}}_T$ (smaller is
+more informative; a diverging value signals degenerate intervals); the \emph{operational bound}
+$2(a+L\lVert\Delta\boldsymbol\psi\rVert)$; and the \emph{diagnostic} verdict. Numbers are averaged
+over five seeds. Three gate criteria were fixed before running: (1) naive miscovers while SCC
+recovers at $\eta=0$; (2) the a-priori bound, with $L$ fit on a subset of (pair, $\eta$)
+configurations, upper-bounds the gap on \emph{held-out} configurations; (3) the gap degrades
+gracefully and monotonically with $\eta$.
+

@@ -1,0 +1,81 @@
+\section{Results}\label{sec:results}
+\paragraph{Coverage recovery (Fig.~\ref{fig:cov}).} At $\eta=0$, calibrating on one temperature
+and deploying on another, naive conformal miscovers badly---coverage collapses to 0.58 when
+calibrating on short-lived and deploying on long-lived units (gap up to 0.34), and wastefully
+over-covers in the reverse direction. SCC recovers coverage to within 0.006 of the 0.90 target
+across all pairs, and Barber's bound $2\dtv(\tilde{\mathcal V})$ contains the SCC gap on every
+pair. The dimensionless transform removes the $10.2\times$ scale difference exactly, as
+Corollary~\ref{cor:apriori}(a) predicts.
+
+\begin{figure}[t]\centering
+\includegraphics[width=\linewidth]{figures/fig1_coverage.pdf}
+\caption{Naive vs.\ SCC coverage at $\eta=0$ across calibrate$\to$deploy temperature pairs.
+Naive miscovers (or over-covers); SCC tracks the 0.90 target.}\label{fig:cov}
+\end{figure}
+
+\paragraph{Graceful degradation (Fig.~\ref{fig:dep}).} As the unmodeled secondary channel is
+weighted up, the SCC coverage gap rises monotonically (0.006 at $\eta=0$ to 0.103 at $\eta=2$)
+and the interval back-off grows from 0.28 to 1.01---coverage is preserved at a quantified
+efficiency cost, both degrading predictably. Reporting efficiency alongside coverage rules out
+the degenerate regime in which coverage is held by trivially wide intervals.
+
+\begin{figure}[t]\centering
+\includegraphics[width=\linewidth]{figures/fig2_departure.pdf}
+\caption{Under a controlled departure $\eta$ from similitude, the SCC coverage gap (left axis)
+and the relative interval back-off (right axis) degrade gracefully and monotonically.}\label{fig:dep}
+\end{figure}
+
+\paragraph{The a-priori certificate (Fig.~\ref{fig:cert}).} With $a,L$ fit on 60\% of
+(pair, $\eta$) configurations, the physical departure $\delta=\eta\lvert h(S)-h(T)\rvert$
+predicts the dimensionless score-distribution mismatch on the held-out 40\% with $R^2=0.79$
+(correlation 0.95), and the resulting a-priori bound $2(a+L\delta)$ upper-bounds the measured
+coverage gap on \emph{100\%} of held-out configurations. The certificate is conservative (it is
+an upper bound) and its finite-sample intercept shrinks as $n^{-1/2}$ (from 0.12 at $n=200$ to
+0.04 at $n=1600$ per condition).
+
+\begin{figure}[t]\centering
+\includegraphics[width=\linewidth]{figures/fig3_certificate.pdf}
+\caption{Held-out measured coverage gap vs.\ the physical departure $\delta$, with the a-priori
+bound $2(a+b\delta)$ fit on disjoint configurations. The bound holds on 100\% of held-out
+points.}\label{fig:cert}
+\end{figure}
+
+\paragraph{Robustness (Table~\ref{tab:robust}).} The gate criteria survive across the departure's
+temperature-dependence ($E_2=95$--150 kJ/mol at matched magnitude), its magnitude (15--60\%
+perturbation), and the coverage target ($\alpha=0.05$/0.10/0.20). At every setting naive
+miscovers ($\approx0.13$), SCC recovers ($\approx0.009$), the a-priori bound holds 100\%, the gap
+is monotone, and its magnitude orders with the departure's steepness and size---the behavior is a
+property of the method, not of one tuning.
+
+\begin{table}[t]\centering\small
+\caption{Robustness of the gate. $g_0$: gap at $\eta=0$; $g_{\max}$: SCC gap at $\eta=2$;
+bound\%: held-out a-priori bound holds.}\label{tab:robust}
+\begin{tabular}{@{}llcccc@{}}\toprule
+axis & value & naive $g_0$ & SCC $g_0$ & SCC $g_{\max}$ & bound\% \\\midrule
+$E_2$ (kJ) & 95  & 0.130 & 0.009 & 0.046 & 100 \\
+           & 150 & 0.130 & 0.009 & 0.214 & 100 \\
+pert.      & 15\% & 0.130 & 0.009 & 0.049 & 100 \\
+           & 60\% & 0.130 & 0.009 & 0.128 & 100 \\
+$\alpha$   & 0.05 & 0.138 & 0.004 & 0.073 & 100 \\
+           & 0.20 & 0.101 & 0.011 & 0.129 & 100 \\\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Diagnostic and a real-data limit (Fig.~\ref{fig:diag}).} On synthetic data the
+diagnostic discriminates correctly: it returns \emph{holds} when lives obey L10, \emph{violated}
+when they do not (with adequate units), and \emph{indeterminate} when the within-condition spread
+swamps the structural signal. The FEMTO bearing benchmark~\cite{nectoux2012pronostia} falls in
+the last category: with $\approx6$ bearings per condition and a $7\times$ within-condition life
+spread, the bootstrap CI on $g$ spans a factor of 2.6--4.4, far too wide to resolve the
+$1.63\times$ life ratio that L10 predicts between its load/speed conditions. The diagnostic
+therefore returns \emph{indeterminate}, and SCC correctly declines its a-priori certificate---an
+honest applicability limit, consistent with the dataset authors' report that L10 does not govern
+FEMTO lives.
+
+\begin{figure}[t]\centering
+\includegraphics[width=\linewidth]{figures/fig4_diagnostic.pdf}
+\caption{Diagnostic verdict via bootstrap CIs on $g$ (median-life ratio normalized by the L10
+prediction; $g{=}1$ under similitude). Synthetic similitude $\to$ holds; powered violation $\to$
+violated; FEMTO-like (few units, large spread) $\to$ indeterminate.}\label{fig:diag}
+\end{figure}
+

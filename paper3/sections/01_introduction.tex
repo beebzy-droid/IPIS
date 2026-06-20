@@ -1,0 +1,54 @@
+\section{Introduction}\label{sec:intro}
+Reliable prognostics requires not just a remaining-useful-life (RUL) point estimate but a
+calibrated statement of its uncertainty: a maintenance decision rests on a \emph{lower bound}
+the true life is unlikely to fall below. Conformal prediction supplies such bounds with a
+finite-sample, distribution-free coverage guarantee~\cite{vovk2005algorithmic,papadopoulos2002inductive,lei2018distribution,angelopoulos2023gentle},
+which has made it attractive for data-driven RUL estimation~\cite{javanmardi2023conformal}.
+That guarantee, however, rests on \emph{exchangeability} of calibration and test data---an
+assumption that breaks precisely in the situation reliability engineering cares about most:
+a model calibrated on assets run under one operating regime (load, speed, temperature) is
+deployed on assets run under another. The degradation distribution shifts, exchangeability
+fails, and the conformal interval miscovers without warning.
+
+Two bodies of work bear on this transfer problem, and they do not meet. The first uses
+\emph{dimensional analysis}: expressing a model in dimensionless variables (via the Buckingham
+$\Pi$ theorem) enforces dynamic similitude between systems and improves out-of-regime
+generalization of \emph{point} predictions, including when the similarity between systems is not
+exact~\cite{therrien2024buckingham,girard2024dimensionless}. None of this literature carries a
+coverage guarantee. The second is \emph{weighted}, or covariate-shift, conformal
+prediction~\cite{tibshirani2019conformal} and its non-exchangeable
+generalization~\cite{barber2023conformal}, which restore coverage under distribution shift---but
+do so by estimating likelihood ratios of the target to the source distribution, which requires
+representative target data. For a newly commissioned asset, or a regime with no run-to-failure
+history, that data does not exist.
+
+The union of these two ideas is empty, and that gap is the opening. We ask: \emph{can physical
+similarity itself deliver a distribution-free coverage guarantee under transfer, without
+estimating density ratios?} We answer yes, and call the method Similarity-Calibrated Conformal
+(SCC). The idea is to compute the conformal nonconformity score in a dimensionless space chosen
+so that, under dynamic similitude, the score distribution is invariant across operating
+regimes. Standard conformal needs only the \emph{scores} to be exchangeable; a physics-derived
+dimensionless transformation makes them approximately so, and the residual coverage gap is
+controlled by the mismatch in a physical, a-priori-computable quantity.
+
+\paragraph{Contributions.}
+\textbf{(C1)} Dimensionless ($\Pi$-space) conformal calibration that restores approximate
+cross-regime score-exchangeability (\S\ref{sec:method}).
+\textbf{(C2)} An \emph{a-priori coverage certificate} (Theorem~\ref{thm:scc},
+Corollary~\ref{cor:apriori}): the cross-regime coverage gap is at most
+$2L\lVert\Delta\boldsymbol\psi\rVert$ in a similitude-departure parameter computable from
+physical parameters, with no target failure data---obtained by composing the dimensionless
+reduction with the non-exchangeable bound of~\cite{barber2023conformal}.
+\textbf{(C3)} A bootstrap \emph{similitude diagnostic} giving SCC a self-aware operating
+envelope (holds / violated / indeterminate), so it declines to certify when its premise is
+unsupported (\S\ref{sec:method}).
+\textbf{(C4)} A controlled-physics validation protocol that tests the certificate
+\emph{non-circularly}, via a graded departure from similitude (\S\ref{sec:design}).
+
+\paragraph{Scope.} We are explicit about what is and is not demonstrated. The guarantee is
+conditional on physical hypotheses (H1--H2) that are falsifiable, not assumed true; validation
+is on a controlled physical simulation in which similitude is genuine but is not assumed by the
+estimator; and the one real-data benchmark (FEMTO) returns \emph{indeterminate}, an honest
+applicability limit rather than a positive result. Real-process validation on adequately
+powered field data is future work.
+
