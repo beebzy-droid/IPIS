@@ -144,9 +144,7 @@ def pump_load(reflux_flow: float, ref_flow: float) -> float:
     return (reflux_flow / ref_flow) ** AFFINITY_BHP_EXPONENT
 
 
-def psi2(
-    op: OperatingPoint, ref_flow: float, scales: CoordinateScales
-) -> npt.NDArray[np.float64]:
+def psi2(op: OperatingPoint, ref_flow: float, scales: CoordinateScales) -> npt.NDArray[np.float64]:
     """Module 2 similitude coordinate: normalized pump load (affinity-coupled)."""
     return np.array(
         [pump_load(op.reflux_flow, ref_flow) / scales.pump_load_scale],
@@ -169,11 +167,7 @@ def _psi2_star(cfg: PsiConfig) -> npt.NDArray[np.float64]:
 def departures(op: OperatingPoint, cfg: PsiConfig) -> tuple[float, float]:
     """Return (||Delta psi1||, ||Delta psi2||) for the operating point."""
     d1 = float(np.linalg.norm(psi1(op, cfg.scales) - _psi1_star(cfg)))
-    d2 = float(
-        np.linalg.norm(
-            psi2(op, cfg.femto_ref_reflux_flow, cfg.scales) - _psi2_star(cfg)
-        )
-    )
+    d2 = float(np.linalg.norm(psi2(op, cfg.femto_ref_reflux_flow, cfg.scales) - _psi2_star(cfg)))
     return d1, d2
 
 
@@ -223,9 +217,7 @@ def evaluate_budget(
 # --- Lipschitz estimation (open item O2 / Paper 3 sweep) ------------------------
 
 
-def estimate_lipschitz(
-    psi_points: npt.ArrayLike, score_quantiles: npt.ArrayLike
-) -> float:
+def estimate_lipschitz(psi_points: npt.ArrayLike, score_quantiles: npt.ArrayLike) -> float:
     """Empirical Lipschitz constant of a score-quantile in psi-space.
 
     Given the psi-coordinates of calibration regimes and the (1 - alpha)

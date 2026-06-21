@@ -23,9 +23,7 @@ from ipis.integration.psi import (
 
 def _fortuna() -> OperatingPoint:
     # Stand-in M1 calibration regime; numbers are illustrative, not load-bearing.
-    return OperatingPoint(
-        R=2.5, D=50.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=125.0
-    )
+    return OperatingPoint(R=2.5, D=50.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=125.0)
 
 
 def _config(L1: float = 0.10, L2: float = 0.20) -> PsiConfig:
@@ -40,17 +38,11 @@ def _config(L1: float = 0.10, L2: float = 0.20) -> PsiConfig:
 
 def test_operating_point_validation() -> None:
     with pytest.raises(ValueError):
-        OperatingPoint(
-            R=2.5, D=-1.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=125.0
-        )
+        OperatingPoint(R=2.5, D=-1.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=125.0)
     with pytest.raises(ValueError):
-        OperatingPoint(
-            R=2.5, D=50.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=0.0
-        )
+        OperatingPoint(R=2.5, D=50.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=0.0)
     with pytest.raises(ValueError):
-        OperatingPoint(
-            R=np.inf, D=50.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=125.0
-        )
+        OperatingPoint(R=np.inf, D=50.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=125.0)
 
 
 def test_gilliland_coordinate() -> None:
@@ -96,12 +88,8 @@ def test_psi2_anchor_value() -> None:
 
 def test_penalty_monotone_in_reflux() -> None:
     cfg = _config()
-    near = OperatingPoint(
-        R=2.5, D=50.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=130.0
-    )
-    far = OperatingPoint(
-        R=2.5, D=50.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=160.0
-    )
+    near = OperatingPoint(R=2.5, D=50.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=130.0)
+    far = OperatingPoint(R=2.5, D=50.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=160.0)
     assert budget_penalty(near, cfg) < budget_penalty(far, cfg)
 
 
@@ -122,9 +110,7 @@ def test_certified_coverage_arithmetic() -> None:
 
 def test_evaluate_budget_feasibility() -> None:
     cfg = _config()
-    far = OperatingPoint(
-        R=4.0, D=50.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=200.0
-    )
+    far = OperatingPoint(R=4.0, D=50.0, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=200.0)
     tight = evaluate_budget(far, cfg, eps=0.01, alpha1=0.05, alpha2=0.05)
     loose = evaluate_budget(far, cfg, eps=1e6, alpha1=0.05, alpha2=0.05)
     assert tight.feasible is False
