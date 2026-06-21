@@ -17,14 +17,17 @@ Confirmed interfaces (raw-probed against the repo):
   * M3 ``LnXbSurface.coef`` is the 6-tuple the §6 NLP optimises; ``EconomicsAnchor``
     supplies the three prices (mapped via :func:`econ_params_from_anchor`).
 
-The one item to confirm before the live run: that the deployed ``point_predict``
-(the 1D.2c-loaded model) consumes ``[t_norm, p_norm]``. If it instead expects a
-richer feature vector, replace :class:`M1FeatureTransform` with that builder --
-it is the only piece inferred rather than read.
+M1's feature contract is the three physics features
+``[bubble_point_c4, rel_volatility, stripping_factor]`` (optionally + raw u5) at a
+transport lag, built by ``features.physics_features.add_physics_features`` --
+confirmed against the repo. :class:`M1FeatureTransform` reproduces it. Set its
+``transport_lag``/``include_raw_u5`` and the normalization ranges to match your
+deployed model's ``feature_names`` (read them off the loaded ModelBundle).
 """
 
 from __future__ import annotations
 
+from collections import deque
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -67,24 +70,65 @@ def _clip01(v: float) -> float:
 
 
 class M1FeatureTransform:
-    """Plant tray-6 temperature (+ a nominal column pressure) -> M1's normalized
-    driving inputs ``[t_norm, p_norm]``.
+    """Plant output -> Module 1's physics-anchored feature vector (Path B).
 
-    The P-GP plant runs at fixed pressure, so ``col_pressure_bar`` is held at the
-    nominal value; if the plant ever varies pressure, source it from the plant
-    output instead. ASSUMES the deployed ``point_predict`` consumes
-    ``[t_norm, p_norm]`` -- the one inferred contract (see module docstring).
+    Production M1 consumes the three physics features
+    ``[bubble_point_c4, rel_volatility, stripping_factor]`` (optionally + raw
+    ``u5``) at a transport lag, built by the real
+    ``features.physics_features.add_physics_features`` from the normalized
+    benchmark inputs u5 (tray-6 T), u2 (column pressure), u3 (reflux flow). This
+    transform reproduces that: it normalizes the plant's tray-6 temperature and
+    reflux flow R*D, buffers them, and emits the physics features at
+    ``transport_lag`` using the repo's own computation.
+
+    Set the ranges, ``transport_lag`` and ``include_raw_u5`` to match your
+    deployed model's ``feature_names`` (read them off the loaded ModelBundle).
+    u3's scale is absorbed by the model coefficient, so the reflux-flow range
+    need only be representative. Pressure is held nominal (the P-GP plant runs at
+    fixed pressure); source it from the plant output if that changes.
     """
 
-    def __init__(self, col_pressure_bar: float = 5.0) -> None:
+    def __init__(
+        self,
+        *,
+        t_min_c: float = TRAY6_T_MIN_C,
+        t_max_c: float = TRAY6_T_MAX_C,
+        p_min_bar: float = COL_P_MIN_BAR,
+        p_max_bar: float = COL_P_MAX_BAR,
+        col_pressure_bar: float = 5.0,
+        reflux_flow_min: float = 26.0,
+        reflux_flow_max: float = 111.0,
+        transport_lag: int = 15,
+        include_raw_u5: bool = True,
+    ) -> None:
+        self.t_min_c, self.t_max_c = t_min_c, t_max_c
+        self.p_min_bar, self.p_max_bar = p_min_bar, p_max_bar
         self.col_pressure_bar = col_pressure_bar
+        self.reflux_flow_min, self.reflux_flow_max = reflux_flow_min, reflux_flow_max
+        self.transport_lag = transport_lag
+        self.include_raw_u5 = include_raw_u5
+        self._buf: deque[tuple[float, float, float]] = deque(maxlen=transport_lag + 1)
 
     def __call__(self, plant_out: PlantOutput) -> npt.NDArray[np.float64]:
-        t_norm = _clip01(
-            (plant_out.sensor_temp_c - TRAY6_T_MIN_C) / (TRAY6_T_MAX_C - TRAY6_T_MIN_C)
+        import pandas as pd
+
+        from ipis.module1_soft_sensor.features.physics_features import (
+            PHYSICS_FEATURE_COLS,
+            add_physics_features,
         )
-        p_norm = _clip01((self.col_pressure_bar - COL_P_MIN_BAR) / (COL_P_MAX_BAR - COL_P_MIN_BAR))
-        return np.array([t_norm, p_norm], dtype=float)
+
+        op = plant_out.operating_point
+        u5 = _clip01((plant_out.sensor_temp_c - self.t_min_c) / (self.t_max_c - self.t_min_c))
+        u2 = _clip01((self.col_pressure_bar - self.p_min_bar) / (self.p_max_bar - self.p_min_bar))
+        flow = op.R * op.D
+        u3 = _clip01((flow - self.reflux_flow_min) / (self.reflux_flow_max - self.reflux_flow_min))
+        self._buf.append((u5, u2, u3))
+        # lagged sample once the buffer fills; current sample during warm-up
+        u5_l, u2_l, u3_l = self._buf[0] if len(self._buf) > self.transport_lag else self._buf[-1]
+        df = pd.DataFrame({"u5": [u5_l], "u2": [u2_l], "u3": [u3_l]})
+        feat = add_physics_features(df)
+        cols = list(PHYSICS_FEATURE_COLS) + (["u5"] if self.include_raw_u5 else [])
+        return feat[cols].to_numpy(dtype=float)[0]
 
 
 class M1Adapter:
@@ -192,7 +236,7 @@ def build_integrated_orchestrator(
     )
     return ClosedLoopOrchestrator(
         plant=plant,
-        feature_fn=M1FeatureTransform(col_pressure_bar),
+        feature_fn=M1FeatureTransform(col_pressure_bar=col_pressure_bar),
         soft_sensor=M1Adapter(soft_sensor),
         rto_solver=rto,
         pdm=M2Adapter(pdm),

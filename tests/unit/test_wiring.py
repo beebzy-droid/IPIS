@@ -81,24 +81,49 @@ def _psi_cfg() -> PsiConfig:
 # --- adapter mapping (sandbox) --------------------------------------------------
 
 
-def test_feature_transform_normalizes() -> None:
-    ft = M1FeatureTransform(col_pressure_bar=5.0)
+def _out(temp_c: float, r: float = 2.0, d: float = 35.0):
+    op = OperatingPoint(R=r, D=d, alpha=6.0, R_min=0.95, strip_factor=1.4, reflux_flow=r * d)
 
-    class _Out:
-        sensor_temp_c = 106.0  # midpoint of 100-112
+    class _O:
+        sensor_temp_c = temp_c
+        operating_point = op
 
-    v = ft(_Out())
-    assert v[0] == pytest.approx(0.5)  # t_norm
-    assert v[1] == pytest.approx(0.5)  # p_norm at 5.0 bar in 4.5-5.5
+    return _O()
 
 
-def test_feature_transform_clips() -> None:
-    ft = M1FeatureTransform(col_pressure_bar=5.0)
+def test_feature_transform_matches_add_physics_features() -> None:
+    pytest.importorskip("ipis.module1_soft_sensor.features.physics_features")
+    import pandas as pd
 
-    class _Hot:
-        sensor_temp_c = 200.0
+    from ipis.module1_soft_sensor.features.physics_features import (
+        PHYSICS_FEATURE_COLS,
+        add_physics_features,
+    )
 
-    assert ft(_Hot())[0] == pytest.approx(1.0)
+    ft = M1FeatureTransform(include_raw_u5=False, transport_lag=2)
+    o = _out(106.0, 2.0, 35.0)
+    for _ in range(4):
+        v = ft(o)  # constant input -> lagged value equals current
+    assert len(v) == 3
+    u5, u2 = (106.0 - 100.0) / 12.0, (5.0 - 4.5) / 1.0
+    u3 = (2.0 * 35.0 - 26.0) / (111.0 - 26.0)
+    ref = add_physics_features(pd.DataFrame({"u5": [u5], "u2": [u2], "u3": [u3]}))
+    ref = ref[list(PHYSICS_FEATURE_COLS)].to_numpy(float)[0]
+    assert np.allclose(v, ref)
+
+
+def test_feature_transform_raw_u5_adds_a_column() -> None:
+    pytest.importorskip("ipis.module1_soft_sensor.features.physics_features")
+    ft = M1FeatureTransform(include_raw_u5=True, transport_lag=0)
+    assert len(ft(_out(106.0))) == 4  # 3 physics + raw u5
+
+
+def test_feature_transform_lag_uses_past_sample() -> None:
+    pytest.importorskip("ipis.module1_soft_sensor.features.physics_features")
+    ft = M1FeatureTransform(include_raw_u5=False, transport_lag=3)
+    outs = [ft(_out(t)) for t in (106.0, 107.0, 108.0, 109.0, 110.0)]
+    base = M1FeatureTransform(include_raw_u5=False, transport_lag=0)(_out(106.0))
+    assert np.allclose(outs[3], base)  # 4th cycle emits the t-3 sample (106 C)
 
 
 def test_m1_adapter_maps_estimate_and_halfwidth() -> None:
@@ -144,6 +169,7 @@ def test_m2_adapter_rul_absent_is_none() -> None:
 
 def test_build_integrated_orchestrator_runs_a_cycle() -> None:
     pytest.importorskip("gekko")
+    pytest.importorskip("ipis.module1_soft_sensor.features.physics_features")
 
     def xb_truth(R, D, z):
         c = _StubSurface.coef
