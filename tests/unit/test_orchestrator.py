@@ -70,7 +70,7 @@ class _RTOStub:
         self.backoffs: list[float] = []
         self.recommendation = (3.0, 48.0)
 
-    def solve(self, *, backoff: float, rto_hold: bool, feed_z: float):
+    def solve(self, *, backoff: float, rto_hold: bool, feed_z: float, operating_point):
         self.backoffs.append(backoff)
         if self.hold or rto_hold:
             return None

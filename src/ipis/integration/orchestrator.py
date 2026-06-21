@@ -95,7 +95,14 @@ class SoftSensor(Protocol):
 class RTOSolver(Protocol):
     """Adapter over ``solve_rto`` (returns None on a drift hold)."""
 
-    def solve(self, *, backoff: float, rto_hold: bool, feed_z: float) -> RTOReading | None: ...
+    def solve(
+        self,
+        *,
+        backoff: float,
+        rto_hold: bool,
+        feed_z: float,
+        operating_point: OperatingPoint,
+    ) -> RTOReading | None: ...
 
 
 class PdM(Protocol):
@@ -190,7 +197,10 @@ class ClosedLoopOrchestrator:
 
         # u_{k+1} from cycle-k information (affects k+1, whose noise is independent of eps_k)
         rto = self.rto_solver.solve(
-            backoff=m1.half_width, rto_hold=m1.drift, feed_z=self.plant.feed_z
+            backoff=m1.half_width,
+            rto_hold=m1.drift,
+            feed_z=self.plant.feed_z,
+            operating_point=out.operating_point,
         )
         held = rto is None
         if rto is None:
