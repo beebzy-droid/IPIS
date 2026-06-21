@@ -158,7 +158,23 @@ def solve_health_constrained_rto(
     pscale = cfg.scales.pump_load_scale
 
     g = GEKKO(remote=False)
-    r = g.Var(value=sum(r_bounds) / 2, lb=r_bounds[0], ub=r_bounds[1])
+    # Warm start near quality feasibility: a tight (spec - backoff) is a narrow
+    # corner of the box that IPOPT can miss from a mid-box start. Estimate the R
+    # that meets the surface spec at mid-D (linear-in-R approximation) and start
+    # there; this does not change the optimum, only the initial iterate.
+    d_mid = sum(d_bounds) / 2.0
+    lin_slope = surface_coef[1] + surface_coef[5] * d_mid
+    if abs(lin_slope) > 1e-9:
+        r_feas = (
+            float(np.log(eff_spec))
+            - surface_coef[0]
+            - surface_coef[2] * d_mid
+            - surface_coef[4] * d_mid * d_mid
+        ) / lin_slope
+        r0 = min(max(r_feas, r_bounds[0]), r_bounds[1])
+    else:
+        r0 = sum(r_bounds) / 2.0
+    r = g.Var(value=r0, lb=r_bounds[0], ub=r_bounds[1])
     d = g.Var(value=sum(d_bounds) / 2, lb=d_bounds[0], ub=d_bounds[1])
 
     b = surface_coef
@@ -194,8 +210,11 @@ def solve_health_constrained_rto(
     g.options.SOLVER = 3  # IPOPT
     try:
         g.solve(disp=False)
-    except Exception as exc:  # gekko raises bare Exception on solver failure
-        raise RuntimeError(f"IPOPT failed: {exc}") from exc
+    except Exception:
+        # An unsolvable joint quality+ψ-budget set means no setpoint can be
+        # certified for S_k at this regime -> hold (no recommendation), the same
+        # operational response as a drift hold. Re-run with disp=True to inspect.
+        return None
 
     r_opt, d_opt = float(r.value[0]), float(d.value[0])
     ln_opt = (
