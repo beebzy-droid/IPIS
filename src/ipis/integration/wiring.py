@@ -204,6 +204,8 @@ def build_integrated_orchestrator(
     seed_setpoints: tuple[float, float] = (1.9, 35.0),
     label_delay: int = 0,
     col_pressure_bar: float = 5.0,
+    transport_lag: int = 15,
+    include_raw_u5: bool = True,
     alpha1: float = 0.10,
     alpha2: float = 0.10,
     r_bounds: tuple[float, float] = (0.8, 3.0),
@@ -236,7 +238,11 @@ def build_integrated_orchestrator(
     )
     return ClosedLoopOrchestrator(
         plant=plant,
-        feature_fn=M1FeatureTransform(col_pressure_bar=col_pressure_bar),
+        feature_fn=M1FeatureTransform(
+            col_pressure_bar=col_pressure_bar,
+            transport_lag=transport_lag,
+            include_raw_u5=include_raw_u5,
+        ),
         soft_sensor=M1Adapter(soft_sensor),
         rto_solver=rto,
         pdm=M2Adapter(pdm),
