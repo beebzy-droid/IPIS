@@ -2,7 +2,7 @@
 
 **Status:** Theory frozen for Paper 4 core. Build-blocking decisions resolved; open items flagged in §8.
 **Scope of formal claim:** debutanizer / binary-key distillation (the dimensionless framework is the generalization vehicle, not a universal proof).
-**Cross-refs:** Paper 1 (CACE-D-26-00944, soft sensor), Paper 2 (JPROCONT-D-26-00565, conformal selection in RTO), Paper 3 (SCC, similarity-calibrated conformal). ChemE grounding verified against Perry's 9th ed. (see `docs/module4/perry-verification.md`).
+**Cross-refs:** Paper 1 / M1 (CACE-D-26-00944, soft sensor), Paper 2 / M2 (JRESS-D-26-04509, similarity-calibrated conformal prognostics), Paper 3 / M3 (JPROCONT-D-26-00565, conformal selection in RTO). ChemE grounding verified against Perry's 9th ed. (see `docs/module4/perry-verification.md`).
 
 ---
 
@@ -62,7 +62,7 @@ P( x_k ∈ Ĉ₁(T_k) | Δψ₁,k )  ≥  1 − α₁ − 2·L₁·‖Δψ₁,k�
 P( ρ_k ≥ ρ_k^lo   | Δψ₂,k )  ≥  1 − α₂ − 2·L₂·‖Δψ₂,k‖          (M2)
 ```
 
-`L_j` is the Lipschitz constant of the score-quantile in ψ-space, estimated a priori from the calibration sweep (Paper 3's robustness sweep is the template for M2; the M1 sweep is new — see open item O2).
+`L_j` is the Lipschitz constant of the score-quantile in ψ-space, estimated a priori from the calibration sweep (the robustness sweep in Paper 2 / M2 is the template; the M1 sweep is new — see open item O2).
 
 **Connection to non-exchangeable conformal.** The term `2L‖Δψ‖` is a *structured, computable instance* of the Barber et al. (2023) non-exchangeability coverage gap, in which the abstract distributional distance is replaced by the physical similitude departure. SCC's contribution is making that distance computable a priori from physical parameters.
 
@@ -80,7 +80,7 @@ P( ρ_k ≥ ρ_k^lo   | Δψ₂,k )  ≥  1 − α₂ − 2·L₂·‖Δψ₂,k�
 u_k ⊥ ε_k | Δψ_k    ⟹    Δ_sel,k = 0.
 ```
 
-**Where Paper 2 lives.** The conformal selection penalty `Δ_sel,k` is the residual term that is **nonzero only in the other configuration**: when the RTO co-selects `u_k` on a quantity computed from the *same sample* used for the coverage check. This delineates exactly when each paper's effect is active — under realistic causal plant timing the selection term vanishes, while the framework still names and bounds it. (Verifying that the specific M3 modifier-adaptation variant respects causal timing is open item **O1**.)
+**Where Paper 3 lives.** The conformal selection penalty `Δ_sel,k` is the residual term that is **nonzero only in the other configuration**: when the RTO co-selects `u_k` on a quantity computed from the *same sample* used for the coverage check. This delineates exactly when each paper's effect is active — under realistic causal plant timing the selection term vanishes, while the framework still names and bounds it. (Verifying that the specific M3 modifier-adaptation variant respects causal timing is open item **O1**.)
 
 ---
 
@@ -111,9 +111,9 @@ P( S_k ) ≥ 1 − (α₁ + α₂) − 2·( L₁·E‖Δψ₁,k‖ + L₂·E‖�
 | Term | Origin |
 |---|---|
 | `α₁` (base coverage of `Ĉ₁`) | **Paper 1** — physics-anchored soft-sensor conformal interval |
-| `α₂` + the one-sided RUL bound | **Paper 3 / M2** — calibrated lower-bound RUL |
-| `2·L_j·‖Δψ_j,k‖` (similitude departure) | **Paper 3** — SCC certificate `≤ 2L‖Δψ‖`, now per-module-per-cycle |
-| `Δ_sel,k` (selection penalty) | **Paper 2** — conformal selection effect, active iff the RTO co-selects on the test residual |
+| `α₂` + the one-sided RUL bound | **Paper 2 / M2** — calibrated lower-bound RUL |
+| `2·L_j·‖Δψ_j,k‖` (similitude departure) | **Paper 2** — SCC certificate `≤ 2L‖Δψ‖`, now per-module-per-cycle |
+| `Δ_sel,k` (selection penalty) | **Paper 3** — conformal selection effect, active iff the RTO co-selects on the test residual |
 
 None of the three papers can state this alone; the composition is the contribution.
 
@@ -146,8 +146,8 @@ This **is** "conformal health-constrained RTO" (the narrow-paper Hooks 1+2), now
 
 | ID | Item | Type | Blocks |
 |---|---|---|---|
-| **O1** | Confirm the specific M3 modifier-adaptation variant forms `u_k` strictly before the cycle-`k` residual (else `Δ_sel,k ≠ 0` and Paper 2's term re-activates). | Pure analysis | Drafted-claim sharpness (§4) |
-| **O2** | M1 Lipschitz sweep `L₁` in ψ-space (new; P3 did `L₂` for M2). | Sandbox sweep | Numeric bound in §3/§5 |
+| **O1** | Confirm the specific M3 modifier-adaptation variant forms `u_k` strictly before the cycle-`k` residual (else `Δ_sel,k ≠ 0` and Paper 3's term re-activates). | Pure analysis | Drafted-claim sharpness (§4) |
+| **O2** | M1 Lipschitz sweep `L₁` in ψ-space (new; P2 did `L₂` for M2). | Sandbox sweep | Numeric bound in §3/§5 |
 | **O3** | Re-pin twin tray efficiency against O'Connell Eq. 14-138 + Table 14-12 at actual `α(T)`, `μ_L(T)` (CoolProp-verified). Sets the theoretical↔actual stage map that M1 sensor-stage AND M2 pump-load both depend on. | Sandbox + DWSIM | Integration fidelity |
 | **O4** | Joint M1/M2 failure-correlation model to tighten Bonferroni. | Future work / empirical | Bound tightness (§7.1) |
 
@@ -161,4 +161,4 @@ This **is** "conformal health-constrained RTO" (the narrow-paper Hooks 1+2), now
 - Marchetti, Chachuat, Bonvin. Modifier-adaptation methodology for real-time optimization.
 - Vovk, Gammerman, Shafer. Algorithmic Learning in a Random World.
 - Perry's Chemical Engineers' Handbook, 9th ed. (Green & Southard): Eqs. 13-30, 13-31/32, 13-33, 13-37/38, 13-42/43/44, 14-138; Table 10-13; Table 14-12; Example 13-1.
-- IPIS Papers 1–3 (internal): CACE-D-26-00944, JPROCONT-D-26-00565, SCC.
+- IPIS Papers 1–3 (internal): Paper 1 = CACE-D-26-00944 (M1, soft sensor), Paper 2 = JRESS-D-26-04509 (M2, similarity-calibrated conformal prognostics), Paper 3 = JPROCONT-D-26-00565 (M3, conformal selection in RTO).
