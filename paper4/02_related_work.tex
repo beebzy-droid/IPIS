@@ -1,0 +1,53 @@
+\section{Related work}
+\label{sec:related}
+
+\paragraph{Conformal prediction and non-exchangeability.}
+Conformal prediction yields distribution-free, finite-sample coverage under the sole
+assumption that calibration and test data are exchangeable~\citep{vovk2005,shafer2008,
+angelopoulos2023}, and regression variants such as conformalized quantile
+regression~\citep{romano2019} and split-conformal methods~\citep{lei2018} make the
+intervals locally adaptive. The assumption that fails in feedback is exchangeability.
+Two lines relax it. \citet{tibshirani2019} reweight the calibration scores under a
+\emph{known} covariate shift, and \citet{barber2023} bound the coverage loss under an
+\emph{arbitrary} shift by a total-variation-type distance between the calibration and
+test distributions. The per-module penalty $2L_j\|\Delta\psi_{j,k}\|$ in this paper is
+a physically computable instance of the latter: the abstract distributional distance is
+replaced by the similitude departure, an engineering quantity known in closed form from
+the operating point. Adaptive conformal inference~\citep{gibbs2021} takes a
+complementary route, guaranteeing long-run coverage online under arbitrary dependence by
+adjusting the conformal quantile after each observation; this is the mechanism we invoke
+for the multi-cycle horizon in the discussion.
+
+\paragraph{Soft sensing with calibrated uncertainty.}
+Inferential (soft) sensors are standard practice for online estimation of qualities that
+resist direct measurement~\citep{fortuna2007}, and the debutanizer is among the most
+studied benchmarks, including recent machine-learning soft sensors for product-quality
+monitoring on cyber-physical columns~\citep{rozanec2022}. The constituent soft-sensor
+module~\citep{busico_m1} contributes physics-anchored features and an adaptive conformal
+calibration that retains coverage under delayed labels; the present work consumes its
+interval as the quality guarantee in the composition.
+
+\paragraph{Data-driven prognostics.}
+Statistical and data-driven estimation of remaining useful life is surveyed
+in~\citet{si2011} and, for rotating machinery, in~\citet{lei2018machinery}. The
+constituent prognostic module~\citep{busico_m2} contributes a similarity-calibrated
+conformal lower bound on remaining life; the present work consumes that bound as the
+equipment-life guarantee.
+
+\paragraph{Real-time optimization and health-aware control.}
+RTO adjusts setpoints to track the economic optimum despite plant--model mismatch.
+Modifier adaptation~\citep{marchetti2009,chachuat2009} corrects the optimizer with
+measured plant gradients and is the method the constituent RTO module~\citep{busico_m3}
+builds upon; a broader lineage embeds economic objectives directly in the feedback
+layer~\citep{skogestad2000}, and health- or constraint-aware variants restrict operation
+to protect equipment. What this body of work does not provide is a distribution-free
+coverage guarantee on the joint quality-and-life event that \emph{composes} the
+uncertainty of the upstream estimators: the optimizer is made health-aware, but the
+soft-sensor and prognostic coverage guarantees are not propagated into a certificate on
+the closed-loop outcome.
+
+\paragraph{The gap.}
+Across these literatures the per-layer guarantees exist and the health-aware optimizer
+exists, but their composition under feedback --- a single per-cycle certificate on the
+system-safety event, derived rather than asserted and enforceable as one optimizer
+constraint --- is unoccupied. Occupying it is the contribution of this paper.

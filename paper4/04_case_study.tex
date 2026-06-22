@@ -1,0 +1,125 @@
+\section{Case study: a debutanizer digital twin}
+\label{sec:case}
+
+We demonstrate the certificate of Theorem~\ref{thm:composed} and the operating
+rule of Corollary~\ref{cor:floor} in closed loop on a calibrated digital twin of a
+debutanizer column. The three modules are the real implementations of the
+constituent papers; the plant is a twin rather than an operating column. This is
+a deliberate scoping choice, justified at the end of this section: the certificate
+is a statement about how three coverage guarantees \emph{compose} in feedback, and
+a twin that responds to the optimizer's setpoint moves is the appropriate
+instrument for that question, whereas component accuracy is established on
+operational data in the constituent papers.
+
+\subsection{The plant twin}
+\label{sec:twin}
+
+The plant truth is a Fenske--Underwood--Gilliland (FUG) shortcut column model
+($\alpha_{\mathrm{LK}}=5.97$, eight equilibrium stages, feed $100$~kmol\,h$^{-1}$,
+light-key feed fraction $0.35$): for a decision $(R,D)$ it returns the bottoms
+light-key fraction $x$, which is the unmeasured quality the soft sensor must
+infer. The inferential measurement is a tray-6 temperature, modelled as cooling
+monotonically with reflux as the split sharpens and landing in the
+$[100.5, 111.5]\,^\circ$C window of the soft sensor's physics bridge; it carries a
+$0.25\,^\circ$C sensor noise, and the bottoms truth carries a
+$1.0\times10^{-3}$ process noise. Thermophysical properties --- relative
+volatility, heavy-key $K$-value, and liquid viscosity --- are evaluated from
+DIPPR-101 vapor pressures for the $n$-butane/$n$-hexane key pair.
+
+The reflux pump degrades as a function of the optimizer's decision, closing in the
+twin the endogeneity loop identified in the framework. Damage accrues at a rate
+proportional to $\mathrm{load}^{p}$, where the load is the affinity brake-horsepower
+ratio $\mathrm{load} = (Q/Q_{\mathrm{ref}})^{3}$ (Perry's Table~10-13) and the
+exponent $p=2$ follows from rolling-element bearing fatigue (the $L_{10}$ life
+varies as $\mathrm{load}^{-3}$) under a hydraulic radial load that scales as $Q^{2}$
+by the affinity head law, so that damage scales as $Q^{6}$ in reflux flow. The base
+rate is set to a fresh-nominal remaining life of $\approx\!1000$~h; these
+coefficients are calibrated to the bearing-degradation timescale of the prognostic
+module. Degradation severity drives a five-feature synthesizer whose output the
+prognostic module scores.
+
+\subsection{The three modules on the twin}
+\label{sec:modules}
+
+\emph{Module~1 (soft sensor).} The real physics-anchored soft
+sensor~\citep{busico_m1} is trained on twin samples: a standardized ridge estimator
+on four physics-derived features --- the C4 bubble-point fraction, the relative
+volatility, the stripping factor, and the (delayed) normalized tray temperature ---
+over $700$ operating points spanning the box, split $450$ for fitting and $250$ for
+the conformal calibration residuals. On held-out twin data its adaptive conformal
+interval attains empirical coverage $0.898$ against a $0.90$ target, with a mean
+half-width of $7.1\times10^{-3}$ --- comparable to the product specification, so the
+interval materially backs off the optimizer through
+\eqref{eq:quality-surrogate}.
+
+\emph{Module~2 (prognostics).} The real predictive-maintenance
+stack~\citep{busico_m2} is built from its canonical configuration: a five-feature
+Hotelling $T^{2}$ health index fitted on a healthy reference (alarm threshold
+$T^{2}=15.1$) and a trajectory-similarity remaining-life estimator over a library of
+run-to-failure arcs. Driven by the synthesizer, the health index rises
+monotonically with severity and alarms at severity $\approx\!0.71$.
+
+\emph{Module~3 (optimizer).} The real modifier-adaptation
+RTO~\citep{busico_m3} optimizes economic profit over the FUG response surface
+(a log-quadratic fit in $(R,D)$, coefficient of determination $0.982$), enforcing
+the backed-off quality constraint \eqref{eq:quality-surrogate} and --- in the
+health-constrained arm --- the $\psi$-budget \eqref{eq:psi-budget}. The program is
+solved to local optimality at each cycle.
+
+\subsection{Protocol}
+\label{sec:protocol}
+
+The demonstration contrasts two arms that are identical in every respect except the
+$\psi$-budget. In the \emph{health-blind} arm the budget is inactive
+($\varepsilon\to\infty$) and the optimizer maximizes economics subject only to the
+quality surrogate. In the \emph{health-constrained} arm the budget is active with
+radius $\varepsilon=0.05$. Each arm is run for $8$ random seeds of $80$ control
+cycles; the coverage harness records, per cycle, whether the system-safety event
+\eqref{eq:safety-event} holds against the truths, and aggregates the empirical
+$S_k$-coverage with a Wilson interval. Both arms share the parameters of
+Table~\ref{tab:params}. With $\alpha_1=\alpha_2=0.1$ and $\varepsilon=0.05$, the
+certified floor of Corollary~\ref{cor:floor} is
+$1-(\alpha_1+\alpha_2)-\varepsilon = 0.75$.
+
+The Lipschitz constant of the soft-sensor score-quantile in $\psi$-space, estimated
+a~priori from a regime sweep across the operating box, is
+$L_1 \approx 0.024$. The demonstration uses a deliberately conservative common value
+$L_1=L_2=0.15$ in the enforced budget \eqref{eq:psi-budget}; because this exceeds
+the swept estimate, the budget is tighter than the data require and the certified
+floor holds a fortiori.
+
+\begin{table}[t]
+\centering
+\caption{Demonstration parameters. Both arms are identical except the
+$\psi$-budget radius $\varepsilon$.}
+\label{tab:params}
+\begin{tabular}{lll}
+\toprule
+Symbol & Meaning & Value \\
+\midrule
+$\alpha_1$ & soft-sensor miscoverage & $0.10$ \\
+$\alpha_2$ & prognostic miscoverage & $0.10$ \\
+$\varepsilon$ & $\psi$-budget radius (constrained arm) & $0.05$ \\
+$x^{\mathrm{spec}}$ & bottoms C4 specification & $8.0\times10^{-3}$ \\
+$\rho_{\min}$ & remaining-life floor & $200$~h \\
+$L_1=L_2$ & Lipschitz constants used (conservative) & $0.15$ \\
+$(R,D)_{\mathrm{nom}}$ & nominal optimum & $(2.037,\,33.49)$ \\
+seeds $\times$ cycles & Monte-Carlo replicates & $8\times80$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Scope of the demonstration}
+\label{sec:scope}
+
+The closed-loop demonstration runs on a calibrated digital twin; the
+\emph{accuracy} of each module is validated on operational data in the constituent
+papers~\citep{busico_m1,busico_m2,busico_m3}. Two reasons make the twin the correct
+instrument here. First, a closed-loop optimizer requires a plant that
+\emph{responds} to its setpoint moves --- the endogeneity identified in the
+framework cannot be exercised against a frozen historical dataset. Second, the
+certificate concerns the \emph{composition} of three coverage guarantees under
+feedback, a property of the loop architecture rather than of any module's point
+accuracy; the twin isolates exactly that property while remaining fully
+reproducible from open code with no proprietary data. Physical realization on a
+dynamic high-fidelity simulator and on plant data is the subject of future work.

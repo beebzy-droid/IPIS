@@ -1,0 +1,71 @@
+% IPIS Module 4 -- composed coverage certificate. Industrial & Engineering Chemistry Research (ACS).
+% Build: pdflatex main && bibtex main && pdflatex main && pdflatex main
+\documentclass[journal=iecred,manuscript=article]{achemso}
+
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+
+% achemso does not provide theorem environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{definition}{Definition}
+
+\setcounter{secnumdepth}{3}  % number sections so \ref cross-references resolve
+
+\author{Bien Busico}
+\email{bienbusico@gmail.com}
+\affiliation{Chemical Engineer, Quezon City, Philippines}
+
+\title{A composed coverage certificate for closed-loop process operation:
+unifying conformal soft sensing, calibrated prognostics, and health-constrained
+real-time optimization}
+
+\keywords{conformal prediction \and real-time optimization \and soft sensor \and
+predictive maintenance \and digital twin \and distillation \and uncertainty
+quantification \and process safety}
+
+\begin{document}
+
+\begin{tocentry}
+\centering
+\includegraphics[width=8cm]{figures/loop_schematic.png}
+\end{tocentry}
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\input{01_intro}
+\input{02_related_work}
+\input{03_framework}
+\input{04_case_study}
+\input{05_results}
+\input{06_discussion}
+\input{07_conclusion}
+
+\begin{acknowledgement}
+The author thanks the maintainers of the open-source scientific Python and
+\LaTeX{} ecosystems on which this work is built.
+\end{acknowledgement}
+
+\section*{Data and code availability}
+The reference implementation of all three modules, the closed-loop integration
+layer, the coverage harness, and the single script that regenerates every number
+and figure in this paper are available at \url{github.com/beebzy-droid/IPIS}.
+
+\section*{CRediT authorship contribution statement}
+\textbf{Bien Busico:} Conceptualization, Methodology, Software, Formal analysis,
+Investigation, Writing -- original draft, Writing -- review \& editing.
+
+\section*{Declaration of competing interest}
+The author declares no competing financial interest.
+
+\bibliography{references}
+
+\end{document}
