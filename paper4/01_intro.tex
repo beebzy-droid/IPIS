@@ -1,61 +1,62 @@
 \section{Introduction}
 \label{sec:intro}
 
-Modern process operation increasingly layers data-driven components on top of the
-base control system. Soft sensors infer product qualities that are too slow or too
-costly to measure online; prognostic models estimate the remaining useful life of
-critical equipment; and real-time optimization (RTO) continually re-tunes setpoints
-toward the economic optimum. Each of these layers has, separately, acquired rigorous
-uncertainty quantification. Conformal prediction in particular supplies
-distribution-free, finite-sample coverage guarantees~\citep{vovk2005,shafer2008,
-angelopoulos2023}, and calibrated intervals are now practical for soft
-sensing, for prognostics, and for constraint handling in optimization.
+Modern process operation increasingly layers data-driven components on top of the base
+control system. Soft sensors infer product qualities that are too slow or too costly to
+measure online; prognostic models estimate the remaining useful life of critical
+equipment; and real-time optimization (RTO) continually re-tunes setpoints toward the
+economic optimum. Each of these layers has, on its own, acquired rigorous uncertainty
+quantification. Conformal prediction in particular supplies distribution-free,
+finite-sample coverage guarantees~\citep{vovk2005,shafer2008,angelopoulos2023}, and
+calibrated intervals are now practical for soft sensing, for prognostics, and for
+constraint handling in optimization.
 
 Safe operation, however, is not a property of any one layer. It is a property of the
-joint outcome: the product must be in specification \emph{and} the equipment must
-survive to its next maintenance window. The optimizer acts on estimates --- a
-soft-sensor interval, a remaining-life bound --- yet the event that determines safety
-is defined on the truths it cannot observe. The coupling is tighter still, because
-the optimizer's own decision moves every layer's operating regime at once: the reflux
-lever it raises for economic gain simultaneously shifts the soft sensor away from its
-calibration regime and loads the pump whose life the prognostic model is predicting.
-The three guarantees are therefore coupled through the decision, and the guarantee a
-closed-loop operator actually needs --- coverage of the joint safety event under this
-coupling --- does not follow from the three guarantees taken in isolation.
+joint outcome: the product must be in specification and the equipment must survive to its
+next maintenance window. The optimizer acts on estimates, a soft-sensor interval and a
+remaining-life bound, yet the event that determines safety is defined on the truths it
+cannot observe. The coupling is tighter still, because the optimizer's own decision moves
+every layer's operating regime at once. The reflux lever it raises for economic gain
+simultaneously shifts the soft sensor away from its calibration regime and loads the pump
+whose life the prognostic model is predicting. The three guarantees are therefore coupled
+through the decision, and the guarantee a closed-loop operator actually needs, coverage of
+the joint safety event under this coupling, does not follow from the three guarantees
+taken in isolation.
 
-Compounding the difficulty, conformal validity is widely held to be incompatible with
-feedback. Conformal coverage rests on exchangeability between the calibration data and
-the test point; a closed loop breaks it, because the test point's operating regime is
-selected by the controller using the very predictions under test. The usual conclusion
-is that conformal guarantees do not survive in the loop, so that conformal methods are
-either confined to open-loop monitoring or deployed in feedback without a guarantee.
+A second difficulty compounds the first: conformal validity is widely held to be
+incompatible with feedback. Conformal coverage rests on exchangeability between the
+calibration data and the test point, and a closed loop breaks it, because the test point's
+operating regime is selected by the controller using the very predictions under test. The
+usual conclusion is that conformal guarantees do not survive in the loop, so conformal
+methods are either confined to open-loop monitoring or deployed in feedback without a
+guarantee.
 
-This paper resolves both issues for the integrated system. Its contributions are:
+This paper resolves both difficulties for the integrated system. Its contributions are:
 \begin{enumerate}
-\item A per-cycle \emph{composed} coverage certificate (Theorem~\ref{thm:composed})
-for the joint safety event, whose terms map one-to-one onto the three modules: the
-soft sensor's miscoverage, the prognostic bound's miscoverage, a similitude-departure
-penalty contributed by each module's regime shift, and a selection penalty.
-\item A resolution of the feedback objection: under the causal timing that any
-physically realizable loop satisfies --- the decision is formed before the measurement
-it is conditioned against --- the selection penalty is exactly zero. The
-conformal-selection effect is named and bounded rather than ignored, and is shown to
-be active only under a non-causal co-selection that real loops do not exhibit.
-\item A conversion of the certificate into a single convex constraint, a
-\emph{$\psi$-budget} on the similitude departure, that the modifier-adaptation RTO
-enforces directly (Corollary~\ref{cor:floor}): the optimizer may not optimize so
-aggressively that it invalidates its own sensor and life guarantees. The flagship
-certificate and the operating floor are the same constraint.
+\item A per-cycle \emph{composed} coverage certificate (Theorem~\ref{thm:composed}) for
+the joint safety event, with terms that map one-to-one onto the three modules: the soft
+sensor's miscoverage, the prognostic bound's miscoverage, a similitude-departure penalty
+contributed by each module's regime shift, and a selection penalty.
+\item A resolution of the feedback objection. Under the causal timing that any physically
+realizable loop satisfies, in which the decision is formed before the measurement it is
+conditioned against, the selection penalty is exactly zero. The conformal-selection effect
+is named and bounded rather than ignored, and it is shown to be active only under a
+non-causal co-selection that real loops do not exhibit.
+\item A conversion of the certificate into a single convex constraint, a \emph{$\psi$-budget}
+on the similitude departure, that the modifier-adaptation RTO enforces directly
+(Corollary~\ref{cor:floor}). The optimizer is barred from pushing economics hard enough to
+invalidate its own sensor and life guarantees, and the flagship certificate and the
+operating floor reduce to the same constraint.
 \item A fully reproducible closed-loop demonstration on a calibrated debutanizer twin
 running the real soft-sensor, prognostic, and RTO implementations. The certified floor
-$1-(\alpha_1+\alpha_2)-\varepsilon = 0.75$ is honoured (joint safety coverage $0.988$)
-when the optimizer enforces the budget and collapses (to $0.000$) when it does not, the
+$1-(\alpha_1+\alpha_2)-\varepsilon = 0.75$ is met (joint safety coverage $0.988$) when the
+optimizer enforces the budget and collapses (to $0.000$) when it does not, with the
 contrast driven entirely by equipment life (Figure~\ref{fig:coverage}).
 \end{enumerate}
 
-The unifying message is that none of the three guarantees implies system safety on its
-own: the composition is the certificate. The remainder of the paper reviews the
-relevant conformal, soft-sensing, prognostic, and optimization literatures and
-positions the contribution; develops the framework, certificate, and budget;
-describes the debutanizer twin and the two-arm protocol; reports the closed-loop
-coverage result; and discusses conservatism, the multi-cycle horizon, and scope.
+The unifying message is that none of the three guarantees implies system safety on its own;
+the composition is the certificate. The remainder of the paper reviews the relevant
+conformal, soft-sensing, prognostic, and optimization literatures and positions the
+contribution; develops the framework, the certificate, and the budget; describes the
+debutanizer twin and the two-arm protocol; reports the closed-loop coverage result; and
+discusses conservatism, the multi-cycle horizon, and scope.

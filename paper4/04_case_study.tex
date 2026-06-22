@@ -22,8 +22,8 @@ infer. The inferential measurement is a tray-6 temperature, modelled as cooling
 monotonically with reflux as the split sharpens and landing in the
 $[100.5, 111.5]\,^\circ$C window of the soft sensor's physics bridge; it carries a
 $0.25\,^\circ$C sensor noise, and the bottoms truth carries a
-$1.0\times10^{-3}$ process noise. Thermophysical properties --- relative
-volatility, heavy-key $K$-value, and liquid viscosity --- are evaluated from
+$1.0\times10^{-3}$ process noise. The thermophysical properties (relative
+volatility, heavy-key $K$-value, and liquid viscosity) are evaluated from
 DIPPR-101 vapor pressures for the $n$-butane/$n$-hexane key pair.
 
 The reflux pump degrades as a function of the optimizer's decision, closing in the
@@ -43,12 +43,12 @@ prognostic module scores.
 
 \emph{Module~1 (soft sensor).} The real physics-anchored soft
 sensor~\citep{busico_m1} is trained on twin samples: a standardized ridge estimator
-on four physics-derived features --- the C4 bubble-point fraction, the relative
-volatility, the stripping factor, and the (delayed) normalized tray temperature ---
-over $700$ operating points spanning the box, split $450$ for fitting and $250$ for
-the conformal calibration residuals. On held-out twin data its adaptive conformal
+on four physics-derived features (the C4 bubble-point fraction, the relative
+volatility, the stripping factor, and the delayed normalized tray temperature),
+trained over $700$ operating points spanning the box and split $450$ for fitting
+and $250$ for the conformal calibration residuals. On held-out twin data its adaptive conformal
 interval attains empirical coverage $0.898$ against a $0.90$ target, with a mean
-half-width of $7.1\times10^{-3}$ --- comparable to the product specification, so the
+half-width of $7.1\times10^{-3}$, comparable to the product specification, so the
 interval materially backs off the optimizer through
 \eqref{eq:quality-surrogate}.
 
@@ -62,8 +62,8 @@ monotonically with severity and alarms at severity $\approx\!0.71$.
 \emph{Module~3 (optimizer).} The real modifier-adaptation
 RTO~\citep{busico_m3} optimizes economic profit over the FUG response surface
 (a log-quadratic fit in $(R,D)$, coefficient of determination $0.982$), enforcing
-the backed-off quality constraint \eqref{eq:quality-surrogate} and --- in the
-health-constrained arm --- the $\psi$-budget \eqref{eq:psi-budget}. The program is
+the backed-off quality constraint \eqref{eq:quality-surrogate} and, in the
+health-constrained arm, the $\psi$-budget \eqref{eq:psi-budget}. The program is
 solved to local optimality at each cycle.
 
 \subsection{Protocol}
@@ -116,7 +116,7 @@ The closed-loop demonstration runs on a calibrated digital twin; the
 \emph{accuracy} of each module is validated on operational data in the constituent
 papers~\citep{busico_m1,busico_m2,busico_m3}. Two reasons make the twin the correct
 instrument here. First, a closed-loop optimizer requires a plant that
-\emph{responds} to its setpoint moves --- the endogeneity identified in the
+\emph{responds} to its setpoint moves, because the endogeneity identified in the
 framework cannot be exercised against a frozen historical dataset. Second, the
 certificate concerns the \emph{composition} of three coverage guarantees under
 feedback, a property of the loop architecture rather than of any module's point

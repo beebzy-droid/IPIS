@@ -19,11 +19,11 @@ does not. Brackets are Wilson $95\%$ intervals.}
  & ($\varepsilon\to\infty$) & ($\varepsilon=0.05$) & \\
 \midrule
 $S_k$ coverage & $0.000\,[0.000,0.006]$ & $\mathbf{0.988\,[0.976,0.994]}$ & $0.750$ \\
-\quad meets floor? & no & \textbf{yes} & --- \\
-Quality coverage $\{x_k\le x^{\mathrm{spec}}\}$ & $0.850$ & $0.988$ & --- \\
-RUL coverage $\{\rho_k\ge\rho_{\min}\}$ & $0.013$ & $1.000$ & --- \\
-$\psi$-budget binding & $0\%$ & $100\%$ & --- \\
-Mean final severity & $0.700$ & $0.097$ & --- \\
+\quad meets floor? & no & \textbf{yes} & \\
+Quality coverage $\{x_k\le x^{\mathrm{spec}}\}$ & $0.850$ & $0.988$ & \\
+RUL coverage $\{\rho_k\ge\rho_{\min}\}$ & $0.013$ & $1.000$ & \\
+$\psi$-budget binding & $0\%$ & $100\%$ & \\
+Mean final severity & $0.700$ & $0.097$ & \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -52,12 +52,12 @@ reflux pump ends the horizon at a mean severity of $0.097$, far from its alarm.
 
 The empirical coverage exceeds the floor by a wide margin. This is expected and
 consistent with the construction: the certificate is a valid lower bound, and two
-sources of conservatism inflate the gap --- the Bonferroni union over the two
+sources of conservatism inflate the gap: the Bonferroni union over the two
 miscoverage events (Theorem~\ref{thm:composed}), which is tight only when the two
 failures are disjoint, and the deliberately conservative Lipschitz constants
-($L_1=L_2=0.15$ against a swept $L_1\approx0.024$). The result to read from
-Table~\ref{tab:coverage} is therefore the \emph{verdict} --- floor met with margin
---- not the size of the margin.
+($L_1=L_2=0.15$ against a swept $L_1\approx0.024$). What matters in
+Table~\ref{tab:coverage} is therefore the verdict, that the floor is met with a
+margin, not the size of that margin.
 
 \subsection{The mechanism: why the blind optimizer fails}
 \label{sec:res-mech}
@@ -69,17 +69,17 @@ recovery. By the affinity and bearing-fatigue scaling of the pump model, the
 pump load rises steeply: severity climbs to $0.70$ and the true remaining life
 collapses below the $200$~h floor within two cycles
 (Figure~\ref{fig:coverage}b,c). The remaining-life half of $S_k$ therefore fails on
-$98.7\%$ of cycles, and the joint event never holds --- $S_k$ coverage is exactly
+$98.7\%$ of cycles, and the joint event never holds: $S_k$ coverage is exactly
 $0.000$, with no certificate available because the floor $1-(\alpha_1+\alpha_2)-
 \varepsilon$ is meaningless once $\varepsilon$ is unbounded. Notably the blind arm's
 quality coverage ($0.850$) is itself \emph{below} the soft sensor's nominal
 $1-\alpha_1=0.90$: pushed to the edge of the operating box, the optimizer drives the
-soft sensor outside the regime where its interval was calibrated --- precisely the
+soft sensor outside the regime where its interval was calibrated, which is precisely the
 non-exchangeability penalty $2L_1\|\Delta\psi_1\|$ that the budget exists to bound.
 
 The contrast is the whole point. The two arms differ only in whether the optimizer
 is allowed to leave the similitude-departure budget; that single convex constraint
 moves the joint safety coverage from $0.000$ to $0.988$, and it does so by
-preserving \emph{both} guarantees at once --- quality \emph{and} remaining life ---
+preserving \emph{both} guarantees at once, quality \emph{and} remaining life,
 rather than trading one for the other. The flagship theorem and the operating floor
 are, as Corollary~\ref{cor:floor} states, the same constraint.

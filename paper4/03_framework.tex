@@ -91,7 +91,7 @@ Table~10-13: $Q \propto N$, $H \propto N^2$, $\mathrm{BHP} \propto N^3$) map flo
 to mechanical load, and Module~2's degradation model maps load to wear. Their
 composition makes $\psi_2(u_k)$ a function of $u_k$. The separation departure
 $\psi_1(u_k)$ is a function of $u_k$ by construction. Thus the same lever that
-the optimizer pulls for economic gain --- reflux --- simultaneously moves both
+the optimizer pulls for economic gain (reflux) simultaneously moves both
 modules away from the regimes where their guarantees were calibrated. This endogeneity is the source of the difficulty in the next subsection and the
 source of the controllability in the $\psi$-budget constraint developed below.
 
@@ -134,8 +134,8 @@ Second, \emph{causal timing}. We make explicit the timing assumption that the
 closed loop must satisfy.
 \begin{assumption}[Causal two-step timing]
 \label{ass:causal}
-The decision $u_k$ is $\sigma(\mathcal{F}_{k-1})$-measurable --- a function of
-information available strictly before cycle $k$ --- and the cycle-$k$ measurement
+The decision $u_k$ is $\sigma(\mathcal{F}_{k-1})$-measurable, a function of
+information available strictly before cycle $k$, and the cycle-$k$ measurement
 noise $\varepsilon_k$ satisfies $\varepsilon_k \perp \mathcal{F}_{k-1}$.
 \end{assumption}
 Under Assumption~\ref{ass:causal}, $u_k$ and $\varepsilon_k$ are conditionally
@@ -150,7 +150,7 @@ alternative configuration in which the optimizer co-selects $u_k$ on a quantity
 computed from the \emph{same} sample used for the coverage check. This delineates
 exactly when the conformal-selection effect of~\citet{busico_m3} is active: under
 realistic causal plant timing it vanishes; the framework still names and bounds
-it. Assumption~\ref{ass:causal} is not a hope about the implementation --- it is a
+it. Assumption~\ref{ass:causal} is not a hope about the implementation; it is a
 property of the synchronous control loop used here, which reads $u_k$ from the
 solution computed at the close of cycle $k-1$, applies it, and only then realizes
 the cycle-$k$ measurement, so that the decision is constructed before the noise it
@@ -217,10 +217,10 @@ originates in a distinct module.}
 \toprule
 Term & Origin \\
 \midrule
-$\alpha_1$ (base coverage of $\hat C_1$) & Module~1 --- conformal soft sensor \\
-$\alpha_2$ and the one-sided RUL bound & Module~2 --- calibrated prognostics \\
-$2L_j\|\Delta\psi_{j,k}\|$ (similitude departure) & Module~3 --- SCC certificate, per cycle \\
-$\Delta_{\mathrm{sel},k}$ (selection penalty) & Module~3 --- selection effect, $=0$ here \\
+$\alpha_1$ (base coverage of $\hat C_1$) & Module~1, conformal soft sensor \\
+$\alpha_2$ and the one-sided RUL bound & Module~2, calibrated prognostics \\
+$2L_j\|\Delta\psi_{j,k}\|$ (similitude departure) & Module~3, SCC certificate (per cycle) \\
+$\Delta_{\mathrm{sel},k}$ (selection penalty) & Module~3, selection effect ($=0$ here) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -257,7 +257,7 @@ every realized $(\Delta\psi_{1,k},\Delta\psi_{2,k})$; the bound
 
 Corollary~\ref{cor:floor} converts the certificate into an operating rule: the
 optimizer maximizes economic profit \emph{subject to remaining inside the
-similitude-departure budget that certifies its own coverage} --- formally, it may
+similitude-departure budget that certifies its own coverage}. Formally, it may
 not optimize so aggressively that it invalidates its own soft sensor and its own
 RUL guarantee. The radius $\varepsilon$ is the chosen coverage budget, traded
 directly against economics. Theorem~\ref{thm:composed} and

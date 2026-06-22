@@ -1,33 +1,32 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-Soft sensing, prognostics, and real-time optimization each ship a calibrated
-uncertainty guarantee, but a closed-loop operator needs a guarantee on the joint
-system-safety event --- in-specification product \emph{and} surviving equipment ---
-and that joint guarantee does not follow from the three taken separately. This paper
-supplied it. The per-cycle composed coverage certificate of Theorem~\ref{thm:composed}
-states the joint guarantee explicitly, with terms that map one-to-one onto the three
-modules, and a causal-timing argument shows that feedback does not void it: the
-conformal-selection penalty is exactly zero whenever the decision is formed before the
-measurement it is conditioned against. Corollary~\ref{cor:floor} converts the
-certificate into a single convex $\psi$-budget that a modifier-adaptation optimizer
-enforces directly, so that the flagship guarantee and the operating floor are one and
-the same constraint --- the optimizer is forbidden from optimizing so aggressively that
-it invalidates its own sensor and life guarantees.
+Soft sensing, prognostics, and real-time optimization each ship a calibrated uncertainty
+guarantee, but a closed-loop operator needs a guarantee on the joint system-safety event,
+namely an in-specification product together with surviving equipment, and that joint
+guarantee does not follow from the three taken separately. This paper supplied it. The
+per-cycle composed coverage certificate of Theorem~\ref{thm:composed} states the joint
+guarantee explicitly, with terms that map one-to-one onto the three modules, and a
+causal-timing argument shows that feedback does not void it: the conformal-selection
+penalty is exactly zero whenever the decision is formed before the measurement it is
+conditioned against. Corollary~\ref{cor:floor} then converts the certificate into a
+single convex $\psi$-budget that a modifier-adaptation optimizer enforces directly, so
+that the flagship guarantee and the operating floor are one and the same constraint, and
+the optimizer is barred from pushing economics hard enough to invalidate its own sensor
+and life guarantees.
 
 On a calibrated debutanizer twin running the real soft-sensor, prognostic, and
 optimization implementations, the certified floor $1-(\alpha_1+\alpha_2)-\varepsilon =
-0.75$ was honoured empirically (joint safety coverage $0.988$) under the budget and
-collapsed (to $0.000$) without it, the entire contrast carried by reflux-pump life. None
-of the three guarantees implies system safety on its own; the composition is the
-certificate.
+0.75$ was met empirically, with joint safety coverage of $0.988$ under the budget and
+$0.000$ without it, the entire contrast carried by reflux-pump life. None of the three
+guarantees implies system safety on its own; the composition is the certificate.
 
 Three directions follow. The per-cycle certificate should be lifted to a horizon
 guarantee under adaptive conformal inference and realized on a dynamic high-fidelity
-simulator and on plant data, moving from the quasi-static demonstration here to a
+simulator and on plant data, moving from the quasi-static demonstration given here to a
 physically deployed loop. The Bonferroni composition should be tightened with a
-dependence-aware model of the joint soft-sensor/prognostic failure, recovering the
-margin that positive failure correlation leaves on the table. And the framework should
-be carried from a single column to a plant, with the coverage budget allocated across
-units --- the step that turns a certificate for one column into a certificate for an
-integrated process.
+dependence-aware model of the joint soft-sensor and prognostic failure, which would
+recover the margin that positive failure correlation currently leaves unused. Finally,
+the framework should be carried from a single column to a plant, with the coverage budget
+allocated across units. That last step is what turns a certificate for one column into a
+certificate for an integrated process.
