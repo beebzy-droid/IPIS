@@ -83,10 +83,24 @@ $1-(\alpha_1+\alpha_2)-\varepsilon = 0.75$.
 
 The Lipschitz constant of the soft-sensor score-quantile in $\psi$-space, estimated
 a~priori from a regime sweep across the operating box, is
-$L_1 \approx 0.024$. The demonstration uses a deliberately conservative common value
+$L_1 \approx 0.025$ (Figure~\ref{fig:l1}). The demonstration uses a deliberately conservative common value
 $L_1=L_2=0.15$ in the enforced budget \eqref{eq:psi-budget}; because this exceeds
 the swept estimate, the budget is tighter than the data require and the certified
 floor holds a fortiori.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.82\textwidth]{figures/l1_sweep.png}
+\caption{A-priori estimate of the soft-sensor Lipschitz constant $L_1$. Each point is
+an operating regime, placed at its similitude departure $\|\Delta\psi_1\|$ from the
+calibration anchor (star); the vertical coordinate is the conformal score quantile at
+level $1-\alpha_1$. The quantile is nearly flat in $\|\Delta\psi_1\|$, and every regime
+falls inside the Lipschitz cone (shaded), whose slope $L_1\approx0.025$ is set by the
+binding pair (red). The enforced budget \eqref{eq:psi-budget} uses $L_1=L_2=0.15$,
+roughly six times this estimate, so the coverage penalty it charges over-bounds the
+true loss.}
+\label{fig:l1}
+\end{figure}
 
 \begin{table}[t]
 \centering
