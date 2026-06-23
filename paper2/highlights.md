@@ -1,7 +1,7 @@
 # Highlights (Elsevier: 3-5 bullets, <=85 characters each incl. spaces)
 
-- Optimizing against a marginal conformal back-off violates ~5x the target rate    <!-- 78 -->
-- The RTO selects the operating point where the conformal margin under-covers       <!-- 76 -->
-- An oracle conditional back-off confirms the chance-constraint formulation is sound <!-- 83 -->
-- CQR with a-posteriori calibration restores violation control to the oracle level   <!-- 81 -->
-- A regime map bounds where each back-off is safe and where calibration data runs out <!-- 84 -->
+- A conditionally calibrated conformal back-off keeps RTO within its violation target  <!-- 82 -->
+- Naive conformal back-offs are exploited by the optimiser and over-violate ~5x         <!-- 77 -->
+- An oracle margin confirms the chance-constraint formulation itself is sound           <!-- 75 -->
+- The method tracks the oracle at near-oracle profit on a rigorous distillation twin    <!-- 82 -->
+- An inflation factor flags when calibration data no longer certify the target          <!-- 76 -->

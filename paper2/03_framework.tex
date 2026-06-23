@@ -186,12 +186,12 @@ stretched to be safe, and its growth signals the onset of calibration-data starv
 
 The plant is a rigorous DWSIM 9.0.5 model of a debutaniser \citep{dwsim}, reduced to the
 binary n-butane and n-hexane system (light key and stabilised-gasoline proxy) under the
-Peng--Robinson equation of state \citep{peng1976}, with nine equilibrium stages (condenser
+Peng-Robinson equation of state \citep{peng1976}, with nine equilibrium stages (condenser
 indexed $0$, reboiler $8$), feed on stage $4$, top pressure $4.7$\,bar, and a $0.4$\,bar
 column drop (Figure~\ref{fig:column}). The feed is $100$\,kmol\,h$^{-1}$. The model is driven
 from Python through DWSIM's automation interface, and a feed-composition campaign over a grid
 in $(z,R,D)$ yields the plant evaluations used below. The binary reduction keeps every twin
-state checkable against first-principles vapour--liquid equilibrium, and it matches the
+state checkable against first-principles vapour-liquid equilibrium, and it matches the
 soft-sensor physics proxy of the companion paper.
 
 Two Gaussian-process surfaces stand in for the plant in \eqref{eq:backoff}. The truth surface
@@ -214,7 +214,7 @@ and the back-off width a direct cost in profit. Price anchors are literature def
 regional spot benchmarks documented with their sources; the contribution depends on the price
 spread, not on the absolute levels.
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{F1_rto_loop.png}
 \caption{Chance-constrained real-time optimisation with a conformal constraint back-off. The
@@ -222,13 +222,13 @@ nominal model and the conformal back-off feed the optimiser, which sets the oper
 $(R,D)$ on the twin. The constrained bottoms composition $x_B$ is not measured online; a
 closed-loop soft-sensor feedback path (grey, dashed) is left to future work.}
 \label{fig:rto}
-\end{figure*}
+\end{figure}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.72\linewidth]{F2_column.png}
 \caption{The debutaniser twin: a nine-stage binary n-butane/n-hexane column under
-Peng--Robinson, with the feed-composition disturbance $z$ entering at stage~4, the light-key
+Peng-Robinson, with the feed-composition disturbance $z$ entering at stage~4, the light-key
 distillate overhead, and the constrained bottoms composition $x_B$.}
 \label{fig:column}
 \end{figure}

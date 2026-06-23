@@ -1,6 +1,6 @@
-% IPIS conformal-RTO paper -- Journal of Process Control (Elsevier)
-% Mirrors the Paper 1 build. Build: pdflatex main && bibtex main && pdflatex main x2
-\documentclass[5p,times]{elsarticle}
+% IPIS conformal-RTO paper for Computers & Chemical Engineering (Elsevier)
+% Build: pdflatex main && bibtex main && pdflatex main x2
+\documentclass[review,12pt]{elsarticle}
 
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
@@ -9,13 +9,13 @@
 \usepackage{lineno}
 \usepackage{url}
 \graphicspath{{figures/}{../docs/module3/paper/figures/}}
-\journal{Journal of Process Control}
+\journal{Computers \& Chemical Engineering}
 
 \begin{document}
 \begin{frontmatter}
 
-\title{The conformal selection effect in real-time optimisation: why marginally valid
-back-offs over-violate and conditional calibration restores safety}
+\title{Conditionally calibrated conformal back-offs for chance-constrained real-time
+optimisation under unmeasured disturbances}
 
 \author{Bien Busico}
 \address{Chemical Engineer, Quezon City, Philippines}
@@ -45,23 +45,13 @@ conditional coverage \sep constraint back-off \sep distillation
 The chance-constrained RTO implementation, the DWSIM twin data, the regime-map engine, and
 the figure scripts that regenerate every figure in this paper are available at
 \url{github.com/beebzy-droid/IPIS}; the regime map and all figures reproduce from a single
-fixed seed. The process twin is built in DWSIM \citep{dwsim} under the Peng--Robinson
+fixed seed. The process twin is built in DWSIM \citep{dwsim} under the Peng-Robinson
 equation of state \citep{peng1976}, and the model-based composition estimate it corrects is
 developed in the companion paper \citep{companion2026}.
-
-\section*{CRediT authorship contribution statement}
-\textbf{Bien Busico}: Conceptualization, Methodology, Software, Validation, Formal
-analysis, Investigation, Data curation, Writing -- original draft, Writing -- review \&
-editing, Visualization, Project administration.
 
 \section*{Declaration of competing interest}
 The author declares no competing financial interests or personal relationships that
 could have influenced the work reported in this paper.
-
-\section*{Declaration of generative AI in the writing process}
-During the preparation of this work the author used an AI assistant to help draft and edit
-prose and to generate plotting code for the figures. The author reviewed and edited all
-content and takes full responsibility for the published article.
 
 \bibliographystyle{elsarticle-num-names}
 \bibliography{references}

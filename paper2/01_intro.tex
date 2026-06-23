@@ -19,26 +19,25 @@ interval with a finite-sample, distribution-free coverage guarantee, assuming on
 data are exchangeable, with no Gaussian residuals and no parametric disturbance law. Taking
 the upper edge of a conformal interval as the back-off promises exactly what a chance
 constraint asks for, namely coverage of the realised quality at the nominal level, learned
-from data, without distributional assumptions. This paper asks whether that promise survives
-contact with the optimiser. It does not.
+from data, without distributional assumptions. This paper shows that the promise does not
+survive contact with the optimiser, and it supplies a back-off construction that restores it.
 
-We show that an RTO optimising against a marginally valid conformal back-off is unsafe. A
-conformal margin guarantees coverage on average over the calibration distribution of
-operating points, but the optimiser does not sample that distribution. It deliberately
-seeks the boundary of the feasible region, which is where the margin is tightest relative
-to the local risk and therefore where coverage is worst. The argmax is a selection
-operator, and it selects for under-coverage. On a rigorous binary-distillation twin
-(Figure~\ref{fig:rto}), a back-off that is marginally valid, including a locally adaptive
-heteroscedastic one that widens where the data are noisier, yields a realised violation
-rate of roughly five times the nominal level across the entire disturbance range. The
-failure is structural rather than a consequence of the disturbance being large, and
-adaptivity in the width of the margin does not cure it. We call this the conformal
-selection effect: the optimisation-induced loss of the marginal coverage guarantee, a
-constraint-space analogue of the winner's curse in post-selection inference. The phenomenon
-was named in the abstract by the conformal-predictive-programming literature
-\citep{zhao2024cpp}, which observed that a decision optimised against sampled constraints is
-no longer independent of them. Our contribution is to instantiate it in a process-RTO loop,
-to quantify its severity, and to isolate what fixes it.
+An RTO that optimises against a marginally valid conformal back-off is unsafe. A conformal
+margin guarantees coverage on average over the calibration distribution of operating points,
+but the optimiser does not sample that distribution. It deliberately seeks the boundary of
+the feasible region, where the margin is tightest relative to the local risk and therefore
+where coverage is worst. The argmax is a selection operator, and it selects for
+under-coverage. On a rigorous binary-distillation twin (Figure~\ref{fig:rto}), a marginally
+valid back-off, including a locally adaptive heteroscedastic one that widens where the data
+are noisier, yields a realised violation rate of roughly five times the nominal level across
+the entire disturbance range; the failure is structural rather than a consequence of a large
+disturbance, and adaptivity in the width of the margin does not cure it. The mechanism is an
+optimisation-induced loss of marginal coverage, a constraint-space analogue of the winner's
+curse in post-selection inference. The conformal-predictive-programming literature
+\citep{zhao2024cpp} observed in the abstract that a decision optimised against sampled
+constraints is no longer independent of them; our concern here is the concrete consequence
+for process RTO, a safety hazard of quantified severity, and, more to the point, the back-off
+construction that removes it.
 
 What fixes it is conditional validity. A back-off built from conformalised quantile
 regression \citep{romano2019} targets the conditional constraint quantile at each operating
@@ -65,20 +64,22 @@ the value of the conditional method is the violation it removes, not any profit 
 
 The contributions are as follows.
 \begin{itemize}
-\item \textbf{R1.} We identify and quantify the conformal selection effect in RTO. A
+\item \textbf{R1.} We propose a deployable, distribution-free constraint back-off for
+  chance-constrained RTO, built from conformalised quantile regression with an a-posteriori
+  calibration at the selected setpoint, and show that it holds the realised violation at the
+  oracle level, within the Monte-Carlo band, at near-oracle profit over the operationally
+  realistic disturbance range (Section~\ref{sec:results-fix}).
+\item \textbf{R2.} We identify and quantify the deployment hazard that motivates it. A
   marginally valid back-off, fixed or locally adaptive, realises roughly five times the
-  nominal violation under optimisation, while an oracle conditional margin holds the target.
-  This establishes that the failure is the selection effect and not the chance-constraint
+  nominal violation under optimisation, because the optimiser settles where the margin
+  under-covers the conditional risk; an oracle conditional margin holds the target, which
+  establishes that the failure lies in the back-off and not in the chance-constrained
   formulation (Sections~\ref{sec:results-selection} and \ref{sec:results-oracle}).
-\item \textbf{R2.} We show that conditional validity is the structural remedy. A CQR
-  back-off with an a-posteriori calibration step tracks the oracle to within the
-  Monte-Carlo band at near-oracle profit over the realistic disturbance range, with the
-  a-posteriori inflation reduced from a primary guarantee to a small residual correction
-  (Section~\ref{sec:results-fix}).
 \item \textbf{R3.} We characterise the disturbance-magnitude regime over which each margin
   controls violation, where a constant margin becomes infeasible, and where the conditional
-  method itself is data-starved, reading the a-posteriori inflation as a diagnostic of data
-  adequacy (Sections~\ref{sec:results-boundary} and \ref{sec:results-profit}).
+  method itself is data-starved, and we show that the a-posteriori inflation factor serves as
+  an interpretable data-adequacy diagnostic, visible to the operator before the margin breaks
+  (Sections~\ref{sec:results-boundary} and \ref{sec:results-profit}).
 \end{itemize}
 
 Section~\ref{sec:related} places the work against RTO under uncertainty, conformal

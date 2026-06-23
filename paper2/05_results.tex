@@ -111,7 +111,7 @@ than as point values. The qualitative claims, namely that the marginal back-off 
 fivefold, that the conditional method tracks the oracle, and that there is a data-starvation
 boundary, all sit far outside that band.
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{F3_violation_vs_sigma.png}
 \caption{Realised constraint-violation rate versus disturbance magnitude $\sigma_z$ for the four
@@ -120,9 +120,9 @@ denote infeasible instances; shaded bands are the Monte-Carlo uncertainty. The m
 back-offs (fixed, normalised) violate well above target, while CQR with a-posteriori calibration
 tracks the oracle.}
 \label{fig:violation}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{F4_backoff_fields.png}
 \caption{Back-off field $C(R,D)$ at the realistic disturbance for the naive-adaptive and the
@@ -131,7 +131,7 @@ The white curve is the true feasibility boundary. The adaptive margin stays smal
 corner, so its optimum lands on the unsafe side; the CQR margin grows there and keeps its optimum
 safe.}
 \label{fig:fields}
-\end{figure*}
+\end{figure}
 
 \begin{figure}[t]
 \centering
@@ -142,14 +142,14 @@ separation opens only as the constraint begins to bind.}
 \label{fig:profit}
 \end{figure}
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{F6_surrogate_validation.png}
 \caption{Truth-surface validation. Left: predicted versus actual $x_B$ on the held-out
 $z=0.375$ slice (leave-one-disturbance-out). Right: the monotone $x_B(R,D,z)$ response that
 justifies the $z$-quantile oracle.}
 \label{fig:validation}
-\end{figure*}
+\end{figure}
 
 \begin{figure}[t]
 \centering
@@ -160,7 +160,7 @@ a readable data-adequacy diagnostic.}
 \label{fig:kappa}
 \end{figure}
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \caption{Regime map over disturbance magnitude $\sigma_z$ (canonical run, seed $20260614$,
 leave-$z$-out $R^2=0.917$). For each method: operating profit (USD\,h$^{-1}$), realised violation
@@ -208,4 +208,4 @@ $\sigma_z$ & method & profit & $\hat v$ & $\kappa$ & $R^\star$ & $D^\star$ \\
       & naive-adapt & 5396 & 0.502 & 1.00 & 3.00 & 33.7 \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
