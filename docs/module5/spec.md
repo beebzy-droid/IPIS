@@ -53,22 +53,29 @@ concern (increment 2).
    steady-state-consistency check vs the M4 static twin, actuator/process/deadtime
    behavior, and psi-on-realized-path. `DynamicPlantOutput` satisfies the `PlantOutput`
    protocol structurally, so the M4 orchestrator/feature-transform/coverage consume it.
-2. **NEXT — ACI horizon read-off + dynamic orchestrator + O1-under-deadtime.**
-   - Wire a dynamic orchestrator that holds a command across the RTO interval (many `dt`),
-     routes `xb_measured` (deadtime-delayed) as the ACI label and `xb_true` as the coverage
-     ground truth, and records every cycle via `CampaignRecorder`.
-   - Replace the per-cycle certificate read-off with an ACI horizon read-off using M1's
-     existing `ACIConformal` + `select_gamma`; maintain long-run coverage of the joint
-     event S_k at >= 1 - (alpha_1 + alpha_2) - eps.
-   - **O1 RE-VERIFY (sharpest item):** the M4 `d_sel = 0` argument holds because `u_k` is
-     formed before `eps_k`. Under analyzer deadtime, draw the timing diagram and confirm no
-     cycle-k interval is formed using cycle-k's own outcome; deadtime delays WHICH residuals
-     ACI sees (cycle-k residual lands at k + D_a), which is the delayed-feedback ACI regime.
-     Expected to resolve favorably; must be shown, not assumed.
-3. **THEN — gamma sweep + paper.** Sweep the ACI learning rate (coverage vs adaptivity);
-   report the horizon-coverage contrast vs a naive K-cycle union bound (vacuous at large K).
-   Paper 5 venue option-scaled at draft time (JPC / Control Engineering Practice / IEEE TCST,
-   or CACE/IECR for the PSE angle).
+2a. **DONE — dynamic orchestrator + ACI horizon read-off + O1 under deadtime.**
+   `src/ipis/integration/dynamic_orchestrator.py`
+   (`DynamicClosedLoopOrchestrator`, `DynamicCycleRecord`): holds `u_k` across
+   `steps_per_cycle` plant steps, routes the cycle-delayed label (`label_delay_cycles` =
+   `D_a`) to M1's `ACIConformal`, evaluates `S_k`, records every cycle via
+   `CampaignRecorder`. Records are `CycleRecord`-compatible, so the proven `run_coverage`
+   Wilson harness measures horizon coverage directly. 26 Module-5 tests pass; existing
+   integration cluster unaffected (54 passed, 2 skipped). Results at `D_a = 2`,
+   `alpha_1 = alpha_2 = 0.10`, `eps = 0.05` (floor 0.75): M1 ACI interval coverage of `x_k`
+   over 400 cycles = **0.900** (target 0.90); `S_k` over 3 x 120 cycles = **1.000**, Wilson
+   lower bound **0.989** >= floor. O1 re-verified: `Delta_sel = 0` preserved under deadtime,
+   cost moves to the ACI rate not validity (`docs/module5/o1-deadtime-timing.md`).
+2b. **NEXT — sweeps that turn 2a into paper figures.**
+   - **Deadtime sweep:** horizon coverage and the finite-horizon transient vs `D_a`
+     (graceful degradation of the rate; validity invariant).
+   - **gamma sweep:** ACI learning rate via `select_gamma` (coverage vs adaptivity), and the
+     horizon-coverage contrast vs a naive K-cycle union bound (vacuous at large K).
+   - **Two-arm contrast (headline):** health-blind (`eps` large) vs conformal
+     health-constrained loop on the dynamic plant, reusing `run_coverage`'s two-arm pattern —
+     the blind RTO over-refluxes and fails the `rho_k >= rho_min` half of `S_k`, the
+     constrained loop holds its floor.
+3. **THEN — paper.** Paper 5 venue option-scaled at draft time (JPC / Control Engineering
+   Practice / IEEE TCST, or CACE/IECR for the PSE angle).
 
 ## Open items carried
 
