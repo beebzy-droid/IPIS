@@ -32,13 +32,15 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 
 ---
 
-## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-20)
+## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-23)
 
-**All three IPIS module papers are SUBMITTED and under review. The Module 2 / SCC paper went to
-RESS on 2026-06-20 as JRESS-D-26-04509. With the publication track now parked on reviewers, the
-next work is FULL IPIS INTEGRATION — wiring Modules 1, 2, and 3 into one coherent system over the
-state bus + serving layer. This is a fresh start: the integration architecture is NOT yet
-decided. Option-scale before building.**
+**All three IPIS module papers are under review, and Module 4 (full integration) is now
+COMPLETE: the IECR manuscript is drafted, polished, and submission-ready (Phase 1 done; see
+below). Module 4 delivered the headline result of the project so far, a derived and
+enforceable closed-loop coverage certificate validated on a calibrated debutanizer twin. The
+next module is MODULE 5, the dynamic/physical realization that lifts the per-cycle certificate
+to a horizon guarantee and moves IPIS off the quasi-static twin. Start a fresh session for it
+(one session per module). Option-scale the dynamic-plant choice before building.**
 
 **Papers (all under review — never edit a submitted manuscript without joint review):**
 
@@ -47,6 +49,7 @@ decided. Option-scale before building.**
 | 1 | M1 soft sensor | Computers & Chemical Engineering | CACE-D-26-00944 | 2026-06-12 | `paper/` |
 | 2 | M3 RTO (conformal selection) | Journal of Process Control | JPROCONT-D-26-00565 | 2026-06-16 | `paper2/` |
 | 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04509** | **2026-06-20** | `paper3/` |
+| 4 | M4 integration (composed certificate) | Industrial & Engineering Chemistry Research (ACS) | *in prep, submission-ready* | -- | `paper4/` |
 
 - **Paper 3 (SCC) final state.** elsarticle `[5p,times]`, split sections in `paper3/` (`scc_paper.tex`
   + `sections/01..07` + `figures/fig1..4.pdf` + `scc_refs.bib` + `scc_paper.bbl` + highlights/cover
@@ -62,44 +65,145 @@ decided. Option-scale before building.**
   revision; (3) two conference refs (Tibshirani 2019 NeurIPS, Nectoux 2012 PHM) lack page numbers
   in the `.bbl`.
 
-### >> RESUME HERE: IPIS Full Integration (fresh session)
+### Module 4 — Full integration (composed coverage certificate) — COMPLETE
 
-**Goal.** An end-to-end Integrated Process Intelligence System in which the three validated modules
-operate together, not as three separate demos.
+**What it is.** The genuinely new contribution chosen at the integration fork: TIGHT coupling
+in which the RTO consumes the M2 health/RUL bound as a constraint and the M1 soft-sensor interval
+as a soft measurement, i.e. health-aware real-time optimization that trades production against
+remaining useful life. Deliverable: Paper 4 (IECR) plus the running demonstration.
 
-**What exists per module (validated components, all under `src/ipis/`):**
-- **M1 soft sensor** — physics-anchored Debutanizer C4 estimator + conformal UQ; serving stack
-  (`SoftSensorService`, FastAPI `/predict`/`/label`/`/health`/`/metrics`/`/state`, `ModelBundle`
-  loader, MLflow, Streamlit dashboard). State-bus output: estimated quality + prediction interval.
-- **M2 PdM** — bearing physics + Hotelling-T² health index (2A), similarity-phase RUL + one-sided
-  conformal lower bound (2B), TEP cross-domain fault detection (2C: FAR 2.0% / 96% / 30-min delay),
-  `PdMService` → `OperationalState` + FastAPI (2D); plus the SCC method in `module2_pdm/scc/`.
-  State-bus output: equipment_health ∈[0,1], health_flags OK/WARN/ALARM, RUL hours + lower bound.
-- **M3 RTO** — modifier-adaptation RTO with the conformal selection effect (Paper 2). Output:
-  optimized setpoints under uncertainty.
-- **`state_bus`** — the contract the modules already write to (quality estimate, health, flags,
-  RUL). This is the integration backbone; read its current schema first.
+**The result.** A per-cycle COMPOSED coverage certificate for the joint safety event
+`S_k = {x_k <= x_spec} AND {rho_k >= rho_min}` (in-spec product AND surviving equipment), derived
+not asserted (Theorem 1), with terms that map one-to-one onto the three modules: M1 miscoverage
+`alpha_1`, M2 miscoverage `alpha_2`, a per-module similitude-departure penalty `2 L_j ||dpsi_j||`
+(the SCC certificate, M2's contribution, now per-cycle), and a selection penalty `dsel` (M3's
+conformal selection effect). The feedback objection is dissolved by a causal-timing argument:
+`dsel = 0` whenever the decision is formed before the measurement it is conditioned against, which
+the synchronous orchestrator guarantees by construction (open item O1, RESOLVED by construction). A
+corollary collapses the certificate into ONE convex `psi`-budget the modifier-adaptation NLP enforces
+directly, so the flagship guarantee and the operating floor are the same constraint.
 
-**First decisions to option-scale BEFORE any build (present tradeoffs; Bien ratifies):**
-1. **Demonstrator process.** The modules use different benchmarks today (Debutanizer for M1;
-   FEMTO/CWRU/TEP for M2; the RTO benchmark for M3). Choose (a) ONE unifying plant — e.g. a DWSIM
-   debutanizer/plantwide model that carries a quality variable, a degrading unit, and an RTO
-   objective — or (b) a FEDERATED demo where each module runs on its own benchmark and integration
-   is the orchestration + shared dashboard. (a) is the stronger story and the likely Paper-4 basis;
-   (b) ships faster.
-2. **Integration depth / the novel claim.** Loose coupling (shared bus, independent services,
-   unified dashboard) vs. TIGHT coupling where **RTO consumes PdM health/RUL as constraints and the
-   soft-sensor estimate as a soft measurement** — i.e. health-aware real-time optimization that
-   trades production rate against remaining useful life. Tight coupling is the genuinely new
-   contribution and a candidate Paper 4.
-3. **Primary deliverable.** Engineering capstone (working integrated system + demo) vs. a 4th paper
-   (IPIS architecture / health-aware RTO). Not exclusive; pick the primary target so scope is bounded.
+**Headline numbers** (calibrated debutanizer FUG twin, real M1/M2/M3 components on synthetic twin
+data; `scripts/run_twin_coverage.py`). Certified floor `1 - (alpha_1+alpha_2) - eps = 0.75`.
+Health-constrained arm (eps=0.05): joint S_k coverage 0.988 [0.976, 0.994], RUL coverage 1.000,
+quality 0.988, final severity 0.097, psi-budget binds 100% of cycles. Health-blind arm (eps->inf):
+S_k coverage 0.000, RUL 0.013, final severity 0.700 (pump destroyed). The contrast is carried
+entirely by reflux-pump life. Soft sensor: empirical conformal coverage 0.898 vs 0.90 target,
+half-width 0.0071. Swept Lipschitz L1 ~ 0.025 (Fig 2) vs the conservative L1=L2=0.15 used in the
+budget (over-bound; floor holds a fortiori). Degradation calibration: damage ~ Q^6 (bearing L10
+fatigue x affinity radial load), base_rate = degradation_rate_for_rul(1000h).
+
+**Where it lives.**
+- Code: `src/ipis/integration/` — `psi.py` (similitude coordinate, departures, budget penalty),
+  `plant.py` (FUG twin ShortcutColumnModel + degradation + synthesizer), `orchestrator.py`
+  (synchronous causal loop), `health_rto.py` (psi-budget NLP), `coverage.py` (harness + Wilson
+  intervals), `wiring.py` (M1 feature transform to the real physics contract), `lipschitz.py`
+  (L1/L2 sweeps), `calibrate.py` (degradation-rate + synth-growth fittings). 77 integration tests.
+- Demo: `scripts/run_twin_coverage.py` (importable; regenerates every number and figure).
+- Manuscript: `paper4/` — achemso `[journal=iecred,manuscript=article]`, Theorem 1 + Corollary 1
+  with proofs, 3 figures (Fig 1 loop schematic, Fig 2 L1 sweep, Fig 3 coverage), 3 tables, 19 refs,
+  TOC graphic, CRediT, line numbers (lineno + amsmath patch), `cover_letter.md`,
+  `suggested_reviewers.md`. Compiles to 24 pp, 0 errors/warnings. Build:
+  `pdflatex main && bibtex main && pdflatex main && pdflatex main`.
+- Theory spike: `docs/module4/formalization-spike.md` (frozen; numbering synced to Paper 1=M1,
+  Paper 2=M2, Paper 3=M3).
+
+**Phase 1 (submission prep) — DONE.** Line numbers added for IECR review; keywords present; cover
+letter (house style, no dates) and reviewer-profile file written. Remaining is Bien's alone: final
+co-author read, then the IECR upload (suggested-reviewer contact details + COI check; TOC graphic
+already embedded).
+
+**Open items carried forward** (`docs/module4/formalization-spike.md` section 8). O1 (causal timing)
+resolved by construction. O2 (M1 Lipschitz L1 sweep) DONE (~0.025). O3 (re-pin twin tray efficiency
+vs O'Connell at actual alpha(T), mu_L(T)) STILL OPEN — affects dynamic-twin fidelity, carries into
+Module 5. O4 (joint M1/M2 failure-correlation model to tighten Bonferroni) FUTURE WORK — the
+mid-term lever.
+
+---
+
+### >> RESUME HERE: Module 5 — dynamic / physical realization (fresh session)
+
+**One-line goal.** Move IPIS off the quasi-static FUG twin onto a DYNAMIC, physically realistic loop
+(real actuator and measurement dynamics + transport lags), and upgrade the per-cycle coverage
+certificate (Module 4, Theorem 1) to a HORIZON coverage guarantee over a campaign of cycles.
+
+**Why this is the right next module.** (1) It pre-empts the single most likely reviewer critique of
+Module 4: a per-cycle, marginal guarantee demonstrated on a steady-state twin. (2) It is the
+necessary bridge to plantwide — you cannot allocate a coverage budget across units until the
+single-unit loop runs in real time. (3) It exercises the online-conformal / ACI machinery that is
+ALREADY in the M1 serving stack, so the theory and the code meet.
+
+**The theoretical headline shift.** From Module 4's per-cycle MARGINAL coverage of `S_k` (valid one
+cycle at a time; a naive K-cycle union degrades linearly in K) to a LONG-RUN / HORIZON guarantee via
+adaptive conformal inference (ACI; Gibbs & Candes 2021), which holds coverage online under arbitrary,
+unspecified dependence — exactly the dependence feedback induces across cycles. The composed
+certificate becomes a runtime monitor whose quantile self-corrects rather than a one-shot per-cycle
+bound. This is the core new claim of Module 5 / Paper 5.
+
+**The plant (option-scale BEFORE building; Bien ratifies).**
+1. **(a) DWSIM-dynamic** — a dynamic distillation column in DWSIM with real tray holdups, valve/pump
+   dynamics, and analyzer deadtime. Higher fidelity and the stronger story; DWSIM runs on Bien's
+   Windows box and is OUT of Claude's sandbox scope (Claude builds the IPIS layer + harness; Bien
+   runs the simulator and exports trajectories).
+2. **(b) DCS/MPC cascade** — a control-layer simulation entirely in the sandbox: a base regulatory
+   layer (PID or MPC) on a dynamic column ODE model, with first-order actuator lags on (R, D),
+   measurement/analyzer deadtime on the quality channel, and the IPIS modules on top. Lower fidelity
+   but fully reproducible end-to-end in-sandbox and faster to ship. Likely the pragmatic first cut;
+   DWSIM-dynamic can follow as the high-fidelity confirmation.
+   Decide (a) vs (b), or (b)-then-(a), at session start.
+
+**What changes mechanically vs Module 4.**
+- **Transport lags become first-class.** M1 already handles a documented label delay (ACI + Shardt
+  bias-update); in the dynamic loop the analyzer deadtime and the label delay are explicit loop
+  elements, and the RTO acts on delayed/filtered estimates rather than instantaneous truth.
+- **Actuator dynamics.** `u_k = (R, D)` is no longer realized instantly; reflux and distillate have
+  first-order (or higher) lags, so the similitude coordinate `psi(u)` evolves CONTINUOUSLY between
+  decisions instead of stepping. The departure `dpsi` a cycle charges must be defined over the
+  realized trajectory, not the commanded setpoint.
+- **The certificate.** Per-cycle `S_k` becomes a horizon event over a sliding window; ACI maintains
+  long-run coverage of `S_k` under feedback-induced dependence. The `psi`-budget remains the
+  enforcement knob, now applied to the realized (lagged) `psi` path.
+
+**Re-verify under dynamics (do NOT assume Module 4's resolutions transfer).**
+- **O1 / causal timing under deadtime.** Module 4's `dsel = 0` holds because the synchronous
+  orchestrator forms `u_k` strictly before the cycle-k residual. With continuous-time dynamics and
+  analyzer deadtime, RE-EXAMINE that the decision is still formed before the measurement it is
+  conditioned against; deadtime can re-open the co-selection window. Sharpest new analysis item.
+- **ACI step-size / learning-rate** tuning for the horizon target (coverage vs adaptivity trade-off).
+- **O3 tray-efficiency re-pin** (O'Connell at actual alpha(T), mu_L(T)) carries forward and matters
+  more in a dynamic twin.
+
+**What carries over (reuse, do NOT rebuild).** The 8 `src/ipis/integration/` modules, the real
+M1/M2/M3 components, the two-arm coverage harness (`scripts/run_twin_coverage.py`), the similitude
+coordinate and budget machinery, the Lipschitz sweep. Module 5 swaps the steady-state
+ShortcutColumnModel for a dynamic plant and the per-cycle certificate for an ACI horizon certificate,
+reusing everything else.
+
+**Deliverable.** Module 5 = Paper 5 (dynamic / horizon realization). Target venue TBD — option-scale
+at draft time (candidates: Journal of Process Control again, Control Engineering Practice, IEEE TCST
+for the control angle; or CACE/IECR for the process-systems angle).
+
+**The roadmap beyond Module 5 (full version in README "Project lifecycle").**
+- **MID — tighten Bonferroni (O4):** a joint M1/M2 failure-correlation model (copula on the two
+  nonconformity scores / multivariate conformal / conformal risk control under dependence) to replace
+  the union bound with a dependence-aware composition and recover the ~0.24 of slack between the
+  empirical 0.988 and the 0.75 floor.
+- **MID — plantwide / multi-unit similitude (highest-leverage bet):** the composition logic is
+  already unit-agnostic; allocate ONE global coverage budget across units (modular risk allocation),
+  which scales IPIS from one column to an integrated plant — a certificate for a PLANT.
+- **LONG — generalization beyond binary-key distillation:** new dimensionless groups per unit type,
+  turning the claimed universality from a scope note into a theorem.
+- **LONG — active fault management:** on M1 drift or M2 alarm, reconfigure to a conservative fallback
+  / maintenance trigger / re-calibration; the certificate becomes a runtime monitor (fault-tolerant
+  control).
+- **LONG — real-plant validation:** an operating LPG / petrochemical column with DCS data, the
+  credibility capstone and the standing future-work lever for all four submitted papers.
 
 **Approach reminders (unchanged).** Option-scale before build. Claude builds/validates in sandbox;
 Bien runs all git/terminal on Windows cmd (one command per line, no continuation backslashes).
-present_files → Downloads → `copy /Y` to repo → git. `mkdir` before any new dir. VERIFY-BEFORE-
+present_files -> Downloads -> `copy /Y` to repo -> git. `mkdir` before any new dir. VERIFY-BEFORE-
 LOAD-BEARING (confirm file state via `raw.githubusercontent.com`, never trust commit messages).
-Update this §0.5 + prepend the changelog at every load-bearing decision.
+Update this section 0.5 + prepend the changelog at every load-bearing decision.
 
 ---
 
@@ -1061,6 +1165,17 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-23** — **MODULE 4 (FULL INTEGRATION) COMPLETE; PHASE 1 DONE.** The IECR manuscript for
+  the composed coverage certificate is drafted, humanized (em-dashes removed), and submission-ready:
+  `paper4/` compiles to 24 pp with 0 errors/warnings, Theorem 1 + Corollary 1 with proofs, 3 figures
+  (loop schematic, L1 sweep, coverage), 3 tables, line numbers (lineno + amsmath patch), keywords,
+  TOC graphic, `cover_letter.md`, `suggested_reviewers.md`. Headline result on the calibrated FUG
+  twin: certified floor 0.75 met at S_k coverage 0.988 under the psi-budget, 0.000 without it, the
+  contrast carried by reflux-pump life. Self-citation titles set exactly; `formalization-spike.md`
+  numbering synced (Paper N = Module N). Resume block (section 0.5) rewritten: Module 4 recorded as
+  complete; **next module is MODULE 5 (dynamic / physical realization)** — full spec written, start a
+  fresh session. README and PROJECT_STRUCTURE updated (status, publications reconciled to module
+  numbering, project-lifecycle roadmap added).
 - **2026-06-20** — **PAPER 3 (SCC) SUBMITTED TO RESS — JRESS-D-26-04509.** Module 2 / SCC paper
   uploaded to *Reliability Engineering & System Safety*. This session: generated the 4 figures from
   the validated code (overlap-free; Fig 4 verdicts moved above the bars, Fig 1 legend out of the

@@ -19,26 +19,38 @@
 
 import sys, os, math
 
-DWSIM_DIR  = r"C:\Users\yubyu\AppData\Local\DWSIM"
+DWSIM_DIR = r"C:\Users\yubyu\AppData\Local\DWSIM"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-CASE_FILE  = os.path.normpath(
+CASE_FILE = os.path.normpath(
     os.path.join(SCRIPT_DIR, "..", "data", "raw", "dwsim", "debutanizer_3a.dwxmz")
 )
 
+
 # --- unit converters ---------------------------------------------------------
-def K_to_C(v):    return float(v) - 273.15
-def Pa_to_bar(v): return float(v) / 1e5
-def W_to_kW(v):   return float(v) / 1e3
+def K_to_C(v):
+    return float(v) - 273.15
+
+
+def Pa_to_bar(v):
+    return float(v) / 1e5
+
+
+def W_to_kW(v):
+    return float(v) / 1e3
+
 
 # --- reflection helpers ------------------------------------------------------
 _BF_val = None
+
 
 def _bf():
     global _BF_val
     if _BF_val is None:
         import System.Reflection as _R
+
         _BF_val = _R.BindingFlags.Public | _R.BindingFlags.Instance
     return _BF_val
+
 
 def rget(obj, pname):
     """Get property by name via reflection, fallback to direct attr."""
@@ -50,6 +62,7 @@ def rget(obj, pname):
         pass
     return getattr(obj, pname, None)
 
+
 def rget_float(obj, names, default=float("nan")):
     for n in names:
         try:
@@ -60,6 +73,7 @@ def rget_float(obj, names, default=float("nan")):
             pass
     return default
 
+
 def rprop_dict(obj):
     d = {}
     for p in obj.GetType().GetProperties(_bf()):
@@ -68,6 +82,7 @@ def rprop_dict(obj):
         except Exception:
             pass
     return d
+
 
 # --- display name from a DWSIM ISimulationObject ----------------------------
 def _display(obj):
@@ -84,6 +99,7 @@ def _display(obj):
             pass
     return ""
 
+
 # --- liquid nC4 mole-fraction from a solved material stream ------------------
 def stream_x_nc4(stream, nc4_name):
     """Read nC4 MoleFraction from stream using reflection-safe rget."""
@@ -93,7 +109,7 @@ def stream_x_nc4(stream, nc4_name):
     nc4_norm = nc4_name.lower().replace("-", "").replace(" ", "")
     for ph_idx in [2, 3, 0]:
         try:
-            ph    = phases[ph_idx]
+            ph = phases[ph_idx]
             cmpds = rget(ph, "Compounds")
             for k in list(cmpds.Keys):
                 if str(k).lower().replace("-", "").replace(" ", "") == nc4_norm:
@@ -104,6 +120,7 @@ def stream_x_nc4(stream, nc4_name):
             pass
     return float("nan")
 
+
 # --- Raoult / Antoine bubble-point x_nC4 estimate ----------------------------
 # Antoine constants (T in degC, P in mmHg):
 #   nC4: log10(P) = 6.80896 - 935.86 / (T + 238.73)
@@ -111,21 +128,24 @@ def stream_x_nc4(stream, nc4_name):
 # DWSIM Stage.l is always empty post-solve; pp flash methods need stream context.
 # This gives x_nC4 accurate to ~+/-0.01 for near-ideal nC4/nC6.
 
+
 def raoult_x_nc4(T_K, P_Pa):
     """Bubble-point liquid x_nC4 from Raoult/Antoine at given T (K), P (Pa)."""
-    T_C  = T_K - 273.15
+    T_C = T_K - 273.15
     P_mmHg = P_Pa / 133.322
-    K_nC4 = 10 ** (6.80896 - 935.86  / (T_C + 238.73)) / P_mmHg
+    K_nC4 = 10 ** (6.80896 - 935.86 / (T_C + 238.73)) / P_mmHg
     K_nC6 = 10 ** (6.87601 - 1171.17 / (T_C + 224.41)) / P_mmHg
     if abs(K_nC4 - K_nC6) < 1e-9:
         return float("nan")
     return (1.0 - K_nC6) / (K_nC4 - K_nC6)
+
 
 # =============================================================================
 # 1. Bootstrap
 # =============================================================================
 sys.path.insert(0, DWSIM_DIR)
 import clr
+
 clr.AddReference(os.path.join(DWSIM_DIR, "DWSIM.Automation.dll"))
 from DWSIM.Automation import Automation3
 
@@ -143,32 +163,41 @@ col = dist_s = btms_s = feed_s = None
 col_key = None
 
 for name in list(fs.SimulationObjects.Keys):
-    obj  = fs.SimulationObjects[name]
+    obj = fs.SimulationObjects[name]
     disp = _display(obj)
-    pfx  = name.split("-")[0].upper() if "-" in name else ""
-    dl   = disp.lower()
-    tag  = ""
+    pfx = name.split("-")[0].upper() if "-" in name else ""
+    dl = disp.lower()
+    tag = ""
 
     if pfx == "DC":
-        col = obj; col_key = name; tag = "<-- COLUMN"
+        col = obj
+        col_key = name
+        tag = "<-- COLUMN"
     elif pfx == "MAT":
-        if   "dist" in dl: dist_s = obj; tag = "<-- DIST"
-        elif any(x in dl for x in ("btms", "bott")): btms_s = obj; tag = "<-- BTMS"
-        elif "feed" in dl: feed_s = obj; tag = "<-- FEED"
-        else: tag = "(MAT: %r)" % disp
+        if "dist" in dl:
+            dist_s = obj
+            tag = "<-- DIST"
+        elif any(x in dl for x in ("btms", "bott")):
+            btms_s = obj
+            tag = "<-- BTMS"
+        elif "feed" in dl:
+            feed_s = obj
+            tag = "<-- FEED"
+        else:
+            tag = "(MAT: %r)" % disp
     elif pfx == "EN":
         tag = "(EN: %r)" % disp
 
     print("  %-52s  %-10s  %s" % (repr(name), disp, tag))
 
-assert col    is not None, "Column (DC-*) not found"
+assert col is not None, "Column (DC-*) not found"
 assert dist_s is not None, "Dist stream not found"
 assert btms_s is not None, "Btms stream not found"
 
 # =============================================================================
 # 3. Concrete type + assembly
 # =============================================================================
-col_type     = col.GetType()
+col_type = col.GetType()
 col_asm_name = str(col_type.Assembly.GetName().Name)
 col_asm_path = os.path.join(DWSIM_DIR, col_asm_name + ".dll")
 print("\nColumn type : %s" % col_type.FullName)
@@ -179,8 +208,20 @@ if os.path.isfile(col_asm_path):
 # 4. Column reflection (find real property names)
 # =============================================================================
 print("\n=== Column properties (keyword-filtered) ===")
-_COL_KW = {"stage", "nstage", "cond", "reb", "duty", "qr", "qc",
-           "feed", "number", "spec", "profile", "result"}
+_COL_KW = {
+    "stage",
+    "nstage",
+    "cond",
+    "reb",
+    "duty",
+    "qr",
+    "qc",
+    "feed",
+    "number",
+    "spec",
+    "profile",
+    "result",
+}
 col_prop_names = []
 for p in sorted(col_type.GetProperties(_bf()), key=lambda x: x.Name):
     pname = str(p.Name)
@@ -197,15 +238,15 @@ for p in sorted(col_type.GetProperties(_bf()), key=lambda x: x.Name):
 # 5. Stage[0] introspection (find T, P attr names)
 # =============================================================================
 stage_list = list(rget(col, "Stages"))
-n_stages   = len(stage_list)
-s0         = stage_list[0]
+n_stages = len(stage_list)
+s0 = stage_list[0]
 print("\n=== Stage[0] (%s, n=%d) ===" % (type(s0).__name__, n_stages))
 s0_props = rprop_dict(s0)
 for k, v in sorted(s0_props.items()):
     print("  %-22s = %s" % (k, repr(v)[:100]))
 
-_T_names  = [k for k in s0_props if k in ("T", "Temperature", "Tl", "TempK")]
-_P_names  = [k for k in s0_props if k in ("P", "Pressure",    "Pl", "PressPa")]
+_T_names = [k for k in s0_props if k in ("T", "Temperature", "Tl", "TempK")]
+_P_names = [k for k in s0_props if k in ("P", "Pressure", "Pl", "PressPa")]
 print("T candidates: %s   P candidates: %s" % (_T_names, _P_names))
 
 # =============================================================================
@@ -217,14 +258,14 @@ for src in (feed_s, dist_s, btms_s):
         continue
     try:
         phases = rget(src, "Phases")
-        cmpds  = rget(phases[0], "Compounds")
+        cmpds = rget(phases[0], "Compounds")
         compound_names = [str(k) for k in list(cmpds.Keys)]
         break
     except Exception:
         pass
 if not compound_names:
     compound_names = ["N-butane", "N-hexane"]
-nC4_idx  = next((i for i, c in enumerate(compound_names) if "butan" in c.lower()), 0)
+nC4_idx = next((i for i, c in enumerate(compound_names) if "butan" in c.lower()), 0)
 nc4_name = compound_names[nC4_idx]
 print("\nCompounds: %s  (nC4 idx=%d, name=%r)" % (compound_names, nC4_idx, nc4_name))
 
@@ -244,13 +285,13 @@ print("\n=== Stage profile (0=condenser, 8=reboiler) ===")
 print("%4s  %8s  %7s  %9s  %9s" % ("idx", "T_C", "P_bar", "x_nC4_R", "note"))
 print("     (x_nC4_R = Raoult/Antoine bubble-pt estimate; stage API empty post-solve)")
 
-profile = []   # (idx, T_C, P_bar, x_nC4_est)
+profile = []  # (idx, T_C, P_bar, x_nC4_est)
 for i, s in enumerate(list(rget(col, "Stages"))):
-    T_C   = K_to_C(rget_float(s, _T_names  or ["T", "Temperature"]))
+    T_C = K_to_C(rget_float(s, _T_names or ["T", "Temperature"]))
     P_bar = Pa_to_bar(rget_float(s, _P_names or ["P", "Pressure"]))
     # Raoult estimate of liquid x_nC4 at equilibrium stage T, P
     x_est = raoult_x_nc4(T_C + 273.15, P_bar * 1e5)
-    note  = "<SENSOR" if 100.0 <= T_C <= 112.0 else ""
+    note = "<SENSOR" if 100.0 <= T_C <= 112.0 else ""
     profile.append((i, T_C, P_bar, x_est))
     print("  %2d    %8.2f  %7.4f  %9.4f  %s" % (i, T_C, P_bar, x_est, note))
 
@@ -258,8 +299,13 @@ for i, s in enumerate(list(rget(col, "Stages"))):
 # 9. Sensor stage
 # =============================================================================
 hits = [(i, T, x) for i, T, _, x in profile if 100.0 <= T <= 112.0]
-print("\nSensor stage candidates [100-112 C]: %s" % [(i, round(T,2), round(x,4)) for i,T,_,x in
-      [(i,T,P,x) for i,T,P,x in profile if 100<=T<=112]])
+print(
+    "\nSensor stage candidates [100-112 C]: %s"
+    % [
+        (i, round(T, 2), round(x, 4))
+        for i, T, _, x in [(i, T, P, x) for i, T, P, x in profile if 100 <= T <= 112]
+    ]
+)
 
 if hits:
     s_idx, s_T, _, s_x = [(i, T, P, x) for i, T, P, x in profile if 100.0 <= T <= 112.0][0]
@@ -273,7 +319,7 @@ else:
 # =============================================================================
 # 10. Stream compositions
 # =============================================================================
-xD_c4 = stream_x_nc4(dist_s,  nc4_name)
+xD_c4 = stream_x_nc4(dist_s, nc4_name)
 xB_c4 = stream_x_nc4(btms_s, nc4_name)
 print("\nxD_c4 = %.6f    xB_c4 = %.6f" % (xD_c4, xB_c4))
 
@@ -281,7 +327,7 @@ print("\nxD_c4 = %.6f    xB_c4 = %.6f" % (xD_c4, xB_c4))
 # 11. Key temperatures + reboiler duty
 # =============================================================================
 T_cond_C = profile[0][1]
-T_reb_C  = profile[n_stages - 1][1]
+T_reb_C = profile[n_stages - 1][1]
 
 # Feed temperature via Phase[0].Properties.temperature
 T_feed_C = float("nan")
@@ -294,14 +340,16 @@ if feed_s:
         try:
             v = attempt()
             if not math.isnan(v) and v > -100:
-                T_feed_C = v; break
+                T_feed_C = v
+                break
         except Exception:
             pass
 
 # Reboiler duty (magnitude in kW)
 Q_kW = float("nan")
-reb_candidates = [n for n in col_prop_names
-                  if any(k in n.lower() for k in ("qr", "reboilerduty", "heatreb"))]
+reb_candidates = [
+    n for n in col_prop_names if any(k in n.lower() for k in ("qr", "reboilerduty", "heatreb"))
+]
 reb_candidates += ["ReboilerDuty", "QR", "Qr", "QReboiler", "HeatReb"]
 for attr in reb_candidates:
     try:
@@ -342,22 +390,19 @@ print(SEP)
 print("\n-- Self-check (walkthrough band criteria) --")
 checks = [
     # (label, value, pass_condition_string, pass_bool)
-    ("Feed T (C)        ~87.09", T_feed_C,
-     "77 < T < 97",   77 < T_feed_C < 97),
-    ("Condenser T  45-55 C",   T_cond_C,
-     "45 <= T <= 55",  45 <= T_cond_C <= 55),
-    ("Reboiler T  122-132 C",  T_reb_C,
-     "122 <= T <= 132", 122 <= T_reb_C <= 132),
-    ("Duty  500-800 kW",       Q_kW,
-     "500 <= Q <= 800",  500 <= Q_kW <= 800),
-    ("xD_c4 > 0.97",          xD_c4,
-     "xD > 0.97",        xD_c4 > 0.97),
-    ("xB_c4  0.006-0.025",    xB_c4,
-     "0.006 <= xB <= 0.025", 0.006 <= xB_c4 <= 0.025),
-    ("Sensor idx == 5",        float(s_idx) if s_idx is not None else float("nan"),
-     "idx == 5",         s_idx == 5),
-    ("Sensor T 100-112 C",     s_T,
-     "100 <= T <= 112",  100 <= s_T <= 112),
+    ("Feed T (C)        ~87.09", T_feed_C, "77 < T < 97", 77 < T_feed_C < 97),
+    ("Condenser T  45-55 C", T_cond_C, "45 <= T <= 55", 45 <= T_cond_C <= 55),
+    ("Reboiler T  122-132 C", T_reb_C, "122 <= T <= 132", 122 <= T_reb_C <= 132),
+    ("Duty  500-800 kW", Q_kW, "500 <= Q <= 800", 500 <= Q_kW <= 800),
+    ("xD_c4 > 0.97", xD_c4, "xD > 0.97", xD_c4 > 0.97),
+    ("xB_c4  0.006-0.025", xB_c4, "0.006 <= xB <= 0.025", 0.006 <= xB_c4 <= 0.025),
+    (
+        "Sensor idx == 5",
+        float(s_idx) if s_idx is not None else float("nan"),
+        "idx == 5",
+        s_idx == 5,
+    ),
+    ("Sensor T 100-112 C", s_T, "100 <= T <= 112", 100 <= s_T <= 112),
 ]
 
 all_ok = True
@@ -376,6 +421,12 @@ if not (xD_c4 > 0.97):
     print("  Record in G1c HANDOFF; accept as PR-physics behaviour for the twin.")
 
 print()
-print("G1c PASS" if all_ok else "G1c PASS (xD near-miss, see note)" if
-      all(ok for lbl, val, cond, ok in checks if "xD" not in lbl) else
-      "G1c FAIL -- investigate before G2")
+print(
+    "G1c PASS"
+    if all_ok
+    else (
+        "G1c PASS (xD near-miss, see note)"
+        if all(ok for lbl, val, cond, ok in checks if "xD" not in lbl)
+        else "G1c FAIL -- investigate before G2"
+    )
+)

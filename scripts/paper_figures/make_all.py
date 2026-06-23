@@ -1,7 +1,7 @@
 """Render every paper figure whose evidence JSON exists; report what's missing.
 
-    set PYTHONPATH=src
-    python -m scripts.paper_figures.make_all
+set PYTHONPATH=src
+python -m scripts.paper_figures.make_all
 """
 
 from __future__ import annotations
