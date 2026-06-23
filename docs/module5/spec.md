@@ -65,17 +65,25 @@ concern (increment 2).
    over 400 cycles = **0.900** (target 0.90); `S_k` over 3 x 120 cycles = **1.000**, Wilson
    lower bound **0.989** >= floor. O1 re-verified: `Delta_sel = 0` preserved under deadtime,
    cost moves to the ACI rate not validity (`docs/module5/o1-deadtime-timing.md`).
-2b. **NEXT — sweeps that turn 2a into paper figures.**
-   - **Deadtime sweep:** horizon coverage and the finite-horizon transient vs `D_a`
-     (graceful degradation of the rate; validity invariant).
-   - **gamma sweep:** ACI learning rate via `select_gamma` (coverage vs adaptivity), and the
-     horizon-coverage contrast vs a naive K-cycle union bound (vacuous at large K).
-   - **Two-arm contrast (headline):** health-blind (`eps` large) vs conformal
-     health-constrained loop on the dynamic plant, reusing `run_coverage`'s two-arm pattern —
-     the blind RTO over-refluxes and fails the `rho_k >= rho_min` half of `S_k`, the
-     constrained loop holds its floor.
-3. **THEN — paper.** Paper 5 venue option-scaled at draft time (JPC / Control Engineering
-   Practice / IEEE TCST, or CACE/IECR for the PSE angle).
+2b. **DONE — sweeps and figures.** `src/ipis/integration/horizon_experiments.py`
+   (`two_arm_contrast`, `deadtime_sweep`, `gamma_sweep`) over a reusable dynamic demo loop
+   `src/ipis/integration/dynamic_demo.py` (delayed-ACI soft sensor + capped back-off RTO).
+   `scripts/run_horizon_sweeps.py` emits the three figures (`docs/module5/figures/`) and
+   frozen evidence (`docs/paper/evidence/module5_horizon_sweeps.json`). 4 experiment tests
+   pass (62 passed, 1 skipped across Module 5 + regression). Results (`alpha_1=alpha_2=0.10`,
+   `eps=0.05`, floor 0.75):
+   - **Figure 1 / two-arm (headline):** both arms meet the quality spec (q=1.000), but the
+     health-blind RTO over-refluxes and projected RUL falls below the floor (rul=0.008), so
+     `S_k = 0.008` (meets_floor False); the conformal health-constrained loop holds
+     `S_k = 1.000`, Wilson lower 0.989 (meets_floor True). The cap (not `eps`) selects the
+     arm; both are scored against the same floor.
+   - **Figure 2 / deadtime:** `S_k = 1.000` for every `D_a in {0,1,2,4,8}` — validity
+     invariant to deadtime, as O1 predicts; interval coverage holds ~0.90 throughout.
+   - **Figure 3 / gamma + union bound:** interval coverage stays near 0.90 across `gamma`
+     with the half-width shrinking as `gamma` rises; the naive K-cycle Bonferroni interval
+     is vacuous (infinite) at `K >= 50`, where ACI keeps a finite ~0.0011 half-width.
+3. **THEN — paper (NEXT).** Draft Paper 5 around the three figures. Venue option-scaled at
+   draft time (JPC / Control Engineering Practice / IEEE TCST, or CACE/IECR for the PSE angle).
 
 ## Open items carried
 

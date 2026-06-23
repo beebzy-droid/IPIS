@@ -1,0 +1,181 @@
+{
+  "stamp": {
+    "script": "scripts/run_horizon_sweeps.py",
+    "argv": [
+      "scripts/run_horizon_sweeps.py"
+    ],
+    "utc": "2026-06-23T21:47:29.944156+00:00",
+    "config": {
+      "spec_xb_c4": 0.02,
+      "rul_min_hours": 200.0,
+      "alpha1": 0.1,
+      "alpha2": 0.1,
+      "eps": 0.05,
+      "n_seeds": 4,
+      "n_cycles": 120
+    },
+    "da_values": [
+      0,
+      1,
+      2,
+      4,
+      8
+    ],
+    "gamma_values": [
+      0.002,
+      0.004,
+      0.008,
+      0.016,
+      0.032,
+      0.064,
+      0.128
+    ],
+    "union_horizons": [
+      1,
+      10,
+      50,
+      200,
+      1000
+    ]
+  },
+  "figure1_two_arm": {
+    "floor": 0.75,
+    "blind": {
+      "label": "health-blind",
+      "s_coverage": 0.008333333333333333,
+      "s_ci": [
+        0.0032452534639503556,
+        0.021228871952301574
+      ],
+      "quality_coverage": 1.0,
+      "rul_coverage": 0.008333333333333333,
+      "meets_floor": false,
+      "final_severity_mean": 0.5189687902853838,
+      "frac_psi_binding": 0.0
+    },
+    "constrained": {
+      "label": "health-constrained",
+      "s_coverage": 1.0,
+      "s_ci": [
+        0.9920602114410997,
+        1.0
+      ],
+      "quality_coverage": 1.0,
+      "rul_coverage": 1.0,
+      "meets_floor": true,
+      "final_severity_mean": 0.005834338412690059,
+      "frac_psi_binding": 1.0
+    }
+  },
+  "figure2_deadtime": {
+    "floor": 0.75,
+    "target_interval_coverage": 0.9,
+    "early_window": 60,
+    "points": [
+      {
+        "d_a": 0,
+        "s_coverage": 1.0,
+        "s_ci_lo": 0.9920602114410997,
+        "interval_coverage": 0.8975,
+        "interval_coverage_early": 1.0,
+        "interval_coverage_late": 0.8794117647058823
+      },
+      {
+        "d_a": 1,
+        "s_coverage": 1.0,
+        "s_ci_lo": 0.9920602114410997,
+        "interval_coverage": 0.8975,
+        "interval_coverage_early": 1.0,
+        "interval_coverage_late": 0.8794117647058823
+      },
+      {
+        "d_a": 2,
+        "s_coverage": 1.0,
+        "s_ci_lo": 0.9920602114410997,
+        "interval_coverage": 0.8975,
+        "interval_coverage_early": 1.0,
+        "interval_coverage_late": 0.8794117647058823
+      },
+      {
+        "d_a": 4,
+        "s_coverage": 1.0,
+        "s_ci_lo": 0.9920602114410997,
+        "interval_coverage": 0.8975,
+        "interval_coverage_early": 1.0,
+        "interval_coverage_late": 0.8794117647058823
+      },
+      {
+        "d_a": 8,
+        "s_coverage": 1.0,
+        "s_ci_lo": 0.9920602114410997,
+        "interval_coverage": 0.895,
+        "interval_coverage_early": 1.0,
+        "interval_coverage_late": 0.8764705882352941
+      }
+    ]
+  },
+  "figure3_gamma_union": {
+    "target_interval_coverage": 0.9,
+    "selected_gamma": 0.128,
+    "aci_mean_half_width": 0.0011243566407923903,
+    "points": [
+      {
+        "gamma": 0.002,
+        "interval_coverage": 0.935,
+        "mean_half_width": 0.0013306021031406824
+      },
+      {
+        "gamma": 0.004,
+        "interval_coverage": 0.9175,
+        "mean_half_width": 0.0012907008753466314
+      },
+      {
+        "gamma": 0.008,
+        "interval_coverage": 0.9075,
+        "mean_half_width": 0.0012257346435084657
+      },
+      {
+        "gamma": 0.016,
+        "interval_coverage": 0.8975,
+        "mean_half_width": 0.0011614408384082887
+      },
+      {
+        "gamma": 0.032,
+        "interval_coverage": 0.8975,
+        "mean_half_width": 0.0010437140604904326
+      },
+      {
+        "gamma": 0.064,
+        "interval_coverage": 0.8925,
+        "mean_half_width": "inf"
+      },
+      {
+        "gamma": 0.128,
+        "interval_coverage": 0.9025,
+        "mean_half_width": "inf"
+      }
+    ],
+    "union_bound": [
+      {
+        "horizon_k": 1,
+        "bonferroni_half_width": 0.0008657429417784634
+      },
+      {
+        "horizon_k": 10,
+        "bonferroni_half_width": 0.0012809245016405894
+      },
+      {
+        "horizon_k": 50,
+        "bonferroni_half_width": "inf"
+      },
+      {
+        "horizon_k": 200,
+        "bonferroni_half_width": "inf"
+      },
+      {
+        "horizon_k": 1000,
+        "bonferroni_half_width": "inf"
+      }
+    ]
+  }
+}
