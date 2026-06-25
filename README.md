@@ -55,7 +55,7 @@ IPIS addresses all three with one architecture, validated across heterogeneous b
 |---|---|---|
 | Module 1 — Soft Sensor | ✅ Complete | Paper under review (CACE-D-26-00944) |
 | Module 2 — Predictive Maintenance | ✅ Complete | Feature-complete (2A–2D); SCC paper under review (JRESS-D-26-04509) |
-| Module 3 — Real-Time Optimization | ✅ Complete | Paper under review (JPROCONT-D-26-00565) |
+| Module 3 — Real-Time Optimization | ✅ Complete | Paper under review (CACE-D-26-01040) |
 | Module 4 — Integration (composed certificate) | ✅ Complete | Closed-loop coverage certificate validated on the debutanizer twin; IECR manuscript submission-ready (`paper4/`) |
 | Module 5 — Dynamic / horizon realization | ⏳ Next | Dynamic plant + adaptive-conformal horizon guarantee; the bridge to plantwide |
 
@@ -71,9 +71,8 @@ differs from the module numbering for Modules 2 and 3; the module mapping below 
   Conformal Prediction: a physics-derived, a-priori coverage certificate for prognostics under
   operating-regime transfer.* Under review, *Reliability Engineering & System Safety*
   (JRESS-D-26-04509). Source: `paper3/`.
-- **Module 3 — Real-Time Optimization:** *The conformal selection effect in real-time optimisation:
-  why marginally valid back-offs over-violate and conditional calibration restores safety.* Under
-  review, *Journal of Process Control* (JPROCONT-D-26-00565). Source: `paper2/`.
+- **Module 3 — Real-Time Optimization:** *Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances.* Under
+  review, *Computers & Chemical Engineering* (CACE-D-26-01040). Source: `paper2/`.
 - **Module 4 — Integration (composed coverage certificate):** *A composed coverage certificate for
   closed-loop process operation: unifying conformal soft sensing, calibrated prognostics, and
   health-constrained real-time optimization.* In preparation (submission-ready), *Industrial &

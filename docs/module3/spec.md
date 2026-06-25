@@ -1,7 +1,7 @@
 # Module 3 — Real-Time Optimization (RTO)
 
 This directory holds Module 3 documentation. **Status: complete (3A + 3B); paper under
-review (JPROCONT-D-26-00565). 3C closed-loop is future work.**
+review (CACE-D-26-01040). 3C closed-loop is future work.**
 
 ## Files
 
@@ -64,9 +64,8 @@ optimum.
 
 ## Publication
 
-Module 3 is reported in **Paper 2**: "The conformal selection effect in real-time optimisation:
-why marginally valid back-offs over-violate and conditional calibration restores safety," under
-review at the *Journal of Process Control* (**JPROCONT-D-26-00565**). LaTeX source in `paper2/`;
+Module 3 is reported in **Paper 2**: "Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances,"
+under review at *Computers & Chemical Engineering* (**CACE-D-26-01040**). LaTeX source in `paper2/`;
 markdown working copy, figures, and frozen evidence in `docs/module3/paper/`.
 
 See `docs/architecture/decisions/` (ADR-013, ADR-014) for the reasoning behind each decision, and

@@ -1,21 +1,18 @@
-Real-time optimisation (RTO) drives a process against a quality constraint it cannot
-measure online, so it must subtract a back-off, a safety margin, from the specification.
-Sizing that margin from data with conformal prediction is attractive, since the guarantee
-is distribution-free and needs no model of the disturbance. We show that the obvious
-construction fails in deployment, and we provide one that does not. On a rigorous
-Peng-Robinson debutaniser twin, an optimiser that respects a marginally valid conformal
-back-off, including a locally adaptive one, realises a constraint-violation rate of roughly
-five times the nominal target across the disturbance range, because it settles at the
-operating point where the margin is least conservative relative to the local risk. We trace
-this loss of marginal coverage to the optimisation itself, verify against an oracle that the
-failure lies in the back-off and not in the chance-constrained formulation, and propose a
-back-off built from conformalised quantile regression with an a-posteriori calibration at
-the selected setpoint. The conditional construction returns the realised violation to the
-oracle level at near-oracle profit over the operationally realistic disturbance range, and
-it degrades only when the disturbance widens several-fold, announcing that limit through a
-calibration inflation factor that an operator can read as a data-adequacy diagnostic. A
-regime map over disturbance magnitude bounds where each back-off controls violation. The
-contribution is calibrated safety rather than profit: at a well-controlled feed the
-constraint is barely active and all methods earn within half a percent of the deterministic
-optimum, so the value of the method is the violation it removes. The mechanism and its
-remedy apply to any conformal interval used as a hard optimisation constraint.
+Real-time optimisation (RTO) drives a process against a quality constraint it cannot measure
+online, so it must subtract a back-off from the specification. Sizing that margin from data
+with conformal prediction is attractive, since it is distribution-free and needs no
+disturbance model. We show that the obvious construction fails in deployment, and
+we provide one that does not. On a rigorous Peng-Robinson debutaniser twin, an optimiser
+respecting a marginally valid conformal back-off, including a locally adaptive one, realises
+a constraint-violation rate of roughly five times the nominal target, because it settles
+where the margin is least conservative relative to the local risk. We verify against an
+oracle that the failure lies in the back-off and not in the chance-constrained formulation,
+and propose a back-off built from conformalised quantile regression with an a-posteriori
+calibration at the selected setpoint. The conditional construction returns the realised
+violation to the oracle level at near-oracle profit over the operationally realistic
+disturbance range, degrading only when the disturbance widens several-fold and announcing
+that limit through a calibration inflation factor an operator reads as a data-adequacy diagnostic. A regime map over disturbance magnitude bounds where each back-off controls
+violation. The contribution is calibrated safety rather than profit: at a well-controlled
+feed the constraint is barely active and all methods earn within half a percent of the
+deterministic optimum, so the method's value is the violation it removes. The mechanism and
+its remedy apply to any conformal interval used as a hard optimisation constraint.

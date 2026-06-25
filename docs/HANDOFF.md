@@ -47,7 +47,7 @@ to a horizon guarantee and moves IPIS off the quasi-static twin. Start a fresh s
 | Paper | Module | Journal | ID | Date | Source |
 |---|---|---|---|---|---|
 | 1 | M1 soft sensor | Computers & Chemical Engineering | CACE-D-26-00944 | 2026-06-12 | `paper/` |
-| 2 | M3 RTO (conformal selection) | Journal of Process Control | JPROCONT-D-26-00565 | 2026-06-16 | `paper2/` |
+| 2 | M3 RTO (conditional conformal back-offs) | Computers & Chemical Engineering | CACE-D-26-01040 | 2026-06-23 | `paper2/` |
 | 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04509** | **2026-06-20** | `paper3/` |
 | 4 | M4 integration (composed certificate) | Industrial & Engineering Chemistry Research (ACS) | *in prep, submission-ready* | -- | `paper4/` |
 
@@ -216,9 +216,11 @@ action is the Module 2 paper draft.**
 
 - **Paper 1 (Module 1, soft sensor)** — submitted to *Computers & Chemical Engineering*,
   **CACE-D-26-00944** (2026-06-12). Source: `paper/` (elsarticle, split sections). Under review.
-- **Paper 2 (Module 3, RTO — the conformal selection effect)** — submitted to *Journal of
-  Process Control*, **JPROCONT-D-26-00565** (2026-06-16). Source: `paper2/`. Markdown working
-  copy, figures, and frozen evidence: `docs/module3/paper/`. Under review.
+- **Paper 2 (Module 3, RTO)** — desk-rejected at *Journal of Process Control*
+  (JPROCONT-D-26-00565, scientific-significance gate, no reviewers), reframed deliverable-first
+  and transferred to *Computers & Chemical Engineering*, resubmitted as **CACE-D-26-01040**
+  (2026-06-23). New title: "Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances." Source: `paper2/` (single-column review
+  format). Markdown working copy, figures, evidence: `docs/module3/paper/`. Under review.
 - **Module 2 — Predictive Maintenance (anomaly detection + RUL): SCOPED, build not yet
   started.** Independent of M1/M3 (~10–20% asset reuse); the designated review-wait work.
   - **Scope locked.** `docs/module2/spec.md` (D1–D6) and **ADR-015** written. **D2 ratified
@@ -478,7 +480,7 @@ framework with three modules on a first-principles physics layer:
 1. **Module 1 — Soft Sensor** — real-time prediction of hard-to-measure quality
    variables. **(✅ complete; paper under review, CACE-D-26-00944)**
 2. **Module 2 — Predictive Maintenance** — anomaly detection + RUL. **(▶ NEXT)**
-3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; paper under review, JPROCONT-D-26-00565)**
+3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; paper under review, CACE-D-26-01040)**
 
 Digital twin layer = **DWSIM + GEKKO + CoolProp**. Operational bus = MQTT +
 InfluxDB. Front = Streamlit + FastAPI.
@@ -1163,6 +1165,19 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-23 (Paper 2 / M3 RTO transferred to CACE)** -- The RTO paper (`paper2/`) was
+  desk-rejected at Journal of Process Control (JPROCONT-D-26-00565, scientific-significance
+  gate, no reviewers). Diagnosed as framing, not science. Reframed deliverable-first: new
+  title "Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances"; abstract and intro re-led with the deployable method and the
+  quantified hazard, the selection-effect mechanism demoted to explanation. Reverted from the
+  JPC two-column 5p layout back to CACE single-column review format ([review,12pt]). Removed
+  the CRediT and generative-AI-declaration sections at author request. Converted residual
+  en-dashes to hyphens. Trimmed abstract to 246 words (CACE 250 cap). Transferred via Elsevier
+  and resubmitted to Computers & Chemical Engineering as **CACE-D-26-01040**. Status docs
+  updated (README, docs/module3/spec.md, PROJECT_STRUCTURE.md, this file). STILL ON OLD ID,
+  for the up-to-date session to propagate: ADR-016, paper4/references.bib,
+  docs/module4/formalization-spike.md, src/ipis/integration/health_rto.py, and the
+  docs/module3/paper/ working drafts (draft_v2.md, outline.md) carry the old title/ID.
 - **2026-06-23** — **MODULE 4 (FULL INTEGRATION) COMPLETE; PHASE 1 DONE.** The IECR manuscript for
   the composed coverage certificate is drafted, humanized (em-dashes removed), and submission-ready:
   `paper4/` compiles to 24 pp with 0 errors/warnings, Theorem 1 + Corollary 1 with proofs, 3 figures

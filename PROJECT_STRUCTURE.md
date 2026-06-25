@@ -7,7 +7,7 @@ next, read `docs/HANDOFF.md` (§0.5 is the live resume pointer).
 on a first-principles physics layer, in four modules: **Module 1 — Soft Sensor** (complete;
 paper under review, CACE-D-26-00944), **Module 2 — Predictive Maintenance** (complete; SCC paper under
 review, JRESS-D-26-04509), **Module 3 — Real-Time Optimization** (complete; paper under review,
-JPROCONT-D-26-00565), and **Module 4 — Integration** (complete; composed closed-loop coverage
+CACE-D-26-01040), and **Module 4 — Integration** (complete; composed closed-loop coverage
 certificate; IECR manuscript submission-ready). **Module 5** (dynamic / horizon realization) is next.
 
 ```
