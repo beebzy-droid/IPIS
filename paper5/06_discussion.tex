@@ -1,0 +1,18 @@
+\section{Discussion}
+% OUTLINE -- draft next. No prose yet.
+% - What the horizon guarantee buys: the per-cycle certificate \citep{busico_m4} becomes a
+%   runtime, horizon-wide safety monitor -- a long-run frequency guarantee on the joint event.
+% - The certificate's operational value, quantified (Fig. 1): meeting a quality spec is not
+%   safety; the health-blind loop is "in spec" yet structurally unsafe over the horizon. The
+%   psi-budget is what converts a per-cycle bound into a sustained one.
+% - Deadtime (Fig. 2 + O1): the cost of delayed feedback is the coverage RATE, not validity; the
+%   selection penalty stays zero.
+% - Adaptive vs static calibration (Fig. 3): a fixed union bound cannot buy horizon coverage
+%   without going vacuous; adaptivity is necessary at realistic K.
+% - Limitations: reduced-order (Hammerstein) dynamics, not a tray-resolved transient; illustrative
+%   time constants to be pinned per column; DWSIM-dynamic high-fidelity confirmation is future work
+%   (the in-sandbox loop proves the distribution-free claim, which is fidelity-agnostic for validity);
+%   the deadtime rate-transient is small in this well-behaved loop, and a drift stress test would
+%   make it visible.
+% - Bridge to plantwide: the eps-budget allocated across units (modular risk allocation) is the
+%   next step that scales the certificate from one column to a plant.

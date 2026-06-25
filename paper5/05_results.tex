@@ -1,0 +1,40 @@
+\section{Results}
+% OUTLINE -- draft next. No prose yet. This section is structured around the three figures.
+% R1 (Fig. 1): the conformal health-constrained loop holds S_k = 1.000 (Wilson 95% lower 0.992)
+%    against the 0.75 floor; the health-blind loop meets the quality spec (q = 1.000) but
+%    over-refluxes so projected RUL collapses (rul = 0.008) and S_k = 0.008 (fails the floor).
+%    The psi-budget binds every cycle in the constrained arm (1.00) and never in the blind arm.
+% R2 (Fig. 2): S_k = 1.000 for every label delay D_a in {0,1,2,4,8}; the M1 interval coverage
+%    holds ~0.90 throughout. Validity is invariant to deadtime (Delta_sel = 0 preserved).
+% R3 (Fig. 3): across the ACI learning rate the interval coverage stays near 0.90 with the
+%    half-width shrinking as gamma rises; the naive K-cycle Bonferroni half-width grows and is
+%    vacuous (infinite) at K >= 50, where ACI keeps a finite ~0.0011 half-width.
+% All numbers above are the committed evidence (docs/paper/evidence/module5_horizon_sweeps.json).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.82\linewidth]{fig1_two_arm.png}
+  \caption{Two-arm contrast over an operating campaign, both arms scored against the same
+  certified floor. The health-blind loop meets the quality spec but its over-reflux drives
+  projected remaining useful life below the floor, so the joint safety event $S_k$ collapses;
+  the conformal health-constrained loop holds $S_k$ at the floor.}
+  \label{fig:two_arm}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.82\linewidth]{fig2_deadtime.png}
+  \caption{Horizon coverage versus label delay $D_a$. The joint-safety coverage $S_k$ holds the
+  certified floor for every delay, and the soft-sensor interval coverage stays on target;
+  validity is invariant to analyzer/laboratory deadtime.}
+  \label{fig:deadtime}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{fig3_gamma_union.png}
+  \caption{(a) Coverage versus adaptivity across the adaptive-conformal learning rate. (b) The
+  naive $K$-cycle Bonferroni half-width becomes vacuous at realistic horizons, whereas adaptive
+  conformal inference maintains a finite half-width at target coverage.}
+  \label{fig:gamma_union}
+\end{figure}

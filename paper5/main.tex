@@ -1,0 +1,63 @@
+% IPIS Module 5 (dynamic / horizon realization) paper for Computers & Chemical Engineering (Elsevier).
+% Build: pdflatex main && bibtex main && pdflatex main x2
+% WORKING TITLE -- provisional, pending Bien's ratification (see chat for alternatives).
+\documentclass[review,12pt]{elsarticle}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{lineno}
+\usepackage{url}
+\graphicspath{{figures/}{../docs/module5/figures/}}
+\journal{Computers \& Chemical Engineering}
+
+\begin{document}
+\begin{frontmatter}
+
+\title{Horizon-wide safety guarantees for closed-loop process operation via adaptive
+conformal calibration}
+
+\author{Bien Busico}
+\address{Chemical Engineer, Quezon City, Philippines}
+\ead{bienbusico@gmail.com}
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\begin{keyword}
+adaptive conformal inference \sep horizon coverage \sep real-time optimisation \sep
+predictive maintenance \sep distillation \sep closed-loop safety
+\end{keyword}
+
+\end{frontmatter}
+\linenumbers
+
+\input{01_intro}
+\input{02_related_work}
+\input{03_framework}
+\input{04_case_study}
+\input{05_results}
+\input{06_discussion}
+\input{07_conclusion}
+
+\section*{Data and code availability}
+The dynamic plant, the dynamic closed-loop orchestrator, the adaptive-conformal horizon
+read-off, the two-arm and sweep experiments, and the single script that regenerates every
+figure in this paper (\texttt{scripts/run\_horizon\_sweeps.py}) are available at
+\url{github.com/beebzy-droid/IPIS}; all figures and the reported coverage numbers reproduce
+from a single fixed seed, with the headline numbers frozen as committed evidence. The
+process twin is built in DWSIM \citep{dwsim} under the Peng-Robinson equation of state
+\citep{peng1976}; the steady-state response surface it corrects, the soft sensor, the
+calibrated prognostics, and the per-cycle composed coverage certificate that this work lifts
+to a horizon are developed in the companion papers \citep{busico_m3, busico_m1, busico_m2, busico_m4}.
+
+\section*{Declaration of competing interest}
+The author declares no competing financial interests or personal relationships that
+could have influenced the work reported in this paper.
+
+\bibliographystyle{elsarticle-num-names}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,30 @@
+\section{Framework}
+% OUTLINE -- draft next. No prose yet. This section carries the two \cite{busico_m4} points.
+%
+% 3.1 The per-cycle composed certificate (recap).
+%   - State S_k = {x_k <= x_spec} AND {rho_k >= rho_min}; certified floor 1 - (alpha1+alpha2) - eps.
+%   - This is the object we lift. *** \cite{busico_m4} HERE (point 1): the composed certificate
+%     this work lifts to a horizon. *** Components: \citep{busico_m1, busico_m2, busico_m3}.
+%
+% 3.2 Dynamic realization (the loop the certificate now lives in).
+%   - Nonlinear-static gain (the DWSIM-fit GP response surface of \citep{busico_m3}) + linear
+%     transport dynamics: actuator first-order lag on (R,D), process lag on composition/temperature,
+%     analyzer deadtime on the measured quality. Two timescales: integration step dt vs the RTO
+%     decision interval (many dt). By construction the settled steady state reproduces the twin.
+%
+% 3.3 Delayed labels and the adaptive read-off.
+%   - Lab/analyzer label for cycle k arrives D_a decision cycles late. The horizon read-off uses
+%     ACI \citep{gibbs2021}: alpha_t updates from the delayed residual; the interval at cycle k is
+%     formed from scores no newer than k-1-D_a.
+%
+% 3.4 Validity under deadtime (O1).
+%   - Because the cycle-k interval never references its own outcome, the selection penalty
+%     Delta_sel = 0 is preserved for all D_a >= 0. *** \cite{busico_m4} HERE (point 2): cite as the
+%     source of the per-cycle Delta_sel = 0 result that this analysis re-verifies under deadtime;
+%     ref docs/module5/o1-deadtime-timing.md. *** Consequence: deadtime moves into the coverage
+%     RATE (an O(D_a/T) transient), not validity.
+%
+% 3.5 Horizon guarantee.
+%   - State the long-run claim: the campaign frequency of S_k meets the certified floor, via ACI's
+%     distribution-free long-run coverage \citep{gibbs2021} composed with the M4 budget. Contrast
+%     with the naive K-cycle Bonferroni bound (vacuous at large K) -- motivates F3.

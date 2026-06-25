@@ -1,0 +1,17 @@
+\section{Case study}
+% OUTLINE -- draft next. No prose yet.
+% 4.1 Twin: debutanizer column in DWSIM \citep{dwsim} under Peng-Robinson \citep{peng1976}; the
+%     validated steady-state response surface of \citep{busico_m3} is the static gain. Perry
+%     diagnostics \citep{perrys} only.
+% 4.2 Dynamic plant: time constants (actuator ~1 min, composition ~30 min, sensor ~15 min),
+%     analyzer deadtime ~5 min, integration dt ~1 min, RTO interval = 60 dt. Pump degradation via
+%     affinity cube law; projected RUL as the health channel.
+% 4.3 The two arms (identical except the psi-budget cap):
+%     - health-blind: uncapped reflux (economic pull), no psi-budget.
+%     - health-constrained: psi-budget reflux cap.
+%     BOTH scored against the SAME certified floor; the cap selects the arm, not eps.
+% 4.4 Configuration (frozen): spec_xb_c4 = 0.02, rul_min = 200 h, alpha1 = alpha2 = 0.10,
+%     eps = 0.05 (floor 0.75). Two-arm campaign n_seeds = 4, n_cycles = 120; sweep campaigns 400
+%     cycles; label delay D_a = 2 unless swept.
+% 4.5 Reproducibility: single fixed seed; run_horizon_sweeps.py regenerates all figures; headline
+%     numbers frozen in the committed evidence JSON.

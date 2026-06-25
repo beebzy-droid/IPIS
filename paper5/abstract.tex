@@ -1,0 +1,21 @@
+% ABSTRACT -- draft next, deliverable-first, <= 250 words (CACE cap). No prose yet.
+% Beats (in order):
+%   1. Deliverable: a horizon-wide (long-run) safety certificate for closed-loop process
+%      operation -- the joint event {product in spec} AND {equipment survives to its next
+%      maintenance window} holds at a certified frequency across an operating campaign.
+%   2. Gap: the per-cycle composed certificate \citep{busico_m4} is exchangeability-based and
+%      per-cycle; closed-loop feedback induces dependence and laboratory/analyzer labels arrive
+%      delayed, so the naive per-cycle-to-horizon extension (a Bonferroni union bound over K
+%      cycles) is vacuous at realistic horizons.
+%   3. Method: realize the loop dynamically (nonlinear-static gain + transport dynamics with
+%      actuator lag and analyzer deadtime) and lift the per-cycle guarantee with adaptive
+%      conformal inference \citep{gibbs2021}; show the selection penalty stays zero under
+%      deadtime so validity is preserved.
+%   4. Results (four, quantified): (a) the conformal health-constrained loop holds S_k=1.000
+%      (Wilson lower 0.992) against the 0.75 floor; (b) a health-blind loop meets the quality
+%      spec (q=1.000) but over-refluxes and projected RUL collapses, S_k=0.008; (c) validity is
+%      invariant to label delay D_a in {0..8}; (d) adaptive calibration stays finite (~0.001
+%      half-width) where the K-cycle Bonferroni interval is vacuous at K>=50.
+%   5. Significance: turns a per-cycle certificate into a runtime, horizon-wide safety monitor
+%      and the bridge to plantwide modular risk allocation.
+[ABSTRACT PLACEHOLDER -- prose to be drafted in the next pass.]
