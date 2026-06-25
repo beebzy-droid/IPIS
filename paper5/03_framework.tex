@@ -1,30 +1,111 @@
 \section{Framework}
-% OUTLINE -- draft next. No prose yet. This section carries the two \cite{busico_m4} points.
-%
-% 3.1 The per-cycle composed certificate (recap).
-%   - State S_k = {x_k <= x_spec} AND {rho_k >= rho_min}; certified floor 1 - (alpha1+alpha2) - eps.
-%   - This is the object we lift. *** \cite{busico_m4} HERE (point 1): the composed certificate
-%     this work lifts to a horizon. *** Components: \citep{busico_m1, busico_m2, busico_m3}.
-%
-% 3.2 Dynamic realization (the loop the certificate now lives in).
-%   - Nonlinear-static gain (the DWSIM-fit GP response surface of \citep{busico_m3}) + linear
-%     transport dynamics: actuator first-order lag on (R,D), process lag on composition/temperature,
-%     analyzer deadtime on the measured quality. Two timescales: integration step dt vs the RTO
-%     decision interval (many dt). By construction the settled steady state reproduces the twin.
-%
-% 3.3 Delayed labels and the adaptive read-off.
-%   - Lab/analyzer label for cycle k arrives D_a decision cycles late. The horizon read-off uses
-%     ACI \citep{gibbs2021}: alpha_t updates from the delayed residual; the interval at cycle k is
-%     formed from scores no newer than k-1-D_a.
-%
-% 3.4 Validity under deadtime (O1).
-%   - Because the cycle-k interval never references its own outcome, the selection penalty
-%     Delta_sel = 0 is preserved for all D_a >= 0. *** \cite{busico_m4} HERE (point 2): cite as the
-%     source of the per-cycle Delta_sel = 0 result that this analysis re-verifies under deadtime;
-%     ref docs/module5/o1-deadtime-timing.md. *** Consequence: deadtime moves into the coverage
-%     RATE (an O(D_a/T) transient), not validity.
-%
-% 3.5 Horizon guarantee.
-%   - State the long-run claim: the campaign frequency of S_k meets the certified floor, via ACI's
-%     distribution-free long-run coverage \citep{gibbs2021} composed with the M4 budget. Contrast
-%     with the naive K-cycle Bonferroni bound (vacuous at large K) -- motivates F3.
+\label{sec:framework}
+
+\subsection{The per-cycle composed certificate}
+\label{sec:percycle}
+
+Each decision cycle $k$ produces a setpoint $u_k=(R_k,D_k)$, the reflux ratio and the
+distillate rate. Under that setpoint the column realises a bottoms impurity $x_k$ and the
+reflux pump carries a projected remaining useful life $\rho_k$. The operating requirement is
+the \emph{joint} safety event
+\begin{equation}
+  S_k \;=\; \{\, x_k \le x_{\mathrm{spec}} \,\}\;\cap\;\{\, \rho_k \ge \rho_{\min} \,\},
+  \label{eq:Sk}
+\end{equation}
+the product staying in specification \emph{and} the equipment surviving to its next planned
+maintenance window. The composed coverage certificate of \citet{busico_m4} guarantees this
+event one cycle at a time: under exchangeable calibration residuals and a similarity budget
+$\varepsilon$,
+\begin{equation}
+  \Pr(S_k) \;\ge\; 1-(\alpha_1+\alpha_2)-\varepsilon,
+  \label{eq:floor}
+\end{equation}
+where $\alpha_1$ is the soft-sensor miscoverage \citep{busico_m1}, $\alpha_2$ the prognostic
+miscoverage \citep{busico_m2}, and $\varepsilon$ the conditional-calibration budget that the
+conformal back-off of the real-time optimiser spends \citep{busico_m3}. We call the
+right-hand side of \eqref{eq:floor} the certified floor. The bound is per cycle and rests on
+exchangeability. The aim of this paper is to make it hold across an operating \emph{horizon}
+once the loop is closed, so that successive cycles are dependent and the labels that calibrate
+the bound arrive late.
+
+\subsection{Dynamic realisation}
+\label{sec:dynamic}
+
+The certificate is established on a quasi-static twin, in which a setpoint maps instantly to
+its steady-state outcome. A real column does not. We therefore retain the validated
+steady-state response surface $g(\cdot)$ of the twin \citep{busico_m3}, fitted from the
+process simulator, as a nonlinear static gain, and wrap it in linear transport dynamics. The
+result is a Hammerstein-class plant with three transport elements, each a measured or
+specified time constant rather than a free parameter:
+\begin{enumerate}
+\item an actuator first-order lag, so the realised setpoint $(\tilde R_k,\tilde D_k)$ relaxes
+  toward the commanded $(R_k,D_k)$ with time constant $\tau_{\mathrm{act}}$;
+\item a process first-order lag, so the impurity and the sensor temperature relax toward their
+  steady-state targets $g(\tilde R_k,\tilde D_k)$ with constants $\tau_{\mathrm{proc}}$ and
+  $\tau_{\mathrm{temp}}$;
+\item an analyser dead time $\theta_a$ on the measured impurity, reflecting the
+  gas-chromatograph cycle.
+\end{enumerate}
+By construction the settled steady state reproduces the twin exactly, so the calibration that
+underlies \eqref{eq:floor} transfers without re-estimation. The loop runs on two timescales: a
+fast integration step $\Delta t$ for the dynamics, and a slower decision interval
+$T_{\mathrm{rto}}=n_{\mathrm{sub}}\,\Delta t$ at which a new setpoint is computed and then held.
+Holding $u_k$ across the interval, rather than applying it instantaneously, is what makes the
+similarity coordinate evolve along the realised path and what exposes the certificate to the
+plant dynamics it must now survive.
+
+\subsection{Delayed labels and the adaptive read-off}
+\label{sec:adaptive}
+
+A laboratory or analyser measurement of cycle $k$ does not return until $D_a$ decision cycles
+later, where $D_a=\lceil \theta_{\mathrm{lab}}/T_{\mathrm{rto}}\rceil$. The horizon read-off
+therefore replaces the per-cycle conformal quantile with an adaptive one
+\citep{gibbs2021}. Writing $s_j$ for the soft-sensor nonconformity score of cycle $j$ and
+$\mathrm{err}_j=\mathbf{1}[\,s_j>\hat q_j\,]$ for its miscoverage indicator, the adaptive level
+follows
+\begin{equation}
+  \alpha_{t+1} \;=\; \alpha_t + \gamma\,\big(\alpha_1 - \mathrm{err}_{t}\big),
+  \label{eq:aci}
+\end{equation}
+and the interval that the optimiser backs off against at cycle $k$ is
+$\mathcal{C}_k=\hat y_k \pm \hat q\big(1-\alpha^{(k)}\big)$. Because the label for cycle $j$
+is only consumed at cycle $j+D_a$, the level $\alpha^{(k)}$ that forms $\mathcal{C}_k$ depends
+only on scores
+\begin{equation}
+  \{\, s_j : j \le k-1-D_a \,\},
+  \label{eq:usable}
+\end{equation}
+that is, on residuals that are stale by $D_a$ cycles relative to the no-delay case. This is the
+standard delayed-feedback regime for adaptive conformal inference, and it is the only channel
+through which dead time enters the guarantee.
+
+\subsection{Validity under dead time}
+\label{sec:o1}
+
+A closed loop raises a selection concern: if the optimiser were to choose $u_k$ using the same
+sample later used to check coverage at cycle $k$, the marginal guarantee would no longer hold,
+and \citet{busico_m4} carry an explicit selection penalty $\Delta_{\mathrm{sel},k}$ that is
+non-zero only in that configuration. Dead time does not create such co-selection. By
+\eqref{eq:usable} the interval $\mathcal{C}_k$ is a function of scores no newer than
+$k-1-D_a$, and for every $D_a\ge 0$ this set excludes $s_k$ itself, since $k>k-1-D_a$. The
+cycle-$k$ interval is thus formed without reference to the cycle-$k$ outcome it is scored
+against, so the per-cycle result $\Delta_{\mathrm{sel},k}=0$ of \citet{busico_m4} is preserved
+under arbitrary label delay. What dead time does change is that $\alpha^{(k)}$ is built from
+older residuals; its effect is a transient in the coverage \emph{rate}, of order $D_a/K$ over a
+$K$-cycle horizon, which washes out as the horizon grows, and not a loss of validity. The
+detailed timing argument is recorded in the supplementary note.
+
+\subsection{The horizon guarantee}
+\label{sec:horizon}
+
+Equations \eqref{eq:aci}--\eqref{eq:usable} deliver a long-run coverage property for the
+soft-sensor interval that is distribution-free and holds under the dependence that feedback
+induces \citep{gibbs2021}: the realised miscoverage frequency converges to $\alpha_1$ up to an
+$O(1/(\gamma K))$ term, with an additional $O(D_a/K)$ boundary term under delay. Composing this
+long-run quality guarantee with the prognostic and budget terms of \eqref{eq:floor} carries the
+per-cycle floor to the horizon: the campaign frequency of the joint event $S_k$ meets the
+certified floor of \eqref{eq:floor}. The naive alternative, a Bonferroni union bound that
+charges each cycle the level $\alpha_1/K$ to cover $K$ cycles jointly, requires the
+$1-\alpha_1/K$ residual quantile per cycle; as $K$ grows this level exceeds what any finite
+calibration set can resolve and the interval becomes vacuous, so static union bounds cannot buy
+horizon coverage. Section~\ref{sec:results} reports both behaviours.

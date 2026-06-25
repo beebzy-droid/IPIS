@@ -119,7 +119,7 @@ mid-term lever.
 
 ---
 
-### >> RESUME HERE: Module 5 — dynamic / physical realization (fresh session)
+### >> RESUME HERE: Module 5 / Paper 5 — paper drafting (CACE; backbone complete, paper5/ skeleton landed)
 
 **One-line goal.** Move IPIS off the quasi-static FUG twin onto a DYNAMIC, physically realistic loop
 (real actuator and measurement dynamics + transport lags), and upgrade the per-cycle coverage
@@ -177,7 +177,7 @@ coordinate and budget machinery, the Lipschitz sweep. Module 5 swaps the steady-
 ShortcutColumnModel for a dynamic plant and the per-cycle certificate for an ACI horizon certificate,
 reusing everything else.
 
-**Deliverable.** Module 5 = Paper 5 (dynamic / horizon realization). Target venue TBD — option-scale
+**Deliverable.** Module 5 = Paper 5 (dynamic / horizon realization). Target venue: Computers & Chemical Engineering (CACE); paper5/ skeleton landed, drafting in progress. The original option-scale
 at draft time (candidates: Journal of Process Control again, Control Engineering Practice, IEEE TCST
 for the control angle; or CACE/IECR for the process-systems angle).
 
@@ -222,8 +222,8 @@ action is the Module 2 paper draft.**
   (2026-06-23). New title: "Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances." Source: `paper2/` (single-column review
   format). Markdown working copy, figures, evidence: `docs/module3/paper/`. Under review.
 - **2026-06-23 (cross-ref propagation)** — propagated **CACE-D-26-01040** + new title from `paper2/` into ADR-016, `paper4/references.bib`, `docs/module4/formalization-spike.md`, `src/ipis/integration/health_rto.py`, and the `docs/module3/paper/` working drafts; corrected the §2 vision pointer (Module 2 -> complete, Module 5 -> next). No code or results changed.
-- **Module 2 — Predictive Maintenance (anomaly detection + RUL): SCOPED, build not yet
-  started.** Independent of M1/M3 (~10–20% asset reuse); the designated review-wait work.
+- **Module 2 — Predictive Maintenance (anomaly detection + RUL): COMPLETE.** SCC paper under
+  review (JRESS-D-26-04509); built as Modules 2A-2D.
   - **Scope locked.** `docs/module2/spec.md` (D1–D6) and **ADR-015** written. **D2 ratified
     by action** (datasets downloaded) → ADR-015 status **Accepted**. M2 = two sub-tasks the
     `state_bus` already contracts: health score ∈[0,1], flag OK/WARN/ALARM, RUL (hours).

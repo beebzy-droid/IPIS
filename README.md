@@ -57,7 +57,7 @@ IPIS addresses all three with one architecture, validated across heterogeneous b
 | Module 2 — Predictive Maintenance | ✅ Complete | Feature-complete (2A–2D); SCC paper under review (JRESS-D-26-04509) |
 | Module 3 — Real-Time Optimization | ✅ Complete | Paper under review (CACE-D-26-01040) |
 | Module 4 — Integration (composed certificate) | ✅ Complete | Closed-loop coverage certificate validated on the debutanizer twin; IECR manuscript submission-ready (`paper4/`) |
-| Module 5 — Dynamic / horizon realization | ⏳ Next | Dynamic plant + adaptive-conformal horizon guarantee; the bridge to plantwide |
+| Module 5 — Dynamic / horizon realization | 🚧 In progress | Dynamic plant, closed-loop orchestrator, and adaptive-conformal horizon coverage validated (62 tests; three results frozen); Paper 5 drafting (`paper5/`) |
 
 ## Publications
 
@@ -77,6 +77,9 @@ differs from the module numbering for Modules 2 and 3; the module mapping below 
   closed-loop process operation: unifying conformal soft sensing, calibrated prognostics, and
   health-constrained real-time optimization.* In preparation (submission-ready), *Industrial &
   Engineering Chemistry Research* (ACS). Source: `paper4/`.
+- **Module 5 — Dynamic / horizon realization (this paper):** *Horizon-wide safety guarantees for
+  closed-loop process operation via adaptive conformal calibration.* In preparation, *Computers &
+  Chemical Engineering* (`paper5/`).
 
 ## Project lifecycle and roadmap
 

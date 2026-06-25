@@ -8,7 +8,7 @@ on a first-principles physics layer, in four modules: **Module 1 — Soft Sensor
 paper under review, CACE-D-26-00944), **Module 2 — Predictive Maintenance** (complete; SCC paper under
 review, JRESS-D-26-04509), **Module 3 — Real-Time Optimization** (complete; paper under review,
 CACE-D-26-01040), and **Module 4 — Integration** (complete; composed closed-loop coverage
-certificate; IECR manuscript submission-ready). **Module 5** (dynamic / horizon realization) is next.
+certificate; IECR manuscript submission-ready). **Module 5** (dynamic / horizon realization) is in progress: experimental backbone complete, Paper 5 drafting (`paper5/`).
 
 ```
 IPIS/
@@ -66,6 +66,10 @@ IPIS/
 │   ├── references.bib  figures/{loop_schematic,l1_sweep,twin_coverage}.png
 │   ├── cover_letter.md  suggested_reviewers.md
 │
+├── paper5/                       PAPER 5 / MODULE 5 (dynamic / horizon realization) — elsarticle (CACE)
+│   ├── main.tex  abstract.tex  01_intro.tex … 07_conclusion.tex   (line-numbered; lineno+amsmath)
+│   ├── references.bib            (figures resolved via ../docs/module5/figures/)
+│
 ├── docs/
 │   ├── HANDOFF.md                Single source of truth for resuming work (read first)
 │   ├── architecture/
@@ -93,9 +97,9 @@ IPIS/
 - **Source layout** `src=["src"]`; conda env `ipis` (Python 3.11). Quality gates before every
   commit: `black src tests scripts`, `ruff check src tests`, `pytest tests/unit -q`. CI lints
   `src tests` and runs unit tests; `scripts/` are not CI-tested (they need gitignored data).
-- **Four papers.** `paper/`, `paper2/`, `paper3/`, and `paper4/` hold the LaTeX submission packages.
+- **Five papers.** `paper/`, `paper2/`, `paper3/`, `paper4/`, and `paper5/` hold the LaTeX submission packages.
   `paper/` and `paper2/` share the markdown-working-copy layout; `paper3/` is self-contained
-  split-section elsarticle; `paper4/` (Module 4) is achemso/ACS for IECR. NOTE the directory numbers
+  split-section elsarticle; `paper4/` (Module 4) is achemso/ACS for IECR; `paper5/` (Module 5) is split-section elsarticle for CACE. NOTE the directory numbers
   follow authoring order: `paper2/`=Module 3 (RTO), `paper3/`=Module 2 (SCC). Module mapping is in
   the README Publications list and the HANDOFF papers table. Working copies/frozen evidence for Papers 1–2 live under
   `docs/paper/` and `docs/module3/paper/`; Paper 3's theory note is `docs/module2/scc/`.
