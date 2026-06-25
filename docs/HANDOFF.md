@@ -221,6 +221,7 @@ action is the Module 2 paper draft.**
   and transferred to *Computers & Chemical Engineering*, resubmitted as **CACE-D-26-01040**
   (2026-06-23). New title: "Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances." Source: `paper2/` (single-column review
   format). Markdown working copy, figures, evidence: `docs/module3/paper/`. Under review.
+- **2026-06-23 (cross-ref propagation)** — propagated **CACE-D-26-01040** + new title from `paper2/` into ADR-016, `paper4/references.bib`, `docs/module4/formalization-spike.md`, `src/ipis/integration/health_rto.py`, and the `docs/module3/paper/` working drafts; corrected the §2 vision pointer (Module 2 -> complete, Module 5 -> next). No code or results changed.
 - **Module 2 — Predictive Maintenance (anomaly detection + RUL): SCOPED, build not yet
   started.** Independent of M1/M3 (~10–20% asset reuse); the designated review-wait work.
   - **Scope locked.** `docs/module2/spec.md` (D1–D6) and **ADR-015** written. **D2 ratified
@@ -475,12 +476,14 @@ benchmark data are **not** CI-tested; library code + unit tests **are**.
 ## 2. Project vision
 
 **IPIS — Integrated Process Intelligence System.** A hybrid, digital-twin-backed
-framework with three modules on a first-principles physics layer:
+framework with five modules on a first-principles physics layer:
 
 1. **Module 1 — Soft Sensor** — real-time prediction of hard-to-measure quality
    variables. **(✅ complete; paper under review, CACE-D-26-00944)**
-2. **Module 2 — Predictive Maintenance** — anomaly detection + RUL. **(▶ NEXT)**
+2. **Module 2 — Predictive Maintenance** — anomaly detection + RUL. **(✅ complete; paper under review, JRESS-D-26-04509)**
 3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; paper under review, CACE-D-26-01040)**
+4. **Module 4 — Composed certificate** — the integrated SCC coverage guarantee. **(✅ complete; IECR submission prep)**
+5. **Module 5 — Dynamic / horizon realization** — closed-loop ACI horizon coverage. **(▶ NEXT — experimental backbone complete, paper next)**
 
 Digital twin layer = **DWSIM + GEKKO + CoolProp**. Operational bus = MQTT +
 InfluxDB. Front = Streamlit + FastAPI.

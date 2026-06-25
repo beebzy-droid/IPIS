@@ -1,6 +1,6 @@
-# The conformal selection effect in real-time optimisation: why marginally valid back-offs over-violate and conditional calibration restores safety
+# Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances
 
-> Paper 2, draft v2 (polished submission text). Target: Journal of Process Control.
+> Paper 2, draft v2 (polished submission text). Target: Computers & Chemical Engineering (CACE-D-26-01040).
 > Figures F1 to F7 and Table 1 are referenced in place. Bibliography in references.md.
 
 ---

@@ -4,8 +4,8 @@
 > is a single sharp contribution, not a five-part framework — keep it tight.
 
 **Working title (primary, selected):**
-*The conformal selection effect in real-time optimisation: why marginally valid
-back-offs over-violate and conditional calibration restores safety*
+*Conditionally calibrated conformal back-offs for chance-constrained real-time
+optimisation under unmeasured disturbances*
 
 Alternates:
 - *When conformal prediction is unsafe for real-time optimisation: the constraint

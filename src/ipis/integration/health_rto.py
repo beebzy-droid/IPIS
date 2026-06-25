@@ -1,7 +1,7 @@
 """Conformal health-constrained RTO (decision D1) -- the §6 actionable corollary.
 
 This is a NEW integration module, not an edit to Module 3's submitted
-``rto_nlp.py`` (Paper 2, JPROCONT-D-26-00565). It rebuilds the same economic NLP
+``rto_nlp.py`` (Paper 2, CACE-D-26-01040). It rebuilds the same economic NLP
 from *injected* parameters -- the fitted ``LnXbSurface`` coefficients and an
 ``EconomicsAnchor``-equivalent price set -- so Paper 2's code stays frozen, and
 adds the similitude-departure (ψ-budget) constraint of
