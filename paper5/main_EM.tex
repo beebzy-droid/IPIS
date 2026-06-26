@@ -1,0 +1,524 @@
+% IPIS Module 5 paper -- FLAT Editorial Manager variant (all sections inlined, no graphicspath).
+% Generated from the split sources in paper5/. Upload this single file as the Manuscript;
+% upload fig1_two_arm.png, fig2_deadtime.png, fig3_gamma_union.png and references.bib alongside.
+% IPIS Module 5 (dynamic / horizon realization) paper for Computers & Chemical Engineering (Elsevier).
+% Build: pdflatex main && bibtex main && pdflatex main x2
+% WORKING TITLE -- provisional, pending Bien's ratification (see chat for alternatives).
+\documentclass[review,12pt]{elsarticle}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{lineno}
+\usepackage{url}
+\journal{Computers \& Chemical Engineering}
+
+\begin{document}
+\begin{frontmatter}
+
+\title{Horizon-wide safety guarantees for closed-loop process operation via adaptive
+conformal calibration}
+
+\author{Bien Busico}
+\address{Chemical Engineer, Quezon City, Philippines}
+\ead{bienbusico@gmail.com}
+
+\begin{abstract}
+% ---- begin abstract.tex ----
+Process safety is judged over a campaign: what matters is the long-run frequency with which a
+plant simultaneously meets its product specification and preserves its equipment to the next
+maintenance window. We give a distribution-free guarantee on this horizon-wide joint event for a
+closed loop with realistic dynamics and delayed measurements. A per-cycle version exists,
+composing a soft-sensor budget, a prognostic budget, and the conditional-calibration budget of a
+conformal real-time optimiser, but it assumes exchangeability and holds one cycle at a time.
+Closed-loop feedback makes cycles dependent, laboratory labels arrive late, and the naive union
+bound that would cover a horizon is vacuous. We realise the loop dynamically, as a validated
+static gain wrapped in actuator, process, and analyser-deadtime transport lags, and lift the
+per-cycle certificate with adaptive conformal inference. The conformal selection penalty is zero
+under arbitrary label delay, so validity is preserved and dead time enters only the coverage
+rate. On a debutanizer twin the health-constrained loop holds the joint event at its certified
+floor of $0.75$ with a $95\%$ Wilson lower bound of $0.992$, whereas a health-blind optimiser
+stays in specification on essentially every cycle yet over-refluxes until projected life
+collapses, dropping the event to $0.008$. Coverage is invariant to label delays of zero to eight
+cycles, and adaptive calibration keeps a finite interval at target coverage where the union
+bound is vacuous beyond fifty cycles. The per-cycle certificate thus becomes a runtime,
+horizon-wide safety monitor.
+% ---- end abstract.tex ----
+\end{abstract}
+
+\begin{keyword}
+adaptive conformal inference \sep horizon coverage \sep real-time optimisation \sep
+predictive maintenance \sep distillation \sep closed-loop safety
+\end{keyword}
+
+\end{frontmatter}
+\linenumbers
+
+% ---- begin 01_intro.tex ----
+\section{Introduction}
+\label{sec:intro}
+
+Closed-loop process operation is judged over a campaign, not a single cycle. What matters
+operationally is the long-run frequency with which the plant simultaneously meets its product
+specification and preserves its equipment to the next planned maintenance window. This paper
+gives a distribution-free guarantee on exactly that horizon-wide joint event for a closed loop
+with realistic dynamics and delayed measurements, and shows that it holds where the obvious
+construction does not.
+
+A per-cycle version of the guarantee already exists. The composed coverage certificate of
+\citet{busico_m4} bounds the one-cycle joint event, the product staying in specification and
+the equipment surviving, under exchangeable calibration residuals, by summing a soft-sensor
+budget \citep{busico_m1}, a prognostic budget \citep{busico_m2}, and the conditional-calibration
+budget of a conformal real-time optimiser \citep{busico_m3}. Two things break when the loop is
+actually run. Feedback makes successive cycles dependent, so exchangeability fails; and
+laboratory or analyser labels return several cycles late, so the residuals that calibrate the
+bound are stale. The natural repair, a Bonferroni union bound that charges each cycle a fraction
+of the error budget to cover $K$ cycles jointly, becomes vacuous as $K$ grows. A horizon
+guarantee therefore needs a different mechanism, not a tighter bookkeeping of the per-cycle one.
+
+We supply that mechanism by lifting the per-cycle certificate with adaptive conformal inference
+\citep{gibbs2021}, and we realise the loop dynamically so the claim is tested against transport
+lags and analyser dead time rather than asserted on a quasi-static surrogate. The contributions
+are four.
+\begin{enumerate}
+\item \textbf{R1, a deployable horizon-wide safety certificate.} Adaptive calibration carries the
+  per-cycle floor to the campaign: the conformal health-constrained loop holds the joint safety
+  event at its certified floor over the horizon, with a $95\%$ Wilson lower bound of $0.992$
+  against a floor of $0.75$.
+\item \textbf{R2, the certificate's operational value, quantified.} A health-blind optimiser
+  meets the quality specification on essentially every cycle yet over-refluxes until projected
+  remaining useful life collapses, dropping the joint event to $0.008$, while the constrained
+  loop holds it. Meeting a specification is not the same as operating safely, and the health
+  channel with its budget is what closes the gap.
+\item \textbf{R3, validity that is invariant to measurement dead time.} The conformal selection
+  penalty stays zero under arbitrary label delay, so dead time moves into the coverage rate
+  rather than breaking validity; the joint coverage stays at $1.000$ across delays of zero to
+  eight cycles.
+\item \textbf{R4, evidence that adaptivity is necessary.} Adaptive calibration keeps a finite
+  interval at target coverage across horizons at which the naive union bound is already vacuous.
+\end{enumerate}
+
+This paper completes the IPIS series, which develops a physics-anchored soft sensor
+\citep{busico_m1}, a similarity-calibrated prognostic certificate \citep{busico_m2}, a
+conditionally calibrated conformal real-time optimiser \citep{busico_m3}, and the per-cycle
+composed certificate \citep{busico_m4} that the present work lifts to a horizon.
+Section~\ref{sec:framework} develops the framework: the per-cycle certificate, its dynamic
+realisation, the delayed-label read-off, the dead-time argument, and the horizon guarantee. The
+case study fixes the debutanizer twin and the two control arms, and Section~\ref{sec:results}
+reports the campaign behaviour against the three results above. The discussion places the
+guarantee as a runtime safety monitor and the bridge to plantwide risk allocation.
+% ---- end 01_intro.tex ----
+% ---- begin 02_related_work.tex ----
+\section{Related work}
+\label{sec:related}
+
+Conformal prediction supplies finite-sample, distribution-free coverage under exchangeability
+\citep{vovk2005, shafer2008}. Split and inductive variants make it cheap enough for online
+regression \citep{lei2018, angelopoulos2023}, and conformalized quantile regression adapts the
+interval width to local difficulty \citep{romano2019}. These deliver per-instance marginal
+coverage, which is exactly the ingredient the per-cycle composed certificate of
+\citet{busico_m4} sums across its soft-sensor and prognostic channels.
+
+Closed-loop data are not exchangeable, because feedback couples successive cycles. Two lines of
+work extend conformal validity past exchangeability. Reweighting recovers coverage under a
+covariate shift that is known or estimable \citep{tibshirani2019}, and the
+beyond-exchangeability framework bounds the coverage gap by a total-variation-type term for
+general dependent data \citep{barber2023}. These results justify that a conformal interval need
+not collapse when a control loop introduces dependence, but they do not on their own deliver a
+long-run guarantee over a horizon under a feedback policy.
+
+Adaptive conformal inference closes that loop directly. It treats the miscoverage level as a
+state updated online from realised errors and guarantees a long-run coverage frequency however
+the distribution drifts \citep{gibbs2021}. This long-run, shift-robust property is the engine of
+the horizon guarantee developed here, and, as Section~\ref{sec:o1} shows, it tolerates the
+delayed feedback that analyser dead time imposes.
+
+On the control side, real-time optimisation drives a plant toward its economic optimum despite
+plant-model mismatch, classically through modifier adaptation
+\citep{marchetti2009, chachuat2009}, while self-optimizing and plantwide control frame which
+variables to hold so that economic loss stays bounded \citep{skogestad2000}. The IPIS optimiser
+\citep{busico_m3} adds a conformal back-off so that the economic push respects a chance
+constraint; the present work asks what that back-off guarantees over a whole campaign rather
+than at a single cycle.
+
+This paper is the realisation layer of the IPIS series, which develops a physics-anchored soft
+sensor \citep{busico_m1}, a similarity-calibrated prognostic certificate \citep{busico_m2}, the
+conformal real-time optimiser \citep{busico_m3}, and the per-cycle composed certificate
+\citep{busico_m4}. To our knowledge none of this prior work delivers a horizon-wide guarantee on
+a joint quality-and-equipment-health event in a dynamic closed loop with delayed labels.
+Establishing that guarantee, and showing that the naive union-bound alternative is vacuous at
+realistic horizons, is the gap this paper fills.
+% ---- end 02_related_work.tex ----
+% ---- begin 03_framework.tex ----
+\section{Framework}
+\label{sec:framework}
+
+\subsection{The per-cycle composed certificate}
+\label{sec:percycle}
+
+Each decision cycle $k$ produces a setpoint $u_k=(R_k,D_k)$, the reflux ratio and the
+distillate rate. Under that setpoint the column realises a bottoms impurity $x_k$ and the
+reflux pump carries a projected remaining useful life $\rho_k$. The operating requirement is
+the \emph{joint} safety event
+\begin{equation}
+  S_k \;=\; \{\, x_k \le x_{\mathrm{spec}} \,\}\;\cap\;\{\, \rho_k \ge \rho_{\min} \,\},
+  \label{eq:Sk}
+\end{equation}
+the product staying in specification \emph{and} the equipment surviving to its next planned
+maintenance window. The composed coverage certificate of \citet{busico_m4} guarantees this
+event one cycle at a time: under exchangeable calibration residuals and a similarity budget
+$\varepsilon$,
+\begin{equation}
+  \Pr(S_k) \;\ge\; 1-(\alpha_1+\alpha_2)-\varepsilon,
+  \label{eq:floor}
+\end{equation}
+where $\alpha_1$ is the soft-sensor miscoverage \citep{busico_m1}, $\alpha_2$ the prognostic
+miscoverage \citep{busico_m2}, and $\varepsilon$ the conditional-calibration budget that the
+conformal back-off of the real-time optimiser spends \citep{busico_m3}. We call the
+right-hand side of \eqref{eq:floor} the certified floor. The bound is per cycle and rests on
+exchangeability. The aim of this paper is to make it hold across an operating \emph{horizon}
+once the loop is closed, so that successive cycles are dependent and the labels that calibrate
+the bound arrive late.
+
+\subsection{Dynamic realisation}
+\label{sec:dynamic}
+
+The certificate is established on a quasi-static twin, in which a setpoint maps instantly to
+its steady-state outcome. A real column does not. We therefore retain the validated
+steady-state response surface $g(\cdot)$ of the twin \citep{busico_m3}, fitted from the
+process simulator, as a nonlinear static gain, and wrap it in linear transport dynamics. The
+result is a Hammerstein-class plant with three transport elements, each a measured or
+specified time constant rather than a free parameter:
+\begin{enumerate}
+\item an actuator first-order lag, so the realised setpoint $(\tilde R_k,\tilde D_k)$ relaxes
+  toward the commanded $(R_k,D_k)$ with time constant $\tau_{\mathrm{act}}$;
+\item a process first-order lag, so the impurity and the sensor temperature relax toward their
+  steady-state targets $g(\tilde R_k,\tilde D_k)$ with constants $\tau_{\mathrm{proc}}$ and
+  $\tau_{\mathrm{temp}}$;
+\item an analyser dead time $\theta_a$ on the measured impurity, reflecting the
+  gas-chromatograph cycle.
+\end{enumerate}
+By construction the settled steady state reproduces the twin exactly, so the calibration that
+underlies \eqref{eq:floor} transfers without re-estimation. The loop runs on two timescales: a
+fast integration step $\Delta t$ for the dynamics, and a slower decision interval
+$T_{\mathrm{rto}}=n_{\mathrm{sub}}\,\Delta t$ at which a new setpoint is computed and then held.
+Holding $u_k$ across the interval, rather than applying it instantaneously, is what makes the
+similarity coordinate evolve along the realised path and what exposes the certificate to the
+plant dynamics it must now survive.
+
+\subsection{Delayed labels and the adaptive read-off}
+\label{sec:adaptive}
+
+A laboratory or analyser measurement of cycle $k$ does not return until $D_a$ decision cycles
+later, where $D_a=\lceil \theta_{\mathrm{lab}}/T_{\mathrm{rto}}\rceil$. The horizon read-off
+therefore replaces the per-cycle conformal quantile with an adaptive one
+\citep{gibbs2021}. Writing $s_j$ for the soft-sensor nonconformity score of cycle $j$ and
+$\mathrm{err}_j=\mathbf{1}[\,s_j>\hat q_j\,]$ for its miscoverage indicator, the adaptive level
+follows
+\begin{equation}
+  \alpha_{t+1} \;=\; \alpha_t + \gamma\,\big(\alpha_1 - \mathrm{err}_{t}\big),
+  \label{eq:aci}
+\end{equation}
+and the interval that the optimiser backs off against at cycle $k$ is
+$\mathcal{C}_k=\hat y_k \pm \hat q\big(1-\alpha^{(k)}\big)$. Because the label for cycle $j$
+is only consumed at cycle $j+D_a$, the level $\alpha^{(k)}$ that forms $\mathcal{C}_k$ depends
+only on scores
+\begin{equation}
+  \{\, s_j : j \le k-1-D_a \,\},
+  \label{eq:usable}
+\end{equation}
+that is, on residuals that are stale by $D_a$ cycles relative to the no-delay case. This is the
+standard delayed-feedback regime for adaptive conformal inference, and it is the only channel
+through which dead time enters the guarantee.
+
+\subsection{Validity under dead time}
+\label{sec:o1}
+
+A closed loop raises a selection concern: if the optimiser were to choose $u_k$ using the same
+sample later used to check coverage at cycle $k$, the marginal guarantee would no longer hold,
+and \citet{busico_m4} carry an explicit selection penalty $\Delta_{\mathrm{sel},k}$ that is
+non-zero only in that configuration. Dead time does not create such co-selection. By
+\eqref{eq:usable} the interval $\mathcal{C}_k$ is a function of scores no newer than
+$k-1-D_a$, and for every $D_a\ge 0$ this set excludes $s_k$ itself, since $k>k-1-D_a$. The
+cycle-$k$ interval is thus formed without reference to the cycle-$k$ outcome it is scored
+against, so the per-cycle result $\Delta_{\mathrm{sel},k}=0$ of \citet{busico_m4} is preserved
+under arbitrary label delay. What dead time does change is that $\alpha^{(k)}$ is built from
+older residuals; its effect is a transient in the coverage \emph{rate}, of order $D_a/K$ over a
+$K$-cycle horizon, which washes out as the horizon grows, and not a loss of validity. The
+detailed timing argument is given in Appendix~\ref{app:o1}.
+
+\subsection{The horizon guarantee}
+\label{sec:horizon}
+
+Equations \eqref{eq:aci}--\eqref{eq:usable} deliver a long-run coverage property for the
+soft-sensor interval that is distribution-free and holds under the dependence that feedback
+induces \citep{gibbs2021}: the realised miscoverage frequency converges to $\alpha_1$ up to an
+$O(1/(\gamma K))$ term, with an additional $O(D_a/K)$ boundary term under delay. Composing this
+long-run quality guarantee with the prognostic and budget terms of \eqref{eq:floor} carries the
+per-cycle floor to the horizon: the campaign frequency of the joint event $S_k$ meets the
+certified floor of \eqref{eq:floor}. The naive alternative, a Bonferroni union bound that
+charges each cycle the level $\alpha_1/K$ to cover $K$ cycles jointly, requires the
+$1-\alpha_1/K$ residual quantile per cycle; as $K$ grows this level exceeds what any finite
+calibration set can resolve and the interval becomes vacuous, so static union bounds cannot buy
+horizon coverage. Section~\ref{sec:results} reports both behaviours.
+% ---- end 03_framework.tex ----
+% ---- begin 04_case_study.tex ----
+\section{Case study}
+\label{sec:case}
+
+\subsection{Process twin}
+The benchmark is a debutanizer column built in DWSIM \citep{dwsim} under the Peng-Robinson
+equation of state \citep{peng1976}. From this twin we take the validated steady-state response
+surface relating reflux ratio and distillate rate to the bottoms butane impurity
+\citep{busico_m3} and use it as the nonlinear static gain of the dynamic plant; column
+diagnostics follow standard correlations \citep{perrys}. Because the gain is the same surface
+the per-cycle certificate was calibrated against, the settled steady state reproduces the twin
+and the calibration transfers without re-estimation.
+
+\subsection{Dynamic plant and health channel}
+The static gain is wrapped in the transport dynamics of Section~\ref{sec:dynamic}. Representative
+time constants are an actuator lag of about one minute on the manipulated setpoints, a
+composition lag of about thirty minutes and a sensor-temperature lag of about fifteen minutes on
+the outputs, and an analyser dead time of about five minutes on the measured impurity; the loop
+is integrated at a one-minute step and a new setpoint is computed and held every sixty steps,
+that is, every hour. The reflux pump degrades under an affinity cube law in the realised reflux,
+and its projected remaining useful life is the equipment-health channel the certificate must
+protect. These time constants are illustrative values, to be pinned per column from step-test
+data; the coverage claim does not depend on them.
+
+\subsection{Control arms}
+Two arms share everything except a single switch. The health-blind arm lets the optimiser pull
+reflux for economic benefit with no health constraint; the health-constrained arm caps that pull
+with the conformal $\psi$-budget. The cap, not the conformal level, is what distinguishes the
+arms, and both are scored against the same certified floor, so the contrast isolates the value of
+enforcing the health budget.
+
+\subsection{Configuration and reproducibility}
+The frozen configuration is a bottoms-impurity specification of $0.02$, a minimum projected life
+of $200$~h, soft-sensor and prognostic miscoverage $\alpha_1=\alpha_2=0.10$, and a similarity
+budget $\varepsilon=0.05$, which set a certified floor of $0.75$. The two-arm contrast runs four
+seeds over $120$ cycles; the delay and adaptivity sweeps run $400$ cycles, with a label delay of
+two decision cycles unless that delay is itself swept. Every figure and number regenerates from a
+single fixed seed through one script, and the headline numbers are frozen as committed evidence.
+% ---- end 04_case_study.tex ----
+% ---- begin 05_results.tex ----
+\section{Results}
+\label{sec:results}
+
+We report a closed-loop campaign under the case-study configuration: bottoms-impurity
+specification $x_{\mathrm{spec}}=0.02$, minimum projected life $\rho_{\min}=200$~h,
+soft-sensor and prognostic miscoverage $\alpha_1=\alpha_2=0.10$, and similarity budget
+$\varepsilon=0.05$, which set a certified floor of $0.75$. Every number below regenerates from
+a single fixed seed and is frozen as committed evidence.
+
+\subsection{The certificate's operational value}
+\label{sec:res-twoarm}
+
+Figure~\ref{fig:two_arm} contrasts the two control arms over the campaign, both scored against
+the same floor. The health-blind optimiser keeps the product in specification on essentially
+every cycle, with a quality coverage of $1.000$, but its unconstrained reflux pull drives the
+pump hard: the projected remaining useful life clears $\rho_{\min}$ on only $0.008$ of cycles,
+so the joint safety event collapses to $S_k=0.008$ (95\% Wilson interval $[0.003, 0.021]$) and
+fails the floor. The conformal health-constrained arm holds $S_k=1.000$ with a Wilson lower
+bound of $0.992$, meeting the floor, and its $\psi$-budget binds on every cycle ($1.00$) where
+the blind arm never binds ($0.00$). Meeting a quality specification is therefore not the same
+as operating safely: a loop can be in specification yet structurally unsafe over the horizon,
+and the health channel together with the budget that enforces it is what carries a per-cycle
+guarantee into one that survives the campaign.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.82\linewidth]{fig1_two_arm.png}
+  \caption{Two-arm contrast over an operating campaign, both arms scored against the same
+  certified floor. The health-blind loop meets the quality spec but its over-reflux drives
+  projected remaining useful life below the floor, so the joint safety event $S_k$ collapses;
+  the conformal health-constrained loop holds $S_k$ at the floor.}
+  \label{fig:two_arm}
+\end{figure}
+
+\subsection{Validity under measurement delay}
+\label{sec:res-deadtime}
+
+Figure~\ref{fig:deadtime} sweeps the label delay $D_a$. The joint coverage holds $S_k=1.000$
+at every delay tested, $D_a\in\{0,1,2,4,8\}$ cycles, and the soft-sensor interval coverage
+stays on its $0.90$ target throughout, moving only from $0.897$ at $D_a=0$ to $0.895$ at
+$D_a=8$. Delay leaves validity intact and shows up only as a small movement in the coverage
+rate, consistent with the $\Delta_{\mathrm{sel},k}=0$ argument of Section~\ref{sec:o1}: the
+cost of stale feedback is paid in the rate, not in validity.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.82\linewidth]{fig2_deadtime.png}
+  \caption{Horizon coverage versus label delay $D_a$. The joint-safety coverage $S_k$ holds the
+  certified floor at every delay, and the soft-sensor interval coverage stays on target;
+  validity is invariant to analyser and laboratory dead time.}
+  \label{fig:deadtime}
+\end{figure}
+
+\subsection{Adaptive versus static calibration}
+\label{sec:res-gamma}
+
+Figure~\ref{fig:gamma_union}(a) varies the adaptive learning rate $\gamma$: interval coverage
+stays near the $0.90$ target while the half-width tightens as $\gamma$ rises, and the
+one-standard-error rule selects $\gamma=0.128$ at a mean half-width of $0.0011$.
+Figure~\ref{fig:gamma_union}(b) sets this against the naive alternative. A $K$-cycle Bonferroni
+interval widens from a half-width of $0.0009$ at $K=1$ to $0.0013$ at $K=10$ and is already
+vacuous at $K\ge 50$, where no finite calibration quantile resolves the per-cycle level
+$\alpha_1/K$; adaptive conformal inference instead holds a finite half-width at target coverage
+across the same horizons \citep{gibbs2021}. Horizon coverage thus requires adaptivity, and the
+static union bound cannot deliver it, which is the mechanism behind the horizon guarantee of
+Section~\ref{sec:horizon}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{fig3_gamma_union.png}
+  \caption{(a) Coverage versus adaptivity across the adaptive-conformal learning rate. (b) The
+  naive $K$-cycle Bonferroni half-width becomes vacuous at realistic horizons, whereas adaptive
+  conformal inference maintains a finite half-width at target coverage.}
+  \label{fig:gamma_union}
+\end{figure}
+% ---- end 05_results.tex ----
+% ---- begin 06_discussion.tex ----
+\section{Discussion}
+\label{sec:discussion}
+
+Under adaptive calibration the per-cycle certificate of \citet{busico_m4} becomes a guarantee
+that holds over the operating horizon rather than at an instant. In practice this turns the
+certificate into a runtime monitor: at any point in a campaign the loop can state a
+distribution-free lower bound on the frequency with which it has met the joint safety event,
+and that bound does not weaken as the campaign lengthens (R1, Section~\ref{sec:horizon}).
+
+The two-arm contrast in Figure~\ref{fig:two_arm} makes the operational content concrete, and it
+is the result most likely to matter on a plant. A health-blind optimiser is in specification on
+essentially every cycle and would pass any quality-only audit, yet it over-refluxes until
+projected life collapses and the joint safety event falls to $0.008$, while the conformal
+health-constrained loop holds the event at its floor. A quality specification and a safety
+guarantee are different objects, and the binding $\psi$-budget is the mechanism that converts a
+per-cycle bound into one sustained across the horizon (R2). The gap here is not subtle: it is
+$0.008$ against $1.000$ on the same floor.
+
+Delayed feedback is the feature of a real analyser loop most often assumed fatal to a conformal
+guarantee, and it is not. Because the interval at a cycle never references that cycle's own
+outcome, the selection penalty stays zero under any label delay (Section~\ref{sec:o1}), so
+coverage remains valid; the only cost is a transient in the coverage rate, of order $D_a/K$,
+which Figure~\ref{fig:deadtime} shows is small over the horizons tested (R3). It is worth
+separating the property that survives dead time, validity, from the one that merely degrades
+gracefully with it, the rate.
+
+The contrast with the union bound in Figure~\ref{fig:gamma_union} is the methodological point. A
+static Bonferroni allocation cannot buy horizon coverage without charging each cycle a vanishing
+error level, at which point no finite calibration set resolves the required quantile and the
+interval is vacuous; adaptive inference sidesteps this by spending a fixed long-run budget
+rather than a per-cycle one \citep{gibbs2021}. Adaptivity is therefore not a refinement but a
+requirement at realistic horizons (R4).
+
+Several limitations bound these claims. The plant is a reduced-order Hammerstein realisation, a
+validated static gain wrapped in transport lags rather than a tray-resolved dynamic column, so
+the transient shapes are representative rather than exact and the time constants are
+illustrative values to be pinned per column from step-test data. The coverage claim is itself
+fidelity-agnostic: validity follows from the calibration construction, not from the plant's
+internal accuracy, so what a higher-fidelity dynamic simulation would sharpen is the realism of
+the coverage-rate transient, not the validity. A confirmation on a DWSIM dynamic column is the
+natural next step. Finally, the deadtime transient is small here because the loop is
+well-behaved; a deliberate drift or disturbance stress test would make the rate cost visible and
+is left to future work.
+
+The same composition that carries one column's certificate across a horizon points to the larger
+target: allocating the similarity budget $\varepsilon$ across several units, so that a plantwide
+certificate is assembled from per-unit ones under a shared risk allocation. That modular
+extension, from one column to a plant, is the highest-leverage direction this framework opens.
+% ---- end 06_discussion.tex ----
+% ---- begin 07_conclusion.tex ----
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have given a horizon-wide safety guarantee for closed-loop process operation, obtained by
+lifting the per-cycle composed coverage certificate of \citet{busico_m4} with adaptive conformal
+inference \citep{gibbs2021} and testing it on a dynamically realised debutanizer loop with
+delayed measurements. The guarantee is distribution-free and holds over an operating campaign
+rather than at a single cycle.
+
+Four results support it. The conformal health-constrained loop holds the joint safety event at
+its certified floor over the horizon, with a $95\%$ Wilson lower bound of $0.992$ against a floor
+of $0.75$. A health-blind optimiser meets the quality specification on essentially every cycle
+yet over-refluxes until projected life collapses, dropping the joint event to $0.008$, which
+shows that meeting a specification and operating safely are distinct and that the binding health
+budget is what closes the gap. Validity is invariant to measurement dead time, the selection
+penalty staying zero under any label delay, so dead time enters the coverage rate rather than
+breaking the guarantee. And adaptive calibration retains a finite interval at target coverage
+across horizons at which the naive union bound is vacuous, so adaptivity is necessary rather than
+optional.
+
+Taken together these carry the IPIS stack from a certified collection of components to a
+certified operating campaign: the per-cycle certificate becomes a runtime, horizon-wide monitor.
+The natural next steps are to allocate the similarity budget across several units, assembling a
+plantwide certificate from per-unit ones under a shared risk allocation, and to confirm the
+guarantee on an operating LPG or petrochemical column with live distributed-control-system data.
+% ---- end 07_conclusion.tex ----
+
+\section*{Data and code availability}
+The dynamic plant, the dynamic closed-loop orchestrator, the adaptive-conformal horizon
+read-off, the two-arm and sweep experiments, and the single script that regenerates every
+figure in this paper (\texttt{scripts/run\_horizon\_sweeps.py}) are available at
+\url{github.com/beebzy-droid/IPIS}; all figures and the reported coverage numbers reproduce
+from a single fixed seed, with the headline numbers frozen as committed evidence. The
+process twin is built in DWSIM \citep{dwsim} under the Peng-Robinson equation of state
+\citep{peng1976}; the steady-state response surface it corrects, the soft sensor, the
+calibrated prognostics, and the per-cycle composed coverage certificate that this work lifts
+to a horizon are developed in the companion papers \citep{busico_m3, busico_m1, busico_m2, busico_m4}.
+
+\section*{Declaration of competing interest}
+The author declares no competing financial interests or personal relationships that
+could have influenced the work reported in this paper.
+
+\appendix
+% ---- begin 08_appendix_o1.tex ----
+\section{Timing of the delayed-label read-off and the zero selection penalty}
+\label{app:o1}
+
+This appendix records the timing argument behind Section~\ref{sec:o1}: the conformal selection
+penalty $\Delta_{\mathrm{sel},k}$ stays zero under arbitrary label delay, so dead time affects
+the coverage rate and not the validity of the certificate.
+
+\paragraph{Timing of one decision cycle.}
+The setpoint $u_k=(R_k,D_k)$ is computed at the end of cycle $k-1$, held across the decision
+interval, after which the realised outcome $x_k$ with measurement noise $\varepsilon_k$ follows.
+The laboratory or analyser reports the quality of cycle $k$ only
+$D_a=\lceil \theta_{\mathrm{lab}}/T_{\mathrm{rto}}\rceil$ decision cycles later, and that delayed
+label drives the adaptive update of \eqref{eq:aci}. The adaptive level $\alpha^{(k)}$ that forms
+the cycle-$k$ interval $\mathcal{C}_k$ reflects every label applied through the end of cycle
+$k-1$; since the label for cycle $j$ is applied at cycle $j+D_a$, the scores that influence
+$\alpha^{(k)}$ are exactly $\{\, s_j : j \le k-1-D_a \,\}$.
+
+\paragraph{The selection penalty vanishes.}
+$\mathcal{C}_k$ is a deterministic function of $\alpha^{(k)}$, which depends only on
+$\{\, s_j : j \le k-1-D_a \,\}$. For every $D_a\ge 0$ this set excludes the cycle-$k$ score
+$s_k$, and with it $x_k$ and $\varepsilon_k$, because
+\begin{equation*}
+  k \;>\; k-1-D_a \qquad \text{for all } D_a \ge 0 .
+\end{equation*}
+The cycle-$k$ interval is therefore formed without reference to the cycle-$k$ outcome it is
+scored against. Combined with the causal-timing property of the per-cycle certificate, that
+$u_k$ is fixed before $\varepsilon_k$ and is hence independent of it given the operating regime
+\citep{busico_m4}, the quantity selected at cycle $k$ does not condition on the realisation
+against which it is checked. Hence $\Delta_{\mathrm{sel},k}=0$, and the per-cycle composed
+certificate applies cycle by cycle exactly as in the quasi-static case; dead time does not
+re-open the co-selection window.
+
+\paragraph{Where the cost goes.}
+What dead time changes is that $\alpha^{(k)}$ is built from scores no newer than $k-1-D_a$, that
+is, stale by $D_a$ cycles relative to the no-delay case. The long-run coverage guarantee of
+adaptive conformal inference bounds the time-averaged miscoverage by an $O(1/(\gamma K))$ term
+that is independent of the data-generating dependence \citep{gibbs2021}; delayed feedback
+re-indexes the error stream by $D_a$, and the same averaging leaves the long-run coverage at its
+target up to an additive $O(D_a/K)$ boundary term that vanishes as $K\to\infty$. Long-run
+coverage therefore holds, while the finite-horizon deviation carries a transient that grows with
+$D_a$. That transient is the object characterised by the dead-time sweep of
+Section~\ref{sec:results}.
+% ---- end 08_appendix_o1.tex ----
+
+\bibliographystyle{elsarticle-num-names}
+\bibliography{references}
+
+\end{document}
