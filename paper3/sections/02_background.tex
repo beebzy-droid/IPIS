@@ -1,40 +1,39 @@
 \section{Background and related work}\label{sec:background}
-\paragraph{Split conformal and its guarantee.} Given a nonconformity score $V=s(X,Y)$ and a
-calibration set exchangeable with the test point, the split-conformal prediction set obtained
-from the empirical $(1-\alpha)$ score quantile covers the truth with probability at least
-$1-\alpha$~\cite{papadopoulos2002inductive,lei2018distribution}. The guarantee is marginal and
-finite-sample, and requires no model assumptions; its sole structural requirement is
-exchangeability.
+\emph{Split conformal prediction} gives the guarantee SCC builds on. Given a nonconformity score
+$V=s(X,Y)$ and a calibration set exchangeable with the test point, the prediction set formed from
+the empirical $(1-\alpha)$ quantile of the calibration scores contains the truth with probability at
+least $1-\alpha$~\cite{papadopoulos2002inductive,lei2018distribution}. The guarantee is marginal,
+finite-sample, and free of modelling assumptions; its only structural requirement is
+exchangeability, which is what operating-regime transfer destroys.
 
-\paragraph{Beyond exchangeability.} Barber et al.~\cite{barber2023conformal} bound the coverage
-loss when exchangeability fails: the gap is controlled by the total-variation distances between
-the score vector and its versions with the test point swapped against each calibration point.
-For independent data this reduces to a sum of pairwise total-variation distances between source
-and target score laws. We use this bound as the analytical backbone of the SCC certificate.
+When exchangeability fails, Barber et al.~\cite{barber2023conformal} bound the resulting coverage
+loss by the total-variation distances between the score vector and its versions with the test point
+swapped against each calibration point; for independent data this reduces to pairwise
+total-variation distances between the source and target score laws. This non-exchangeable bound is
+the analytical backbone of the SCC certificate. Weighted (covariate-shift) conformal
+prediction~\cite{tibshirani2019conformal} instead restores exact coverage using importance weights
+$w(x)=\mathrm{d}P_T/\mathrm{d}P_S$; this is powerful but requires estimating the density ratio, and
+hence representative target covariates. SCC differs in kind: it removes the shift physically, through
+a dimensionless transformation, rather than reweighting statistically, and its certificate needs no
+target data.
 
-\paragraph{Covariate-shift conformal.} Weighted conformal~\cite{tibshirani2019conformal} restores
-exact coverage under covariate shift using importance weights $w(x)=\mathrm{d}P_T/\mathrm{d}P_S$.
-This is powerful but requires estimating the density ratio, hence representative target
-covariates. SCC differs in kind: it removes the shift physically (by a dimensionless
-transformation) rather than reweighting statistically, and its certificate needs no target data.
+The physical transformation comes from \emph{dimensional similitude}. The Buckingham $\Pi$ theorem
+reduces a dimensional relationship to dimensionless groups, and matching those groups enforces
+dynamic similitude between systems. Recent work exploits this for transfer learning, training models
+in dimensionless variables so they generalise across scales and operating
+points~\cite{oppenheimer2023multiscale,therrien2024buckingham}, with exact policy transfer
+guaranteed only under exact similitude~\cite{girard2024dimensionless}. These methods target point
+accuracy and provide no calibrated uncertainty; SCC imports the same similitude principle into the
+conformal calibration step to obtain a coverage guarantee.
 
-\paragraph{Dimensional similitude and transfer.} The Buckingham $\Pi$ theorem reduces a physical
-relationship to dimensionless groups; matching groups enforces dynamic similitude. Recent work
-exploits this for transfer learning, training models in dimensionless variables to generalize
-across scales and systems~\cite{oppenheimer2023multiscale,therrien2024buckingham}, with exact
-policy transfer guaranteed only under exact similitude~\cite{girard2024dimensionless}. These
-methods target point accuracy and provide no calibrated uncertainty. SCC imports the similitude
-principle into the conformal calibration step to obtain a \emph{coverage} guarantee.
-
-\paragraph{Prognostic UQ.} Javanmardi and H\"ullermeier~\cite{javanmardi2023conformal} first
-conformalized RUL estimation, applying split conformal, conformalized quantile regression, and the
-non-exchangeable variant to the C-MAPSS benchmark. Where operating conditions vary, their remedy
-is to cluster them into a finite set of \emph{known, discrete} operating modes and normalize within
-each. They note that this procedure becomes inapplicable when the modes are not known in advance
-or lack calibration data, and their non-exchangeable variant weights calibration points by
-\emph{temporal recency} rather than operating-regime similarity. SCC instead handles \emph{continuous} operating-regime
-transfer through physical scaling, certifies coverage a priori without target-regime data, and
-requires no discrete mode labels. Our concern is orthogonal to point
-accuracy~\cite{lei2018machinery}: the validity of the interval when the operating regime changes
-between calibration and deployment.
-
+The closest prior treatment of prognostic uncertainty is Javanmardi and
+H\"ullermeier~\cite{javanmardi2023conformal}, who first conformalised RUL estimation on the C-MAPSS
+benchmark using split conformal, conformalised quantile regression, and the non-exchangeable
+variant. Where operating conditions vary, their remedy is to cluster them into a finite set of
+\emph{known, discrete} modes and normalise within each; they note that this becomes inapplicable
+when the modes are not known in advance or lack calibration data, and their non-exchangeable variant
+weights calibration points by temporal recency rather than operating-regime similarity. SCC instead
+handles \emph{continuous} operating-regime transfer through physical scaling, certifies coverage a
+priori without target-regime data, and needs no discrete mode labels. Our concern is orthogonal to
+point accuracy~\cite{lei2018machinery}: it is the validity of the interval when the operating regime
+changes between calibration and deployment.

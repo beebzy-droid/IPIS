@@ -1,20 +1,30 @@
 \section{Discussion}\label{sec:discussion}
-\paragraph{What the certificate buys.} SCC certifies coverage from physical parameters before any
-target failure data exists. Under verified similitude (the diagnostic's \emph{holds}), arbitrarily
-large differences in the dominant operating parameters cost nothing, because the dimensionless
-scale absorbs them; this is the qualitative content of the $10.2\times$-scale recovery. Under
-incomplete similitude the certificate degrades by the departure $\lVert\Delta\boldsymbol\psi\rVert$,
-and the diagnostic flags the regime. This is a different guarantee from weighted
-conformal~\cite{tibshirani2019conformal}: it trades the need for target data for a falsifiable
-physical assumption, which the diagnostic makes checkable.
+\subsection{What the guarantee provides in practice}\label{sec:disc-buys}
+SCC quantifies the reliability of a transferred RUL interval from physical parameters before any
+target failure data exists. When the runtime diagnostic confirms similitude (\emph{holds}),
+arbitrarily large differences in the dominant operating parameters, the $10.2\times$ life range in
+the testbed, cost nothing in coverage, because the dimensionless scale absorbs them. When similitude
+is incomplete, the certificate degrades by the physical departure $\lVert\Delta\boldsymbol\psi\rVert$
+and the diagnostic flags the regime. This is a different bargain from weighted
+conformal~\cite{tibshirani2019conformal}: SCC trades the need for target failure data, which a new
+asset lacks, for a falsifiable physical assumption that the diagnostic makes checkable.
 
-\paragraph{Limitations.} (i) The guarantee is conditional on H1--H2, physical hypotheses rather
-than theorems. (ii) The certificate bounds the gap for the modeled groups; unmodeled physics
-contributes a residual that the departure study quantifies and the diagnostic detects, but that
-must be bounded a priori to use Corollary~\ref{cor:apriori}(b). (iii) Validation is on controlled
-simulation; the single real benchmark returns indeterminate by design rather than a positive
-result. (iv) The bound is conservative. The decisive next step is validation on adequately
-powered run-to-failure field data, where the diagnostic returns \emph{holds} and the certificate
-can be checked against measured cross-regime coverage. We expect to obtain such field data from an
-industrial process.
+\subsection{Deployment and fault-tolerant use}\label{sec:disc-deploy}
+The two by-products of the method are what make it usable on a real asset. The a-priori bound lets a
+planner quote a worst-case coverage shortfall, and therefore a worst-case reliability of the
+maintenance decision, before the target unit is commissioned. The runtime diagnostic acts as an
+online monitor: when its premise is unsupported it returns \emph{indeterminate} or \emph{violated},
+and the system falls back to conservative data-driven conformal rather than issuing an interval whose
+confidence is silently wrong. The result is graceful degradation, the property a safety-relevant
+prognostic function needs, instead of an unannounced loss of coverage.
 
+\subsection{Limitations and validation roadmap}\label{sec:disc-limits}
+Four limitations bound the claims. (i) The guarantee is conditional on the physical hypotheses
+H1--H2 (\ref{app:proof}), which are falsifiable rather than proven. (ii) The certificate bounds the
+gap for the modelled groups; unmodelled physics contributes a residual that the departure study
+quantifies and the diagnostic detects, but that must be bounded a priori to use the certificate under
+incomplete similitude. (iii) Validation is on a controlled simulation, and the single field benchmark
+returns \emph{indeterminate} by design rather than a positive result. (iv) The bound is conservative.
+The decisive next step is validation on adequately powered run-to-failure field data, where the
+diagnostic returns \emph{holds} and the certificate can be checked against measured cross-regime
+coverage; such data is the goal of ongoing work on an operating industrial process.

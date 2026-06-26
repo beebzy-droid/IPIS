@@ -1,53 +1,60 @@
 \section{Introduction}\label{sec:intro}
-Reliable prognostics requires not just a remaining-useful-life (RUL) point estimate but a
-calibrated statement of its uncertainty: a maintenance decision rests on a \emph{lower bound}
-the true life is unlikely to fall below. Conformal prediction supplies such bounds with a
-finite-sample, distribution-free coverage guarantee~\cite{vovk2005algorithmic,papadopoulos2002inductive,lei2018distribution,angelopoulos2023gentle},
-which has made it attractive for data-driven RUL estimation~\cite{javanmardi2023conformal}.
-That guarantee, however, rests on \emph{exchangeability} of calibration and test data, an
-assumption that breaks precisely in the situation reliability engineering cares about most:
-a model calibrated on assets run under one operating regime (load, speed, temperature) is
-deployed on assets run under another. The degradation distribution shifts, exchangeability
-fails, and the conformal interval miscovers without warning.
+Condition-based maintenance and safety-critical operation both rest on prognostics: an estimate of
+an asset's remaining useful life (RUL) that a planner can act on. What a maintenance or replacement
+decision actually needs is not a point estimate but a trustworthy \emph{lower bound} on remaining
+life, with a stated confidence that the true life will not fall below it. An interval that is too
+optimistic invites in-service failure, with the attendant safety and cost consequences; one that is
+too conservative forces premature replacement and lost availability. The usefulness of a prognostic
+interval is therefore set by whether its stated confidence is honest.
 
-Two bodies of work bear on this transfer problem, and they do not meet. The first uses
-\emph{dimensional analysis}: expressing a model in dimensionless variables (via the Buckingham
-$\Pi$ theorem) enforces dynamic similitude between systems and improves out-of-regime
-generalization of \emph{point} predictions, including when the similarity between systems is not
-exact~\cite{therrien2024buckingham,girard2024dimensionless}. None of this literature carries a
-coverage guarantee. The second is \emph{weighted}, or covariate-shift, conformal
-prediction~\cite{tibshirani2019conformal} and its non-exchangeable
-generalization~\cite{barber2023conformal}, which restore coverage under distribution shift. They do so, however, by estimating likelihood ratios of the target to the source distribution, which requires
-representative target data. For a newly commissioned asset, or a regime with no run-to-failure
-history, that data does not exist.
+Conformal prediction has become an attractive way to attach such a guarantee to a data-driven RUL
+model, because it certifies a finite-sample, distribution-free coverage level without assuming a
+noise model~\cite{vovk2005algorithmic,papadopoulos2002inductive,lei2018distribution,angelopoulos2023gentle,javanmardi2023conformal}.
+That guarantee, however, holds only when the calibration and deployment data are exchangeable, and
+this is precisely the assumption that fails in the situation reliability engineering meets most
+often: a model calibrated on assets run under one operating regime (load, speed, temperature) is
+deployed on assets run under another. The degradation distribution shifts, exchangeability is lost,
+and the interval miscovers with no outward sign that its confidence is no longer valid.
 
-The union of these two ideas is empty, and that gap is the opening. We ask: \emph{can physical
-similarity itself deliver a distribution-free coverage guarantee under transfer, without
-estimating density ratios?} We answer yes, and call the method Similarity-Calibrated Conformal
-(SCC). The idea is to compute the conformal nonconformity score in a dimensionless space chosen
-so that, under dynamic similitude, the score distribution is invariant across operating
-regimes. Standard conformal needs only the \emph{scores} to be exchangeable; a physics-derived
-dimensionless transformation makes them approximately so, and the residual coverage gap is
-controlled by the mismatch in a physical, a-priori-computable quantity.
+The two established ways to repair coverage under such a shift do not fit the reliability setting.
+Reweighting methods, namely covariate-shift conformal prediction~\cite{tibshirani2019conformal} and
+its non-exchangeable generalisation~\cite{barber2023conformal}, restore coverage, but only by
+estimating the likelihood ratio between the target and source operating distributions, which
+requires representative failure data from the target regime. A newly commissioned asset, or a regime
+with no run-to-failure history, does not have that data. Dimensional-analysis transfer, in which a
+model is expressed in dimensionless variables so that it generalises across scales and
+systems~\cite{oppenheimer2023multiscale,therrien2024buckingham,girard2024dimensionless}, needs no
+target data, but it improves only the \emph{point} prediction and carries no coverage guarantee.
+One family has the guarantee but needs data the operator lacks; the other needs no data but offers
+no guarantee.
 
-\paragraph{Contributions.}
-\textbf{(C1)} Dimensionless ($\Pi$-space) conformal calibration that restores approximate
-cross-regime score-exchangeability (\S\ref{sec:method}).
-\textbf{(C2)} An \emph{a-priori coverage certificate} (Theorem~\ref{thm:scc},
-Corollary~\ref{cor:apriori}): the cross-regime coverage gap is at most
-$2L\lVert\Delta\boldsymbol\psi\rVert$ in a similitude-departure parameter computable from
-physical parameters, with no target failure data, obtained by composing the dimensionless
-reduction with the non-exchangeable bound of~\cite{barber2023conformal}.
-\textbf{(C3)} A bootstrap \emph{similitude diagnostic} giving SCC a self-aware operating
-envelope (holds / violated / indeterminate), so it declines to certify when its premise is
-unsupported (\S\ref{sec:method}).
-\textbf{(C4)} A controlled-physics validation protocol that tests the certificate
-\emph{non-circularly}, via a graded departure from similitude (\S\ref{sec:design}).
+This paper closes that gap with a deployable method, Similarity-Calibrated Conformal (SCC)
+prediction, summarised in Fig.~\ref{fig:overview}. SCC computes the conformal calibration in a
+dimensionless coordinate chosen, from the governing physics, so that the score distribution is
+invariant across operating regimes under dynamic similitude. Coverage then transfers with no target
+failure data, and the residual shortfall when similitude is imperfect is bounded by a physical
+quantity computable before deployment. A companion runtime check tells the operator when that
+premise is supported, so the method declines to certify rather than miscover silently.
 
-\paragraph{Scope.} We are explicit about what is and is not demonstrated. The guarantee is
-conditional on physical hypotheses (H1--H2) that are falsifiable, not assumed true; validation
-is on a controlled physical simulation in which similitude is genuine but is not assumed by the
-estimator; and the one real-data benchmark (FEMTO) returns \emph{indeterminate}, an honest
-applicability limit rather than a positive result. Real-process validation on adequately
-powered field data is future work.
+The contributions are practical capabilities for reliable prognostics under operating-regime
+transfer:
+\begin{enumerate}
+\item a calibration step in dimensionless ($\Pi$) coordinates that restores conformal coverage
+across operating regimes without target-regime failure data (Section~\ref{sec:method});
+\item an a-priori coverage bound computable from physical parameters alone: the cross-regime
+coverage shortfall is at most $2L\lVert\Delta\boldsymbol\psi\rVert$ in a similitude-departure
+quantity $\boldsymbol\psi$, so the worst-case loss can be checked before an asset is deployed
+(Section~\ref{sec:method}; derivation in~\ref{app:proof});
+\item a runtime similitude diagnostic returning holds, violated, or indeterminate, which gives SCC a
+self-aware operating envelope and a conservative fallback when its premise is unsupported
+(Section~\ref{sec:method});
+\item a non-circular validation on a controlled process-reliability testbed, stress-testing the
+guarantee against a graded, physically meaningful departure from similitude
+(Sections~\ref{sec:design}--\ref{sec:results}).
+\end{enumerate}
 
+We are deliberate about scope. The guarantee is conditional on two physical hypotheses that are
+falsifiable rather than assumed; the validation uses a controlled simulation in which similitude is
+real but is never assumed by the estimator; and the one field benchmark (FEMTO bearings) is
+correctly reported by the diagnostic as outside the method's envelope rather than forced into a
+positive result. Validation on adequately powered field data is the natural next step.

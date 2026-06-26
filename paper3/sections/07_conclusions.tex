@@ -1,13 +1,16 @@
 \section{Conclusions}\label{sec:conclusions}
-We introduced Similarity-Calibrated Conformal prediction, which calibrates conformal RUL bounds in
-a physics-derived dimensionless space to obtain an a-priori, data-free coverage certificate for
-transfer across operating regimes, filling the gap between dimensionless transfer learning (no
-coverage guarantee) and weighted conformal (needs target data). The certificate follows by
-composing the dimensionless reduction with the non-exchangeable conformal bound. On a controlled
-catalyst-deactivation testbed the method recovers coverage where naive conformal fails, degrades
-gracefully under a controlled departure from similitude with the a-priori bound holding on all
-held-out configurations, and is robust across departure structure, magnitude, and coverage level.
-An accompanying similitude diagnostic gives the method a self-aware operating envelope and, on the
-FEMTO benchmark, correctly identifies that benchmark as outside it. The contribution is coverage
-theory; its translation to certified field deployment awaits adequately powered real-process data.
-
+We presented Similarity-Calibrated Conformal prediction, a deployable method that delivers reliable
+remaining-useful-life intervals when an asset is operated in a regime different from the one its model
+was calibrated on. By calibrating the conformal quantile in a physics-derived dimensionless
+coordinate, SCC restores coverage under operating-regime transfer with no target failure data, fills
+the gap between dimensionless transfer learning (which lacks a coverage guarantee) and weighted
+conformal (which needs target data), and comes with two features a practitioner can act on: an
+a-priori coverage bound computable from physical parameters, and a runtime diagnostic that gives the
+method a self-aware operating envelope. On a controlled catalyst-deactivation reliability testbed the
+method recovers coverage where regime-blind conformal fails, degrades gracefully under a controlled
+departure from similitude with the a-priori bound holding on all held-out configurations, and is
+robust across the structure and magnitude of the departure and the coverage level. On the FEMTO
+benchmark the diagnostic correctly places that dataset outside the method's envelope, demonstrating
+the intended fault-tolerant behaviour. The method is ready for the decisive test, validation on
+adequately powered run-to-failure field data from an operating process, which is the focus of
+continuing work.

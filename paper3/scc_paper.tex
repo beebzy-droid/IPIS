@@ -20,33 +20,31 @@
 
 \begin{document}
 \begin{frontmatter}
-\title{Similarity-Calibrated Conformal Prediction: a physics-derived, a-priori coverage
-certificate for prognostics under operating-regime transfer}
+\title{Similarity-Calibrated Conformal prediction: data-free coverage guarantees for
+remaining-useful-life intervals under operating-regime transfer}
 \author{Bien Busico}
-\address{Chemical Engineer, Quezon City, Philippines}
+\address{Map\'ua Malayan College Mindanao, Davao City, Philippines}
 
 \begin{abstract}
-Conformal prediction guarantees coverage only under exchangeability, which fails when a
-prognostic model calibrated on one operating regime is deployed on another: the
-remaining-useful-life (RUL) interval silently miscovers. Existing remedies are disjoint:
-dimensionless transfer learning improves point accuracy without a coverage guarantee, while
-weighted conformal restores coverage only by estimating density ratios from target data. We
-introduce \emph{Similarity-Calibrated Conformal} (SCC): computing the nonconformity score in a
-physics-derived dimensionless space (the Buckingham $\Pi$ theorem) restores approximate
-score-exchangeability across operating regimes, yielding a coverage certificate computable
-\emph{a priori from physical parameters alone}, with no target failure data. The certificate
-composes the dimensionless reduction with the non-exchangeable bound of Barber et al. (2023): the
-cross-regime coverage gap is at most $2L\lVert\Delta\boldsymbol\psi\rVert$ in a
-similitude-departure parameter. On a controlled catalyst-deactivation testbed in which similitude
-is genuine but is not assumed by the estimator, naive conformal miscovers (coverage falls to 0.58)
-while SCC recovers it to within 0.006 of target; under a controlled departure the gap and interval
-back-off degrade gracefully and monotonically, the a-priori bound holds on 100\% of held-out
-configurations, and physical departure predicts the score-distribution mismatch ($R^2=0.79$). A
-bootstrap similitude diagnostic returns a three-way verdict (holds/violated/indeterminate) that
-lets SCC decline to certify outside its operating envelope; on the FEMTO bearing benchmark it
-correctly returns \emph{indeterminate}, exposing the method's applicability limit. The
-contribution is coverage theory; real-process validation on adequately powered field data is
-future work.
+Prognostics supports condition-based maintenance and safety decisions, where a remaining-useful-life
+(RUL) interval is only as good as its stated confidence. Conformal prediction gives a
+distribution-free coverage guarantee for such models, but only under exchangeability, which fails
+when a model calibrated on assets in one operating regime is deployed on assets in another: the
+interval then miscovers with no warning. The two standard fixes do not suit reliability practice:
+reweighting methods need target failure data a new asset lacks, and dimensionless transfer learning
+improves point accuracy but carries no coverage guarantee. We present Similarity-Calibrated Conformal
+(SCC) prediction, a deployable method that calibrates the conformal quantile in a physics-derived
+dimensionless coordinate (via the Buckingham $\Pi$ theorem) so that coverage transfers across
+operating regimes with no target failure data. SCC adds two features a practitioner can act on: an
+a-priori coverage bound computable from physical parameters alone, the cross-regime shortfall being
+at most $2L\lVert\Delta\boldsymbol\psi\rVert$ in a similitude-departure quantity, and a runtime
+diagnostic returning holds, violated, or indeterminate so the method declines to certify rather than
+miscover. On a controlled catalyst-deactivation reliability testbed, regime-blind conformal miscovers
+(coverage falls to 0.58) while SCC recovers it to within 0.006 of target; under a controlled
+departure the coverage gap and interval back-off degrade gracefully and monotonically, and the
+a-priori bound holds on 100\% of held-out configurations. On the FEMTO bearing benchmark the
+diagnostic correctly places that dataset outside the method's envelope. Validation on adequately
+powered field data is the next step.
 \end{abstract}
 
 \begin{keyword}
@@ -76,6 +74,9 @@ During preparation the author used a generative AI assistant for derivation chec
 scaffolding, and editing. The author reviewed and verified all content and takes full
 responsibility for it.
 
+
+\appendix
+\input{sections/08_appendix}
 
 \bibliographystyle{elsarticle-num-names}
 \bibliography{scc_refs}

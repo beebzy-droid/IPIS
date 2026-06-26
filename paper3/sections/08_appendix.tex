@@ -1,0 +1,61 @@
+\section{Formal coverage guarantee and proof}\label{app:proof}
+This appendix gives the formal statement underlying Eq.~\eqref{eq:cert}: the dimensionless reduction,
+the regularity hypotheses, the non-exchangeable bound used as a lemma, and the SCC certificate with
+its proof and two-regime corollary.
+
+\begin{definition}[Dimensionless reduction]\label{def:pi}
+The Buckingham $\Pi$ theorem yields dimensionless groups, partitioned into (i) \emph{scale-setting}
+groups, used to form a characteristic score scale $\sigma(\theta_c)>0$ such that the dimensionless
+score $\tilde V=V/\sigma(\theta_c)$ has a condition-invariant law under exact similitude, and (ii) a
+\emph{similitude-departure parameter} $\boldsymbol\psi(\theta_c)\in\mathbb R^m$ collecting residual
+groups the scale does not absorb. $\boldsymbol\psi$ is constant across conditions when the
+dimensionless model is complete. Let $\lawt c$ denote the law of $\tilde V$ under $\mathbb P_c$.
+\end{definition}
+
+\begin{assumption}[Lipschitz similitude departure]\label{ass:lip}
+There exists $L<\infty$ with
+$\dtv(\lawt c,\lawt{c'})\le L\lVert\boldsymbol\psi(\theta_c)-\boldsymbol\psi(\theta_{c'})\rVert$ for
+all $c,c'$.
+\end{assumption}
+The exact-similitude boundary case
+($\boldsymbol\psi\equiv\mathrm{const}\Rightarrow\lawt c=\lawt{c'}$, hypothesis H1) holds
+\emph{irrespective of how far apart the scale-setting parameters are}; the global Lipschitz form
+(hypothesis H2) is the regularity needed away from exact similitude. H1--H2 are physical hypotheses,
+not theorems, and the diagnostic of Section~\ref{sec:diagnostic} tests them.
+
+\begin{lemma}[\cite{barber2023conformal}]\label{lem:barber}
+For split conformal with weights $w_i$ and pre-fitted scores, the coverage gap is at most
+$(1+\sum_i w_i)^{-1}\sum_i w_i\,\dtv(R(Z),R(Z^i))$, where $R(Z)$ is the score vector and $R(Z^i)$
+swaps the test point with calibration point $i$. For independent data,
+$\dtv(R(Z),R(Z^i))\le 2\,\dtv(Z_i,Z_{n+1})$.
+\end{lemma}
+
+\begin{theorem}[SCC certificate]\label{thm:scc}
+Under Assumption~\ref{ass:lip}, with calibration i.i.d.\ from $S$ and target
+$(X_{n+1},Y_{n+1})\sim\mathbb P_T$ independent of calibration,
+\[
+\mathbb P\big(Y_{n+1}\in\mathcal C(X_{n+1})\big)\ge
+1-\alpha-\tfrac{2n}{n+1}L\lVert\boldsymbol\psi(\theta_S)-\boldsymbol\psi(\theta_T)\rVert
+\ge 1-\alpha-2L\lVert\boldsymbol\psi(\theta_S)-\boldsymbol\psi(\theta_T)\rVert.
+\]
+\end{theorem}
+\begin{proof}
+Coverage is the event $\{\tilde V_{n+1}\le\tilde q\}$ with $\tilde V_{n+1}\sim\lawt T$. Were the
+dimensionless scores exchangeable (all $\lawt S$), split conformal would give coverage $\ge1-\alpha$.
+Apply Lemma~\ref{lem:barber} with $w_i\equiv1$ (denominator $n+1$). The pre-fitted scores are
+independent scalars; swapping calibration point $i$ with the test point exchanges
+$\tilde V_i\sim\lawt S$ and $\tilde V_{n+1}\sim\lawt T$ while the other coordinates are unchanged. The
+two joint laws are product measures differing in two independent coordinates, so by subadditivity of
+total variation $\dtv(R(Z),R(Z^i))\le\dtv(\lawt S,\lawt T)+\dtv(\lawt T,\lawt S)=2\dtv(\lawt S,\lawt T)$.
+Summing $n$ terms gives gap $\le\tfrac{2n}{n+1}\dtv(\lawt S,\lawt T)$, and Assumption~\ref{ass:lip}
+bounds $\dtv(\lawt S,\lawt T)$ by $L\lVert\Delta\boldsymbol\psi\rVert$.
+\end{proof}
+
+\begin{corollary}[A-priori certificate, two regimes]\label{cor:apriori}
+$\lVert\Delta\boldsymbol\psi\rVert$ is a physical quantity, not a function of target failure data.
+\emph{(a)} Under complete similitude ($\boldsymbol\psi$ constant) the bound is $0$ and coverage is
+$\ge1-\alpha$ for arbitrary differences in the scale-setting parameters, requiring only the target
+scale $\sigma(\theta_T)$. \emph{(b)} Under incomplete similitude, coverage is certified down to
+$1-\alpha-2L\lVert\Delta\boldsymbol\psi\rVert$ given a bound on the departure. Neither regime estimates
+a density ratio, the property that distinguishes SCC from weighted and covariate-shift conformal.
+\end{corollary}

@@ -1,57 +1,65 @@
 \section{Results}\label{sec:results}
-\paragraph{Coverage recovery (Fig.~\ref{fig:cov}).} At $\eta=0$, calibrating on one temperature
-and deploying on another, naive conformal miscovers badly: coverage collapses to 0.58 when
-calibrating on short-lived and deploying on long-lived units (gap up to 0.34), and wastefully
-over-covers in the reverse direction. SCC recovers coverage to within 0.006 of the 0.90 target
-across all pairs, and Barber's bound $2\dtv(\tilde{\mathcal V})$ contains the SCC gap on every
-pair. The dimensionless transform removes the $10.2\times$ scale difference exactly, as
-Corollary~\ref{cor:apriori}(a) predicts.
+\subsection{Does SCC restore coverage under regime transfer?}\label{sec:res-cov}
+At $\eta=0$, calibrating on one temperature and deploying on another, naive conformal miscovers
+badly: coverage collapses to 0.58 when calibrating on short-lived and deploying on long-lived units
+(a gap of up to 0.34), and over-covers wastefully in the reverse direction. In maintenance terms, a
+0.34 gap means roughly a third of the intervals promised at 90\% reliability fail to contain the true
+life, an unsafe basis for a replacement decision. SCC recovers coverage to within 0.006 of the 0.90
+target across all calibrate--deploy pairs (Fig.~\ref{fig:cov}), and the non-exchangeable bound
+$2\,\dtv(\tilde{\mathcal V})$ contains the SCC gap on every pair. The dimensionless transform removes
+the $10.2\times$ scale difference exactly, the behaviour the zero-departure case of~\eqref{eq:cert}
+predicts.
 
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{figures/fig1_coverage.pdf}
-\caption{Naive vs.\ SCC coverage at $\eta=0$ across calibrate$\to$deploy temperature pairs.
-Naive miscovers (or over-covers); SCC tracks the 0.90 target.}\label{fig:cov}
+\caption{Naive vs.\ SCC coverage at $\eta=0$ across calibrate$\to$deploy temperature pairs. Naive
+miscovers (or over-covers); SCC tracks the 0.90 target.}\label{fig:cov}
 \end{figure}
 
-\paragraph{Graceful degradation (Fig.~\ref{fig:dep}).} As the unmodeled secondary channel is
-weighted up, the SCC coverage gap rises monotonically (0.006 at $\eta=0$ to 0.103 at $\eta=2$)
-and the interval back-off grows from 0.28 to 1.01. Coverage is preserved at a quantified
-efficiency cost, with both degrading predictably. Reporting efficiency alongside coverage rules out
-the degenerate regime in which coverage is held by trivially wide intervals.
+\subsection{How does the guarantee degrade as physics departs from similitude?}\label{sec:res-deg}
+As the unmodelled secondary channel is weighted up, the SCC coverage gap rises monotonically (0.006
+at $\eta=0$ to 0.103 at $\eta=2$) and the interval back-off grows from 0.28 to 1.01
+(Fig.~\ref{fig:dep}). Coverage is preserved at a quantified and predictable cost in conservatism:
+rather than failing abruptly, the method trades a little efficiency for continued validity as its
+premise weakens. Reporting efficiency alongside coverage rules out the degenerate outcome in which
+coverage is held only by trivially wide, uninformative intervals.
 
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{figures/fig2_departure.pdf}
-\caption{Under a controlled departure $\eta$ from similitude, the SCC coverage gap (left axis)
-and the relative interval back-off (right axis) degrade gracefully and monotonically.}\label{fig:dep}
+\caption{Under a controlled departure $\eta$ from similitude, the SCC coverage gap (left axis) and
+the relative interval back-off (right axis) degrade gracefully and monotonically.}\label{fig:dep}
 \end{figure}
 
-\paragraph{The a-priori certificate (Fig.~\ref{fig:cert}).} With $a,L$ fit on 60\% of
-(pair, $\eta$) configurations, the physical departure $\delta=\eta\lvert h(S)-h(T)\rvert$
-predicts the dimensionless score-distribution mismatch on the held-out 40\% with $R^2=0.79$
-(correlation 0.95), and the resulting a-priori bound $2(a+L\delta)$ upper-bounds the measured
-coverage gap on \emph{100\%} of held-out configurations. The certificate is conservative (it is
-an upper bound) and its finite-sample intercept shrinks as $n^{-1/2}$ (from 0.12 at $n=200$ to
-0.04 at $n=1600$ per condition).
+\subsection{Is the coverage bound reliable before deployment?}\label{sec:res-cert}
+With the intercept $a$ and slope $L$ fit on 60\% of (pair, $\eta$) configurations, the physical
+departure $\delta=\eta\lvert h(S)-h(T)\rvert$ predicts the dimensionless score-distribution mismatch
+on the held-out 40\% with $R^2=0.79$ (correlation 0.95), and the resulting a-priori bound
+$2(a+L\delta)$ upper-bounds the measured coverage gap on \emph{100\%} of held-out configurations
+(Fig.~\ref{fig:cert}). The bound is deliberately conservative, since it is an upper bound, and its
+finite-sample intercept shrinks as $n^{-1/2}$ (from 0.12 at $n=200$ to 0.04 at $n=1600$ per
+condition). For deployment this means the worst-case coverage shortfall can be quoted from physical
+parameters before the target asset is run.
 
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{figures/fig3_certificate.pdf}
-\caption{Held-out measured coverage gap vs.\ the physical departure $\delta$, with the a-priori
-bound $2(a+b\delta)$ fit on disjoint configurations. The bound holds on 100\% of held-out
+\caption{Held-out measured coverage gap vs.\ the physical departure $\delta$, with the a-priori bound
+$2(a+b\delta)$ fit on disjoint configurations. The bound holds on 100\% of held-out
 points.}\label{fig:cert}
 \end{figure}
 
-\paragraph{Robustness (Table~\ref{tab:robust}).} The gate criteria survive across the departure's
-temperature-dependence ($E_2=95$--150 kJ/mol at matched magnitude), its magnitude (15--60\%
-perturbation), and the coverage target ($\alpha=0.05$/0.10/0.20). At every setting naive
-miscovers ($\approx0.13$), SCC recovers ($\approx0.009$), the a-priori bound holds 100\%, the gap
-is monotone, and its magnitude orders with the departure's steepness and size. This behavior is a
-property of the method, not of one tuning.
+\subsection{Robustness across operating and tuning choices}\label{sec:res-rob}
+The acceptance criteria survive across the departure's temperature-dependence ($E_2=95$--150~kJ/mol
+at matched magnitude), its magnitude (15--60\% perturbation), and the coverage target
+($\alpha=0.05/0.10/0.20$); Table~\ref{tab:robust}. At every setting naive conformal miscovers
+($\approx0.13$), SCC recovers ($\approx0.009$), the a-priori bound holds on 100\% of held-out
+configurations, the gap stays monotone, and its magnitude orders with the steepness and size of the
+departure. The behaviour is a property of the method rather than of a single tuning.
 
 \begin{table}[t]\centering\footnotesize
 \setlength{\tabcolsep}{12pt}\renewcommand{\arraystretch}{1.2}
-\caption{Robustness of the gate across the departure's temperature-dependence, its magnitude, and
-the coverage level. $g_0$: coverage gap at $\eta=0$; $g_{\max}$: SCC coverage gap at $\eta=2$;
-Bound\,\%: fraction of held-out configurations on which the a-priori bound holds.}\label{tab:robust}
+\caption{Robustness of the acceptance criteria across the departure's temperature-dependence, its
+magnitude, and the coverage level. $g_0$: coverage gap at $\eta=0$; $g_{\max}$: SCC coverage gap at
+$\eta=2$; Bound\,\%: fraction of held-out configurations on which the a-priori bound holds.}\label{tab:robust}
 \begin{tabular}{@{}llcccc@{}}\toprule
 Perturbation axis & Value & Naive $g_0$ & SCC $g_0$ & SCC $g_{\max}$ & Bound\,\% \\\midrule
 $E_2$ (kJ/mol) & 95   & 0.130 & 0.009 & 0.046 & 100 \\
@@ -63,21 +71,22 @@ Coverage $\alpha$ & 0.05 & 0.138 & 0.004 & 0.073 & 100 \\
 \end{tabular}
 \end{table}
 
-\paragraph{Diagnostic and a real-data limit (Fig.~\ref{fig:diag}).} On synthetic data the
-diagnostic discriminates correctly: it returns \emph{holds} when lives obey L10, \emph{violated}
-when they do not (with adequate units), and \emph{indeterminate} when the within-condition spread
-swamps the structural signal. The FEMTO bearing benchmark~\cite{nectoux2012pronostia} falls in
-the last category: with $\approx6$ bearings per condition and a $7\times$ within-condition life
-spread, the bootstrap CI on $g$ spans a factor of 2.6--4.4, far too wide to resolve the
-$1.63\times$ life ratio that L10 predicts between its load/speed conditions. The diagnostic
-therefore returns \emph{indeterminate}, and SCC correctly declines its a-priori certificate. This is an
-honest applicability limit, consistent with the dataset authors' report that L10 does not govern
-FEMTO lives.
+\subsection{Knowing when not to trust the method: the diagnostic and a field-data limit}\label{sec:res-diag}
+On synthetic data the runtime diagnostic discriminates correctly: it returns \emph{holds} when lives
+obey L10, \emph{violated} when they do not (with adequate units), and \emph{indeterminate} when the
+within-condition spread swamps the structural signal (Fig.~\ref{fig:diag}). The FEMTO bearing
+benchmark~\cite{nectoux2012pronostia} falls in the last category: with roughly six bearings per
+condition and a $7\times$ within-condition life spread, the bootstrap CI on $g$ spans a factor of
+2.6--4.4, far too wide to resolve the $1.63\times$ life ratio that L10 predicts between its load/speed
+conditions. The diagnostic therefore returns \emph{indeterminate} and SCC declines its a-priori
+certificate, deferring to data-driven conformal. This is an honest applicability limit rather than a
+failure, and it is consistent with the dataset authors' report that L10 does not govern FEMTO lives;
+it also shows the diagnostic doing its safety job, refusing to certify on evidence too weak to
+support the premise.
 
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{figures/fig4_diagnostic.pdf}
-\caption{Diagnostic verdict via bootstrap CIs on $g$ (median-life ratio normalized by the L10
+\caption{Diagnostic verdict via bootstrap CIs on $g$ (median-life ratio normalised by the L10
 prediction; $g{=}1$ under similitude). Synthetic similitude $\to$ holds; powered violation $\to$
 violated; FEMTO-like (few units, large spread) $\to$ indeterminate.}\label{fig:diag}
 \end{figure}
-
