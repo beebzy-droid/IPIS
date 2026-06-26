@@ -1,0 +1,42 @@
+\section{Timing of the delayed-label read-off and the zero selection penalty}
+\label{app:o1}
+
+This appendix records the timing argument behind Section~\ref{sec:o1}: the conformal selection
+penalty $\Delta_{\mathrm{sel},k}$ stays zero under arbitrary label delay, so dead time affects
+the coverage rate and not the validity of the certificate.
+
+\paragraph{Timing of one decision cycle.}
+The setpoint $u_k=(R_k,D_k)$ is computed at the end of cycle $k-1$, held across the decision
+interval, after which the realised outcome $x_k$ with measurement noise $\varepsilon_k$ follows.
+The laboratory or analyser reports the quality of cycle $k$ only
+$D_a=\lceil \theta_{\mathrm{lab}}/T_{\mathrm{rto}}\rceil$ decision cycles later, and that delayed
+label drives the adaptive update of \eqref{eq:aci}. The adaptive level $\alpha^{(k)}$ that forms
+the cycle-$k$ interval $\mathcal{C}_k$ reflects every label applied through the end of cycle
+$k-1$; since the label for cycle $j$ is applied at cycle $j+D_a$, the scores that influence
+$\alpha^{(k)}$ are exactly $\{\, s_j : j \le k-1-D_a \,\}$.
+
+\paragraph{The selection penalty vanishes.}
+$\mathcal{C}_k$ is a deterministic function of $\alpha^{(k)}$, which depends only on
+$\{\, s_j : j \le k-1-D_a \,\}$. For every $D_a\ge 0$ this set excludes the cycle-$k$ score
+$s_k$, and with it $x_k$ and $\varepsilon_k$, because
+\begin{equation*}
+  k \;>\; k-1-D_a \qquad \text{for all } D_a \ge 0 .
+\end{equation*}
+The cycle-$k$ interval is therefore formed without reference to the cycle-$k$ outcome it is
+scored against. Combined with the causal-timing property of the per-cycle certificate, that
+$u_k$ is fixed before $\varepsilon_k$ and is hence independent of it given the operating regime
+\citep{busico_m4}, the quantity selected at cycle $k$ does not condition on the realisation
+against which it is checked. Hence $\Delta_{\mathrm{sel},k}=0$, and the per-cycle composed
+certificate applies cycle by cycle exactly as in the quasi-static case; dead time does not
+re-open the co-selection window.
+
+\paragraph{Where the cost goes.}
+What dead time changes is that $\alpha^{(k)}$ is built from scores no newer than $k-1-D_a$, that
+is, stale by $D_a$ cycles relative to the no-delay case. The long-run coverage guarantee of
+adaptive conformal inference bounds the time-averaged miscoverage by an $O(1/(\gamma K))$ term
+that is independent of the data-generating dependence \citep{gibbs2021}; delayed feedback
+re-indexes the error stream by $D_a$, and the same averaging leaves the long-run coverage at its
+target up to an additive $O(D_a/K)$ boundary term that vanishes as $K\to\infty$. Long-run
+coverage therefore holds, while the finite-horizon deviation carries a transient that grows with
+$D_a$. That transient is the object characterised by the dead-time sweep of
+Section~\ref{sec:results}.
