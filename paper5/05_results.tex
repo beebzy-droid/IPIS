@@ -1,16 +1,26 @@
 \section{Results}
 \label{sec:results}
-% OUTLINE -- draft next. No prose yet. This section is structured around the three figures.
-% R1 (Fig. 1): the conformal health-constrained loop holds S_k = 1.000 (Wilson 95% lower 0.992)
-%    against the 0.75 floor; the health-blind loop meets the quality spec (q = 1.000) but
-%    over-refluxes so projected RUL collapses (rul = 0.008) and S_k = 0.008 (fails the floor).
-%    The psi-budget binds every cycle in the constrained arm (1.00) and never in the blind arm.
-% R2 (Fig. 2): S_k = 1.000 for every label delay D_a in {0,1,2,4,8}; the M1 interval coverage
-%    holds ~0.90 throughout. Validity is invariant to deadtime (Delta_sel = 0 preserved).
-% R3 (Fig. 3): across the ACI learning rate the interval coverage stays near 0.90 with the
-%    half-width shrinking as gamma rises; the naive K-cycle Bonferroni half-width grows and is
-%    vacuous (infinite) at K >= 50, where ACI keeps a finite ~0.0011 half-width.
-% All numbers above are the committed evidence (docs/paper/evidence/module5_horizon_sweeps.json).
+
+We report a closed-loop campaign under the case-study configuration: bottoms-impurity
+specification $x_{\mathrm{spec}}=0.02$, minimum projected life $\rho_{\min}=200$~h,
+soft-sensor and prognostic miscoverage $\alpha_1=\alpha_2=0.10$, and similarity budget
+$\varepsilon=0.05$, which set a certified floor of $0.75$. Every number below regenerates from
+a single fixed seed and is frozen as committed evidence.
+
+\subsection{The certificate's operational value}
+\label{sec:res-twoarm}
+
+Figure~\ref{fig:two_arm} contrasts the two control arms over the campaign, both scored against
+the same floor. The health-blind optimiser keeps the product in specification on essentially
+every cycle, with a quality coverage of $1.000$, but its unconstrained reflux pull drives the
+pump hard: the projected remaining useful life clears $\rho_{\min}$ on only $0.008$ of cycles,
+so the joint safety event collapses to $S_k=0.008$ (95\% Wilson interval $[0.003, 0.021]$) and
+fails the floor. The conformal health-constrained arm holds $S_k=1.000$ with a Wilson lower
+bound of $0.992$, meeting the floor, and its $\psi$-budget binds on every cycle ($1.00$) where
+the blind arm never binds ($0.00$). Meeting a quality specification is therefore not the same
+as operating safely: a loop can be in specification yet structurally unsafe over the horizon,
+and the health channel together with the budget that enforces it is what carries a per-cycle
+guarantee into one that survives the campaign.
 
 \begin{figure}[t]
   \centering
@@ -22,14 +32,38 @@
   \label{fig:two_arm}
 \end{figure}
 
+\subsection{Validity under measurement delay}
+\label{sec:res-deadtime}
+
+Figure~\ref{fig:deadtime} sweeps the label delay $D_a$. The joint coverage holds $S_k=1.000$
+at every delay tested, $D_a\in\{0,1,2,4,8\}$ cycles, and the soft-sensor interval coverage
+stays on its $0.90$ target throughout, moving only from $0.897$ at $D_a=0$ to $0.895$ at
+$D_a=8$. Delay leaves validity intact and shows up only as a small movement in the coverage
+rate, consistent with the $\Delta_{\mathrm{sel},k}=0$ argument of Section~\ref{sec:o1}: the
+cost of stale feedback is paid in the rate, not in validity.
+
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.82\linewidth]{fig2_deadtime.png}
   \caption{Horizon coverage versus label delay $D_a$. The joint-safety coverage $S_k$ holds the
-  certified floor for every delay, and the soft-sensor interval coverage stays on target;
-  validity is invariant to analyzer/laboratory deadtime.}
+  certified floor at every delay, and the soft-sensor interval coverage stays on target;
+  validity is invariant to analyser and laboratory dead time.}
   \label{fig:deadtime}
 \end{figure}
+
+\subsection{Adaptive versus static calibration}
+\label{sec:res-gamma}
+
+Figure~\ref{fig:gamma_union}(a) varies the adaptive learning rate $\gamma$: interval coverage
+stays near the $0.90$ target while the half-width tightens as $\gamma$ rises, and the
+one-standard-error rule selects $\gamma=0.128$ at a mean half-width of $0.0011$.
+Figure~\ref{fig:gamma_union}(b) sets this against the naive alternative. A $K$-cycle Bonferroni
+interval widens from a half-width of $0.0009$ at $K=1$ to $0.0013$ at $K=10$ and is already
+vacuous at $K\ge 50$, where no finite calibration quantile resolves the per-cycle level
+$\alpha_1/K$; adaptive conformal inference instead holds a finite half-width at target coverage
+across the same horizons \citep{gibbs2021}. Horizon coverage thus requires adaptivity, and the
+static union bound cannot deliver it, which is the mechanism behind the horizon guarantee of
+Section~\ref{sec:horizon}.
 
 \begin{figure}[t]
   \centering
