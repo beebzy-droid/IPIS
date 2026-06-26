@@ -1,16 +1,39 @@
 \section{Related work}
-% OUTLINE -- draft next. No prose yet.
-% (a) Conformal prediction and distribution-free UQ: foundations \citep{vovk2005, shafer2008},
-%     regression \citep{lei2018}, quantile variant \citep{romano2019}, overview \citep{angelopoulos2023}.
-% (b) Validity without exchangeability: covariate shift \citep{tibshirani2019} and the
-%     beyond-exchangeability framework \citep{barber2023} -- the basis for coverage under the
-%     dependence that closed-loop feedback induces.
-% (c) Online / adaptive conformal under distribution shift: ACI \citep{gibbs2021} -- the engine
-%     that delivers a long-run coverage guarantee from delayed, dependent residuals.
-% (d) Real-time optimisation and modifier adaptation \citep{marchetti2009, chachuat2009};
-%     plantwide / self-optimizing control \citep{skogestad2000} for the closed-loop framing.
-% (e) The IPIS series this paper completes: soft sensing \citep{busico_m1}, similarity-calibrated
-%     prognostics \citep{busico_m2}, conditionally calibrated conformal RTO \citep{busico_m3}, and
-%     the per-cycle composed certificate \citep{busico_m4}.
-% Gap statement: none of the above delivers a HORIZON-wide guarantee on a JOINT (quality AND
-%   equipment-health) safety event in a DYNAMIC closed loop with DELAYED labels. That is R1-R4.
+\label{sec:related}
+
+Conformal prediction supplies finite-sample, distribution-free coverage under exchangeability
+\citep{vovk2005, shafer2008}. Split and inductive variants make it cheap enough for online
+regression \citep{lei2018, angelopoulos2023}, and conformalized quantile regression adapts the
+interval width to local difficulty \citep{romano2019}. These deliver per-instance marginal
+coverage, which is exactly the ingredient the per-cycle composed certificate of
+\citet{busico_m4} sums across its soft-sensor and prognostic channels.
+
+Closed-loop data are not exchangeable, because feedback couples successive cycles. Two lines of
+work extend conformal validity past exchangeability. Reweighting recovers coverage under a
+covariate shift that is known or estimable \citep{tibshirani2019}, and the
+beyond-exchangeability framework bounds the coverage gap by a total-variation-type term for
+general dependent data \citep{barber2023}. These results justify that a conformal interval need
+not collapse when a control loop introduces dependence, but they do not on their own deliver a
+long-run guarantee over a horizon under a feedback policy.
+
+Adaptive conformal inference closes that loop directly. It treats the miscoverage level as a
+state updated online from realised errors and guarantees a long-run coverage frequency however
+the distribution drifts \citep{gibbs2021}. This long-run, shift-robust property is the engine of
+the horizon guarantee developed here, and, as Section~\ref{sec:o1} shows, it tolerates the
+delayed feedback that analyser dead time imposes.
+
+On the control side, real-time optimisation drives a plant toward its economic optimum despite
+plant-model mismatch, classically through modifier adaptation
+\citep{marchetti2009, chachuat2009}, while self-optimizing and plantwide control frame which
+variables to hold so that economic loss stays bounded \citep{skogestad2000}. The IPIS optimiser
+\citep{busico_m3} adds a conformal back-off so that the economic push respects a chance
+constraint; the present work asks what that back-off guarantees over a whole campaign rather
+than at a single cycle.
+
+This paper is the realisation layer of the IPIS series, which develops a physics-anchored soft
+sensor \citep{busico_m1}, a similarity-calibrated prognostic certificate \citep{busico_m2}, the
+conformal real-time optimiser \citep{busico_m3}, and the per-cycle composed certificate
+\citep{busico_m4}. To our knowledge none of this prior work delivers a horizon-wide guarantee on
+a joint quality-and-equipment-health event in a dynamic closed loop with delayed labels.
+Establishing that guarantee, and showing that the naive union-bound alternative is vacuous at
+realistic horizons, is the gap this paper fills.
