@@ -1,11 +1,25 @@
 \section{Conclusion}
-% OUTLINE -- draft next. No prose yet.
-% - Restate the deliverable: a horizon-wide safety certificate for closed-loop process operation,
-%   obtained by lifting the per-cycle composed certificate \citep{busico_m4} with adaptive conformal
-%   inference \citep{gibbs2021}.
-% - The four results (R1-R4): constrained loop holds the floor; blind loop is in-spec yet unsafe;
-%   validity invariant to deadtime; adaptive calibration finite where Bonferroni is vacuous.
-% - The lift from per-cycle to horizon is the bridge from a certified component stack to a certified
-%   operating campaign.
-% - Future: plantwide eps-budget (modular risk allocation) and real-plant validation on an operating
-%   LPG/petrochemical column.
+\label{sec:conclusion}
+
+We have given a horizon-wide safety guarantee for closed-loop process operation, obtained by
+lifting the per-cycle composed coverage certificate of \citet{busico_m4} with adaptive conformal
+inference \citep{gibbs2021} and testing it on a dynamically realised debutanizer loop with
+delayed measurements. The guarantee is distribution-free and holds over an operating campaign
+rather than at a single cycle.
+
+Four results support it. The conformal health-constrained loop holds the joint safety event at
+its certified floor over the horizon, with a $95\%$ Wilson lower bound of $0.992$ against a floor
+of $0.75$. A health-blind optimiser meets the quality specification on essentially every cycle
+yet over-refluxes until projected life collapses, dropping the joint event to $0.008$, which
+shows that meeting a specification and operating safely are distinct and that the binding health
+budget is what closes the gap. Validity is invariant to measurement dead time, the selection
+penalty staying zero under any label delay, so dead time enters the coverage rate rather than
+breaking the guarantee. And adaptive calibration retains a finite interval at target coverage
+across horizons at which the naive union bound is vacuous, so adaptivity is necessary rather than
+optional.
+
+Taken together these carry the IPIS stack from a certified collection of components to a
+certified operating campaign: the per-cycle certificate becomes a runtime, horizon-wide monitor.
+The natural next steps are to allocate the similarity budget across several units, assembling a
+plantwide certificate from per-unit ones under a shared risk allocation, and to confirm the
+guarantee on an operating LPG or petrochemical column with live distributed-control-system data.
