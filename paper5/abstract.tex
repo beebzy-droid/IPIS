@@ -1,21 +1,18 @@
-% ABSTRACT -- draft next, deliverable-first, <= 250 words (CACE cap). No prose yet.
-% Beats (in order):
-%   1. Deliverable: a horizon-wide (long-run) safety certificate for closed-loop process
-%      operation -- the joint event {product in spec} AND {equipment survives to its next
-%      maintenance window} holds at a certified frequency across an operating campaign.
-%   2. Gap: the per-cycle composed certificate \citep{busico_m4} is exchangeability-based and
-%      per-cycle; closed-loop feedback induces dependence and laboratory/analyzer labels arrive
-%      delayed, so the naive per-cycle-to-horizon extension (a Bonferroni union bound over K
-%      cycles) is vacuous at realistic horizons.
-%   3. Method: realize the loop dynamically (nonlinear-static gain + transport dynamics with
-%      actuator lag and analyzer deadtime) and lift the per-cycle guarantee with adaptive
-%      conformal inference \citep{gibbs2021}; show the selection penalty stays zero under
-%      deadtime so validity is preserved.
-%   4. Results (four, quantified): (a) the conformal health-constrained loop holds S_k=1.000
-%      (Wilson lower 0.992) against the 0.75 floor; (b) a health-blind loop meets the quality
-%      spec (q=1.000) but over-refluxes and projected RUL collapses, S_k=0.008; (c) validity is
-%      invariant to label delay D_a in {0..8}; (d) adaptive calibration stays finite (~0.001
-%      half-width) where the K-cycle Bonferroni interval is vacuous at K>=50.
-%   5. Significance: turns a per-cycle certificate into a runtime, horizon-wide safety monitor
-%      and the bridge to plantwide modular risk allocation.
-[ABSTRACT PLACEHOLDER -- prose to be drafted in the next pass.]
+Process safety is judged over a campaign: what matters is the long-run frequency with which a
+plant simultaneously meets its product specification and preserves its equipment to the next
+maintenance window. We give a distribution-free guarantee on this horizon-wide joint event for a
+closed loop with realistic dynamics and delayed measurements. A per-cycle version exists,
+composing a soft-sensor budget, a prognostic budget, and the conditional-calibration budget of a
+conformal real-time optimiser, but it assumes exchangeability and holds one cycle at a time.
+Closed-loop feedback makes cycles dependent, laboratory labels arrive late, and the naive union
+bound that would cover a horizon is vacuous. We realise the loop dynamically, as a validated
+static gain wrapped in actuator, process, and analyser-deadtime transport lags, and lift the
+per-cycle certificate with adaptive conformal inference. The conformal selection penalty is zero
+under arbitrary label delay, so validity is preserved and dead time enters only the coverage
+rate. On a debutanizer twin the health-constrained loop holds the joint event at its certified
+floor of $0.75$ with a $95\%$ Wilson lower bound of $0.992$, whereas a health-blind optimiser
+stays in specification on essentially every cycle yet over-refluxes until projected life
+collapses, dropping the event to $0.008$. Coverage is invariant to label delays of zero to eight
+cycles, and adaptive calibration keeps a finite interval at target coverage where the union
+bound is vacuous beyond fifty cycles. The per-cycle certificate thus becomes a runtime,
+horizon-wide safety monitor.

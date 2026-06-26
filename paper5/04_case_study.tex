@@ -1,17 +1,37 @@
 \section{Case study}
-% OUTLINE -- draft next. No prose yet.
-% 4.1 Twin: debutanizer column in DWSIM \citep{dwsim} under Peng-Robinson \citep{peng1976}; the
-%     validated steady-state response surface of \citep{busico_m3} is the static gain. Perry
-%     diagnostics \citep{perrys} only.
-% 4.2 Dynamic plant: time constants (actuator ~1 min, composition ~30 min, sensor ~15 min),
-%     analyzer deadtime ~5 min, integration dt ~1 min, RTO interval = 60 dt. Pump degradation via
-%     affinity cube law; projected RUL as the health channel.
-% 4.3 The two arms (identical except the psi-budget cap):
-%     - health-blind: uncapped reflux (economic pull), no psi-budget.
-%     - health-constrained: psi-budget reflux cap.
-%     BOTH scored against the SAME certified floor; the cap selects the arm, not eps.
-% 4.4 Configuration (frozen): spec_xb_c4 = 0.02, rul_min = 200 h, alpha1 = alpha2 = 0.10,
-%     eps = 0.05 (floor 0.75). Two-arm campaign n_seeds = 4, n_cycles = 120; sweep campaigns 400
-%     cycles; label delay D_a = 2 unless swept.
-% 4.5 Reproducibility: single fixed seed; run_horizon_sweeps.py regenerates all figures; headline
-%     numbers frozen in the committed evidence JSON.
+\label{sec:case}
+
+\subsection{Process twin}
+The benchmark is a debutanizer column built in DWSIM \citep{dwsim} under the Peng-Robinson
+equation of state \citep{peng1976}. From this twin we take the validated steady-state response
+surface relating reflux ratio and distillate rate to the bottoms butane impurity
+\citep{busico_m3} and use it as the nonlinear static gain of the dynamic plant; column
+diagnostics follow standard correlations \citep{perrys}. Because the gain is the same surface
+the per-cycle certificate was calibrated against, the settled steady state reproduces the twin
+and the calibration transfers without re-estimation.
+
+\subsection{Dynamic plant and health channel}
+The static gain is wrapped in the transport dynamics of Section~\ref{sec:dynamic}. Representative
+time constants are an actuator lag of about one minute on the manipulated setpoints, a
+composition lag of about thirty minutes and a sensor-temperature lag of about fifteen minutes on
+the outputs, and an analyser dead time of about five minutes on the measured impurity; the loop
+is integrated at a one-minute step and a new setpoint is computed and held every sixty steps,
+that is, every hour. The reflux pump degrades under an affinity cube law in the realised reflux,
+and its projected remaining useful life is the equipment-health channel the certificate must
+protect. These time constants are illustrative values, to be pinned per column from step-test
+data; the coverage claim does not depend on them.
+
+\subsection{Control arms}
+Two arms share everything except a single switch. The health-blind arm lets the optimiser pull
+reflux for economic benefit with no health constraint; the health-constrained arm caps that pull
+with the conformal $\psi$-budget. The cap, not the conformal level, is what distinguishes the
+arms, and both are scored against the same certified floor, so the contrast isolates the value of
+enforcing the health budget.
+
+\subsection{Configuration and reproducibility}
+The frozen configuration is a bottoms-impurity specification of $0.02$, a minimum projected life
+of $200$~h, soft-sensor and prognostic miscoverage $\alpha_1=\alpha_2=0.10$, and a similarity
+budget $\varepsilon=0.05$, which set a certified floor of $0.75$. The two-arm contrast runs four
+seeds over $120$ cycles; the delay and adaptivity sweeps run $400$ cycles, with a label delay of
+two decision cycles unless that delay is itself swept. Every figure and number regenerates from a
+single fixed seed through one script, and the headline numbers are frozen as committed evidence.
