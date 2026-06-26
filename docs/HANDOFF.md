@@ -49,7 +49,7 @@ to a horizon guarantee and moves IPIS off the quasi-static twin. Start a fresh s
 | 1 | M1 soft sensor | Computers & Chemical Engineering | CACE-D-26-00944 | 2026-06-12 | `paper/` |
 | 2 | M3 RTO (conditional conformal back-offs) | Computers & Chemical Engineering | CACE-D-26-01040 | 2026-06-23 | `paper2/` |
 | 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04509** | **2026-06-20** | `paper3/` |
-| 4 | M4 integration (composed certificate) | Industrial & Engineering Chemistry Research (ACS) | *in prep, submission-ready* | -- | `paper4/` |
+| 4 | M4 integration (composed certificate) | Industrial & Engineering Chemistry Research (ACS) | **ie-2026-03342s** | **2026-06-26** | `paper4/` |
 
 - **Paper 3 (SCC) final state.** elsarticle `[review,times]` (single-column review format,
   switched from `[5p]` two-column at the RESS editor's request before peer review), split
@@ -1168,6 +1168,19 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-26 (M4 SUBMITTED to IECR + cross-paper propagation)** -- Module 4 submitted to
+  Industrial & Engineering Chemistry Research, manuscript **ie-2026-03342s** (ACS Paragon Plus,
+  achemso). Propagated the upstream Paper 2 / Paper 3 changes into M4: `paper4/references.bib`
+  `busico_m2` title updated to the restructured SCC title ("Similarity-Calibrated Conformal
+  prediction: data-free coverage guarantees for remaining-useful-life intervals under
+  operating-regime transfer"); `busico_m3` already carried CACE-D-26-01040 (no change);
+  `busico_m1` unchanged. paper4 recompiles 24 pp, 0 errors, References (14) renders the new M2
+  title. README synced (M2 title, M4 status -> submitted, M4 publication line + ID). Created
+  **docs/CITATION_LEDGER.md** as the single source of truth for cross-paper citation metadata
+  and the downstream-propagation protocol (the "domino"). Emitted a Paper 5 sync prompt
+  (busico_m2 title + busico_m4 -> ie-2026-03342s). KNOWN STALE for the SCC (Module 2) session to
+  fix in its own pass: `docs/module2/scc/scc_paper_outline.md` and `docs/module2/scc/scc_theory.tex`
+  still carry the old M2 title.
 - **2026-06-23 (Paper 2 / M3 RTO transferred to CACE)** -- The RTO paper (`paper2/`) was
   desk-rejected at Journal of Process Control (JPROCONT-D-26-00565, scientific-significance
   gate, no reviewers). Diagnosed as framing, not science. Reframed deliverable-first: new
