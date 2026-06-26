@@ -1,24 +1,52 @@
 \section{Introduction}
-% OUTLINE -- draft next. No prose yet.
-% Hook: closed-loop process operation needs guarantees that hold over an operating HORIZON,
-%   not just at a single cycle. The quantity that matters is the long-run frequency of the
-%   joint safety event S_k = {x_k <= x_spec} AND {rho_k >= rho_min}.
-% Gap: the per-cycle composed coverage certificate \citep{busico_m4} guarantees
-%   P(S_k) >= 1 - (alpha1 + alpha2) - eps PER CYCLE under exchangeability. A real loop breaks
-%   both assumptions: (i) feedback makes successive cycles dependent; (ii) laboratory/analyzer
-%   labels arrive delayed (deadtime), so the residual stream that calibrates the bound is stale.
-%   The naive fix -- a Bonferroni union bound to cover K cycles jointly -- is vacuous as K grows.
-% Contributions (deliverable-first; this is the order the abstract/intro lead with):
-%   R1. A deployable horizon-wide safety certificate: lift the per-cycle guarantee with adaptive
-%       conformal inference (ACI) \citep{gibbs2021} so the long-run frequency of S_k meets the
-%       certified floor over a campaign. [evidence: F1 constrained arm]
-%   R2. The certificate's operational value, quantified: a health-blind RTO meets the quality
-%       spec but over-refluxes and drives projected RUL below the floor, collapsing S_k; the
-%       conformal health-constrained loop holds the floor. [evidence: F1]
-%   R3. Validity is invariant to measurement deadtime: the conformal selection penalty
-%       Delta_sel = 0 is preserved under label delay (the per-cycle result of \citep{busico_m4}
-%       extended), so deadtime moves into the coverage RATE, not validity. [evidence: F2 + O1 note]
-%   R4. Adaptive calibration is finite where the naive union bound is vacuous. [evidence: F3]
-% Components cited: soft sensor \citep{busico_m1}, prognostics \citep{busico_m2},
-%   conformal RTO \citep{busico_m3}, composed certificate \citep{busico_m4}.
-% Close: paper roadmap (framework -> case study -> results -> discussion).
+\label{sec:intro}
+
+Closed-loop process operation is judged over a campaign, not a single cycle. What matters
+operationally is the long-run frequency with which the plant simultaneously meets its product
+specification and preserves its equipment to the next planned maintenance window. This paper
+gives a distribution-free guarantee on exactly that horizon-wide joint event for a closed loop
+with realistic dynamics and delayed measurements, and shows that it holds where the obvious
+construction does not.
+
+A per-cycle version of the guarantee already exists. The composed coverage certificate of
+\citet{busico_m4} bounds the one-cycle joint event, the product staying in specification and
+the equipment surviving, under exchangeable calibration residuals, by summing a soft-sensor
+budget \citep{busico_m1}, a prognostic budget \citep{busico_m2}, and the conditional-calibration
+budget of a conformal real-time optimiser \citep{busico_m3}. Two things break when the loop is
+actually run. Feedback makes successive cycles dependent, so exchangeability fails; and
+laboratory or analyser labels return several cycles late, so the residuals that calibrate the
+bound are stale. The natural repair, a Bonferroni union bound that charges each cycle a fraction
+of the error budget to cover $K$ cycles jointly, becomes vacuous as $K$ grows. A horizon
+guarantee therefore needs a different mechanism, not a tighter bookkeeping of the per-cycle one.
+
+We supply that mechanism by lifting the per-cycle certificate with adaptive conformal inference
+\citep{gibbs2021}, and we realise the loop dynamically so the claim is tested against transport
+lags and analyser dead time rather than asserted on a quasi-static surrogate. The contributions
+are four.
+\begin{enumerate}
+\item \textbf{R1, a deployable horizon-wide safety certificate.} Adaptive calibration carries the
+  per-cycle floor to the campaign: the conformal health-constrained loop holds the joint safety
+  event at its certified floor over the horizon, with a $95\%$ Wilson lower bound of $0.992$
+  against a floor of $0.75$.
+\item \textbf{R2, the certificate's operational value, quantified.} A health-blind optimiser
+  meets the quality specification on essentially every cycle yet over-refluxes until projected
+  remaining useful life collapses, dropping the joint event to $0.008$, while the constrained
+  loop holds it. Meeting a specification is not the same as operating safely, and the health
+  channel with its budget is what closes the gap.
+\item \textbf{R3, validity that is invariant to measurement dead time.} The conformal selection
+  penalty stays zero under arbitrary label delay, so dead time moves into the coverage rate
+  rather than breaking validity; the joint coverage stays at $1.000$ across delays of zero to
+  eight cycles.
+\item \textbf{R4, evidence that adaptivity is necessary.} Adaptive calibration keeps a finite
+  interval at target coverage across horizons at which the naive union bound is already vacuous.
+\end{enumerate}
+
+This paper completes the IPIS series, which develops a physics-anchored soft sensor
+\citep{busico_m1}, a similarity-calibrated prognostic certificate \citep{busico_m2}, a
+conditionally calibrated conformal real-time optimiser \citep{busico_m3}, and the per-cycle
+composed certificate \citep{busico_m4} that the present work lifts to a horizon.
+Section~\ref{sec:framework} develops the framework: the per-cycle certificate, its dynamic
+realisation, the delayed-label read-off, the dead-time argument, and the horizon guarantee. The
+case study fixes the debutanizer twin and the two control arms, and Section~\ref{sec:results}
+reports the campaign behaviour against the three results above. The discussion places the
+guarantee as a runtime safety monitor and the bridge to plantwide risk allocation.
