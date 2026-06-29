@@ -76,12 +76,16 @@ each arriving label with its originating interval. Our online implementation (\S
 
 \subsection{The gap}
 
-Selection robustness, drift correction, delay handling, calibrated uncertainty,
-migration, and deployment each have mature single-thread treatments. What is missing
-is their \emph{integration under one validation discipline}, with blocked CV and a parsimony
-rule applied identically to feature sets, drift parameters, and regularization paths,
-with the interactions made explicit (bias correction before conformal calibration;
-migration composed with online updating; delay threaded through both the corrector
-and the conformal bookkeeping), evidence that the result runs within the analyzer cycle, and a
-negative control that shows where the performance actually comes from. That
-integration, and the accounting it forces, is the contribution.
+Selection robustness, drift correction, delay handling, calibrated uncertainty, and
+migration each have mature single-thread treatments, and a competent soft sensor must
+get all of them right at once. But assembling them is engineering, not a claim; the
+open question is \emph{attribution}. When such a sensor works, which part is
+responsible for which promise? Standard practice cannot say, because it never exhibits
+the counterfactual. The contribution of this paper is to supply it: a negative control,
+a process engineered so that the physics-dependent promise (accuracy) must fail while
+the distribution-free promise (validity) is left untouched, so that the surviving
+guarantee can be attributed to its true source. The integrated framework, with its
+interactions made explicit (bias correction before conformal calibration, migration
+composed with online updating, delay threaded through both the corrector and the
+conformal bookkeeping), is what makes that control interpretable; the attribution it
+yields is what makes it science rather than assembly.

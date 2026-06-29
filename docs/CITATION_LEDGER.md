@@ -12,13 +12,13 @@ downstream paper. Chasing those by hand across `references.bib`, `README.md`, st
 working drafts is lossy and token-expensive. This ledger plus the protocol makes propagation
 mechanical and one-directional.
 
-Last updated: 2026-06-26.
+Last updated: 2026-06-29.
 
 ## 1. Canonical ledger
 
 | bibkey | Module | Canonical title | Venue | Manuscript ID | Status | Source dir |
 |---|---|---|---|---|---|---|
-| `busico_m1` | M1 soft sensor | A physics-informed, drift-adaptive soft-sensor framework with calibrated uncertainty under delayed labels: from benchmark validation to a negative control and real-time implementation | Computers & Chemical Engineering | CACE-D-26-00944 | under review | `paper/` |
+| `busico_m1` | M1 soft sensor | When does a calibrated soft sensor keep its promise? A negative-control study of validity without accuracy under drift and delayed labels | Journal of Process Control (transfer from CACE) | CACE-D-26-00944 desk-rejected; JPC transfer in progress | reframed, transferring | `paper/` |
 | `busico_m2` | M2 prognostics (SCC) | Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer | Reliability Engineering & System Safety | JRESS-D-26-04509 | under review (deliverable-first restructure resubmitted) | `paper3/` |
 | `busico_m3` | M3 RTO | Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances | Computers & Chemical Engineering | CACE-D-26-01040 | under review | `paper2/` |
 | `busico_m4` | M4 integration | A composed coverage certificate for closed-loop process operation: unifying conformal soft sensing, calibrated prognostics, and health-constrained real-time optimization | Industrial & Engineering Chemistry Research | ie-2026-03342s | submitted | `paper4/` |
@@ -48,8 +48,8 @@ Downstream `references.bib` files must contain exactly these for the keys they c
 
 ```bibtex
 @misc{busico_m1,
-  title={{A physics-informed, drift-adaptive soft-sensor framework with calibrated uncertainty under delayed labels: from benchmark validation to a negative control and real-time implementation}},
-  author={Busico, Bien}, year={2026}, note={Manuscript CACE-D-26-00944, submitted to Computers \& Chemical Engineering}}
+  title={{When does a calibrated soft sensor keep its promise? A negative-control study of validity without accuracy under drift and delayed labels}},
+  author={Busico, Bien}, year={2026}, note={Manuscript transferred to Journal of Process Control (orig. CACE-D-26-00944); reframed as a negative-control study}}
 
 @misc{busico_m2,
   title={{Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer}},
@@ -115,6 +115,14 @@ TASKS:
 ```
 
 ## 6. Open propagation debt (fix in the owning session)
+
+- **M1 RETITLED + venue change (2026-06-29).** CACE desk-rejected CACE-D-26-00944 on
+  scope/novelty; M1 reframed on a negative-control spine and is transferring to JPC.
+  NEW title is in Sections 1 and 3 above. Blast radius = `busico_m4`, `busico_m5`
+  (both cite `busico_m1` by title in their `references.bib`). When the M4 and M5
+  sessions next run, replace their `busico_m1` @misc block with the canonical entry
+  above and grep their prose for the OLD title string. This is the only M1-driven
+  domino outstanding.
 
 - `docs/module2/scc/scc_paper_outline.md` and `docs/module2/scc/scc_theory.tex` still carry the OLD
   M2 title. These are the SCC (Module 2) session's internal drafts; refresh them there.
