@@ -1,17 +1,24 @@
-Industrial soft sensors fail through recurring mechanisms: model selection becomes a
-lottery under autocorrelation and regime shift, calibration drifts between delayed and
-infrequent laboratory analyses, confidence statistics inherit an exchangeability
-assumption that drift destroys, and new operating regimes lack training data. We
-present an integrated framework that addresses each with a simple,
-auditable core: physics-derived features on a linear estimator, blocked time-series
-cross-validation with a one-standard-error rule, an open-loop bias update at the
-documented label delay, adaptive conformal intervals computed on the corrected
-residuals, and functional scale-bias migration composed with the online layer. The framework is completed by an
-online implementation that scores each delayed laboratory result against the interval
-issued when its sample was predicted. On the Tennessee Eastman process the framework delivers
-regime-uniform empirical coverage of 0.897--0.903 against a 0.90 target where a static
-conformal baseline swings between 0.847 and 0.957, and 10.0$\times$ data efficiency in regime
-migration. A deliberately hostile negative control (SECOM: 590 anonymized features,
-no physics) shows the decomposition: the point sensor fails ($R^2$ = --1.84), yet coverage
-holds at 0.910--0.915 with 37\% narrower intervals than the static baseline. Validity is
-model-agnostic; accuracy is what physics anchors buy.
+A soft sensor that reports an uncertainty interval makes two promises, and they are
+not the same: that its point estimate is \emph{accurate}, and that its interval is
+\emph{valid}, covering the truth at the stated rate. Practice usually conflates them.
+We separate the two by construction and then test the separation directly. The
+framework pairs physics-derived features and a linear estimator, selected by blocked
+time-series cross-validation with a one-standard-error rule, with an open-loop bias
+update at the documented laboratory delay and adaptive conformal intervals computed on
+the bias-corrected residual; functional scale-bias migration transfers it to new
+operating regimes. On two process columns the sensor is both accurate and valid:
+held-out $R^2$ rises from $+0.476$ to $+0.857$ on a debutanizer benchmark once drift
+is corrected, and on Tennessee Eastman regimes the intervals hold $0.897$--$0.903$
+empirical coverage against a $0.90$ target where a static conformal baseline swings
+between $0.847$ and $0.957$. The decisive test is a negative control: a deliberately
+physics-free process (SECOM, 590 anonymized signals with no thermodynamic structure)
+on which the point model is designed to fail. It does ($R^2 = -1.84$), yet conformal
+validity is undamaged ($0.910$--$0.915$ coverage at $37\%$ narrower intervals than the
+static baseline). Accuracy collapses while validity holds. This dissociation is the
+central evidence: distribution-free validity is model-agnostic, whereas point accuracy
+is what the physics anchors buy, a claim that can only be established by exhibiting the
+case where one survives and the other does not. We further show that under delayed
+laboratory feedback the coverage indicator must be scored against the interval issued
+when a sample was measured, not the interval the adapted state would issue when the
+result arrives, and we enforce this in a real-time implementation that runs two orders
+of magnitude inside a typical analyzer cycle.

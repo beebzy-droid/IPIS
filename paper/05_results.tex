@@ -1,7 +1,7 @@
 \section{Results}
 \label{sec:results}
 
-\subsection{Feature philosophy and model selection (K1, K2; Debutanizer)}
+\subsection{Feature philosophy and model selection (C2, C3; debutanizer)}
 
 Table~\ref{tab:t1} / Figure~\ref{fig:f2} report the feature ablation under the identical blocked
 time-series CV protocol (5 folds, transport lag 15, plain linear regression, scaler fit
@@ -42,7 +42,7 @@ to fail (static $R^2$ $\approx$ 0.02), which a naive reading would call a physic
 scanning recovers u5 at lag 15 as a stable interior maximum ($r^2$ $\approx$ 0.51). The lag-zero
 failure is diagnostic of transport delay, not of the thermodynamics (see the accompanying repository).
 
-\subsection{Drift handling under delayed labels (K2; Debutanizer, TEP)}
+\subsection{Drift handling under delayed labels (C3; debutanizer, TEP)}
 
 Figure~\ref{fig:f4} shows the held-out residual trace before and after the open-loop bias-update
 \citep{shardt2016} at the documented analyzer delay ($\lambda$ = 0.1 CV-selected on the pool, test
@@ -60,7 +60,7 @@ The same recipe applied unchanged to the TEP regimes reproduces the signature
 $\theta$ = 2). The methodology therefore transfers across process topology before any model migration
 is attempted (see the accompanying repository).
 
-\subsection{Calibrated uncertainty under drift and delay (K3; TEP, synthetic)}
+\subsection{Calibrated uncertainty under drift and delay (C4; TEP, synthetic)}
 
 Static split conformal \citep{papadopoulos2002} assumes exchangeability; process drift
 breaks it. On a controlled synthetic stress test (residual scale $\times$3 mid-stream, target
@@ -103,7 +103,7 @@ sits between the two, structurally limited by its FIFO residual window on these
 mild-drift regimes (its batch-size parameter is flat here: coverage 0.897--0.910 over
 s $\in$ \{1, 10, 25, 50\}).
 
-\subsection{Model migration across operating regimes (K4; TEP)}
+\subsection{Model migration across operating regimes (C5; TEP)}
 
 Migration is evaluated as within-process regime migration (mode 1 $\to$ modes 2, 3) under
 the two-layer composition (offline migration plus the Section 5.2 online bias-update,
@@ -128,7 +128,7 @@ Output-only correction \citep{lu2008similarity} lands between (1.0$\times$ / 4.0
 the two-layer composition is load-bearing, because within-regime drift otherwise
 swamps the cross-regime correction.
 
-\subsection{The negative control: no physics anchors (K5; SECOM)}
+\subsection{The negative control: no physics anchors (C1; SECOM)}
 
 SECOM inverts every assumption the framework exploits: 590 anonymized features over
 1,567 samples (p $\approx$ n), 4.5\% missing cells, no thermodynamic structure. Framed as
@@ -165,7 +165,7 @@ SECOM & \textbf{none} & $-1.84 \to -0.16$ & \textbf{0.910 / 0.915} ($\theta{=}2/
 \end{tabular}
 \end{table}
 
-\subsection{Real-time feasibility (K5)}
+\subsection{Real-time feasibility (C1, C4)}
 
 The complete pipeline was exercised end-to-end against a live instance of the
 online implementation (Figure~\ref{fig:f1}b). The measured latency per estimate on

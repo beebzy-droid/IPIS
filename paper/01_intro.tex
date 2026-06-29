@@ -1,76 +1,86 @@
 \section{Introduction}
 \label{sec:intro}
 
-Soft sensors, models that estimate a slow, expensive, or delayed quality measurement
-from fast process signals, are among the oldest and most economically defensible
-applications of machine learning in the process industries. They are also among the
-most quietly unreliable. The gap between a benchmarked soft sensor and a trusted one
-is not, in our experience, a matter of model capacity; it is a set of recurring
-production failure modes that standard practice leaves unaddressed.
+A soft sensor that reports an uncertainty interval makes two promises, and they are
+not the same promise. One is \emph{accuracy}: the point estimate is close to the true
+quality variable. The other is \emph{validity}: the reported interval contains the
+truth at the stated rate. A sensor can be accurate but overconfident, or inaccurate but
+honestly uncertain, and an operator who cannot tell which cannot safely act on either.
+Most soft-sensor practice reports a point value with an error bar derived from a
+held-out set and treats the two as one quantity. They are separable, and this paper
+separates them.
 
-Five such mechanisms organize this paper. \emph{Selection lotteries:} process data are
-autocorrelated and regime-structured, so validation on adjacent or shuffled samples
-leaks information and averages regimes away. Model choice then depends on the seed,
-and the chosen model fails on the regime the validation scheme hid. \emph{Drift:}
-calibration decays between laboratory analyses, and the analyses themselves arrive
+The separation is not merely conceptual. We build a soft sensor whose accuracy comes
+from process physics and whose validity comes from distribution-free calibration, then
+test the two promises independently by constructing a process on which the first is
+designed to fail. On a deliberately physics-free dataset the point model collapses to
+worse-than-mean prediction, yet the calibrated intervals retain their coverage. That
+dissociation, accuracy gone and validity intact, is the central result, and it licenses
+a claim that no positive result alone could support: that in this framework
+distribution-free validity is model-agnostic, while point accuracy is purchased
+specifically by the physics. A negative control is the standard instrument for
+attributing an effect to its cause; it is uncommon in data-driven process modeling, and
+deploying one here is the paper's primary methodological contribution.
+
+Reaching a sensor on which that test is meaningful requires getting four ordinary things
+right, because each, left unaddressed, produces a sensor that is inaccurate or invalid
+for reasons unrelated to the physics, and would confound the control. Process data are
+autocorrelated and regime-structured, so model selection on adjacent or shuffled samples
+leaks information and becomes a lottery whose winner fails on the regime the validation
+scheme hid. Calibration drifts between laboratory analyses, and those analyses arrive
 late and sparsely, so the labels that could correct the drift are themselves delayed.
-\emph{Uncalibrated confidence:} prediction intervals inherited from a held-out set assume
-exchangeability, which is the very property that drift and regime change destroy, so the
-stated coverage is wrong in both directions, and the operator cannot tell which.
-\emph{Delay-corrupted bookkeeping:} when a label arrives late, naive online calibration
-scores it against the current interval rather than the one issued at prediction time,
-silently corrupting the very adaptation meant to fix the previous problem. \emph{Data
-scarcity on new regimes:} a sensor built for one operating point collapses on another
-($R^2$ of --1.1 to --1.3 in our transfer-gap measurement), and retraining from scratch
-discards everything the source regime taught.
+Prediction intervals inherited from a held-out set assume exchangeability, the very
+property that drift destroys, so the stated coverage is wrong in both directions. And
+when a delayed label finally arrives, naive online calibration scores it against the
+current interval rather than the one issued when the sample was measured, silently
+corrupting the adaptation meant to fix the previous problem. We treat each with the
+simplest mechanism that works, and we keep every point model linear, both because the
+negative-control logic requires holding model capacity fixed across datasets and because
+linearity keeps each adaptive step $O(1)$ per label and the implemented sensor auditable
+by a process engineer.
 
-Each mechanism has a mature single-thread literature (Section 2): delayed-measurement
-estimation, process model migration, conformal prediction for time series. What is
-missing is their integration under one validation discipline, with the interactions
-made explicit and the result shown to run in real time. That integration is this paper's
-contribution, and it is conservative by design in one dimension: every point model
-is linear, both because the negative-control logic requires holding the model class
-fixed and because linearity is what keeps every adaptive mechanism O(1) per label and
-the implemented sensor auditable by a process engineer.
-
-Concretely, we contribute:
+The contributions, ordered by how far they depart from existing practice, are:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{K1, a selection methodology} that converts the cross-regime lottery into
-  reproducible choice: blocked time-series CV whose per-fold spread is treated as
-  signal, plus the one-standard-error parsimony rule, applied identically to feature
-  sets and regularization paths. On the Debutanizer benchmark this separates a
-  4-feature physics set (CV $R^2$ +0.145 $\pm$ 0.419, test +0.476) from a 126-feature lagged
-  set whose failure is visible even out-of-sample (test +0.221); on SECOM (p $\approx$ n) it
-  contains a path explosion spanning four orders of magnitude.
+  \textbf{C1, a negative control that isolates the source of the guarantee.} On SECOM,
+  a deliberately physics-free process where no thermodynamic structure exists to encode,
+  the point sensor is designed to fail and does ($R^2 = -1.84$), yet the calibration
+  machinery holds $0.910$--$0.915$ coverage at $37\%$ narrower width than a static
+  baseline. Accuracy collapses while validity survives, which isolates physics anchors
+  as the source of accuracy and distribution-free calibration as the source of validity.
+  To our knowledge this is the first use of a designed negative control to attribute the
+  guarantee of a process soft sensor to its cause.
 \item
-  \textbf{K2, drift handling at the documented label delay}: an open-loop EWMA bias update
-  that cuts cross-fold standard error 9$\times$ and lifts held-out $R^2$ from +0.476 to +0.857
-  on the Debutanizer, with drift alarming on the corrected residual so alarms mean
-  intervention, not normal tracking.
+  \textbf{C2, leakage-free model selection.} Blocked time-series cross-validation whose
+  per-fold spread is treated as signal, plus the one-standard-error parsimony rule,
+  applied identically to feature sets and regularization paths, converts the cross-regime
+  selection lottery into reproducible choice. On the debutanizer benchmark this separates
+  a 4-feature physics set (CV $R^2$ $+0.145 \pm 0.419$, test $+0.476$) from a 126-feature
+  lagged set whose failure is visible even out-of-sample (test $+0.221$); on SECOM
+  ($p \approx n$) it contains a path explosion spanning four orders of magnitude.
 \item
-  \textbf{K3, calibrated uncertainty under drift and delay}: adaptive conformal intervals
-  on the bias-corrected estimate achieve regime-uniform coverage (0.897--0.903 against
-  a 0.90 target, all regimes $\times$ delays) where the static construction is invalid in
-  both directions (0.847--0.957), together with the delayed-label bookkeeping rule
-  (coverage is scored against the interval stored at prediction time) that makes online
-  calibration correct rather than approximately right.
+  \textbf{C3, drift handling at the documented label delay.} An open-loop EWMA bias
+  update cuts cross-fold standard error $9\times$ and lifts held-out $R^2$ from $+0.476$
+  to $+0.857$ on the debutanizer, with drift alarming on the corrected residual so an
+  alarm signals intervention rather than normal tracking.
 \item
-  \textbf{K4, transfer with its limits stated}: the methodology transfers across process
+  \textbf{C4, calibrated uncertainty under drift and delay.} Adaptive conformal intervals
+  on the bias-corrected estimate achieve regime-uniform coverage ($0.897$--$0.903$ against
+  a $0.90$ target, all regimes $\times$ delays) where the static construction is invalid in
+  both directions ($0.847$--$0.957$). Under delayed feedback the coverage indicator is
+  scored against the interval issued when the sample was measured, not the interval the
+  adapted state would issue at result arrival; we state this correctness property and
+  enforce it in a real-time implementation that runs two orders of magnitude inside a
+  typical analyzer cycle.
+\item
+  \textbf{C5, transfer with its limits stated.} The methodology transfers across process
   topology verbatim; within a process, functional scale-bias migration with a GP bias
-  achieves 10.0$\times$ data efficiency on both evaluated regime pairs, with calibrated
-  intervals that widen appropriately with the regime gap, while the linear-source
-  degeneracy of per-input affine migration is verified analytically and observed
-  empirically to $\pm$0.001--0.006.
-\item
-  \textbf{K5, a negative control and a real-time implementation}: on SECOM, where no physics exists to
-  encode, the point sensor fails ($R^2$ = --1.84) but the calibration machinery holds
-  0.910--0.915 coverage at 37\% narrower width than the static baseline. This isolates
-  physics anchors as the source of accuracy and conformal calibration as the source of
-  honesty. The full pipeline computes each estimate in under 2 ms at the 99th
-  percentile, two orders of magnitude inside a typical analyzer-cycle budget.
+  achieves $10.0\times$ data efficiency on both evaluated regime pairs, with intervals
+  that widen appropriately with the regime gap, while the linear-source degeneracy of
+  per-input affine migration is verified analytically and observed empirically to
+  $\pm 0.001$--$0.006$.
 \end{itemize}
 
 The paper proceeds as outlined: Section 2 positions the three literatures and the gap;
