@@ -8,7 +8,7 @@ time-series CV protocol (5 folds, transport lag 15, plain linear regression, sca
 per fold-train). The four arms differ only in where model complexity comes from.
 
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering\small
 \caption{Debutanizer feature ablation under the identical blocked-CV protocol (held-out test $n=360$).}
 \label{tab:t1}
@@ -22,7 +22,7 @@ physics + $u_5$ (deployed) & 4 & $\mathbf{+0.145 \pm 0.419}$ & $-1.494$ & $\math
 lagged raw (kitchen sink) & 126 & $-1.604 \pm 1.421$ & $-6.248$ & $+0.221$ \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 Three observations. First, the thermodynamically grounded set (bubble-point estimate,
 relative volatility $\alpha$(T), stripping factor) dominates on every metric while using 4
@@ -70,7 +70,7 @@ regimes exhibit the production version of this failure: not a collapse but
 \emph{inconsistency} (Table~\ref{tab:t2} / Figure~\ref{fig:f7}).
 
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering\small
 \caption{Empirical coverage against the 0.90 target on real TEP regimes, by construction and label delay $\theta$ ($n_{\mathrm{test}}=300$ per regime); interval width in parentheses.}
 \label{tab:t2}
@@ -91,7 +91,7 @@ mode 3 & raw + split        & 0.957 (3.18) & 0.957 (3.18) \\
        & EnbPI              & 0.873 (2.49) & 0.873 (2.49) \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 The static baseline swings from under-coverage (0.847, modes 1--2) to over-coverage
 (0.957, mode 3). It is invalid in both directions, and the over-covering regime pays for its
@@ -150,7 +150,7 @@ fail-enrichment of conformal misses is inconclusive (9 failing lots in the test
 window) and is reported only as such.
 
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering\small
 \caption{Cross-dataset summary; the negative-control row is the point.}
 \label{tab:t3}
@@ -163,7 +163,7 @@ TEP regimes & process feat. & $+0.31 \to$ CV $+0.45$ ($\theta{=}2$) & \textbf{0.
 SECOM & \textbf{none} & $-1.84 \to -0.16$ & \textbf{0.910 / 0.915} ($\theta{=}2/5$) \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \subsection{Real-time feasibility (C1, C4)}
 
@@ -186,46 +186,46 @@ availability).
 
 % --- figures first referenced in this section ---
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=0.6\textwidth]{F2_feature_ablation}
+\includegraphics[width=\textwidth]{F2_feature_ablation}
 \caption{\textbf{Feature ablation on the debutanizer (identical blocked-CV protocol).} Bars: blocked-CV $R^2$ mean $\pm$ SE; red dashes: worst fold; k = number of features. The physics-anchored set with the raw lagged temperature (k = 4) dominates (CV +0.145 $\pm$ 0.419, test +0.476), while the 126-feature lagged kitchen sink collapses (CV --1.604 $\pm$ 1.421, worst fold --6.248) and its failure is visible out-of-sample as well (test +0.221): complexity set by physics beats complexity set by validation.}
 \label{fig:f2}
-\end{figure}
+\end{figure*}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.6\textwidth]{F3_secom_cv_path}
+\includegraphics[width=\linewidth]{F3_secom_cv_path}
 \caption{\textbf{SECOM elastic-net CV path (p $\approx$ n selection lottery).} Mean blocked-CV --$R^2$ (log scale) $\pm$ SE along the regularization path, complexity increasing to the right. The path explodes by four orders of magnitude (to --$R^2$ $\approx$ 7 $\times$ 10$^4$) at weak shrinkage; the one-standard-error rule (blue) selects maximal shrinkage $\alpha$* = 10 (6/441 nonzero coefficients), adjacent to the best CV mean (red), containing the lottery that pure CV-mean selection would re-enter.}
 \label{fig:f3}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{F4_bias_trace}
 \caption{\textbf{Held-out residual trace, raw vs.~bias-corrected (debutanizer).} Residuals on the 360-sample test window before (red) and after (blue) the open-loop EWMA bias update ($\lambda$ = 0.1 CV-selected on the pool; $\theta$ = 4). The correction removes the calibration offset and tracks within-window drift, lifting held-out $R^2$ from +0.476 to +0.857; the residual sd drops accordingly. The same mechanism reduces cross-fold SE 9$\times$ in CV (Table~\ref{tab:t1} vs.~\S 5.2).}
 \label{fig:f4}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{F5_data_efficiency}
 \caption{\textbf{Data efficiency of regime migration (TEP, mode 1 $\to$ modes 2 and 3;
 two-layer = migration + online bias update, n = 8 repeats).} Held-out $R^2$ vs.~fraction of target-regime data for the migrated sensor (blue, $\pm$ sd) and from-scratch training (red); dashed line: 90\% of the from-scratch ceiling. Yan functional scale-bias migration reaches the threshold at 5\% of target data vs.~50\% from scratch on both targets, a 10.0$\times$ data efficiency, with calibrated GP posterior intervals (coverage 92--98\%) that widen appropriately for the larger mode-3 regime gap.}
 \label{fig:f5}
-\end{figure}
+\end{figure*}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.6\textwidth]{F6_synthetic_stress}
+\includegraphics[width=\linewidth]{F6_synthetic_stress}
 \caption{\textbf{Coverage under a controlled drift stress (synthetic; target 0.90).} Residual scale is tripled mid-stream. Static split conformal collapses to 0.403 coverage; adaptive conformal inference re-attains 0.899 by adapting the working miscoverage level; EnbPI recovers to 0.832 with the lag of its FIFO residual window. The controlled version of the real-regime inconsistency in Figure~\ref{fig:f7}.}
 \label{fig:f6}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{F7_tep_coverage}
 \caption{\textbf{Empirical coverage on real TEP regimes (target 0.90, dashed; n = 300 per
 regime; $\theta$ $\in$ \{2, 5\}).} Static split conformal on raw residuals is invalid in both directions, under-covering modes 1--2 (0.847) and over-covering mode 3 (0.957, at the widest intervals, 3.18). The corrected + ACI construction is regime-uniform at the target (range {[}0.897, 0.903{]} across all six regime $\times$ delay cells) at widths 1.7--2.5; EnbPI sits between. Validity here is a property of the composition: bias correction first, conformal calibration on what remains.}
 \label{fig:f7}
-\end{figure}
+\end{figure*}

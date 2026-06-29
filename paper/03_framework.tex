@@ -161,9 +161,9 @@ afterthought.
 
 % --- figures first referenced in this section ---
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{F1_architecture}
 \caption{\textbf{Framework and online implementation.} (a) The offline/online pipeline: physics-derived features (bubble-point estimate, relative volatility $\alpha(T)$, stripping factor) feed blocked time-series CV with one-SE selection; the frozen linear sensor is corrected online by an open-loop EWMA bias update at the documented analyzer delay $\theta$, and adaptive conformal intervals are computed on the corrected residuals; drift alarming acts on the corrected residual, and migration (offline) initializes sensors for sibling regimes. (b) The online implementation as a fast estimation path and a slow reconciliation path over a small calibration state ($b_t$, $\alpha_t$, residual window): each estimate is issued with its interval and recorded; each delayed laboratory result updates the calibration state and is scored against the interval recorded when its sample was estimated (dashed), not the since-adapted current one.}
 \label{fig:f1}
-\end{figure}
+\end{figure*}
