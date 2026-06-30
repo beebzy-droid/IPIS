@@ -1,20 +1,24 @@
-Soft sensors, prognostic models, and real-time optimization (RTO) each increasingly
-ship distribution-free coverage guarantees. Safe closed-loop operation, however,
-turns on a joint event that none of them addresses alone: the product must stay in
-specification while the equipment survives to its next maintenance window. That joint
-guarantee does not follow from the three taken in isolation, and feedback is widely
-believed to void it by breaking exchangeability. We derive a per-cycle \emph{composed}
-coverage certificate for the joint safety event, with terms that map one-to-one onto
-the three modules. A causal-timing argument then shows that the conformal-selection
-penalty is exactly zero whenever the decision is formed before the measurement it is
-conditioned against, which dissolves the feedback objection. A corollary collapses the
-certificate into a single convex similitude-departure budget that a modifier-adaptation
-RTO enforces directly, so the optimizer cannot push economics hard enough to invalidate
-its own sensor and life guarantees; the flagship guarantee and the operating floor
-become the same constraint. On a calibrated debutanizer digital twin running the real
-soft-sensor, prognostic, and RTO implementations, the certified floor
-$1-(\alpha_1+\alpha_2)-\varepsilon = 0.75$ is met empirically: joint safety coverage is
-$0.988$ ($95\%$ interval $[0.976, 0.994]$) when the budget is enforced and $0.000$ when
-it is not. Reflux-pump life carries the entire contrast, with remaining-life coverage of
-$1.000$ against $0.013$. None of the three guarantees implies system safety on its own;
-the composition is what the certificate provides.
+A self-optimizing plant is safe only when a joint event holds: the product stays in
+specification while the equipment survives to its next maintenance window. We show that this
+joint guarantee can be certified in closed loop, that feedback does not void it, and that a
+single convex constraint forces a profit-seeking optimizer to respect it. Soft sensors,
+prognostic models, and real-time optimization (RTO) each now ship distribution-free coverage
+guarantees, yet the joint event that determines safety follows from none of them in
+isolation, and feedback is widely believed to break the exchangeability on which conformal
+validity rests. We derive a per-cycle \emph{composed} coverage certificate for the joint
+event, with terms that map one-to-one onto the three modules: the soft sensor's miscoverage,
+the prognostic bound's miscoverage, a similitude-departure penalty contributed by each
+module's regime shift, and a selection penalty. A causal-timing argument then shows that the
+selection penalty is exactly zero whenever the decision is formed before the measurement it
+is conditioned against, which dissolves the feedback objection. A corollary collapses the
+certificate into a single convex similitude-departure budget that a modifier-adaptation RTO
+enforces directly, so the optimizer cannot push economics hard enough to invalidate its own
+sensor and life guarantees, and the flagship guarantee and the operating floor become the
+same constraint. A negative control isolates the mechanism. On a calibrated debutanizer
+digital twin running the real soft-sensor, prognostic, and RTO implementations, the certified
+floor $1-(\alpha_1+\alpha_2)-\varepsilon = 0.75$ is met empirically, with joint safety
+coverage $0.988$ ($95\%$ interval $[0.976, 0.994]$) when the budget is enforced; removing the
+budget, the single causal ingredient, collapses joint coverage to $0.000$. Reflux-pump life
+carries the entire contrast, with remaining-life coverage of $1.000$ against $0.013$. None of
+the three guarantees implies system safety on its own; the composition, and the convex budget
+that enforces it, is what the certificate provides.

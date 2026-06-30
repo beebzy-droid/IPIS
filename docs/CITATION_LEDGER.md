@@ -12,7 +12,7 @@ downstream paper. Chasing those by hand across `references.bib`, `README.md`, st
 working drafts is lossy and token-expensive. This ledger plus the protocol makes propagation
 mechanical and one-directional.
 
-Last updated: 2026-06-30 (M2 SCC -> JRESS-D-26-04700; propagation switched to pull-based via the repo, prompt handoff retired; M4/M5 bib + HANDOFF sync pending in Section 6; M2-owned surfaces synced).
+Last updated: 2026-06-30 (M4 reframed + ported to CACE after IECR desk-reject: retitled, achemso -> elsarticle, CRediT removed; busico_m2 ID 04509 -> 04700 pulled into paper4; busico_m4 row/entry updated; M5 must pull busico_m4. Earlier same day: M2 SCC -> JRESS-D-26-04700, pull-based propagation).
 
 ## 1. Canonical ledger
 
@@ -21,7 +21,7 @@ Last updated: 2026-06-30 (M2 SCC -> JRESS-D-26-04700; propagation switched to pu
 | `busico_m1` | M1 soft sensor | When does a calibrated soft sensor keep its promise? A negative-control study of validity without accuracy under drift and delayed labels | Journal of Process Control (transfer from CACE) | JPROCONT-D-26-00618 (orig. CACE-D-26-00944) | under review | `paper/` |
 | `busico_m2` | M2 prognostics (SCC) | Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer | Reliability Engineering & System Safety | JRESS-D-26-04700 (resub. of JRESS-D-26-04509) | under review (deliverable-first restructure) | `paper3/` |
 | `busico_m3` | M3 RTO | Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances | Computers & Chemical Engineering | CACE-D-26-01040 | under review | `paper2/` |
-| `busico_m4` | M4 integration | A composed coverage certificate for closed-loop process operation: unifying conformal soft sensing, calibrated prognostics, and health-constrained real-time optimization | Industrial & Engineering Chemistry Research | ie-2026-03342s | submitted | `paper4/` |
+| `busico_m4` | M4 integration | A composed coverage certificate for closed-loop process operation: certified joint product-quality and equipment-survival guarantees under feedback | Computers & Chemical Engineering | none (in submission; IECR ie-2026-03342s declined) | submitting to CACE | `paper4/` |
 | `busico_m5` | M5 dynamic / horizon | Horizon-wide safety guarantees for closed-loop process operation via adaptive conformal calibration | Computers & Chemical Engineering (target) | none (in prep) | `paper5/` |
 
 Note the directory quirk: `paperN/` is numbered by authoring order, so `paper2/` = Module 3 (RTO)
@@ -60,8 +60,8 @@ Downstream `references.bib` files must contain exactly these for the keys they c
   author={Busico, Bien}, year={2026}, note={Manuscript CACE-D-26-01040, submitted to Computers \& Chemical Engineering}}
 
 @misc{busico_m4,
-  title={{A composed coverage certificate for closed-loop process operation: unifying conformal soft sensing, calibrated prognostics, and health-constrained real-time optimization}},
-  author={Busico, Bien}, year={2026}, note={Manuscript ie-2026-03342s, submitted to Industrial \& Engineering Chemistry Research}}
+  title={{A composed coverage certificate for closed-loop process operation: certified joint product-quality and equipment-survival guarantees under feedback}},
+  author={Busico, Bien}, year={2026}, note={Manuscript in submission to Computers \& Chemical Engineering (reframed; IECR ie-2026-03342s and the ACS Omega transfer declined)}}
 ```
 
 (Double braces around the title preserve capitalization under achemso/elsarticle bst. Keep them.)
@@ -107,7 +107,7 @@ prompt is passed between sessions.
   (was JRESS-D-26-04509). Deliverable-first restructure (proofs to Appendix A, engineering
   narrative, workflow figure); no results changed. Ledger Section 1 + Section 3 now canonical.
   DOWNSTREAM SYNC PENDING (busico_m2 blast radius = M4, M5):
-  `paper4/references.bib` needs the ID 04509 -> 04700 (its title is already current);
+  `paper4/references.bib` busico_m2 ID SYNCED 04509 -> 04700 (2026-06-30, M4 pass);
   `paper5/references.bib` needs BOTH the ID 04509 -> 04700 AND title old -> canonical.
   M4 and M5 sessions read this ledger on their next run and sync busico_m2 in their
   references.bib per Section 4 (paper4 = ID only; paper5 = ID + title).
@@ -131,3 +131,21 @@ prompt is passed between sessions.
 - Affiliation STANDARDIZED to "Mapua Malayan College Mindanao, Davao City, Philippines"
   (M1 done 2026-06-29; matches EM record for JPROCONT-D-26-00618). M2-M5 front matter
   should adopt the same string in their sessions; not a citation field, so no domino.
+
+- **M4 REFRAMED + venue change to CACE (2026-06-30): declined IECR (ie-2026-03342s) and the ACS
+  Omega transfer; ported achemso -> elsarticle, CRediT and TOC-graphic removed, retitled.** New
+  canonical title: "A composed coverage certificate for closed-loop process operation: certified
+  joint product-quality and equipment-survival guarantees under feedback". Now in submission to
+  Computers & Chemical Engineering (no manuscript ID yet). Ledger Section 1 + Section 3 updated.
+  DOWNSTREAM SYNC PENDING (busico_m4 blast radius = M5 only): `paper5/references.bib` busico_m4
+  needs title old -> new AND note old (IECR ie-2026-03342s) -> new (in submission to CACE, no ID).
+  The M5 session pulls from this ledger on its next run per Section 4. M4-owned surfaces SYNCED this
+  pass (2026-06-30): the `paper4/` manuscript (elsarticle, new title, CRediT removed),
+  `paper4/references.bib` (busico_m2 ID -> 04700), `paper4/cover_letter.md` (CACE, transfer owned,
+  M1 listed at JPC), README M4 rows, docs/HANDOFF.md M4 papers-table row + changelog. When M4
+  receives a CACE manuscript ID, update busico_m4 here (Section 1 + 3) and re-flag M5.
+- **HANDOFF papers-table staleness (flag for owning sessions):** `docs/HANDOFF.md` still lists M1
+  (Paper 1) at "Computers & Chemical Engineering | CACE-D-26-00944"; M1 is now at Journal of Process
+  Control (JPROCONT-D-26-00618). The M2 row (JRESS-D-26-04509) is likewise stale (-> 04700). Both
+  are owned by the M1/M5 sessions per the M2 assignment above; the M4 pass did not edit other papers'
+  rows, to avoid cross-session churn.

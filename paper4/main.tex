@@ -1,32 +1,19 @@
-% IPIS Module 4 -- composed coverage certificate. Industrial & Engineering Chemistry Research (ACS).
+% IPIS Module 4 -- composed coverage certificate. Computers & Chemical Engineering (Elsevier).
 % Build: pdflatex main && bibtex main && pdflatex main && pdflatex main
-\documentclass[journal=iecred,manuscript=article]{achemso}
+\documentclass[review,12pt]{elsarticle}
 
 \usepackage{amsmath,amssymb}
+% elsarticle predefines \proof; free it so amsthm can provide the proof environment
+\let\proof\relax
+\let\endproof\relax
 \usepackage{amsthm}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{graphicx}
-
-% Line numbers for peer review (IECR submission requirement).
-% lineno + amsmath patch so numbering continues across display math and proofs.
 \usepackage{lineno}
-\newcommand*\patchAmsMathEnvironmentForLineno[1]{%
-  \expandafter\let\csname old#1\expandafter\endcsname\csname #1\endcsname
-  \expandafter\let\csname oldend#1\expandafter\endcsname\csname end#1\endcsname
-  \renewenvironment{#1}%
-    {\linenomath\csname old#1\endcsname}%
-    {\csname oldend#1\endcsname\endlinenomath}}%
-\newcommand*\patchBothAmsMathEnvironmentsForLineno[1]{%
-  \patchAmsMathEnvironmentForLineno{#1}\patchAmsMathEnvironmentForLineno{#1*}}%
-\AtBeginDocument{%
-  \patchBothAmsMathEnvironmentsForLineno{equation}%
-  \patchBothAmsMathEnvironmentsForLineno{align}%
-  \patchBothAmsMathEnvironmentsForLineno{gather}%
-  \patchBothAmsMathEnvironmentsForLineno{multline}}%
-\linenumbers
+\usepackage{url}
 
-% achemso does not provide theorem environments
+% theorem environments (structure unchanged from the reviewed version)
 \newtheorem{theorem}{Theorem}
 \newtheorem{corollary}{Corollary}
 \newtheorem{lemma}{Lemma}
@@ -34,30 +21,30 @@
 \newtheorem{assumption}{Assumption}
 \newtheorem{definition}{Definition}
 
-\setcounter{secnumdepth}{3}  % number sections so \ref cross-references resolve
-
-\author{Bien Busico}
-\email{bienbusico@gmail.com}
-\affiliation{Chemical Engineer, Quezon City, Philippines}
-
-\title{A composed coverage certificate for closed-loop process operation:
-unifying conformal soft sensing, calibrated prognostics, and health-constrained
-real-time optimization}
-
-\keywords{conformal prediction \and real-time optimization \and soft sensor \and
-predictive maintenance \and digital twin \and distillation \and uncertainty
-quantification \and process safety}
+\journal{Computers \& Chemical Engineering}
 
 \begin{document}
+\begin{frontmatter}
 
-\begin{tocentry}
-\centering
-\includegraphics[width=8cm]{figures/loop_schematic.png}
-\end{tocentry}
+\title{A composed coverage certificate for closed-loop process operation:
+certified joint product-quality and equipment-survival guarantees under feedback}
+
+\author{Bien Busico}
+\address{Chemical Engineer, Quezon City, Philippines}
+\ead{bienbusico@gmail.com}
 
 \begin{abstract}
 \input{abstract}
 \end{abstract}
+
+\begin{keyword}
+conformal prediction \sep real-time optimization \sep soft sensor \sep
+predictive maintenance \sep digital twin \sep distillation \sep
+uncertainty quantification \sep process safety
+\end{keyword}
+
+\end{frontmatter}
+\linenumbers
 
 \input{01_intro}
 \input{02_related_work}
@@ -67,23 +54,16 @@ quantification \and process safety}
 \input{06_discussion}
 \input{07_conclusion}
 
-\begin{acknowledgement}
-The author thanks the maintainers of the open-source scientific Python and
-\LaTeX{} ecosystems on which this work is built.
-\end{acknowledgement}
-
 \section*{Data and code availability}
 The reference implementation of all three modules, the closed-loop integration
 layer, the coverage harness, and the single script that regenerates every number
 and figure in this paper are available at \url{github.com/beebzy-droid/IPIS}.
 
-\section*{CRediT authorship contribution statement}
-\textbf{Bien Busico:} Conceptualization, Methodology, Software, Formal analysis,
-Investigation, Writing -- original draft, Writing -- review \& editing.
-
 \section*{Declaration of competing interest}
-The author declares no competing financial interest.
+The author declares no competing financial interests or personal relationships that
+could have influenced the work reported in this paper.
 
+\bibliographystyle{elsarticle-num-names}
 \bibliography{references}
 
 \end{document}

@@ -1,0 +1,944 @@
+% EM-FLAT upload variant for Elsevier Editorial Manager (no subfolders): sections inlined,
+% bibliography inlined from .bbl, figure paths bare. Upload this .tex as Manuscript and the
+% three PNGs as Figure items at the same folder level.
+% IPIS Module 4 -- composed coverage certificate. Computers & Chemical Engineering (Elsevier).
+% Build: pdflatex main && bibtex main && pdflatex main && pdflatex main
+\documentclass[review,12pt]{elsarticle}
+
+\usepackage{amsmath,amssymb}
+% elsarticle predefines \proof; free it so amsthm can provide the proof environment
+\let\proof\relax
+\let\endproof\relax
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{lineno}
+\usepackage{url}
+
+% theorem environments (structure unchanged from the reviewed version)
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{definition}{Definition}
+
+\journal{Computers \& Chemical Engineering}
+
+\begin{document}
+\begin{frontmatter}
+
+\title{A composed coverage certificate for closed-loop process operation:
+certified joint product-quality and equipment-survival guarantees under feedback}
+
+\author{Bien Busico}
+\address{Chemical Engineer, Quezon City, Philippines}
+\ead{bienbusico@gmail.com}
+
+\begin{abstract}
+A self-optimizing plant is safe only when a joint event holds: the product stays in
+specification while the equipment survives to its next maintenance window. We show that this
+joint guarantee can be certified in closed loop, that feedback does not void it, and that a
+single convex constraint forces a profit-seeking optimizer to respect it. Soft sensors,
+prognostic models, and real-time optimization (RTO) each now ship distribution-free coverage
+guarantees, yet the joint event that determines safety follows from none of them in
+isolation, and feedback is widely believed to break the exchangeability on which conformal
+validity rests. We derive a per-cycle \emph{composed} coverage certificate for the joint
+event, with terms that map one-to-one onto the three modules: the soft sensor's miscoverage,
+the prognostic bound's miscoverage, a similitude-departure penalty contributed by each
+module's regime shift, and a selection penalty. A causal-timing argument then shows that the
+selection penalty is exactly zero whenever the decision is formed before the measurement it
+is conditioned against, which dissolves the feedback objection. A corollary collapses the
+certificate into a single convex similitude-departure budget that a modifier-adaptation RTO
+enforces directly, so the optimizer cannot push economics hard enough to invalidate its own
+sensor and life guarantees, and the flagship guarantee and the operating floor become the
+same constraint. A negative control isolates the mechanism. On a calibrated debutanizer
+digital twin running the real soft-sensor, prognostic, and RTO implementations, the certified
+floor $1-(\alpha_1+\alpha_2)-\varepsilon = 0.75$ is met empirically, with joint safety
+coverage $0.988$ ($95\%$ interval $[0.976, 0.994]$) when the budget is enforced; removing the
+budget, the single causal ingredient, collapses joint coverage to $0.000$. Reflux-pump life
+carries the entire contrast, with remaining-life coverage of $1.000$ against $0.013$. None of
+the three guarantees implies system safety on its own; the composition, and the convex budget
+that enforces it, is what the certificate provides.
+
+\end{abstract}
+
+\begin{keyword}
+conformal prediction \sep real-time optimization \sep soft sensor \sep
+predictive maintenance \sep digital twin \sep distillation \sep
+uncertainty quantification \sep process safety
+\end{keyword}
+
+\end{frontmatter}
+\linenumbers
+
+\section{Introduction}
+\label{sec:intro}
+
+Modern process operation increasingly layers data-driven components on top of the base
+control system. Soft sensors infer product qualities that are too slow or too costly to
+measure online; prognostic models estimate the remaining useful life of critical
+equipment; and real-time optimization (RTO) continually re-tunes setpoints toward the
+economic optimum. Each of these layers has, on its own, acquired rigorous uncertainty
+quantification. Conformal prediction in particular supplies distribution-free,
+finite-sample coverage guarantees~\citep{vovk2005,shafer2008,angelopoulos2023}, and
+calibrated intervals are now practical for soft sensing, for prognostics, and for
+constraint handling in optimization.
+
+Safe operation, however, is not a property of any one layer. It is a property of the
+joint outcome: the product must be in specification and the equipment must survive to its
+next maintenance window. The optimizer acts on estimates, a soft-sensor interval and a
+remaining-life bound, yet the event that determines safety is defined on the truths it
+cannot observe. The coupling is tighter still, because the optimizer's own decision moves
+every layer's operating regime at once. The reflux lever it raises for economic gain
+simultaneously shifts the soft sensor away from its calibration regime and loads the pump
+whose life the prognostic model is predicting. The three guarantees are therefore coupled
+through the decision, and the guarantee a closed-loop operator actually needs, coverage of
+the joint safety event under this coupling, does not follow from the three guarantees
+taken in isolation.
+
+A second difficulty compounds the first: conformal validity is widely held to be
+incompatible with feedback. Conformal coverage rests on exchangeability between the
+calibration data and the test point, and a closed loop breaks it, because the test point's
+operating regime is selected by the controller using the very predictions under test. The
+usual conclusion is that conformal guarantees do not survive in the loop, so conformal
+methods are either confined to open-loop monitoring or deployed in feedback without a
+guarantee.
+
+This paper resolves both difficulties for the integrated system. Its contributions are:
+\begin{enumerate}
+\item A per-cycle \emph{composed} coverage certificate (Theorem~\ref{thm:composed}) for
+the joint safety event, with terms that map one-to-one onto the three modules: the soft
+sensor's miscoverage, the prognostic bound's miscoverage, a similitude-departure penalty
+contributed by each module's regime shift, and a selection penalty.
+\item A resolution of the feedback objection. Under the causal timing that any physically
+realizable loop satisfies, in which the decision is formed before the measurement it is
+conditioned against, the selection penalty is exactly zero. The conformal-selection effect
+is named and bounded rather than ignored, and it is shown to be active only under a
+non-causal co-selection that real loops do not exhibit.
+\item A conversion of the certificate into a single convex constraint, a \emph{$\psi$-budget}
+on the similitude departure, that the modifier-adaptation RTO enforces directly
+(Corollary~\ref{cor:floor}). The optimizer is barred from pushing economics hard enough to
+invalidate its own sensor and life guarantees, and the flagship certificate and the
+operating floor reduce to the same constraint.
+\item A fully reproducible closed-loop demonstration on a calibrated debutanizer twin
+running the real soft-sensor, prognostic, and RTO implementations. The certified floor
+$1-(\alpha_1+\alpha_2)-\varepsilon = 0.75$ is met (joint safety coverage $0.988$) when the
+optimizer enforces the budget and collapses (to $0.000$) when it does not, with the
+contrast driven entirely by equipment life (Figure~\ref{fig:coverage}).
+\end{enumerate}
+
+The claim is sharp: none of the three guarantees implies system safety on its own; the
+composition is the certificate, and a single convex budget makes it something the optimizer
+must obey. The remainder of the paper reviews the relevant
+conformal, soft-sensing, prognostic, and optimization literatures and positions the
+contribution; develops the framework, the certificate, and the budget; describes the
+debutanizer twin and the two-arm protocol; reports the closed-loop coverage result; and
+discusses conservatism, the multi-cycle horizon, and scope.
+
+\section{Related work}
+\label{sec:related}
+
+\paragraph{Conformal prediction beyond exchangeability.}
+These methods give distribution-free, finite-sample coverage under the single
+assumption that calibration and test data are exchangeable~\citep{vovk2005,shafer2008,
+angelopoulos2023}, and regression variants such as conformalized quantile
+regression~\citep{romano2019} and split-conformal methods~\citep{lei2018} make the
+intervals locally adaptive. Exchangeability is the assumption that fails in feedback.
+Two lines of work relax it. \citet{tibshirani2019} reweight the calibration scores when
+the covariate shift is known, while \citet{barber2023} bound the coverage loss under an
+arbitrary shift by a total-variation-type distance between the calibration and test
+distributions. The per-module penalty $2L_j\|\Delta\psi_{j,k}\|$ used here is a
+physically computable instance of that bound, with the abstract distributional distance
+replaced by a similitude departure that is known in closed form from the operating
+point. Adaptive conformal inference~\citep{gibbs2021} takes a complementary route and
+guarantees long-run coverage online under arbitrary dependence by adjusting the
+conformal quantile after each observation; we return to it for the multi-cycle horizon
+in the discussion.
+
+\paragraph{Soft sensing with calibrated uncertainty.}
+Inferential (soft) sensors are standard practice for online estimation of qualities
+that resist direct measurement~\citep{fortuna2007}, and the debutanizer is among the
+most studied benchmarks, including recent machine-learning soft sensors for
+product-quality monitoring on cyber-physical columns~\citep{rozanec2022}. The
+constituent soft-sensor module~\citep{busico_m1} adds physics-anchored features and an
+adaptive conformal calibration that holds coverage under delayed labels. We consume its
+interval as the quality guarantee in the composition.
+
+\paragraph{Data-driven prognostics.}
+Statistical and data-driven estimation of remaining useful life is surveyed
+in~\citet{si2011} and, for rotating machinery, in~\citet{lei2018machinery}. The
+constituent prognostic module~\citep{busico_m2} contributes a similarity-calibrated
+conformal lower bound on remaining life, which we consume as the equipment-life
+guarantee.
+
+\paragraph{Real-time optimization and health-aware control.}
+RTO adjusts setpoints to track the economic optimum despite plant-model mismatch.
+Modifier adaptation~\citep{marchetti2009,chachuat2009} corrects the optimizer with
+measured plant gradients and is the method the constituent RTO
+module~\citep{busico_m3} builds on. A broader lineage embeds economic objectives
+directly in the feedback layer~\citep{skogestad2000}, and health- or constraint-aware
+variants restrict operation to protect equipment. What this body of work does not yet
+offer is a distribution-free coverage guarantee on the joint quality-and-life event that
+\emph{composes} the uncertainty of the upstream estimators. The optimizer is made
+health-aware, but the soft-sensor and prognostic guarantees are never propagated into a
+certificate on the closed-loop outcome.
+
+\paragraph{The gap.}
+Across these literatures the per-layer guarantees exist and the health-aware optimizer
+exists, yet their composition under feedback has not been addressed: a single per-cycle
+certificate on the system-safety event, derived rather than asserted and enforceable as
+one optimizer constraint. Supplying that composition is the contribution of this paper.
+
+\section{Framework}
+\label{sec:framework}
+
+This section develops the central result: a per-cycle coverage certificate for
+the closed loop whose terms map one-to-one onto the three constituent modules,
+together with the constraint that renders it enforceable inside a real-time
+optimizer. We first fix the loop and the event we certify, introduce the
+dimensionless coordinate in which the optimizer's decisions move the modules'
+operating regime, state the per-module conditional coverage these regimes
+inherit, resolve the objection that feedback voids conformal validity, compose
+the modules into a single certificate, and convert the certificate into an
+optimizer constraint.
+
+\subsection{The loop and the certified event}
+\label{sec:loop}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{loop_schematic.png}
+\caption{The integrated closed loop. The optimizer (Module~3) sets the decision
+$u_k$; the plant returns a tray temperature to the soft sensor (Module~1) and a pump
+load to the prognostic module (Module~2), whose interval and remaining-life bound feed
+back to the optimizer. The reflux lever moves both modules' operating regimes at once
+($\psi_1$ separation, $\psi_2$ pump load), and the composed certificate bounds the
+coverage of the joint safety event $S_k$ in terms of the two regime departures.}
+\label{fig:loop}
+\end{figure}
+
+At control cycle $k$ the real-time optimizer (RTO) sets the decision
+$u_k = (R_k, D_k)$, the reflux ratio and distillate rate of a binary-key
+distillation column. The plant returns tray temperatures $T_k$ and a true but
+\emph{unmeasured} product quality $x_k$, the light-key (C4) mole fraction in the
+bottoms. The reflux pump carries a true but \emph{unobserved} remaining useful
+life $\rho_k$.
+
+Three modules act on this loop (Figure~\ref{fig:loop}). The soft sensor (Module~1,~\citet{busico_m1})
+issues a conformal interval $\hat C_1(T_k) = [\hat x_k - w_k,\, \hat x_k + w_k]$
+for the quality with nominal miscoverage $\alpha_1$, so that marginally
+$\mathbb{P}(x_k \in \hat C_1(T_k)) \ge 1-\alpha_1$. The prognostic module
+(Module~2,~\citet{busico_m2}) issues a one-sided lower bound $\rho_k^{\mathrm{lo}}$
+with nominal miscoverage $\alpha_2$, so that
+$\mathbb{P}(\rho_k \ge \rho_k^{\mathrm{lo}}) \ge 1-\alpha_2$. The optimizer
+(Module~3,~\citet{busico_m3}), a modifier-adaptation
+RTO~\citep{marchetti2009,chachuat2009}, computes the next decision while enforcing
+two \emph{surrogate} constraints stated on the estimates:
+\begin{align}
+\hat x_k + w_k &\le x^{\mathrm{spec}}, \label{eq:quality-surrogate}\\
+\rho_k^{\mathrm{lo}} &\ge \rho_{\min}, \label{eq:health-surrogate}
+\end{align}
+where $x^{\mathrm{spec}}$ is the product specification and $\rho_{\min}$ the
+remaining life required to reach the next maintenance window. Equation
+\eqref{eq:quality-surrogate} backs the spec off by the interval half-width;
+\eqref{eq:health-surrogate} is a health floor.
+
+The quantity that actually matters for safe operation is neither estimate but the
+joint event on the \emph{truths}: the product is in specification and the pump
+survives to maintenance. We call this the system-safety event,
+\begin{equation}
+S_k \;=\; \{\, x_k \le x^{\mathrm{spec}} \,\} \;\cap\; \{\, \rho_k \ge \rho_{\min} \,\}.
+\label{eq:safety-event}
+\end{equation}
+The surrogate constraints \eqref{eq:quality-surrogate}--\eqref{eq:health-surrogate}
+act on estimates; safety \eqref{eq:safety-event} is about truths. The bridge from
+one to the other is coverage, and the contribution of this paper is to make that
+bridge a single, computable, enforceable guarantee.
+
+\subsection{The similitude coordinate and why the optimizer controls it}
+\label{sec:psi}
+
+The modules' calibration is regime-dependent: a conformal interval calibrated at
+one operating point need not retain its coverage at another. We track the
+operating point in a dimensionless coordinate $\psi$ spanned by three standard
+distillation quantities, each verified against Perry's Handbook~\citep{perrys}:
+the relative volatility $\alpha(T)$ (Eq.~13-33), the Gilliland reflux coordinate
+$\Psi_G = (R - R_{\min})/(R+1)$ (Eq.~13-30, Fig.~13-29), and the stripping factor
+$S = KV/L$ (Eq.~13-44). Let $\psi_1\!\star$ and $\psi_2\!\star$ be the anchor
+regimes at which Module~1 and Module~2 were calibrated, and define the residual
+similitude departures
+\begin{equation}
+\Delta\psi_{1,k} = \psi_1(u_k) - \psi_1\!\star, \qquad
+\Delta\psi_{2,k} = \psi_2(u_k) - \psi_2\!\star,
+\label{eq:departure}
+\end{equation}
+the part of the regime shift not already absorbed by each module's internal
+normalizer.
+
+The key structural fact is that \emph{both} departures are functions of the
+optimizer's decision. Raising the reflux ratio $R = L/D$ raises the reflux flow
+$L$, which raises the reflux-pump duty; the pump-affinity laws (Perry's
+Table~10-13: $Q \propto N$, $H \propto N^2$, $\mathrm{BHP} \propto N^3$) map flow
+to mechanical load, and Module~2's degradation model maps load to wear. Their
+composition makes $\psi_2(u_k)$ a function of $u_k$. The separation departure
+$\psi_1(u_k)$ is a function of $u_k$ by construction. Thus the same lever that
+the optimizer pulls for economic gain (reflux) simultaneously moves both
+modules away from the regimes where their guarantees were calibrated. This endogeneity is the source of the difficulty in the next subsection and the
+source of the controllability in the $\psi$-budget constraint developed below.
+
+\subsection{Per-module conditional coverage}
+\label{sec:permodule}
+
+Within a single cycle the operating regime is held fixed while the modules
+predict. The similarity-calibrated conformal certificate of~\citet{busico_m3},
+applied conditionally on the cycle's own realized departure, gives
+\begin{align}
+\mathbb{P}\!\left(x_k \in \hat C_1(T_k) \,\middle|\, \Delta\psi_{1,k}\right)
+  &\ge 1-\alpha_1 - 2L_1\|\Delta\psi_{1,k}\|, \label{eq:m1-cond}\\
+\mathbb{P}\!\left(\rho_k \ge \rho_k^{\mathrm{lo}} \,\middle|\, \Delta\psi_{2,k}\right)
+  &\ge 1-\alpha_2 - 2L_2\|\Delta\psi_{2,k}\|, \label{eq:m2-cond}
+\end{align}
+where $L_j$ is the Lipschitz constant of the score-quantile map in $\psi$-space,
+estimated a~priori from a calibration sweep. The penalty $2L_j\|\Delta\psi_{j,k}\|$
+is a physically computable instance of the non-exchangeability coverage gap of
+\citet{barber2023}: their abstract distributional distance between calibration and
+test is replaced here by the similitude departure, an engineering quantity known
+in closed form from the operating point. We write
+$E_{1,k} = \{x_k \in \hat C_1(T_k)\}$ and
+$E_{2,k} = \{\rho_k \ge \rho_k^{\mathrm{lo}}\}$ for the two coverage events.
+
+\subsection{Why feedback does not break the certificate}
+\label{sec:causal}
+
+Because $u_{k+1}$ is computed from $(\hat x_k, \rho_k^{\mathrm{lo}})$, the departure
+sequence $\{\Delta\psi_{j,k}\}$ is endogenous, dependent, and controlled, and the
+cycle-$k$ test point is not exchangeable with the offline calibration set. This is
+the standard reason conformal guarantees are doubted under feedback. The objection
+is resolved in two parts.
+
+First, \emph{conditioning}. The bounds \eqref{eq:m1-cond}--\eqref{eq:m2-cond} are
+conditional on $\Delta\psi_{j,k}$ and are agnostic to the mechanism that produced
+the regime. Endogeneity makes $\Delta\psi_{j,k}$ random; it does not invalidate a
+statement already conditioned on it.
+
+Second, \emph{causal timing}. We make explicit the timing assumption that the
+closed loop must satisfy.
+\begin{assumption}[Causal two-step timing]
+\label{ass:causal}
+The decision $u_k$ is $\sigma(\mathcal{F}_{k-1})$-measurable, a function of
+information available strictly before cycle $k$, and the cycle-$k$ measurement
+noise $\varepsilon_k$ satisfies $\varepsilon_k \perp \mathcal{F}_{k-1}$.
+\end{assumption}
+Under Assumption~\ref{ass:causal}, $u_k$ and $\varepsilon_k$ are conditionally
+independent given $\Delta\psi_k$ (itself a function of $u_k$), so conditioning on
+the regime leaves $\varepsilon_k$ at its nominal regime-conditional distribution:
+\begin{equation}
+u_k \perp \varepsilon_k \,\big|\, \Delta\psi_k \;\;\Longrightarrow\;\; \Delta_{\mathrm{sel},k} = 0,
+\label{eq:no-selection}
+\end{equation}
+where $\Delta_{\mathrm{sel},k}$ is a selection penalty that is nonzero only in the
+alternative configuration in which the optimizer co-selects $u_k$ on a quantity
+computed from the \emph{same} sample used for the coverage check. This delineates
+exactly when the conformal-selection effect of~\citet{busico_m3} is active: under
+realistic causal plant timing it vanishes; the framework still names and bounds
+it. Assumption~\ref{ass:causal} is not a hope about the implementation; it is a
+property of the synchronous control loop used here, which reads $u_k$ from the
+solution computed at the close of cycle $k-1$, applies it, and only then realizes
+the cycle-$k$ measurement, so that the decision is constructed before the noise it
+is conditioned against.
+
+\subsection{The composed certificate}
+\label{sec:theorem}
+
+\begin{theorem}[Composed coverage certificate]
+\label{thm:composed}
+Suppose the optimizer enforces the surrogate constraints
+\eqref{eq:quality-surrogate}--\eqref{eq:health-surrogate}, the per-module
+conditional bounds \eqref{eq:m1-cond}--\eqref{eq:m2-cond} hold, and
+Assumption~\ref{ass:causal} holds. Then the system-safety event
+\eqref{eq:safety-event} satisfies, conditionally on the cycle's realized
+departures,
+\begin{equation}
+\mathbb{P}\!\left(S_k \,\middle|\, \Delta\psi_{1,k}, \Delta\psi_{2,k}\right)
+\;\ge\; 1 - (\alpha_1 + \alpha_2)
+       - 2\!\left(L_1\|\Delta\psi_{1,k}\| + L_2\|\Delta\psi_{2,k}\|\right),
+\label{eq:certificate-cond}
+\end{equation}
+and, marginalizing over the endogenous regime,
+\begin{equation}
+\mathbb{P}(S_k) \;\ge\; 1 - (\alpha_1 + \alpha_2)
+       - 2\!\left(L_1\,\mathbb{E}\|\Delta\psi_{1,k}\| + L_2\,\mathbb{E}\|\Delta\psi_{2,k}\|\right).
+\label{eq:certificate-marg}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+On the enforced surrogate, each coverage event implies its safety half. If
+$E_{1,k}$ holds then $x_k \le \hat x_k + w_k \le x^{\mathrm{spec}}$ by
+\eqref{eq:quality-surrogate}; if $E_{2,k}$ holds then
+$\rho_k \ge \rho_k^{\mathrm{lo}} \ge \rho_{\min}$ by \eqref{eq:health-surrogate}.
+Hence $E_{1,k}\cap E_{2,k} \subseteq S_k$, and so
+$\mathbb{P}(S_k \mid \cdot) \ge \mathbb{P}(E_{1,k}\cap E_{2,k}\mid\cdot)$.
+By the union bound applied to the complementary miscoverage events,
+$\mathbb{P}(E_{1,k}\cap E_{2,k}\mid\cdot) \ge 1 - \mathbb{P}(E_{1,k}^c\mid\cdot)
+- \mathbb{P}(E_{2,k}^c\mid\cdot)$. Substituting
+\eqref{eq:m1-cond}--\eqref{eq:m2-cond}, and using
+$\Delta_{\mathrm{sel},k}=0$ from \eqref{eq:no-selection} so the conditional
+miscoverages are exactly those of the offline calibration, gives
+\eqref{eq:certificate-cond}. Taking expectations over $\Delta\psi_{1,k},
+\Delta\psi_{2,k}$ and applying Jensen's inequality to the (linear) departure terms
+yields \eqref{eq:certificate-marg}.
+\end{proof}
+
+Equation \eqref{eq:certificate-cond} is the unification. Its terms map one-to-one
+onto the three modules (Table~\ref{tab:terms}): the base coverage of $\hat C_1$ is
+Module~1; the one-sided RUL bound and its miscoverage $\alpha_2$ are Module~2; the
+similitude-departure penalty $2L_j\|\Delta\psi_{j,k}\|$ is the per-module,
+per-cycle instance of the Module~3 certificate; and the (here vanishing) selection
+penalty $\Delta_{\mathrm{sel},k}$ is the Module~3 conformal-selection effect, active
+only when the optimizer co-selects on the test residual. No single module states
+this inequality; the composition is the contribution.
+
+\begin{table}[t]
+\centering
+\caption{Each term of the composed certificate \eqref{eq:certificate-cond}
+originates in a distinct module.}
+\label{tab:terms}
+\begin{tabular}{ll}
+\toprule
+Term & Origin \\
+\midrule
+$\alpha_1$ (base coverage of $\hat C_1$) & Module~1, conformal soft sensor \\
+$\alpha_2$ and the one-sided RUL bound & Module~2, calibrated prognostics \\
+$2L_j\|\Delta\psi_{j,k}\|$ (similitude departure) & Module~3, SCC certificate (per cycle) \\
+$\Delta_{\mathrm{sel},k}$ (selection penalty) & Module~3, selection effect ($=0$ here) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The $\psi$-budget constraint}
+\label{sec:budget}
+
+Because each departure $\Delta\psi_{j,k} = \psi_j(u_k) - \psi_j\!\star$ is a known
+function of the decision $u_k$, the coverage penalty in
+\eqref{eq:certificate-cond} is itself controllable. Imposing the single convex
+constraint
+\begin{equation}
+2\!\left(L_1\|\psi_1(u) - \psi_1\!\star\| + L_2\|\psi_2(u) - \psi_2\!\star\|\right) \;\le\; \varepsilon
+\label{eq:psi-budget}
+\end{equation}
+inside the modifier-adaptation NLP yields the following.
+
+\begin{corollary}[Certified floor]
+\label{cor:floor}
+Under the hypotheses of Theorem~\ref{thm:composed}, if the optimizer additionally
+enforces \eqref{eq:psi-budget}, then for every cycle
+\begin{equation}
+\mathbb{P}(S_k) \;\ge\; 1 - (\alpha_1 + \alpha_2) - \varepsilon.
+\label{eq:floor}
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Constraint \eqref{eq:psi-budget} bounds the departure term in
+\eqref{eq:certificate-cond} by $\varepsilon$ for every realized $u_k$, hence for
+every realized $(\Delta\psi_{1,k},\Delta\psi_{2,k})$; the bound
+\eqref{eq:floor} then holds conditionally and therefore marginally.
+\end{proof}
+
+Corollary~\ref{cor:floor} converts the certificate into an operating rule: the
+optimizer maximizes economic profit \emph{subject to remaining inside the
+similitude-departure budget that certifies its own coverage}. Formally, it may
+not optimize so aggressively that it invalidates its own soft sensor and its own
+RUL guarantee. The radius $\varepsilon$ is the chosen coverage budget, traded
+directly against economics. Theorem~\ref{thm:composed} and
+Corollary~\ref{cor:floor} share one implementation: the flagship per-cycle
+guarantee and the operational floor are the same constraint
+\eqref{eq:psi-budget} added to the NLP.
+
+\section{Case study: a debutanizer digital twin}
+\label{sec:case}
+
+We demonstrate the certificate of Theorem~\ref{thm:composed} and the operating
+rule of Corollary~\ref{cor:floor} in closed loop on a calibrated digital twin of a
+debutanizer column. The three modules are the real implementations of the
+constituent papers; the plant is a twin rather than an operating column. This is
+a deliberate scoping choice, justified at the end of this section: the certificate
+is a statement about how three coverage guarantees \emph{compose} in feedback, and
+a twin that responds to the optimizer's setpoint moves is the appropriate
+instrument for that question, whereas component accuracy is established on
+operational data in the constituent papers.
+
+\subsection{The plant twin}
+\label{sec:twin}
+
+The plant truth is a Fenske--Underwood--Gilliland (FUG) shortcut column model
+($\alpha_{\mathrm{LK}}=5.97$, eight equilibrium stages, feed $100$~kmol\,h$^{-1}$,
+light-key feed fraction $0.35$): for a decision $(R,D)$ it returns the bottoms
+light-key fraction $x$, which is the unmeasured quality the soft sensor must
+infer. The inferential measurement is a tray-6 temperature, modelled as cooling
+monotonically with reflux as the split sharpens and landing in the
+$[100.5, 111.5]\,^\circ$C window of the soft sensor's physics bridge; it carries a
+$0.25\,^\circ$C sensor noise, and the bottoms truth carries a
+$1.0\times10^{-3}$ process noise. The thermophysical properties (relative
+volatility, heavy-key $K$-value, and liquid viscosity) are evaluated from
+DIPPR-101 vapor pressures for the $n$-butane/$n$-hexane key pair.
+
+The reflux pump degrades as a function of the optimizer's decision, closing in the
+twin the endogeneity loop identified in the framework. Damage accrues at a rate
+proportional to $\mathrm{load}^{p}$, where the load is the affinity brake-horsepower
+ratio $\mathrm{load} = (Q/Q_{\mathrm{ref}})^{3}$ (Perry's Table~10-13) and the
+exponent $p=2$ follows from rolling-element bearing fatigue (the $L_{10}$ life
+varies as $\mathrm{load}^{-3}$) under a hydraulic radial load that scales as $Q^{2}$
+by the affinity head law, so that damage scales as $Q^{6}$ in reflux flow. The base
+rate is set to a fresh-nominal remaining life of $\approx\!1000$~h; these
+coefficients are calibrated to the bearing-degradation timescale of the prognostic
+module. Degradation severity drives a five-feature synthesizer whose output the
+prognostic module scores.
+
+\subsection{The three modules on the twin}
+\label{sec:modules}
+
+\emph{Module~1 (soft sensor).} The real physics-anchored soft
+sensor~\citep{busico_m1} is trained on twin samples: a standardized ridge estimator
+on four physics-derived features (the C4 bubble-point fraction, the relative
+volatility, the stripping factor, and the delayed normalized tray temperature),
+trained over $700$ operating points spanning the box and split $450$ for fitting
+and $250$ for the conformal calibration residuals. On held-out twin data its adaptive conformal
+interval attains empirical coverage $0.898$ against a $0.90$ target, with a mean
+half-width of $7.1\times10^{-3}$, comparable to the product specification, so the
+interval materially backs off the optimizer through
+\eqref{eq:quality-surrogate}.
+
+\emph{Module~2 (prognostics).} The real predictive-maintenance
+stack~\citep{busico_m2} is built from its canonical configuration: a five-feature
+Hotelling $T^{2}$ health index fitted on a healthy reference (alarm threshold
+$T^{2}=15.1$) and a trajectory-similarity remaining-life estimator over a library of
+run-to-failure arcs. Driven by the synthesizer, the health index rises
+monotonically with severity and alarms at severity $\approx\!0.71$.
+
+\emph{Module~3 (optimizer).} The real modifier-adaptation
+RTO~\citep{busico_m3} optimizes economic profit over the FUG response surface
+(a log-quadratic fit in $(R,D)$, coefficient of determination $0.982$), enforcing
+the backed-off quality constraint \eqref{eq:quality-surrogate} and, in the
+health-constrained arm, the $\psi$-budget \eqref{eq:psi-budget}. The program is
+solved to local optimality at each cycle.
+
+\subsection{Protocol}
+\label{sec:protocol}
+
+The demonstration contrasts two arms that are identical in every respect except the
+$\psi$-budget. In the \emph{health-blind} arm the budget is inactive
+($\varepsilon\to\infty$) and the optimizer maximizes economics subject only to the
+quality surrogate. In the \emph{health-constrained} arm the budget is active with
+radius $\varepsilon=0.05$. Each arm is run for $8$ random seeds of $80$ control
+cycles; the coverage harness records, per cycle, whether the system-safety event
+\eqref{eq:safety-event} holds against the truths, and aggregates the empirical
+$S_k$-coverage with a Wilson interval. Both arms share the parameters of
+Table~\ref{tab:params}. With $\alpha_1=\alpha_2=0.1$ and $\varepsilon=0.05$, the
+certified floor of Corollary~\ref{cor:floor} is
+$1-(\alpha_1+\alpha_2)-\varepsilon = 0.75$.
+
+The Lipschitz constant of the soft-sensor score-quantile in $\psi$-space, estimated
+a~priori from a regime sweep across the operating box, is
+$L_1 \approx 0.025$ (Figure~\ref{fig:l1}). The demonstration uses a deliberately conservative common value
+$L_1=L_2=0.15$ in the enforced budget \eqref{eq:psi-budget}; because this exceeds
+the swept estimate, the budget is tighter than the data require and the certified
+floor holds a fortiori.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.82\textwidth]{l1_sweep.png}
+\caption{A-priori estimate of the soft-sensor Lipschitz constant $L_1$. Each point is
+an operating regime, placed at its similitude departure $\|\Delta\psi_1\|$ from the
+calibration anchor (star); the vertical coordinate is the conformal score quantile at
+level $1-\alpha_1$. The quantile is nearly flat in $\|\Delta\psi_1\|$, and every regime
+falls inside the Lipschitz cone (shaded), whose slope $L_1\approx0.025$ is set by the
+binding pair (red). The enforced budget \eqref{eq:psi-budget} uses $L_1=L_2=0.15$,
+roughly six times this estimate, so the coverage penalty it charges over-bounds the
+true loss.}
+\label{fig:l1}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\caption{Demonstration parameters. Both arms are identical except the
+$\psi$-budget radius $\varepsilon$.}
+\label{tab:params}
+\begin{tabular}{lll}
+\toprule
+Symbol & Meaning & Value \\
+\midrule
+$\alpha_1$ & soft-sensor miscoverage & $0.10$ \\
+$\alpha_2$ & prognostic miscoverage & $0.10$ \\
+$\varepsilon$ & $\psi$-budget radius (constrained arm) & $0.05$ \\
+$x^{\mathrm{spec}}$ & bottoms C4 specification & $8.0\times10^{-3}$ \\
+$\rho_{\min}$ & remaining-life floor & $200$~h \\
+$L_1=L_2$ & Lipschitz constants used (conservative) & $0.15$ \\
+$(R,D)_{\mathrm{nom}}$ & nominal optimum & $(2.037,\,33.49)$ \\
+seeds $\times$ cycles & Monte-Carlo replicates & $8\times80$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Scope of the demonstration}
+\label{sec:scope}
+
+The closed-loop demonstration runs on a calibrated digital twin; the
+\emph{accuracy} of each module is validated on operational data in the constituent
+papers~\citep{busico_m1,busico_m2,busico_m3}. Two reasons make the twin the correct
+instrument here. First, a closed-loop optimizer requires a plant that
+\emph{responds} to its setpoint moves, because the endogeneity identified in the
+framework cannot be exercised against a frozen historical dataset. Second, the
+certificate concerns the \emph{composition} of three coverage guarantees under
+feedback, a property of the loop architecture rather than of any module's point
+accuracy; the twin isolates exactly that property while remaining fully
+reproducible from open code with no proprietary data. Physical realization on a
+dynamic high-fidelity simulator and on plant data is the subject of future work.
+
+\section{Results}
+\label{sec:results}
+
+The central finding is that the certified floor of Corollary~\ref{cor:floor} is
+honoured empirically when the optimizer enforces the $\psi$-budget and is violated
+when it does not. Table~\ref{tab:coverage} reports the two arms against the floor;
+Figure~\ref{fig:coverage} shows the coverage decomposition and the per-cycle
+mechanism.
+
+\begin{table}[t]
+\centering
+\caption{Closed-loop coverage over $8$ seeds $\times\,80$ cycles ($N=640$ per arm).
+The health-constrained arm meets the certified floor $0.75$; the health-blind arm
+does not. Brackets are Wilson $95\%$ intervals.}
+\label{tab:coverage}
+\begin{tabular}{lccc}
+\toprule
+ & Health-blind & Health-constrained & Certified floor \\
+ & ($\varepsilon\to\infty$) & ($\varepsilon=0.05$) & \\
+\midrule
+$S_k$ coverage & $0.000\,[0.000,0.006]$ & $\mathbf{0.988\,[0.976,0.994]}$ & $0.750$ \\
+\quad meets floor? & no & \textbf{yes} & \\
+Quality coverage $\{x_k\le x^{\mathrm{spec}}\}$ & $0.850$ & $0.988$ & \\
+RUL coverage $\{\rho_k\ge\rho_{\min}\}$ & $0.013$ & $1.000$ & \\
+$\psi$-budget binding & $0\%$ & $100\%$ & \\
+Mean final severity & $0.700$ & $0.097$ & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{twin_coverage.png}
+\caption{Composed coverage certificate on the debutanizer twin.
+(a) Empirical coverage of the joint safety event $S_k$ and its two halves for the
+two arms, against the certified floor $1-(\alpha_1+\alpha_2)-\varepsilon=0.75$
+(dashed). (b) True reflux-pump remaining life per cycle; the health-blind arm falls
+below the floor $\rho_{\min}=200$~h within two cycles, the health-constrained arm
+holds $700$--$1000$~h. (c) Degradation severity per cycle.}
+\label{fig:coverage}
+\end{figure}
+
+\subsection{The certificate holds under the budget}
+\label{sec:res-cert}
+
+Under the $\psi$-budget the joint safety event holds on $0.988$ of cycles
+($95\%$ Wilson interval $[0.976, 0.994]$), comfortably above the certified floor of
+$0.75$. Both halves of $S_k$ are satisfied simultaneously: quality coverage is
+$0.988$ and remaining-life coverage is $1.000$. The budget is active on every
+constrained cycle, holding the operating point on the certified reference; the
+reflux pump ends the horizon at a mean severity of $0.097$, far from its alarm.
+
+The empirical coverage exceeds the floor by a wide margin. This is expected and
+consistent with the construction: the certificate is a valid lower bound, and two
+sources of conservatism inflate the gap: the Bonferroni union over the two
+miscoverage events (Theorem~\ref{thm:composed}), which is tight only when the two
+failures are disjoint, and the deliberately conservative Lipschitz constants
+($L_1=L_2=0.15$ against a swept $L_1\approx0.025$). What matters in
+Table~\ref{tab:coverage} is therefore the verdict, that the floor is met with a
+margin, not the size of that margin.
+
+\subsection{The mechanism: why the blind optimizer fails}
+\label{sec:res-mech}
+
+The health-blind arm exposes what the budget protects against. Facing the same
+tight specification, the unconstrained optimizer drives the reflux ratio to its
+upper bound ($R\to3.0$, reflux flow $\approx\!97$~kmol\,h$^{-1}$) to maximize C4
+recovery. By the affinity and bearing-fatigue scaling of the pump model, the
+pump load rises steeply: severity climbs to $0.70$ and the true remaining life
+collapses below the $200$~h floor within two cycles
+(Figure~\ref{fig:coverage}b,c). The remaining-life half of $S_k$ therefore fails on
+$98.7\%$ of cycles, and the joint event never holds: $S_k$ coverage is exactly
+$0.000$, with no certificate available because the floor $1-(\alpha_1+\alpha_2)-
+\varepsilon$ is meaningless once $\varepsilon$ is unbounded. Notably the blind arm's
+quality coverage ($0.850$) is itself \emph{below} the soft sensor's nominal
+$1-\alpha_1=0.90$: pushed to the edge of the operating box, the optimizer drives the
+soft sensor outside the regime where its interval was calibrated, which is precisely the
+non-exchangeability penalty $2L_1\|\Delta\psi_1\|$ that the budget exists to bound.
+
+The contrast is the whole point. The two arms differ only in whether the optimizer
+is allowed to leave the similitude-departure budget; that single convex constraint
+moves the joint safety coverage from $0.000$ to $0.988$, and it does so by
+preserving \emph{both} guarantees at once, quality \emph{and} remaining life,
+rather than trading one for the other. The flagship theorem and the operating floor
+are, as Corollary~\ref{cor:floor} states, the same constraint.
+
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{The certificate is a conservative lower bound.}
+The empirical coverage under the budget ($0.988$) sits well above the certified floor
+($0.75$), and the construction explains the gap. Theorem~\ref{thm:composed} composes the
+two miscoverage events through a union bound, which is tight only when the two failures
+are disjoint. In practice the soft-sensor and prognostic failures are positively
+correlated in the regimes that matter, because aggressive operation pushes the soft
+sensor out of its calibration regime and loads the pump at the same time, so the two
+modules tend to be stressed together. Positive failure correlation makes the true joint
+coverage exceed the Bonferroni bound, and the deliberately conservative Lipschitz
+constants ($L_1=L_2=0.15$ against a swept $L_1\approx0.025$) widen the gap further. The
+certificate is therefore a guarantee, a floor that is provably met, rather than a
+prediction of the coverage actually achieved. Tightening it is a concrete next step: a
+joint failure-correlation model, built from a copula on the two nonconformity scores,
+from multivariate conformal prediction, or from conformal risk control under dependence,
+would replace the union bound with a dependence-aware composition and recover much of the
+margin.
+
+\paragraph{From per-cycle to the operating horizon.}
+Theorem~\ref{thm:composed} is a per-cycle, marginal guarantee. A campaign runs over many
+cycles, and a naive union of the per-cycle bound over a horizon of $K$ cycles degrades
+linearly in $K$. The route to a genuine horizon guarantee is adaptive conformal
+inference~\citep{gibbs2021}, which the soft-sensor module already
+implements~\citep{busico_m1}. By adjusting the conformal quantile online it secures
+long-run coverage under arbitrary, unspecified dependence, which is exactly the
+dependence that feedback induces across cycles. Lifting the per-cycle certificate to a
+horizon statement under this mechanism, in a dynamic rather than quasi-static setting, is
+the principal direction of ongoing work, and it is what connects the present result to a
+physically deployed implementation.
+
+\paragraph{The selection term, and when it is not zero.}
+The selection penalty $\Delta_{\mathrm{sel},k}$ vanishes here as a property of the loop
+(Assumption~\ref{ass:causal}), not as an idealization, because the synchronous controller
+forms each decision from the previous cycle's information and applies it before the
+current measurement is realized. Carrying the term explicitly is worthwhile because it
+identifies precisely when conformal validity would instead be lost, namely under a
+non-causal co-selection in which the optimizer chooses the decision using the same
+residual that the coverage check then evaluates. Most treatments of conformal prediction
+in feedback either assume the difficulty away or abandon the guarantee. Naming the
+selection effect, bounding it, and showing that it is null under realizable timing is what
+makes the closed-loop certificate honest.
+
+\paragraph{Scope and generality.}
+The certificate is instantiated for binary-key distillation through a similitude
+coordinate built from the relative volatility, the Gilliland reflux coordinate, and the
+stripping factor. That coordinate is the unit-specific ingredient. The composition logic
+itself, namely per-module conditional coverage, the causal-timing argument, the Bonferroni
+composition, and the convex $\psi$-budget, is unit-agnostic. Extending the framework to
+multicomponent separations or to other unit operations requires identifying the
+appropriate dimensionless groups for those units, after which the same machinery applies.
+A second refinement concerns the Lipschitz constants, estimated here a~priori from a
+regime sweep; an online estimator that re-identifies them as the plant ages would let the
+budget adapt, and it pairs naturally with the adaptive-conformal horizon extension above.
+The budget radius $\varepsilon$ is, finally, an explicit economic dial. It trades the
+certified coverage level directly against the profit the optimizer is permitted to chase,
+and exposing that trade-off quantitatively is one of the practical contributions of the
+framework.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+Soft sensing, prognostics, and real-time optimization each ship a calibrated uncertainty
+guarantee, but a closed-loop operator needs a guarantee on the joint system-safety event,
+namely an in-specification product together with surviving equipment, and that joint
+guarantee does not follow from the three taken separately. This paper supplied it. The
+per-cycle composed coverage certificate of Theorem~\ref{thm:composed} states the joint
+guarantee explicitly, with terms that map one-to-one onto the three modules, and a
+causal-timing argument shows that feedback does not void it: the conformal-selection
+penalty is exactly zero whenever the decision is formed before the measurement it is
+conditioned against. Corollary~\ref{cor:floor} then converts the certificate into a
+single convex $\psi$-budget that a modifier-adaptation optimizer enforces directly, so
+that the flagship guarantee and the operating floor are one and the same constraint, and
+the optimizer is barred from pushing economics hard enough to invalidate its own sensor
+and life guarantees.
+
+On a calibrated debutanizer twin running the real soft-sensor, prognostic, and
+optimization implementations, the certified floor $1-(\alpha_1+\alpha_2)-\varepsilon =
+0.75$ was met empirically, with joint safety coverage of $0.988$ under the budget and
+$0.000$ without it, the entire contrast carried by reflux-pump life. None of the three
+guarantees implies system safety on its own; the composition is the certificate.
+
+Three directions follow. The per-cycle certificate should be lifted to a horizon
+guarantee under adaptive conformal inference and realized on a dynamic high-fidelity
+simulator and on plant data, moving from the quasi-static demonstration given here to a
+physically deployed loop. The Bonferroni composition should be tightened with a
+dependence-aware model of the joint soft-sensor and prognostic failure, which would
+recover the margin that positive failure correlation currently leaves unused. Finally,
+the framework should be carried from a single column to a plant, with the coverage budget
+allocated across units. That last step is what turns a certificate for one column into a
+certificate for an integrated process.
+
+
+\section*{Data and code availability}
+The reference implementation of all three modules, the closed-loop integration
+layer, the coverage harness, and the single script that regenerates every number
+and figure in this paper are available at \url{github.com/beebzy-droid/IPIS}.
+
+\section*{Declaration of competing interest}
+The author declares no competing financial interests or personal relationships that
+could have influenced the work reported in this paper.
+
+\begin{thebibliography}{19}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\href}[2]{#2}
+\providecommand{\path}[1]{#1}
+\providecommand{\DOIprefix}{doi:}
+\providecommand{\ArXivprefix}{arXiv:}
+\providecommand{\URLprefix}{URL: }
+\providecommand{\Pubmedprefix}{pmid:}
+\providecommand{\doi}[1]{\href{http://dx.doi.org/#1}{\path{#1}}}
+\providecommand{\Pubmed}[1]{\href{pmid:#1}{\path{#1}}}
+\providecommand{\bibinfo}[2]{#2}
+\ifx\xfnm\relax \def\xfnm[#1]{\unskip,\space#1}\fi
+%Type = Book
+\bibitem[{Vovk et~al.(2005)Vovk, Gammerman, and Shafer}]{vovk2005}
+\bibinfo{author}{V.~Vovk}, \bibinfo{author}{A.~Gammerman},
+  \bibinfo{author}{G.~Shafer}, \bibinfo{title}{Algorithmic Learning in a Random
+  World}, \bibinfo{publisher}{Springer}, \bibinfo{address}{New York},
+  \bibinfo{year}{2005}.
+%Type = Article
+\bibitem[{Shafer and Vovk(2008)}]{shafer2008}
+\bibinfo{author}{G.~Shafer}, \bibinfo{author}{V.~Vovk},
+\newblock \bibinfo{title}{A tutorial on conformal prediction},
+\newblock \bibinfo{journal}{Journal of Machine Learning Research}
+  \bibinfo{volume}{9} (\bibinfo{year}{2008}) \bibinfo{pages}{371--421}.
+%Type = Article
+\bibitem[{Angelopoulos and Bates(2023)}]{angelopoulos2023}
+\bibinfo{author}{A.~N. Angelopoulos}, \bibinfo{author}{S.~Bates},
+\newblock \bibinfo{title}{Conformal prediction: A gentle introduction},
+\newblock \bibinfo{journal}{Foundations and Trends in Machine Learning}
+  \bibinfo{volume}{16} (\bibinfo{year}{2023}) \bibinfo{pages}{494--591}.
+%Type = Article
+\bibitem[{Romano et~al.(2019)Romano, Patterson, and Cand\`es}]{romano2019}
+\bibinfo{author}{Y.~Romano}, \bibinfo{author}{E.~Patterson},
+  \bibinfo{author}{E.~J. Cand\`es},
+\newblock \bibinfo{title}{Conformalized quantile regression},
+\newblock \bibinfo{journal}{Advances in Neural Information Processing Systems}
+  \bibinfo{volume}{32} (\bibinfo{year}{2019}).
+%Type = Article
+\bibitem[{Lei et~al.(2018)Lei, G'Sell, Rinaldo, Tibshirani, and
+  Wasserman}]{lei2018}
+\bibinfo{author}{J.~Lei}, \bibinfo{author}{M.~G'Sell},
+  \bibinfo{author}{A.~Rinaldo}, \bibinfo{author}{R.~J. Tibshirani},
+  \bibinfo{author}{L.~Wasserman},
+\newblock \bibinfo{title}{Distribution-free predictive inference for
+  regression},
+\newblock \bibinfo{journal}{Journal of the American Statistical Association}
+  \bibinfo{volume}{113} (\bibinfo{year}{2018}) \bibinfo{pages}{1094--1111}.
+%Type = Article
+\bibitem[{Tibshirani et~al.(2019)Tibshirani, Foygel~Barber, Cand\`es, and
+  Ramdas}]{tibshirani2019}
+\bibinfo{author}{R.~J. Tibshirani}, \bibinfo{author}{R.~Foygel~Barber},
+  \bibinfo{author}{E.~Cand\`es}, \bibinfo{author}{A.~Ramdas},
+\newblock \bibinfo{title}{Conformal prediction under covariate shift},
+\newblock \bibinfo{journal}{Advances in Neural Information Processing Systems}
+  \bibinfo{volume}{32} (\bibinfo{year}{2019}).
+%Type = Article
+\bibitem[{Barber et~al.(2023)Barber, Cand\`es, Ramdas, and
+  Tibshirani}]{barber2023}
+\bibinfo{author}{R.~F. Barber}, \bibinfo{author}{E.~J. Cand\`es},
+  \bibinfo{author}{A.~Ramdas}, \bibinfo{author}{R.~J. Tibshirani},
+\newblock \bibinfo{title}{Conformal prediction beyond exchangeability},
+\newblock \bibinfo{journal}{The Annals of Statistics} \bibinfo{volume}{51}
+  (\bibinfo{year}{2023}) \bibinfo{pages}{816--845}.
+%Type = Inproceedings
+\bibitem[{Gibbs and Cand\`es(2021)}]{gibbs2021}
+\bibinfo{author}{I.~Gibbs}, \bibinfo{author}{E.~J. Cand\`es},
+\newblock \bibinfo{title}{Adaptive conformal inference under distribution
+  shift},
+\newblock in: \bibinfo{booktitle}{Advances in Neural Information Processing
+  Systems}, volume~\bibinfo{volume}{34}, \bibinfo{year}{2021}, pp.
+  \bibinfo{pages}{1660--1672}.
+%Type = Article
+\bibitem[{Fortuna et~al.(2007)Fortuna, Graziani, Rizzo, and
+  Xibilia}]{fortuna2007}
+\bibinfo{author}{L.~Fortuna}, \bibinfo{author}{S.~Graziani},
+  \bibinfo{author}{A.~Rizzo}, \bibinfo{author}{M.~G. Xibilia},
+\newblock \bibinfo{title}{Soft sensors for monitoring and control of industrial
+  processes}  (\bibinfo{year}{2007}).
+%Type = Article
+\bibitem[{Ro{\v{z}}anec et~al.(2022)}]{rozanec2022}
+\bibinfo{author}{J.~M. Ro{\v{z}}anec}, et~al.,
+\newblock \bibinfo{title}{Cyber-physical {LPG} debutanizer distillation
+  columns: machine-learning-based soft sensors for product quality monitoring},
+\newblock \bibinfo{journal}{Applied Sciences}  (\bibinfo{year}{2022}).
+%Type = Misc
+\bibitem[{Busico(2026)}]{busico_m1}
+\bibinfo{author}{B.~Busico}, \bibinfo{title}{{When does a calibrated soft
+  sensor keep its promise? A negative-control study of validity without
+  accuracy under drift and delayed labels}}, \bibinfo{year}{2026}.
+  \bibinfo{note}{Manuscript JPROCONT-D-26-00618, Journal of Process Control
+  (transfer from CACE-D-26-00944); reframed as a negative-control study}.
+%Type = Article
+\bibitem[{Si et~al.(2011)Si, Wang, Hu, and Zhou}]{si2011}
+\bibinfo{author}{X.-S. Si}, \bibinfo{author}{W.~Wang}, \bibinfo{author}{C.-H.
+  Hu}, \bibinfo{author}{D.-H. Zhou},
+\newblock \bibinfo{title}{Remaining useful life estimation--a review on the
+  statistical data driven approaches},
+\newblock \bibinfo{journal}{European Journal of Operational Research}
+  \bibinfo{volume}{213} (\bibinfo{year}{2011}) \bibinfo{pages}{1--14}.
+%Type = Article
+\bibitem[{Lei et~al.(2018)Lei, Li, Guo, Li, Yan, and Lin}]{lei2018machinery}
+\bibinfo{author}{Y.~Lei}, \bibinfo{author}{N.~Li}, \bibinfo{author}{L.~Guo},
+  \bibinfo{author}{N.~Li}, \bibinfo{author}{T.~Yan}, \bibinfo{author}{J.~Lin},
+\newblock \bibinfo{title}{Machinery health prognostics: A systematic review
+  from data acquisition to rul prediction},
+\newblock \bibinfo{journal}{Mechanical Systems and Signal Processing}
+  \bibinfo{volume}{104} (\bibinfo{year}{2018}) \bibinfo{pages}{799--834}.
+%Type = Misc
+\bibitem[{Busico(2026)}]{busico_m2}
+\bibinfo{author}{B.~Busico}, \bibinfo{title}{{Similarity-Calibrated Conformal
+  prediction: data-free coverage guarantees for remaining-useful-life intervals
+  under operating-regime transfer}}, \bibinfo{year}{2026}.
+  \bibinfo{note}{Manuscript JRESS-D-26-04700, submitted to Reliability
+  Engineering \& System Safety}.
+%Type = Article
+\bibitem[{Marchetti et~al.(2009)Marchetti, Chachuat, and
+  Bonvin}]{marchetti2009}
+\bibinfo{author}{A.~Marchetti}, \bibinfo{author}{B.~Chachuat},
+  \bibinfo{author}{D.~Bonvin},
+\newblock \bibinfo{title}{Modifier-adaptation methodology for real-time
+  optimization},
+\newblock \bibinfo{journal}{Industrial \& Engineering Chemistry Research}
+  \bibinfo{volume}{48} (\bibinfo{year}{2009}) \bibinfo{pages}{6022--6033}.
+%Type = Article
+\bibitem[{Chachuat et~al.(2009)Chachuat, Srinivasan, and Bonvin}]{chachuat2009}
+\bibinfo{author}{B.~Chachuat}, \bibinfo{author}{B.~Srinivasan},
+  \bibinfo{author}{D.~Bonvin},
+\newblock \bibinfo{title}{Adaptation strategies for real-time optimization},
+\newblock \bibinfo{journal}{Computers \& Chemical Engineering}
+  \bibinfo{volume}{33} (\bibinfo{year}{2009}) \bibinfo{pages}{1557--1567}.
+%Type = Misc
+\bibitem[{Busico(2026)}]{busico_m3}
+\bibinfo{author}{B.~Busico}, \bibinfo{title}{{Conditionally calibrated
+  conformal back-offs for chance-constrained real-time optimisation under
+  unmeasured disturbances}}, \bibinfo{year}{2026}. \bibinfo{note}{Manuscript
+  CACE-D-26-01040, submitted to Computers \& Chemical Engineering}.
+%Type = Article
+\bibitem[{Skogestad(2000)}]{skogestad2000}
+\bibinfo{author}{S.~Skogestad},
+\newblock \bibinfo{title}{Plantwide control: the search for the self-optimizing
+  control structure},
+\newblock \bibinfo{journal}{Journal of Process Control} \bibinfo{volume}{10}
+  (\bibinfo{year}{2000}) \bibinfo{pages}{487--507}.
+%Type = Book
+\bibitem[{Green and Southard(2019)}]{perrys}
+\bibinfo{author}{D.~W. Green}, \bibinfo{author}{M.~Z. Southard},
+  \bibinfo{title}{Perry's Chemical Engineers' Handbook}, \bibinfo{edition}{9th}
+  ed., \bibinfo{publisher}{McGraw-Hill}, \bibinfo{address}{New York},
+  \bibinfo{year}{2019}.
+
+\end{thebibliography}
+
+
+\end{document}

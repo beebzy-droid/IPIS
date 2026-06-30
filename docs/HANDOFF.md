@@ -49,7 +49,7 @@ to a horizon guarantee and moves IPIS off the quasi-static twin. Start a fresh s
 | 1 | M1 soft sensor | Computers & Chemical Engineering | CACE-D-26-00944 | 2026-06-12 | `paper/` |
 | 2 | M3 RTO (conditional conformal back-offs) | Computers & Chemical Engineering | CACE-D-26-01040 | 2026-06-23 | `paper2/` |
 | 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04509** | **2026-06-20** | `paper3/` |
-| 4 | M4 integration (composed certificate) | Industrial & Engineering Chemistry Research (ACS) | **ie-2026-03342s** | **2026-06-26** | `paper4/` |
+| 4 | M4 integration (composed certificate) | Computers & Chemical Engineering | **(submitting; IECR ie-2026-03342s declined)** | **2026-06-30** | `paper4/` |
 
 - **Paper 3 (SCC) final state.** elsarticle `[review,times]` (single-column review format,
   switched from `[5p]` two-column at the RESS editor's request before peer review), split
@@ -1168,6 +1168,20 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-30 (M4 REFRAMED + ported to CACE after IECR desk-reject)** -- I&EC Research declined
+  ie-2026-03342s on scope (technically sound, outside its general-chemistry readership) and offered
+  an ACS Omega transfer, which was declined. M4 reframed for *Computers & Chemical Engineering*:
+  retitled to "A composed coverage certificate for closed-loop process operation: certified joint
+  product-quality and equipment-survival guarantees under feedback" (the "unifying X/Y/Z" inventory
+  framing removed from title/abstract/intro, claim and negative control led); ported achemso ->
+  elsarticle `[review,12pt]`; CRediT and TOC-graphic removed; abstract recast claim-first. Science,
+  theorem, results, figures unchanged. Pulled the upstream M2 ID into `paper4/references.bib`
+  (busico_m2 04509 -> 04700); busico_m1 (JPC) and busico_m3 (CACE) already current. Repo build 27 pp,
+  0 errors; EM-flat upload variant (`paper4/em/main_EM.tex`, sections + bibliography inlined, bare
+  figure paths) 27 pp, 0 errors; References render JPROCONT-D-26-00618 / JRESS-D-26-04700 /
+  CACE-D-26-01040. Cover letter rewritten for CACE, owning the transfer, M1 listed at JPC. Ledger
+  busico_m4 updated (Section 1 + 3); Section 6 records the M5 pull and flags the stale HANDOFF M1/M2
+  rows for their owning sessions.
 - **2026-06-26 (M4 SUBMITTED to IECR + cross-paper propagation)** -- Module 4 submitted to
   Industrial & Engineering Chemistry Research, manuscript **ie-2026-03342s** (ACS Paragon Plus,
   achemso). Propagated the upstream Paper 2 / Paper 3 changes into M4: `paper4/references.bib`
