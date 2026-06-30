@@ -53,7 +53,7 @@ IPIS addresses all three with one architecture, validated across heterogeneous b
 
 | Module | Status | Notes |
 |---|---|---|
-| Module 1 — Soft Sensor | ✅ Complete | Paper under review (CACE-D-26-00944) |
+| Module 1 — Soft Sensor | ✅ Complete | Under review at Journal of Process Control (JPROCONT-D-26-00618; transfer from CACE) |
 | Module 2 — Predictive Maintenance | ✅ Complete | Feature-complete (2A–2D); SCC paper under review (JRESS-D-26-04509) |
 | Module 3 — Real-Time Optimization | ✅ Complete | Paper under review (CACE-D-26-01040) |
 | Module 4 — Integration (composed certificate) | ✅ Submitted | Closed-loop coverage certificate validated on the debutanizer twin; submitted to IECR as ie-2026-03342s (`paper4/`) |
@@ -64,8 +64,8 @@ IPIS addresses all three with one architecture, validated across heterogeneous b
 Listed by module. Submission directories `paperN/` are numbered by authoring order, which
 differs from the module numbering for Modules 2 and 3; the module mapping below is authoritative.
 
-- **Module 1 — Soft Sensor:** *A physics-informed, drift-adaptive soft-sensor framework with
-  calibrated uncertainty under delayed labels.* Under review, *Computers & Chemical Engineering*
+- **Module 1 — Soft Sensor:** *When does a calibrated soft sensor keep its promise? A negative-control study of validity
+  without accuracy under drift and delayed labels.* Under review, *Journal of Process Control* (JPROCONT-D-26-00618)
   (CACE-D-26-00944). Source: `paper/`.
 - **Module 2 — Predictive Maintenance (Similarity-Calibrated Conformal):** *Similarity-Calibrated
   Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under
