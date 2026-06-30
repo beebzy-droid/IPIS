@@ -12,7 +12,7 @@ downstream paper. Chasing those by hand across `references.bib`, `README.md`, st
 working drafts is lossy and token-expensive. This ledger plus the protocol makes propagation
 mechanical and one-directional.
 
-Last updated: 2026-06-30 (M2 SCC restructured + resubmitted to RESS as JRESS-D-26-04700; downstream M4/M5 bib ID sync pending).
+Last updated: 2026-06-30 (M2 SCC -> JRESS-D-26-04700; propagation switched to pull-based via the repo, prompt handoff retired; M4/M5 bib sync pending in Section 6).
 
 ## 1. Canonical ledger
 
@@ -68,51 +68,38 @@ Downstream `references.bib` files must contain exactly these for the keys they c
 
 ## 4. The propagation protocol (the domino)
 
+Propagation is pull-based and runs through the repo: this ledger is the single signal. The upstream
+session records the change here and pushes; each downstream session, on its next run, reads this ledger
+directly from the repo and reconciles its own files. No prompt is passed between sessions.
+
 When a reviewer-driven change to paper N alters its title, venue, or manuscript ID:
 
 **Upstream session (the paper that changed), as its LAST step after the change is committed:**
 1. Update this ledger: the row in Section 1 and the `@misc` block in Section 3 for `busico_mN`.
-2. Update paper N's own front matter / status docs as needed (its own concern).
-3. Emit the downstream sync prompt (template in Section 5), filled in with the old -> new diff and
-   the blast radius from Section 2. Hand it to the next session in the order M1 -> ... -> M5.
+2. Update paper N's own front matter / status / internal drafts as needed (its own concern).
+3. Add an entry to Section 6 (open propagation debt) naming the blast radius from Section 2, then
+   commit and push. The pushed ledger is the signal; nothing is sent to other sessions.
 
-**Downstream session (each paper in the blast radius, in order):**
-1. Open this ledger; copy the canonical `@misc` entry for the changed key into the local
-   `references.bib` (replace the stale one). Change nothing else in the entry.
-2. Grep the paper's prose and drafts for the OLD title / venue / ID strings; fix any that appear as
-   literal text (titles are usually only in `references.bib`, but check).
-3. Recompile; confirm 0 errors and that the References list renders the new metadata.
-4. If this paper is itself cited downstream (see Section 2), emit the next sync prompt and pass it on.
-5. Deliver via the standard workflow; record a one-line changelog entry.
+**Downstream session (each paper in the blast radius), on its next run:**
+1. Read this ledger (verify-before-load-bearing via raw.githubusercontent.com); check Section 6 for
+   open debt naming this paper.
+2. Copy the canonical `@misc` entry for the changed key from Section 3 into the local `references.bib`
+   (replace the stale one). Change nothing else in the entry.
+3. Grep the paper's prose and drafts for the OLD title / venue / ID strings; fix any literal occurrences.
+4. Recompile; confirm 0 errors and that the References list renders the new metadata.
+5. Clear the Section 6 debt for this paper once synced and pushed; record a one-line changelog entry.
 
 **Invariant:** titles/venues/IDs live in the ledger. Other documents (README, status files) should
 reference module names, not re-type titles, so there is exactly one place to change. Where a title
 must appear verbatim (a paper's `references.bib`, the README publications list), it is a controlled
 copy of the ledger and is synced via this protocol.
 
-## 5. Downstream sync prompt template
+## 5. (Retired) prompt-based handoff
 
-Paste this into the next paper's fresh session, filled in:
-
-```
-CROSS-PAPER SYNC (domino) for <PAPER N+ SESSION>. Upstream paper <busico_mX> changed during review.
-Reconcile this paper's references and prose, do not touch results or claims.
-
-WHAT CHANGED (from docs/CITATION_LEDGER.md):
-- bibkey: <busico_mX>
-- old -> new title: "<OLD>" -> "<NEW>"        (omit if unchanged)
-- old -> new venue: <OLD> -> <NEW>            (omit if unchanged)
-- old -> new manuscript ID: <OLD> -> <NEW>    (omit if unchanged)
-
-TASKS:
-1. Check repo (verify-before-load-bearing via raw.githubusercontent.com). Open docs/CITATION_LEDGER.md.
-2. Replace this paper's <busico_mX> entry in references.bib with the canonical block from the ledger
-   Section 3. Surgical; change nothing else.
-3. Grep this paper's .tex and drafts for the OLD title/venue/ID strings; fix any literal occurrences.
-4. Recompile; confirm 0 errors and that the References render the new metadata.
-5. If this paper is cited downstream (ledger Section 2), emit the next sync prompt for that session.
-6. Deliver via present_files; give the Windows-cmd commit; add a one-line changelog entry.
-```
+Earlier the upstream session emitted a fill-in sync prompt for the next session. That mechanism is
+retired: sessions now read this ledger directly from the repo and self-sync per Section 4. The
+canonical metadata in Sections 1 and 3, plus the open-debt list in Section 6, are the only signal; no
+prompt is passed between sessions.
 
 ## 6. Open propagation debt (fix in the owning session)
 
@@ -122,7 +109,8 @@ TASKS:
   DOWNSTREAM SYNC PENDING (busico_m2 blast radius = M4, M5):
   `paper4/references.bib` needs the ID 04509 -> 04700 (its title is already current);
   `paper5/references.bib` needs BOTH the ID 04509 -> 04700 AND title old -> canonical.
-  Apply via the Section 5 prompt in the M4 and M5 sessions.
+  M4 and M5 sessions read this ledger on their next run and sync busico_m2 in their
+  references.bib per Section 4 (paper4 = ID only; paper5 = ID + title).
 
 - **M1 RETITLED + venue change (2026-06-29), now IN REVIEW at JPC as
   JPROCONT-D-26-00618.** RESOLVED this pass: `paper4/references.bib`,
