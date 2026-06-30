@@ -12,7 +12,7 @@ downstream paper. Chasing those by hand across `references.bib`, `README.md`, st
 working drafts is lossy and token-expensive. This ledger plus the protocol makes propagation
 mechanical and one-directional.
 
-Last updated: 2026-06-30 (M2 SCC -> JRESS-D-26-04700; propagation switched to pull-based via the repo, prompt handoff retired; M4/M5 bib sync pending in Section 6).
+Last updated: 2026-06-30 (M2 SCC -> JRESS-D-26-04700; propagation switched to pull-based via the repo, prompt handoff retired; M4/M5 bib + HANDOFF sync pending in Section 6; M2-owned surfaces synced).
 
 ## 1. Canonical ledger
 
@@ -111,6 +111,12 @@ prompt is passed between sessions.
   `paper5/references.bib` needs BOTH the ID 04509 -> 04700 AND title old -> canonical.
   M4 and M5 sessions read this ledger on their next run and sync busico_m2 in their
   references.bib per Section 4 (paper4 = ID only; paper5 = ID + title).
+  M2-owned surfaces SYNCED this pass (2026-06-30): README.md, PROJECT_STRUCTURE.md,
+  docs/module2/spec.md (ID 04509 -> 04700) and the two internal drafts above. STILL PENDING
+  (downstream-owned, pull from this ledger): `paper4/references.bib` (M4); `paper5/references.bib`
+  (M5); `docs/HANDOFF.md` current-state M2 rows (M5 session - update the papers table, the
+  Module 2 baseline line, and the status line to 04700; KEEP the dated changelog entries that
+  mention 04509 as history).
 
 - **M1 RETITLED + venue change (2026-06-29), now IN REVIEW at JPC as
   JPROCONT-D-26-00618.** RESOLVED this pass: `paper4/references.bib`,
@@ -120,8 +126,8 @@ prompt is passed between sessions.
   drafts (not just bib), refresh in those sessions, but the cross-citation metadata is
   synced.
 
-- `docs/module2/scc/scc_paper_outline.md` and `docs/module2/scc/scc_theory.tex` still carry the OLD
-  M2 title. These are the SCC (Module 2) session's internal drafts; refresh them there.
+- `docs/module2/scc/scc_paper_outline.md` and `docs/module2/scc/scc_theory.tex` titles RESOLVED
+  (2026-06-30): refreshed to the canonical M2 title and pushed.
 - Affiliation STANDARDIZED to "Mapua Malayan College Mindanao, Davao City, Philippines"
   (M1 done 2026-06-29; matches EM record for JPROCONT-D-26-00618). M2-M5 front matter
   should adopt the same string in their sessions; not a citation field, so no domino.

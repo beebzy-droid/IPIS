@@ -6,7 +6,7 @@ next, read `docs/HANDOFF.md` (§0.5 is the live resume pointer).
 **IPIS (Integrated Process Intelligence System)** — a hybrid, digital-twin-backed framework
 on a first-principles physics layer, in four modules: **Module 1 — Soft Sensor** (complete;
 paper under review, CACE-D-26-00944), **Module 2 — Predictive Maintenance** (complete; SCC paper under
-review, JRESS-D-26-04509), **Module 3 — Real-Time Optimization** (complete; paper under review,
+review, JRESS-D-26-04700), **Module 3 — Real-Time Optimization** (complete; paper under review,
 CACE-D-26-01040), and **Module 4 — Integration** (complete; composed closed-loop coverage
 certificate; IECR manuscript submission-ready). **Module 5** (dynamic / horizon realization) is in progress: experimental backbone complete, Paper 5 drafting (`paper5/`).
 

@@ -1,13 +1,13 @@
 # Module 2 — Predictive Maintenance (anomaly detection + RUL)
 
 This directory holds Module 2 documentation. **Status: complete (2A–2D); SCC paper under
-review (JRESS-D-26-04509).**
+review (JRESS-D-26-04700).**
 
 Module 2 is feature-complete across phases 2A–2D and is largely independent of Modules 1
 and 3 (≈10–20 % asset reuse — the conformal/drift/serving stack and the `state_bus`
 contract — versus ≈70–80 % for M3). A research extension, **Similarity-Calibrated Conformal
 (SCC)**, generalises the calibrated-RUL idea to an a-priori coverage certificate for
-cross-regime transfer and was submitted to RESS (JRESS-D-26-04509); its theory note and code
+cross-regime transfer and was submitted to RESS (JRESS-D-26-04700); its theory note and code
 live in `docs/module2/scc/` and `src/ipis/module2_pdm/scc/`, with the submission package in `paper3/`.
 
 ## Files
@@ -32,7 +32,7 @@ and the HANDOFF update-at-every-phase rule apply unchanged.
 **Research extension — Similarity-Calibrated Conformal (SCC).** Beyond 2A–2D, the
 calibrated-RUL idea was generalised to an a-priori, physics-derived coverage certificate for
 cross-regime transfer (gap ≤ 2L‖Δψ‖, composing a dimensionless reduction with Barber et al.
-2023). Submitted to *Reliability Engineering & System Safety* (JRESS-D-26-04509). Theory:
+2023). Submitted to *Reliability Engineering & System Safety* (JRESS-D-26-04700). Theory:
 `docs/module2/scc/scc_theory.(tex|pdf)`; code: `src/ipis/module2_pdm/scc/`; submission: `paper3/`.
 
 ## Scope (decisions D1–D6, ADR-015)

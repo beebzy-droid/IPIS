@@ -54,7 +54,7 @@ IPIS addresses all three with one architecture, validated across heterogeneous b
 | Module | Status | Notes |
 |---|---|---|
 | Module 1 — Soft Sensor | ✅ Complete | Under review at Journal of Process Control (JPROCONT-D-26-00618; transfer from CACE) |
-| Module 2 — Predictive Maintenance | ✅ Complete | Feature-complete (2A–2D); SCC paper under review (JRESS-D-26-04509) |
+| Module 2 — Predictive Maintenance | ✅ Complete | Feature-complete (2A–2D); SCC paper under review (JRESS-D-26-04700) |
 | Module 3 — Real-Time Optimization | ✅ Complete | Paper under review (CACE-D-26-01040) |
 | Module 4 — Integration (composed certificate) | ✅ Submitted | Closed-loop coverage certificate validated on the debutanizer twin; submitted to IECR as ie-2026-03342s (`paper4/`) |
 | Module 5 — Dynamic / horizon realization | 🚧 In progress | Dynamic plant, closed-loop orchestrator, and adaptive-conformal horizon coverage validated (62 tests; three results frozen); Paper 5 drafting (`paper5/`) |
@@ -70,7 +70,7 @@ differs from the module numbering for Modules 2 and 3; the module mapping below 
 - **Module 2 — Predictive Maintenance (Similarity-Calibrated Conformal):** *Similarity-Calibrated
   Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under
   operating-regime transfer.* Under review, *Reliability Engineering & System Safety*
-  (JRESS-D-26-04509). Source: `paper3/`.
+  (JRESS-D-26-04700). Source: `paper3/`.
 - **Module 3 — Real-Time Optimization:** *Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances.* Under
   review, *Computers & Chemical Engineering* (CACE-D-26-01040). Source: `paper2/`.
 - **Module 4 — Integration (composed coverage certificate):** *A composed coverage certificate for
