@@ -64,7 +64,7 @@ regime using the predictions under test.
 
 ## References
 
-- Module manuscripts: CACE-D-26-00944 (M1), JRESS-D-26-04509 (M2/SCC), CACE-D-26-01040 (M3).
+- Module manuscripts: JPROCONT-D-26-00618 (M1), JRESS-D-26-04700 (M2/SCC), CACE-D-26-01040 (M3).
 - Theory spike and term-by-term derivation: `docs/module4/formalization-spike.md`.
 - Non-exchangeable conformal coverage gap and adaptive conformal inference are cited in
   `paper4/references.bib` (Barber et al. 2023; Gibbs & Candès 2021).

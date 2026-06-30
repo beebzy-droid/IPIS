@@ -56,7 +56,7 @@ IPIS addresses all three with one architecture, validated across heterogeneous b
 | Module 1 — Soft Sensor | ✅ Complete | Under review at Journal of Process Control (JPROCONT-D-26-00618; transfer from CACE) |
 | Module 2 — Predictive Maintenance | ✅ Complete | Feature-complete (2A–2D); SCC paper under review (JRESS-D-26-04700) |
 | Module 3 — Real-Time Optimization | ✅ Complete | Paper under review (CACE-D-26-01040) |
-| Module 4 — Integration (composed certificate) | 🔄 Submitting to CACE | Closed-loop coverage certificate validated on the debutanizer twin; reframed and ported to *Computers & Chemical Engineering* after IECR declined on scope (`paper4/`) |
+| Module 4 — Integration (composed certificate) | ✅ Under review | Closed-loop coverage certificate validated on the debutanizer twin; under review at *Computers & Chemical Engineering* (CACE-D-26-01079), reframed and ported after IECR declined on scope (`paper4/`) |
 | Module 5 — Dynamic / horizon realization | 🚧 In progress | Dynamic plant, closed-loop orchestrator, and adaptive-conformal horizon coverage validated (62 tests; three results frozen); Paper 5 drafting (`paper5/`) |
 
 ## Publications
@@ -75,8 +75,8 @@ differs from the module numbering for Modules 2 and 3; the module mapping below 
   review, *Computers & Chemical Engineering* (CACE-D-26-01040). Source: `paper2/`.
 - **Module 4 — Integration (composed coverage certificate):** *A composed coverage certificate for
   closed-loop process operation: certified joint product-quality and equipment-survival guarantees
-  under feedback.* Submitting, *Computers & Chemical Engineering* (reframed and ported from the
-  IECR submission, declined on scope). Source: `paper4/`.
+  under feedback.* Under review, *Computers & Chemical Engineering* (CACE-D-26-01079; reframed and ported after the
+  IECR submission was declined on scope). Source: `paper4/`.
 - **Module 5 — Dynamic / horizon realization (this paper):** *Horizon-wide safety guarantees for
   closed-loop process operation via adaptive conformal calibration.* In preparation, *Computers &
   Chemical Engineering* (`paper5/`).

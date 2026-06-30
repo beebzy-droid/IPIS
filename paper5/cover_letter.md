@@ -31,11 +31,11 @@ portable construction for turning a certified stack of components into a certifi
 campaign and a runtime safety monitor.
 
 The manuscript is the author's original work and is not under consideration elsewhere. It is the
-realisation layer of a series whose companion papers develop the soft sensor (CACE-D-26-00944,
-under review at this journal), the prognostic certificate (JRESS-D-26-04509, under review), and
-the conformal real-time optimiser (CACE-D-26-01040, under review at this journal); the per-cycle
-composed certificate that the present work lifts to a horizon is a further companion in
-preparation for Industrial & Engineering Chemistry Research. The present manuscript is
+realisation layer of a series whose companion papers develop the soft sensor (JPROCONT-D-26-00618,
+under review at the Journal of Process Control), the prognostic certificate (JRESS-D-26-04700,
+under review), and the conformal real-time optimiser (CACE-D-26-01040, under review at this
+journal); the per-cycle composed certificate that the present work lifts to a horizon is a further
+companion under review at this journal (CACE-D-26-01079). The present manuscript is
 self-contained and does not overlap with these in contribution.
 
 The dynamic plant, the closed-loop orchestrator, the adaptive-conformal read-off, and the figure

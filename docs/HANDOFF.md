@@ -46,10 +46,10 @@ to a horizon guarantee and moves IPIS off the quasi-static twin. Start a fresh s
 
 | Paper | Module | Journal | ID | Date | Source |
 |---|---|---|---|---|---|
-| 1 | M1 soft sensor | Computers & Chemical Engineering | CACE-D-26-00944 | 2026-06-12 | `paper/` |
+| 1 | M1 soft sensor | Journal of Process Control | JPROCONT-D-26-00618 | 2026-06-12 | `paper/` |
 | 2 | M3 RTO (conditional conformal back-offs) | Computers & Chemical Engineering | CACE-D-26-01040 | 2026-06-23 | `paper2/` |
-| 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04509** | **2026-06-20** | `paper3/` |
-| 4 | M4 integration (composed certificate) | Computers & Chemical Engineering | **(submitting; IECR ie-2026-03342s declined)** | **2026-06-30** | `paper4/` |
+| 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04700** | **2026-06-30** | `paper3/` |
+| 4 | M4 integration (composed certificate) | Computers & Chemical Engineering | **CACE-D-26-01079** | **2026-06-30** | `paper4/` |
 
 - **Paper 3 (SCC) final state.** elsarticle `[review,times]` (single-column review format,
   switched from `[5p]` two-column at the RESS editor's request before peer review), split
@@ -223,7 +223,7 @@ action is the Module 2 paper draft.**
   format). Markdown working copy, figures, evidence: `docs/module3/paper/`. Under review.
 - **2026-06-23 (cross-ref propagation)** — propagated **CACE-D-26-01040** + new title from `paper2/` into ADR-016, `paper4/references.bib`, `docs/module4/formalization-spike.md`, `src/ipis/integration/health_rto.py`, and the `docs/module3/paper/` working drafts; corrected the §2 vision pointer (Module 2 -> complete, Module 5 -> next). No code or results changed.
 - **Module 2 — Predictive Maintenance (anomaly detection + RUL): COMPLETE.** SCC paper under
-  review (JRESS-D-26-04509); built as Modules 2A-2D.
+  review (JRESS-D-26-04700); built as Modules 2A-2D.
   - **Scope locked.** `docs/module2/spec.md` (D1–D6) and **ADR-015** written. **D2 ratified
     by action** (datasets downloaded) → ADR-015 status **Accepted**. M2 = two sub-tasks the
     `state_bus` already contracts: health score ∈[0,1], flag OK/WARN/ALARM, RUL (hours).
@@ -480,7 +480,7 @@ framework with five modules on a first-principles physics layer:
 
 1. **Module 1 — Soft Sensor** — real-time prediction of hard-to-measure quality
    variables. **(✅ complete; paper under review, CACE-D-26-00944)**
-2. **Module 2 — Predictive Maintenance** — anomaly detection + RUL. **(✅ complete; paper under review, JRESS-D-26-04509)**
+2. **Module 2 — Predictive Maintenance** — anomaly detection + RUL. **(✅ complete; paper under review, JRESS-D-26-04700)**
 3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; paper under review, CACE-D-26-01040)**
 4. **Module 4 — Composed certificate** — the integrated SCC coverage guarantee. **(✅ complete; IECR submission prep)**
 5. **Module 5 — Dynamic / horizon realization** — closed-loop ACI horizon coverage. **(▶ NEXT — experimental backbone complete, paper next)**
@@ -1168,6 +1168,17 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-30 (M4 received CACE-D-26-01079 + FULL downstream hygiene pass)** -- M4 is under review
+  at Computers & Chemical Engineering as **CACE-D-26-01079**. Ran a complete repo-wide cross-citation
+  audit and reconciled every surface to the ledger: ledger Section 1/3 busico_m4 -> CACE-D-26-01079;
+  `paper5/references.bib` busico_m4 (new title + CACE + ID) and busico_m2 (canonical title +
+  JRESS-D-26-04700), both had been stale; `paper5/cover_letter.md` companion list refreshed
+  (M1 -> JPROCONT-D-26-00618/JPC, M2 -> 04700, M4 -> CACE-D-26-01079); `paper2/references.bib`
+  `@unpublished{companion2026}` (M3's cite to M1, missed by busico_* sweeps because of the key name)
+  refreshed to the current M1 title + JPC + JPROCONT-D-26-00618; this papers table M1 row -> JPC, M2
+  row -> 04700, M4 row -> CACE-D-26-01079; README M4 -> under review/ID; `docs/module4/formalization-spike.md`
+  and `ADR-016` cross-ref IDs refreshed. Verified: M1 cites no earlier module, M2 cites none, M3 cites
+  M1 only, M4 cites M1/M2/M3, M5 cites M1/M2/M3/M4 -- all current. Ledger Section 6 debt cleared.
 - **2026-06-30 (M4 REFRAMED + ported to CACE after IECR desk-reject)** -- I&EC Research declined
   ie-2026-03342s on scope (technically sound, outside its general-chemistry readership) and offered
   an ACS Omega transfer, which was declined. M4 reframed for *Computers & Chemical Engineering*:
