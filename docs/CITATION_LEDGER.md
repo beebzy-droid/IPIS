@@ -12,14 +12,14 @@ downstream paper. Chasing those by hand across `references.bib`, `README.md`, st
 working drafts is lossy and token-expensive. This ledger plus the protocol makes propagation
 mechanical and one-directional.
 
-Last updated: 2026-06-29 (M1 -> JPC review; M1 title domino resolved across M4/M5 bibs + README).
+Last updated: 2026-06-30 (M2 SCC restructured + resubmitted to RESS as JRESS-D-26-04700; downstream M4/M5 bib ID sync pending).
 
 ## 1. Canonical ledger
 
 | bibkey | Module | Canonical title | Venue | Manuscript ID | Status | Source dir |
 |---|---|---|---|---|---|---|
 | `busico_m1` | M1 soft sensor | When does a calibrated soft sensor keep its promise? A negative-control study of validity without accuracy under drift and delayed labels | Journal of Process Control (transfer from CACE) | JPROCONT-D-26-00618 (orig. CACE-D-26-00944) | under review | `paper/` |
-| `busico_m2` | M2 prognostics (SCC) | Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer | Reliability Engineering & System Safety | JRESS-D-26-04509 | under review (deliverable-first restructure resubmitted) | `paper3/` |
+| `busico_m2` | M2 prognostics (SCC) | Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer | Reliability Engineering & System Safety | JRESS-D-26-04700 (resub. of JRESS-D-26-04509) | under review (deliverable-first restructure) | `paper3/` |
 | `busico_m3` | M3 RTO | Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances | Computers & Chemical Engineering | CACE-D-26-01040 | under review | `paper2/` |
 | `busico_m4` | M4 integration | A composed coverage certificate for closed-loop process operation: unifying conformal soft sensing, calibrated prognostics, and health-constrained real-time optimization | Industrial & Engineering Chemistry Research | ie-2026-03342s | submitted | `paper4/` |
 | `busico_m5` | M5 dynamic / horizon | Horizon-wide safety guarantees for closed-loop process operation via adaptive conformal calibration | Computers & Chemical Engineering (target) | none (in prep) | `paper5/` |
@@ -53,7 +53,7 @@ Downstream `references.bib` files must contain exactly these for the keys they c
 
 @misc{busico_m2,
   title={{Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer}},
-  author={Busico, Bien}, year={2026}, note={Manuscript JRESS-D-26-04509, submitted to Reliability Engineering \& System Safety}}
+  author={Busico, Bien}, year={2026}, note={Manuscript JRESS-D-26-04700, submitted to Reliability Engineering \& System Safety}}
 
 @misc{busico_m3,
   title={{Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances}},
@@ -115,6 +115,14 @@ TASKS:
 ```
 
 ## 6. Open propagation debt (fix in the owning session)
+
+- **M2 (SCC) RESTRUCTURED + RESUBMITTED to RESS (2026-06-30): new ID JRESS-D-26-04700**
+  (was JRESS-D-26-04509). Deliverable-first restructure (proofs to Appendix A, engineering
+  narrative, workflow figure); no results changed. Ledger Section 1 + Section 3 now canonical.
+  DOWNSTREAM SYNC PENDING (busico_m2 blast radius = M4, M5):
+  `paper4/references.bib` needs the ID 04509 -> 04700 (its title is already current);
+  `paper5/references.bib` needs BOTH the ID 04509 -> 04700 AND title old -> canonical.
+  Apply via the Section 5 prompt in the M4 and M5 sessions.
 
 - **M1 RETITLED + venue change (2026-06-29), now IN REVIEW at JPC as
   JPROCONT-D-26-00618.** RESOLVED this pass: `paper4/references.bib`,

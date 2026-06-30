@@ -5,8 +5,8 @@
 `\bibliographystyle{elsarticle-num-names}` · `\address{Chemical Engineer, Quezon City, Philippines}`
 **House standard:** Paper 1 (CACE-D-26-00944) — split sections 01–07, end-matter, highlights, cover letter (.docx).
 
-**Working title:** *Similarity-Calibrated Conformal Prediction: a physics-derived,
-a-priori coverage certificate for prognostics under operating-regime transfer.*
+**Working title:** *Similarity-Calibrated Conformal prediction: data-free coverage
+guarantees for remaining-useful-life intervals under operating-regime transfer.*
 
 ---
 
