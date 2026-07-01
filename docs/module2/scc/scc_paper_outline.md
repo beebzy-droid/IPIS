@@ -2,7 +2,7 @@
 
 **Target:** Reliability Engineering & System Safety (RESS)
 **Class:** elsarticle `[5p,times]` two-column · `\usepackage{lineno}\linenumbers` ·
-`\bibliographystyle{elsarticle-num-names}` · `\address{Chemical Engineer, Quezon City, Philippines}`
+`\bibliographystyle{elsarticle-num-names}` · `\address{Map\'ua Malayan College Mindanao, Davao City, Philippines}`
 **House standard:** Paper 1 (CACE-D-26-00944) — split sections 01–07, end-matter, highlights, cover letter (.docx).
 
 **Working title:** *Similarity-Calibrated Conformal prediction: data-free coverage

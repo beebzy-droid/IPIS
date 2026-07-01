@@ -1,8 +1,7 @@
 # Paper outline (Phase 1F.1)
 
-**Working title:** A physics-informed, drift-adaptive soft-sensor framework with
-calibrated uncertainty under delayed labels: from benchmark validation to a negative
-control and production serving
+**Working title:** When does a calibrated soft sensor keep its promise? A negative-control
+study of validity without accuracy under drift and delayed labels
 
 **Venue:** Computers & Chemical Engineering (primary; elsarticle). Fallback: Journal of
 Process Control with the narrow conformal-under-drift framing (extractable from the same

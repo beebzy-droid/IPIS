@@ -1168,6 +1168,14 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-06-30 (affiliation + M1 title-surface standardisation)** -- Standardised author affiliation
+  to "Mapua Malayan College Mindanao, Davao City, Philippines" across all paper front matter (M3/M4/M5
+  had the "Chemical Engineer, Quezon City" placeholder; M1/M2 already correct), all three downstream
+  cover-letter sign-offs, both EM-flat variants, and the M2 outline note. Refreshed M1's own stale
+  surfaces to the negative-control title + JPC venue: paper/cover_letter.md (full reframe to the
+  validity-without-accuracy thesis, owns the CACE->JPC transfer), docs/module1/spec.md, docs/paper/outline.md.
+  M3 (CACE-D-26-01040) and M4 (CACE-D-26-01079) are under review under the old affiliation; update their
+  EM author metadata so it carries to revision.
 - **2026-06-30 (M4 received CACE-D-26-01079 + FULL downstream hygiene pass)** -- M4 is under review
   at Computers & Chemical Engineering as **CACE-D-26-01079**. Ran a complete repo-wide cross-citation
   audit and reconciled every surface to the ledger: ledger Section 1/3 busico_m4 -> CACE-D-26-01079;

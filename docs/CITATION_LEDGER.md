@@ -134,11 +134,12 @@ CACE-D-26-00944)" / "(resub. of JRESS-D-26-04509)"; dated HANDOFF changelog entr
 sentences that own the IECR transfer history. These cite prior IDs as history and are correct.
 
 Still open (non-citation, no domino):
-- Affiliation string. Paper front matter reads "Chemical Engineer, Quezon City, Philippines"; the
-  standard on M1's EM record is "Mapua Malayan College Mindanao, Davao City, Philippines." M4 is
-  already submitted under the Quezon City string (CACE-D-26-01079), so changing it now diverges from
-  the submitted version. Decide whether to standardise M2-M5 front matter and whether to correct M4
-  at revision. Not a citation field.
+- Affiliation string: STANDARDISED this pass to "Mapua Malayan College Mindanao, Davao City,
+  Philippines" across all paper front matter (M1/M2 already; M3/M4/M5 updated), all cover-letter
+  sign-offs, both EM-flat variants, and the M2 outline note. M3 (CACE-D-26-01040) and M4
+  (CACE-D-26-01079) are under review under the old "Quezon City" string, so update the affiliation in
+  their EM author-metadata field (carries to revision); the repo now holds the corrected version. Not
+  a citation field.
 
 Reminder: when M5 receives a manuscript ID, update `busico_m5` (Sections 1 and 3). Its blast radius
 is empty (terminal), so no downstream sync follows.

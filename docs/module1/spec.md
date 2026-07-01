@@ -32,9 +32,9 @@ This directory holds Module 1 documentation. **Status: complete; paper under rev
 
 ## Publication
 
-Module 1 is reported in **Paper 1**: "A physics-informed, drift-adaptive soft-sensor framework
-with calibrated uncertainty under delayed labels: from benchmark validation to a negative
-control and real-time implementation," under review at *Computers & Chemical Engineering*
+Module 1 is reported in **Paper 1**: "When does a calibrated soft sensor keep its promise? A negative-control study of validity
+without accuracy under drift and delayed labels," under review at the *Journal of Process Control*
+(JPROCONT-D-26-00618, transferred from CACE-D-26-00944)
 (**CACE-D-26-00944**). LaTeX source in `paper/`; markdown working copy, figures, and frozen
 evidence in `docs/paper/`.
 

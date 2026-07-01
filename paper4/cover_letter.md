@@ -41,5 +41,5 @@ adaptation, and prognostics and health management for process equipment.
 Thank you for your consideration.
 
 Bien Busico
-Chemical Engineer, Quezon City, Philippines
+Mapúa Malayan College Mindanao, Davao City, Philippines
 bienbusico@gmail.com
