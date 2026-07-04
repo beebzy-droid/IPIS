@@ -47,7 +47,7 @@ to a horizon guarantee and moves IPIS off the quasi-static twin. Start a fresh s
 | Paper | Module | Journal | ID | Date | Source |
 |---|---|---|---|---|---|
 | 1 | M1 soft sensor | Journal of Process Control | JPROCONT-D-26-00618 | 2026-06-12 | `paper/` |
-| 2 | M3 RTO (conditional conformal back-offs) | Computers & Chemical Engineering | CACE-D-26-01040 | 2026-06-23 | `paper2/` |
+| 2 | M3 RTO (post-selection safety guarantee) | IEEE TCST (target) | pending; rej. CACE-D-26-01040 | 2026-07-01 | `paper2/tcst/` |
 | 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04700** | **2026-06-30** | `paper3/` |
 | 4 | M4 integration (composed certificate) | Computers & Chemical Engineering | **CACE-D-26-01079** | **2026-06-30** | `paper4/` |
 
@@ -216,11 +216,14 @@ action is the Module 2 paper draft.**
 
 - **Paper 1 (Module 1, soft sensor)** — submitted to *Computers & Chemical Engineering*,
   **CACE-D-26-00944** (2026-06-12). Source: `paper/` (elsarticle, split sections). Under review.
-- **Paper 2 (Module 3, RTO)** — desk-rejected at *Journal of Process Control*
-  (JPROCONT-D-26-00565, scientific-significance gate, no reviewers), reframed deliverable-first
-  and transferred to *Computers & Chemical Engineering*, resubmitted as **CACE-D-26-01040**
-  (2026-06-23). New title: "Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances." Source: `paper2/` (single-column review
-  format). Markdown working copy, figures, evidence: `docs/module3/paper/`. Under review.
+- **Paper 2 (Module 3, RTO)** — desk-rejected at *Journal of Process Control* (JPROCONT-D-26-00565,
+  significance) and then at *Computers & Chemical Engineering* (CACE-D-26-01040, novelty; EiC Mitsos,
+  no reviewers). Both refusals were on the novelty/significance axis, exhausting the reframe lever.
+  The paper was then ELEVATED with a finite-sample, distribution-free post-selection coverage
+  guarantee (Theorems 1-2) and RETARGETED to **IEEE Transactions on Control Systems Technology**
+  (free at <=12pp, guarantee-friendly community). New title: "Safe real-time optimization under
+  unmeasured disturbances: a finite-sample, distribution-free constraint-satisfaction guarantee."
+  IEEEtran draft in `paper2/tcst/`; ID pending submission. Evidence/markdown: `docs/module3/paper/`.
 - **2026-06-23 (cross-ref propagation)** — propagated **CACE-D-26-01040** + new title from `paper2/` into ADR-016, `paper4/references.bib`, `docs/module4/formalization-spike.md`, `src/ipis/integration/health_rto.py`, and the `docs/module3/paper/` working drafts; corrected the §2 vision pointer (Module 2 -> complete, Module 5 -> next). No code or results changed.
 - **Module 2 — Predictive Maintenance (anomaly detection + RUL): COMPLETE.** SCC paper under
   review (JRESS-D-26-04700); built as Modules 2A-2D.
@@ -1168,6 +1171,25 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-07-01 (M3 RTO elevated + retargeted to IEEE TCST)** -- CACE desk-rejected the RTO paper
+  (CACE-D-26-01040) on novelty (EiC Mitsos, no reviewers); with the prior JPC significance
+  desk-reject, both refusals were on the same axis, so the reframe lever is spent. Per
+  THESIS_STANDARDS S2 the response was genuine elevation, not another reframe: added a finite-sample,
+  distribution-free post-selection coverage guarantee. Theorem 1 proves marginal conformal back-offs
+  carry no guarantee at the optimized decision (kappa up to 1/alpha; empirically ~5x); Theorem 2
+  proves the repair (a-posteriori recalibration -> exact validity; data-reuse uniform calibration ->
+  alpha + O(sqrt(d/n))); Corollary 1 makes the inflation factor a data-adequacy diagnostic. Rebuilt
+  in IEEEtran double-column (<=12pp, free) as `paper2/tcst/main.tex`; Table 1 verified against
+  `docs/module3/paper/evidence/regime_map.json` (the earlier reconstructed table had errors, now
+  fixed; kappa is non-monotonic because n_cal scales with sigma). Retargeted to IEEE TCST.
+  **PENDING PROPAGATION (up-to-date session):** M3 is no longer CACE-D-26-01040 "under review";
+  propagate the retarget (new title + "IEEE TCST target, pending, rej. CACE-D-26-01040") across
+  README, docs/module3/spec.md, PROJECT_STRUCTURE.md, ADR-016, docs/module4/formalization-spike.md,
+  src/ipis/integration/health_rto.py, and the busico_m3 bib entries in paper4/references.bib and
+  paper5/references.bib. **M4 COORDINATION:** M3 now OWNS the single-constraint post-selection
+  guarantee (Theorem 2); M4 must CITE busico_m3 (Thm 2) rather than re-derive it, or both risk a
+  self-overlap desk-reject. **PROGRAM RISK:** M3 rejected at CACE, M4 at CACE-D-26-01079, M5 targeting
+  CACE -- recommend M5 retarget to IEEE TCST and M4 -> TCST if it desk-rejects.
 - **2026-06-30 (affiliation + M1 title-surface standardisation)** -- Standardised author affiliation
   to "Mapua Malayan College Mindanao, Davao City, Philippines" across all paper front matter (M3/M4/M5
   had the "Chemical Engineer, Quezon City" placeholder; M1/M2 already correct), all three downstream
