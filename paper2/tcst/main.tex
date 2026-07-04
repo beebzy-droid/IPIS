@@ -1,7 +1,9 @@
+\pdfminorversion=4
 %% Safe RTO under unmeasured disturbances -- IEEE TCST submission (double-column, <=12 pp)
 %% Compile on Overleaf: pdflatex -> bibtex -> pdflatex x2. IEEEtran.cls + IEEEtran.bst are native there.
 \documentclass[journal]{IEEEtran}
 
+\usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -544,5 +546,12 @@ conditional calibration a general design requirement for safe data-driven optimi
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
+
+\vspace{-0.8em}
+\begin{IEEEbiographynophoto}{Bien Busico}
+is a board-certified Chemical/Process Engineer affiliated with Mapua Malayan College Mindanao,
+Davao City, Philippines. His research interests include distribution-free uncertainty
+quantification, real-time optimization, and safe data-driven control for process systems.
+\end{IEEEbiographynophoto}
 
 \end{document}

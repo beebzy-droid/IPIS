@@ -20,7 +20,7 @@ Last updated: 2026-06-30 (M4 received CACE-D-26-01079; FULL downstream hygiene p
 |---|---|---|---|---|---|---|
 | `busico_m1` | M1 soft sensor | When does a calibrated soft sensor keep its promise? A negative-control study of validity without accuracy under drift and delayed labels | Journal of Process Control (transfer from CACE) | JPROCONT-D-26-00618 (orig. CACE-D-26-00944) | under review | `paper/` |
 | `busico_m2` | M2 prognostics (SCC) | Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer | Reliability Engineering & System Safety | JRESS-D-26-04700 (resub. of JRESS-D-26-04509) | under review (deliverable-first restructure) | `paper3/` |
-| `busico_m3` | M3 RTO | Safe real-time optimization under unmeasured disturbances: a finite-sample, distribution-free constraint-satisfaction guarantee | IEEE Trans. Control Systems Technology (target) | pending; desk-rejected CACE-D-26-01040 | revising for TCST | `paper2/tcst/` |
+| `busico_m3` | M3 RTO | Safe real-time optimization under unmeasured disturbances: a finite-sample, distribution-free constraint-satisfaction guarantee | IEEE Trans. Control Systems Technology | 26-0876 | Received (prescreen) | `paper2/tcst/` |
 | `busico_m4` | M4 integration | A composed coverage certificate for closed-loop process operation: certified joint product-quality and equipment-survival guarantees under feedback | Computers & Chemical Engineering | CACE-D-26-01079 | under review | `paper4/` |
 | `busico_m5` | M5 dynamic / horizon | Horizon-wide safety guarantees for closed-loop process operation via adaptive conformal calibration | Computers & Chemical Engineering (target) | none (in prep) | `paper5/` |
 
@@ -57,7 +57,7 @@ Downstream `references.bib` files must contain exactly these for the keys they c
 
 @misc{busico_m3,
   title={{Safe real-time optimization under unmeasured disturbances: a finite-sample, distribution-free constraint-satisfaction guarantee}},
-  author={Busico, Bien}, year={2026}, note={Manuscript in preparation for IEEE Transactions on Control Systems Technology; earlier version desk-rejected as CACE-D-26-01040}}
+  author={Busico, Bien}, year={2026}, note={Manuscript 26-0876, submitted to IEEE Transactions on Control Systems Technology; earlier version desk-rejected as CACE-D-26-01040}}
 
 @misc{busico_m4,
   title={{A composed coverage certificate for closed-loop process operation: certified joint product-quality and equipment-survival guarantees under feedback}},

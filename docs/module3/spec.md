@@ -1,7 +1,7 @@
 # Module 3 — Real-Time Optimization (RTO)
 
 This directory holds Module 3 documentation. **Status: complete (3A + 3B); paper under
-review (CACE-D-26-01040). 3C closed-loop is future work.**
+review (IEEE TCST, 26-0876). 3C closed-loop is future work.**
 
 ## Files
 
@@ -64,8 +64,8 @@ optimum.
 
 ## Publication
 
-Module 3 is reported in **Paper 2**: "Conditionally calibrated conformal back-offs for chance-constrained real-time optimisation under unmeasured disturbances,"
-under review at *Computers & Chemical Engineering* (**CACE-D-26-01040**). LaTeX source in `paper2/`;
+Module 3 is reported in **Paper 2**: "Safe real-time optimization under unmeasured disturbances: a finite-sample, distribution-free constraint-satisfaction guarantee,"
+submitted to *IEEE Trans. Control Systems Technology* (**26-0876**). LaTeX source in `paper2/tcst/`;
 markdown working copy, figures, and frozen evidence in `docs/module3/paper/`.
 
 See `docs/architecture/decisions/` (ADR-013, ADR-014) for the reasoning behind each decision, and
