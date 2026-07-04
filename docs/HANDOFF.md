@@ -1171,6 +1171,21 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-07-04 (venue de-risk: break the CACE concentration)** -- M3 desk-rejected at CACE on
+  novelty; M4 sits at CACE (CACE-D-26-01079), M5 targeted CACE. Three conformal-lineage papers on
+  one EiC pool = correlated desk-reject risk. Decisions: (1) **M4 rides at CACE** (already cleared
+  desk / "under review"; do not withdraw). Contingency if rejected: **RESS #1** (equipment-survival /
+  system-safety fit, M2 already there, elsarticle = ~0 reformat, free), IEEE TCST #2. (2) **M5
+  retargeted CACE -> IEEE TCST** (ledger `busico_m5` updated). Rationale: M5 is a genuine horizon-wide
+  safety-certificate theorem with closed-loop dynamics, dead time, and delayed labels -- core TCST
+  scope, better fit than PSE-general CACE; estimated desk-reject drops from ~35-55% (CACE) to ~15-25%
+  (TCST); coheres with M3 at TCST (M5 cites busico_m3). **M5 retarget execution (up-to-date session,
+  paper5/ owner):** reformat elsarticle -> IEEEtran single file <=12pp (free); add compliance triad
+  (`\pdfminorversion=4`, `\usepackage[T1]{fontenc}`, `\IEEEbiographynophoto`); keywords Chemical
+  process control + Machine learning + Randomized algorithms + Predictive control for nonlinear
+  systems (+ Delay systems for the dead-time content); reframe cover letter for TCST; submit to SE
+  Glielmo lane. Post de-risk venue map: M1 JPC, M2 RESS, M3 TCST (26-0876), M4 CACE(->RESS), M5 TCST
+  -- 4 venues, no EiC holding >2 papers, all $0.
 - **2026-07-04 (M3 SUBMITTED to IEEE TCST as 26-0876)** -- The elevated RTO paper was submitted to
   IEEE Transactions on Control Systems Technology, Senior Editor Luigi Glielmo, as a Full Paper.
   **Manuscript number 26-0876**, status Received (prescreen), 2026-07-04. Traditional (non-OA, $0);

@@ -22,7 +22,7 @@ Last updated: 2026-06-30 (M4 received CACE-D-26-01079; FULL downstream hygiene p
 | `busico_m2` | M2 prognostics (SCC) | Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer | Reliability Engineering & System Safety | JRESS-D-26-04700 (resub. of JRESS-D-26-04509) | under review (deliverable-first restructure) | `paper3/` |
 | `busico_m3` | M3 RTO | Safe real-time optimization under unmeasured disturbances: a finite-sample, distribution-free constraint-satisfaction guarantee | IEEE Trans. Control Systems Technology | 26-0876 | Received (prescreen) | `paper2/tcst/` |
 | `busico_m4` | M4 integration | A composed coverage certificate for closed-loop process operation: certified joint product-quality and equipment-survival guarantees under feedback | Computers & Chemical Engineering | CACE-D-26-01079 | under review | `paper4/` |
-| `busico_m5` | M5 dynamic / horizon | Horizon-wide safety guarantees for closed-loop process operation via adaptive conformal calibration | Computers & Chemical Engineering (target) | none (in prep) | `paper5/` |
+| `busico_m5` | M5 dynamic / horizon | Horizon-wide safety guarantees for closed-loop process operation via adaptive conformal calibration | IEEE Trans. Control Systems Technology (target; retargeted from CACE per 2026-07-04 de-risk) | none (in prep) | `paper5/` |
 
 Note the directory quirk: `paperN/` is numbered by authoring order, so `paper2/` = Module 3 (RTO)
 and `paper3/` = Module 2 (SCC). The Module column above is authoritative.
