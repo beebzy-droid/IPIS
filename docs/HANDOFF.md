@@ -1171,6 +1171,20 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-07-15 (26-0876 returned for clarification -- fixed, resubmission pack ready)** -- TCST
+  editorial office unsubmitted 26-0876 (NOT a rejection; deadline 2026-07-29, ONE resubmission
+  allowed). Two defects: (1) author name mismatch: PDF said "Bien Busico", IEEE database (PIN
+  252713) says "Bien Don Busico" -- FIXED in the PDF (\author, \thanks, biography); database
+  untouched. (2) figure labels unreadable at IEEE 3.5in column -- root cause: F1 drawn at 10.2in
+  (2.9x shrink), F3/F7 at 6.4in with in-figure titles. FIXED: new `scripts/paper2_figures/
+  make_ieee_figures.py` regenerates from frozen regime_map.json at native sizes (F1 7.16in
+  two-column figure*, F3/F7 3.5in single-column), >=8pt fonts at final size, 600 dpi, no in-figure
+  titles; figures now local at `paper2/tcst/figures/`, graphicspath localized. Rebuilt with genuine
+  IEEEtran.cls + IEEEtran.bst: 7pp, 0 errors, 0 undefined citations, name verified on title page.
+  ONE-SHOT RULE: nothing else in the paper was touched. PROCEDURE SAVED -- IEEE template selector:
+  template-selector.ieee.org -> Transactions/Journals/Letters -> IEEE TCST -> Original Research ->
+  LaTeX -> Download (bundle: IEEEtran.cls, how-to, bare_jrnl sample; .bst NOT included, extract
+  from texlive-publishers). Resubmit via PaperPlaza author workspace before 2026-07-29.
 - **2026-07-04 (venue de-risk: break the CACE concentration)** -- M3 desk-rejected at CACE on
   novelty; M4 sits at CACE (CACE-D-26-01079), M5 targeted CACE. Three conformal-lineage papers on
   one EiC pool = correlated desk-reject risk. Decisions: (1) **M4 rides at CACE** (already cleared

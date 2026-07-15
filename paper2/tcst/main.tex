@@ -9,7 +9,7 @@
 \usepackage{booktabs}
 \usepackage{url}
 \usepackage[numbers,sort&compress]{natbib}
-\graphicspath{{}{figures/}{../../docs/module3/paper/figures/}}
+\graphicspath{{figures/}}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{corollary}{Corollary}
@@ -21,8 +21,8 @@
 \title{Safe Real-Time Optimization Under Unmeasured Disturbances:\\
 A Finite-Sample, Distribution-Free Constraint-Satisfaction Guarantee}
 
-\author{Bien~Busico%
-\thanks{B. Busico is with Mapua Malayan College Mindanao, Davao City, Philippines
+\author{Bien~Don~Busico%
+\thanks{B. D. Busico is with Mapua Malayan College Mindanao, Davao City, Philippines
 (e-mail: bienbusico@gmail.com).}}
 
 \markboth{IEEE Transactions on Control Systems Technology}%
@@ -352,15 +352,15 @@ when the data cannot certify the target. Section~\ref{sec:results} shows $\kappa
 from near unity to nearly sixfold before the conditional method exhausts its calibration data,
 which is the empirical face of Corollary~\ref{cor:kappa}.
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{F1_rto_loop.png}
+\includegraphics[width=\textwidth]{F1_rto_loop.png}
 \caption{Chance-constrained RTO with a conformal constraint back-off. The nominal model and the
 back-off feed the optimizer, which sets $(R,D)$ on the twin. The constrained bottoms composition
 $x_B$ is not measured online; a closed-loop soft-sensor feedback path (grey, dashed) is left to
 future work.}
 \label{fig:rto}
-\end{figure}
+\end{figure*}
 
 \section{Process Twin and Experimental Design}
 \label{sec:case}
@@ -548,7 +548,7 @@ conditional calibration a general design requirement for safe data-driven optimi
 \bibliography{references}
 
 \vspace{-0.8em}
-\begin{IEEEbiographynophoto}{Bien Busico}
+\begin{IEEEbiographynophoto}{Bien Don Busico}
 is a board-certified Chemical/Process Engineer affiliated with Mapua Malayan College Mindanao,
 Davao City, Philippines. His research interests include distribution-free uncertainty
 quantification, real-time optimization, and safe data-driven control for process systems.
