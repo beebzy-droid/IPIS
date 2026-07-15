@@ -8,7 +8,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{url}
-\usepackage[numbers,sort&compress]{natbib}
+\usepackage{cite}
 \graphicspath{{figures/}}
 
 \newtheorem{theorem}{Theorem}
@@ -22,10 +22,10 @@
 A Finite-Sample, Distribution-Free Constraint-Satisfaction Guarantee}
 
 \author{Bien~Don~Busico%
-\thanks{B. D. Busico is with Mapua Malayan College Mindanao, Davao City, Philippines
+\thanks{B. D. Busico is with Mapua Malayan Colleges Mindanao, Davao City, Philippines
 (e-mail: bienbusico@gmail.com).}}
 
-\markboth{IEEE Transactions on Control Systems Technology}%
+\markboth{IEEE TRANSACTIONS ON CONTROL SYSTEMS TECHNOLOGY}%
 {Busico: Safe Real-Time Optimization Under Unmeasured Disturbances}
 
 \maketitle
@@ -447,7 +447,8 @@ property of the method rather than a silent failure, as Corollary~\ref{cor:kappa
 \centering
 \includegraphics[width=0.85\linewidth]{F7_kappa_vs_sigma.png}
 \caption{A-posteriori inflation factor $\kappa^\star$ for the CQR method versus $\sigma_z$. The
-margin is stretched (rising $\kappa^\star$) before the method becomes infeasible, making
+margin is stretched (rising $\kappa^\star$) before the method becomes infeasible; the dashed
+horizontal line marks $\kappa^\star=1$ (no tightening). This makes
 $\kappa^\star$ a data-adequacy diagnostic.}
 \label{fig:kappa}
 \end{figure}
@@ -549,9 +550,19 @@ conditional calibration a general design requirement for safe data-driven optimi
 
 \vspace{-0.8em}
 \begin{IEEEbiographynophoto}{Bien Don Busico}
-is a board-certified Chemical/Process Engineer affiliated with Mapua Malayan College Mindanao,
-Davao City, Philippines. His research interests include distribution-free uncertainty
-quantification, real-time optimization, and safe data-driven control for process systems.
+was born in Butuan City, Philippines, in 2000. He received the B.S. degree in chemical
+engineering from Mapua Malayan Colleges Mindanao, Davao City, Philippines, in 2025. He is
+currently pursuing the M.S. degree in chemical engineering with the University of the
+Philippines Diliman, Quezon City, Philippines.
+
+He is a board-certified Chemical Engineer and the developer of the Integrated Process
+Intelligence System (IPIS), an open-source framework for guaranteed-safe, data-driven process
+operation; its companion modules, including a physics-informed drift-adaptive soft sensor,
+similarity-calibrated conformal prognostics, and a composed closed-loop coverage certificate,
+are under review at the Journal of Process Control, Reliability Engineering \& System Safety,
+and Computers \& Chemical Engineering. His research interests include distribution-free
+uncertainty quantification, real-time optimization under uncertainty, and safe data-driven
+control of process systems.
 \end{IEEEbiographynophoto}
 
 \end{document}
