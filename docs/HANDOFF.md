@@ -47,7 +47,7 @@ to a horizon guarantee and moves IPIS off the quasi-static twin. Start a fresh s
 | Paper | Module | Journal | ID | Date | Source |
 |---|---|---|---|---|---|
 | 1 | M1 soft sensor | Journal of Process Control | JPROCONT-D-26-00618 | 2026-06-12 | `paper/` |
-| 2 | M3 RTO (post-selection safety guarantee) | IEEE TCST | 26-0876 (prescreen) | 2026-07-04 | `paper2/tcst/` |
+| 2 | M3 RTO (post-selection safety guarantee) | IEEE TCST | 26-0876 v2, UNDER REVIEW | 2026-07-23 | `paper2/tcst/` |
 | 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04700** | **2026-06-30** | `paper3/` |
 | 4 | M4 integration (composed certificate) | Computers & Chemical Engineering | **CACE-D-26-01079** | **2026-06-30** | `paper4/` |
 
@@ -223,7 +223,7 @@ action is the Module 2 paper draft.**
   guarantee (Theorems 1-2) and RETARGETED to **IEEE Transactions on Control Systems Technology**
   (free at <=12pp, guarantee-friendly community). New title: "Safe real-time optimization under
   unmeasured disturbances: a finite-sample, distribution-free constraint-satisfaction guarantee."
-  Submitted to IEEE TCST as **26-0876** (2026-07-04, status Received / prescreen; Senior Editor Glielmo). Source `paper2/tcst/`; evidence `docs/module3/paper/`.
+  **UNDER REVIEW at IEEE TCST as 26-0876 (Version 2, 2026-07-23).** Senior Editor Luigi Glielmo acknowledged receipt directly and confirmed it is under review as a Full Paper; expected processing 3-4 months (decision window ~Nov 2026). Source `paper2/tcst/`; evidence `docs/module3/paper/`. First IPIS RTO paper to reach actual peer review (JPC and CACE both desk-rejected).
 - **2026-06-23 (cross-ref propagation)** — propagated **CACE-D-26-01040** + new title from `paper2/` into ADR-016, `paper4/references.bib`, `docs/module4/formalization-spike.md`, `src/ipis/integration/health_rto.py`, and the `docs/module3/paper/` working drafts; corrected the §2 vision pointer (Module 2 -> complete, Module 5 -> next). No code or results changed.
 - **Module 2 — Predictive Maintenance (anomaly detection + RUL): COMPLETE.** SCC paper under
   review (JRESS-D-26-04700); built as Modules 2A-2D.
@@ -484,7 +484,7 @@ framework with five modules on a first-principles physics layer:
 1. **Module 1 — Soft Sensor** — real-time prediction of hard-to-measure quality
    variables. **(✅ complete; paper under review, CACE-D-26-00944)**
 2. **Module 2 — Predictive Maintenance** — anomaly detection + RUL. **(✅ complete; paper under review, JRESS-D-26-04700)**
-3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; submitted to IEEE TCST, 26-0876)**
+3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; UNDER REVIEW, IEEE TCST 26-0876 v2)**
 4. **Module 4 — Composed certificate** — the integrated SCC coverage guarantee. **(✅ complete; IECR submission prep)**
 5. **Module 5 — Dynamic / horizon realization** — closed-loop ACI horizon coverage. **(▶ NEXT — experimental backbone complete, paper next)**
 
@@ -1171,6 +1171,30 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-07-23 (26-0876 RESUBMITTED as Version 2 -- CLEARED SCREEN, NOW UNDER REVIEW)** -- Version 2
+  uploaded to PaperPlaza with the mandatory author's response file; status Received, and Senior
+  Editor Luigi Glielmo acknowledged receipt directly, confirming it is under review as a Full Paper
+  with expected processing of 3-4 months (decision window ~Nov 2026). **This is the first IPIS RTO
+  paper to reach actual peer review**: JPROCONT-D-26-00565 (significance) and CACE-D-26-01040
+  (novelty) both died at desk without reviewers, and 26-0876 v1 was returned by the editorial office
+  on administrative defects. Both v1 defects were fixed and nothing else was touched (one-shot rule):
+  author name now matches the IEEE database for PIN 252713 exactly (Bien Don Busico) and affiliation
+  corrected to "Mapua Malayan Colleges Mindanao"; Figs. 1-3 regenerated at native IEEE dimensions
+  (F1 7.16in two-column figure*, F3/F7 3.5in single column), 600 dpi, labels >=8pt at final size,
+  with F1 blocks auto-sized around their measured text so overflow is structurally impossible and
+  zero label collisions verified programmatically against rendered geometry; block detail moved to
+  the F1 caption; author biography + photograph added per the IEEEtran template; one Theorem 2
+  display equation split to clear an overfull line. Final build: 7pp, 0 errors, 0 undefined
+  citations. **REUSABLE IEEE SUBMISSION CHECKLIST (apply to M5 at TCST):** (1) template via
+  template-selector.ieee.org -> Transactions/Journals/Letters -> IEEE TCST -> Original Research ->
+  LaTeX (bundle ships IEEEtran.cls but NOT IEEEtran.bst; extract the .bst from texlive-publishers);
+  (2) `\documentclass[journal]{IEEEtran}`, `\usepackage{cite}` + IEEEtran.bst, `\markboth` running
+  heads, `\pdfminorversion=4`, `\usepackage[T1]{fontenc}`; (3) author name and affiliation must
+  match the PaperPlaza database record CHARACTER FOR CHARACTER; (4) draw figures at NATIVE printed
+  width (7.16in span / 3.5in column) at 600 dpi, never scale down; (5) include biography + photo
+  (`\IEEEbiography[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{photo.jpg}}]`);
+  (6) <=12pp keeps the paper free ($125/page over); (7) on any resubmission the author's response
+  file is MANDATORY (single PDF, <=4MB).
 - **2026-07-15 (26-0876 returned for clarification -- fixed, resubmission pack ready)** -- TCST
   editorial office unsubmitted 26-0876 (NOT a rejection; deadline 2026-07-29, ONE resubmission
   allowed). Two defects: (1) author name mismatch: PDF said "Bien Busico", IEEE database (PIN
