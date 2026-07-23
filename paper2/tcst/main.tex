@@ -285,10 +285,11 @@ Let $u^\star$ be produced by any selection rule using a dataset $D_n$.
 $z_1',\dots,z_m'\stackrel{\text{iid}}{\sim}\mathcal F_\sigma$ independent of $D_n$, and set the
 back-off at $u^\star$ to the split-conformal quantile \eqref{eq:quantile} of the fresh residuals
 $\{g(u^\star,z_j')-\hat g(u^\star)\}_{j=1}^m$. Then under Assumption~\ref{ass:exch},
-\[
-\mathbb P\big[g(u^\star,z)\le\hat g(u^\star)+C(u^\star)\big]\ge
-\frac{\lceil(1-\alpha)(m+1)\rceil}{m+1}\ge 1-\alpha,
-\]
+\begin{align*}
+\mathbb P\big[g(u^\star,z)\le\hat g(u^\star)+C(u^\star)\big]
+&\ge \frac{\lceil(1-\alpha)(m+1)\rceil}{m+1}\\
+&\ge 1-\alpha,
+\end{align*}
 so $M(u^\star)\le\alpha$, distribution-free and finite-sample.
 \item[(b)] \emph{Data-reuse, uniform calibration.} Suppose instead the same $D_n$ builds
 $C(\cdot)$ within a back-off class $\mathcal C$ of covering number $N(\mathcal C,\varepsilon)$ and
@@ -358,7 +359,7 @@ which is the empirical face of Corollary~\ref{cor:kappa}.
 \caption{Chance-constrained RTO with a conformal constraint back-off. The nominal model and the
 back-off feed the optimizer, which sets $(R,D)$ on the twin. The constrained bottoms composition
 $x_B$ is not measured online; a closed-loop soft-sensor feedback path (grey, dashed) is left to
-future work.}
+future work. The back-off $C(u)$ is one of the fixed, normalized, or CQR constructions of Section~\ref{sec:methods-backoffs}; the twin is a nine-stage binary n-butane/n-hexane column.}
 \label{fig:rto}
 \end{figure*}
 
@@ -549,7 +550,7 @@ conditional calibration a general design requirement for safe data-driven optimi
 \bibliography{references}
 
 \vspace{-0.8em}
-\begin{IEEEbiographynophoto}{Bien Don Busico}
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{bio_busico.jpg}}]{Bien Don Busico}
 was born in Butuan City, Philippines, in 2000. He received the B.S. degree in chemical
 engineering from Mapua Malayan Colleges Mindanao, Davao City, Philippines, in 2025. He is
 currently pursuing the M.S. degree in chemical engineering with the University of the
@@ -563,6 +564,6 @@ are under review at the Journal of Process Control, Reliability Engineering \& S
 and Computers \& Chemical Engineering. His research interests include distribution-free
 uncertainty quantification, real-time optimization under uncertainty, and safe data-driven
 control of process systems.
-\end{IEEEbiographynophoto}
+\end{IEEEbiography}
 
 \end{document}
