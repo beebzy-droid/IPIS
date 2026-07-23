@@ -1,0 +1,579 @@
+%% Safe RTO under unmeasured disturbances -- IEEE TCST submission (double-column, <=12 pp)
+%% Compile on Overleaf: pdflatex -> bibtex -> pdflatex x2. IEEEtran.cls + IEEEtran.bst are native there.
+\documentclass[journal]{IEEEtran}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{cite}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+
+\begin{document}
+\begin{center}
+{\LARGE \textbf{Safe Real-Time Optimization Under Unmeasured Disturbances: A Finite-Sample, Distribution-Free Constraint-Satisfaction Guarantee}}
+
+\vspace{6pt}
+{\large Bien Don Busico}
+
+Mapua Malayan Colleges Mindanao, Davao City, Philippines
+
+bienbusico@gmail.com
+\end{center}
+
+%%TITLEBLOCK%%
+
+
+\title{Safe Real-Time Optimization Under Unmeasured Disturbances:\\
+A Finite-Sample, Distribution-Free Constraint-Satisfaction Guarantee}
+
+\author{Bien Don Busico \\ Mapua Malayan Colleges Mindanao, Davao City, Philippines \\ bienbusico@gmail.com}
+
+
+\maketitle
+
+\begin{abstract}
+Real-time optimization (RTO) drives a process against a product-quality constraint it cannot
+measure online, so it must subtract a back-off from the specification. Conformal prediction is
+an attractive, distribution-free way to size that back-off from data, yet we prove that the
+guarantee it provides does not survive the optimization. We show that an RTO respecting a
+marginally valid conformal back-off carries no coverage guarantee at the operating point it
+selects: the realized constraint-violation probability can exceed the nominal level by an
+arbitrary factor, because the optimizer settles on the active boundary where the margin is
+least conservative relative to the local risk. This is a constraint-space analogue of the
+winner's curse. We then prove that conditional calibration restores a finite-sample,
+distribution-free guarantee. An a-posteriori recalibration at the selected point achieves exact
+validity, and, when fresh calibration data at that point are unavailable, a calibration made
+uniform over the decision set guarantees a realized violation no worse than the nominal level
+plus a term of order $\sqrt{d/n}$ that is small for the low-dimensional decisions typical of
+RTO. On a rigorous DWSIM Peng-Robinson debutanizer twin, a marginally valid back-off realizes
+roughly five times the nominal violation, the conditional method tracks a plant-aware oracle at
+near-oracle profit, and the a-posteriori inflation factor is an interpretable data-adequacy
+diagnostic that bounds the safe operating regime.
+\end{abstract}
+
+\noindent\textbf{Index Terms---}
+Real-time optimization, chance-constrained control, conformal prediction, safe learning,
+constraint back-off, distribution-free guarantees, process control.
+
+
+
+
+\section{Introduction}
+\label{sec:intro}
+
+Real-time optimization (RTO) recomputes the operating point of a process to
+maximize an economic objective as conditions drift. Its value comes from pushing the process
+against its constraints; a distillation column earns more as it drives a product composition to
+the edge of specification. The constraints that matter most, however, are often on quality
+variables that are not measured online. A laboratory assay or an inferential estimate stands in
+for a true composition the controller never sees in real time. To operate safely against such a
+constraint, an RTO must subtract a \emph{back-off} from the specification: a margin that absorbs
+the gap between the model's nominal prediction and the realized quality under an unmeasured
+disturbance. Sizing that margin is the central difficulty of RTO under uncertainty. Set it too
+small and the process violates specification whenever the disturbance is adverse; set it too
+large and the economic benefit of the optimization is given away.
+
+Conformal prediction is an appealing tool for the job. It turns any predictor into an interval
+with a finite-sample, distribution-free coverage guarantee, assuming only that the data are
+exchangeable, with no Gaussian residuals and no parametric disturbance law
+\cite{vovk2005,lei2018,angelopoulos2023}. Taking the upper edge of a conformal interval as the
+back-off appears to deliver exactly what a chance constraint asks: coverage of the realized
+quality at the nominal level, learned from data. This paper shows that the guarantee does not
+survive contact with the optimizer, and it supplies a back-off construction, with proof, that
+restores it.
+
+The failure is structural. A conformal margin guarantees coverage \emph{on average} over the
+calibration distribution of operating points, but the optimizer does not sample that
+distribution. It deliberately seeks the boundary of the feasible region, where the margin is
+tightest relative to the local risk and therefore where coverage is worst. The argmax is a
+selection operator, and it selects for under-coverage. The conformal-predictive-programming
+literature \cite{zhao2024cpp} observed abstractly that a decision optimized against sampled
+constraints is no longer independent of them; our concern is the concrete consequence for a
+control layer, namely a safety hazard of provable and quantified severity, and the construction
+that removes it. Theorem~\ref{thm:vacuous} shows that marginal validity implies \emph{no}
+nontrivial bound on the realized violation at the selected operating point. This is a
+constraint-space analogue of the winner's curse in post-selection inference.
+
+What repairs it is conditional validity, and we prove two guarantees for it
+(Theorem~\ref{thm:repair}). A back-off recalibrated a-posteriori at the selected operating point,
+with an independent calibration batch, achieves exact finite-sample validity because the
+selection is then independent of the calibration data. When such a batch is unavailable and the
+same historical data must serve both optimization and calibration, a calibration made uniform
+over the decision set restores validity up to a term of order $\sqrt{d/n}$, which is small for
+the low-dimensional decisions characteristic of RTO. A back-off built from conformalized quantile
+regression \cite{romano2019} is the practical route to this conditional target, and the
+a-posteriori inflation factor it requires is an observable diagnostic of calibration adequacy
+(Corollary~\ref{cor:kappa}).
+
+We demonstrate the theory on a rigorous DWSIM Peng-Robinson debutanizer twin. A marginally valid
+back-off, including a locally adaptive heteroscedastic one, realizes roughly five times the
+nominal violation across the disturbance range; a plant-aware oracle holds the target by
+construction, confirming that the failure lies in the back-off and not in the chance-constrained
+formulation; the conditional method tracks the oracle at near-oracle profit; and the inflation
+factor climbs from near unity to nearly sixfold before the method exhausts its calibration data,
+bounding the safe operating regime. We are explicit that the contribution is calibrated safety,
+not profit: at a well-controlled feed every method earns within half a percent of the
+deterministic optimum, so the value of the method is the violation it removes.
+
+The contributions are as follows.
+\begin{itemize}
+\item \textbf{C1.} We prove that optimizing against a marginally valid conformal back-off carries
+no coverage guarantee at the selected operating point: the realized violation can exceed the
+nominal level by an arbitrary factor (Theorem~\ref{thm:vacuous}).
+\item \textbf{C2.} We prove that conditional calibration restores a finite-sample,
+distribution-free guarantee: a-posteriori recalibration achieves exact validity, and uniform
+calibration guarantees a realized violation of at most the nominal level plus an
+$O(\sqrt{d/n})$ term (Theorem~\ref{thm:repair}), and we tie the required inflation factor to
+calibration adequacy (Corollary~\ref{cor:kappa}).
+\item \textbf{C3.} We validate the theory on a rigorous distillation RTO twin, quantifying the
+fivefold failure of marginal back-offs, the near-oracle safety and profit of the conditional
+method, and the inflation factor as a data-adequacy diagnostic that bounds the safe regime.
+\end{itemize}
+
+The remainder of the paper is organized as follows. Section~\ref{sec:methods} formalizes the
+chance-constrained RTO and the conformal back-offs. Section~\ref{sec:theory} proves the selection
+effect and its repair. Section~\ref{sec:case} describes the twin and the experimental design,
+Section~\ref{sec:results} reports the results, and Section~\ref{sec:discussion} draws the design
+rule, the limitations, and the bridge to a closed-loop realization.
+
+\subsection{Related work}
+\label{sec:related}
+RTO under uncertainty classically addresses plant-model mismatch through modifier adaptation,
+which corrects the optimizer with measured gradients \cite{marchetti2009,chachuat2009}, and
+through chance-constrained programming, which bounds constraint violation under an assumed
+disturbance law \cite{li2008,bradford2019,bradford2020}. Both presuppose a model of the
+uncertainty. Conformal prediction removes that assumption, guaranteeing finite-sample coverage
+under exchangeability alone \cite{vovk2005,lei2018,angelopoulos2023}, with conditional and
+covariate-shift extensions \cite{romano2019,gibbs2021,gibbscherian2023,tibshirani2019,barber2023}.
+Its use inside optimization is recent \cite{zhao2024cpp,zhang2024}: conformal predictive
+programming recognizes that optimization couples the decision to the sampled constraints. We
+contribute the control-theoretic consequence of that coupling, a proof that marginal back-offs
+are unsafe at the optimum, and a proven repair with an accompanying diagnostic.
+
+\section{Problem Formulation and Conformal Back-Offs}
+\label{sec:methods}
+
+\subsection{Chance-constrained RTO under an unmeasured disturbance}
+\label{sec:methods-rto}
+We consider steady-state RTO of a distillation column whose product-quality constraint cannot be
+measured online (Fig.~\ref{fig:rto}). The decision is the operating point $u=(R,D)$, with $R$ the
+reflux ratio and $D$ the distillate molar flow; the admissible set is the box
+$\mathcal U=[0.8,3.0]\times[33,37]$, with $D$ in kmol\,h$^{-1}$. The plant is subject to an
+exogenous disturbance $z$, the feed light-key (n-butane) mole fraction, neither manipulated nor
+measured in real time, modeled as a truncated normal
+$z\sim\mathcal F_\sigma=\mathcal N(z_0,\sigma_z^2)|_{[z_{\mathrm{lo}},z_{\mathrm{hi}}]}$ with
+$z_0=0.35$, $[z_{\mathrm{lo}},z_{\mathrm{hi}}]=[0.30,0.40]$, and $\sigma_z$ the disturbance
+magnitude (swept in Section~\ref{sec:case}; the operationally realistic value is
+$\sigma_z\approx0.006$).
+
+The constrained quantity is the bottoms light-key composition $g(u,z)=x_B(R,D,z)$, which must
+satisfy $g(u,z)\le\bar g$ with $\bar g=0.02$. Because $g$ is unmeasured, the optimizer sees only a
+nominal model $\hat g(u)=x_B(R,D,z_0)$. The economic objective $\pi(u)$ is an operating profit
+with two product streams valued by mass less the reboiler energy
+(Section~\ref{sec:methods-twin}). The principled formulation is a chance constraint,
+\begin{equation}
+\max_{u\in\mathcal U}\;\pi(u)\quad\text{s.t.}\quad
+\mathbb{P}_{z\sim\mathcal F_\sigma}\!\left[\,g(u,z)\le\bar g\,\right]\ge 1-\alpha,
+\label{eq:chance}
+\end{equation}
+with miss level $\alpha=0.10$. Writing $Q^z_{1-\alpha}[g(u,\cdot)]$ for the $(1-\alpha)$-quantile
+of $g(u,z)$, \eqref{eq:chance} is equivalent to $Q^z_{1-\alpha}[g(u,\cdot)]\le\bar g$. RTO has no
+access to this quantile, so it enforces a surrogate by subtracting a back-off $C(u)\ge0$ from the
+spec applied to the nominal model,
+\begin{equation}
+\max_{u\in\mathcal U}\;\pi(u)\quad\text{s.t.}\quad \hat g(u)+C(u)\le\bar g .
+\label{eq:backoff}
+\end{equation}
+The entire content of an uncertainty-aware RTO lies in how $C(u)$ is constructed: the back-off is
+correct when $\hat g(u)+C(u)\ge Q^z_{1-\alpha}[g(u,\cdot)]$, so that any $u$ feasible in
+\eqref{eq:backoff} is feasible in \eqref{eq:chance}.
+
+A benchmark is the oracle. Because $g(u,z)$ is monotone increasing in $z$ at every $u$ (verified
+on the twin), the conditional quantile collapses to $Q^z_{1-\alpha}[g(u,\cdot)]=g(u,z_{1-\alpha})$
+with $z_{1-\alpha}=\mathcal F_\sigma^{-1}(1-\alpha)$, giving the oracle back-off
+$C_{\mathrm{orc}}(u)=[g(u,z_{1-\alpha})-\hat g(u)]_+$. The oracle needs the true plant response and
+is not deployable; it makes the realized violation at any active optimum equal to $\alpha$, which
+we use to confirm the chance-constraint machinery is sound.
+
+\subsection{Conformal constraint back-offs}
+\label{sec:methods-backoffs}
+Assume a calibration set of plant evaluations $\{(u_i,z_i,g_i)\}_{i=1}^n$ with
+$u_i\sim\mathrm{Unif}(\mathcal U)$, $z_i\sim\mathcal F_\sigma$, $g_i=g(u_i,z_i)$; in deployment
+these are historical operating records. Define residuals $r_i=g_i-\hat g(u_i)$. For a one-sided
+upper bound at level $1-\alpha$, the split-conformal quantile of scores $\{s_i\}$ is the order
+statistic
+\begin{equation}
+\widehat Q_{1-\alpha}(\{s_i\})=s_{(k)},\qquad k=\lceil(n+1)(1-\alpha)\rceil,
+\label{eq:quantile}
+\end{equation}
+which is $+\infty$ if $k>n$. We compare four constructions of $C(u)$, all floored at zero. The
+\emph{fixed} margin ignores the operating point, $C_{\mathrm{fix}}=\widehat Q_{1-\alpha}(\{r_i\})$;
+it is marginally valid but spends the same margin everywhere. The \emph{normalized}, locally
+adaptive back-off scales the score by a Gaussian-process spread estimate $\hat s(u)$ fit to
+$\{|r_i|\}$ \cite{lei2018},
+$C_{\mathrm{nrm}}(u)=\widehat Q_{1-\alpha}(\{r_i/\hat s(u_i)\})\,\hat s(u)$; it is the back-off a
+soft-sensor interval supplies, marginally but not conditionally valid. \emph{Conformalized
+quantile regression} (CQR) \cite{romano2019} is the conditional construction: fit a
+gradient-boosted quantile regressor $\hat q_{1-\alpha}(u)$, form scores
+$E_i=g_i-\hat q_{1-\alpha}(u_i)$, and set
+$C_{\mathrm{cqr}}(u)=[\hat q_{1-\alpha}(u)+\widehat Q_{1-\alpha}(\{E_i\})-\hat g(u)]_+$. Because
+$\hat q_{1-\alpha}(u)$ estimates the conditional quantile at each $u$, $C_{\mathrm{cqr}}$ tracks
+the local risk, and the conformal correction restores finite-sample marginal validity on top.
+
+\section{The Selection Effect and Its Repair}
+\label{sec:theory}
+
+This section makes precise the failure of marginal back-offs under optimization and proves that
+conditional calibration repairs it. Throughout, let
+$M(u)\triangleq\mathbb{P}_{z\sim\mathcal F_\sigma}[g(u,z)>\hat g(u)+C(u)]$ be the realized
+\emph{miss} of the back-off at $u$. Because any $u$ feasible in \eqref{eq:backoff} satisfies
+$\hat g(u)+C(u)\le\bar g$, the event $\{g(u,z)>\bar g\}$ is contained in
+$\{g(u,z)>\hat g(u)+C(u)\}$, so the specification-violation probability is bounded by the miss,
+$\mathbb P_z[g(u,z)>\bar g]\le M(u)$. Controlling $M$ at the selected point controls the chance
+constraint \eqref{eq:chance}.
+
+\begin{definition}[Marginal and conditional validity]
+A back-off $C$ is \emph{marginally valid} at level $\alpha$ over a reference distribution $\rho$
+on $\mathcal U$ if $\mathbb E_{u\sim\rho}[M(u)]\le\alpha$. It is \emph{conditionally valid} at
+level $\alpha$ on $\mathcal S\subseteq\mathcal U$ if $M(u)\le\alpha$ for every $u\in\mathcal S$.
+\end{definition}
+
+Split and normalized conformal back-offs are marginally valid by construction
+\cite{vovk2005,lei2018}, but the conditional miss varies over $\mathcal U$
+\cite{gibbscherian2023}. The next result shows this gap is a safety failure once an optimizer is
+in the loop.
+
+\begin{theorem}[Marginal validity is vacuous at the optimum]
+\label{thm:vacuous}
+Fix $\alpha\in(0,1)$. For every $\kappa\in[1,1/\alpha]$ there is an instance $(g,\hat g,\pi,C)$
+with $C$ marginally valid at level $\alpha$ over $\rho=\mathrm{Unif}(\mathcal U)$ for which the RTO
+solution $u^\star=\arg\max_{u\in\mathcal U}\{\pi(u):\hat g(u)+C(u)\le\bar g\}$ satisfies
+$M(u^\star)=\kappa\alpha$. Consequently marginal validity alone implies no bound on $M(u^\star)$
+tighter than the trivial $M(u^\star)\le1$.
+\end{theorem}
+
+\begin{proof}
+Partition $\mathcal U=A\cup B$ with $\rho(A)=1/\kappa\in[\alpha,1]$, admissible since
+$\kappa\in[1,1/\alpha]$. The miss $M(u)$ is continuous and strictly decreasing in $C(u)$ from
+$\mathbb P_z[g(u,z)>\hat g(u)]$ to $0$; choose $C$ so that $M(u)=\kappa\alpha$ on $A$ (attainable
+whenever $\kappa\alpha\le1$) and $M(u)=0$ on $B$. Then
+$\mathbb E_{u\sim\rho}[M(u)]=\rho(A)\kappa\alpha+\rho(B)\cdot0=\alpha$, so $C$ is marginally valid.
+Place the profit so its constrained maximizer lies in $A$: set $\hat g(u)+C(u)=\bar g-\epsilon$ on
+$A$ with $\pi$ increasing toward that boundary and strictly smaller on $B$. Then $u^\star\in A$ and
+$M(u^\star)=\kappa\alpha$. As $\kappa$ ranges over $[1,1/\alpha]$ with $\kappa\alpha\le1$, no bound
+better than $M(u^\star)\le1$ follows.
+\end{proof}
+
+Theorem~\ref{thm:vacuous} is the winner's curse in constraint space. The optimizer takes, among
+points feasible under the back-off, the most profitable, which presses hardest on the spec where
+the margin is tightest relative to the local risk; averaging coverage over $\mathcal U$ hides that
+point. The fivefold inflation reported in Section~\ref{sec:results} is one realization, and it is
+not cured by an adaptive width, because a smooth heteroscedastic scale still leaves pockets of
+under-coverage the optimizer finds. The repair is to control the conditional miss at the selected
+point. We give two guarantees, according to whether fresh calibration data can be obtained there.
+
+\begin{assumption}[Exchangeable calibration]
+\label{ass:exch}
+For a fixed operating point $u$, the calibration disturbances and the deployment disturbance are
+i.i.d.\ draws from $\mathcal F_\sigma$. Residuals are almost surely finite.
+\end{assumption}
+
+\begin{theorem}[Conditional calibration restores finite-sample validity]
+\label{thm:repair}
+Let $u^\star$ be produced by any selection rule using a dataset $D_n$.
+\begin{enumerate}
+\item[(a)] \emph{A-posteriori recalibration.} Draw a fresh sample
+$z_1',\dots,z_m'\stackrel{\text{iid}}{\sim}\mathcal F_\sigma$ independent of $D_n$, and set the
+back-off at $u^\star$ to the split-conformal quantile \eqref{eq:quantile} of the fresh residuals
+$\{g(u^\star,z_j')-\hat g(u^\star)\}_{j=1}^m$. Then under Assumption~\ref{ass:exch},
+\begin{align*}
+\mathbb P\big[g(u^\star,z)\le\hat g(u^\star)+C(u^\star)\big]
+&\ge \frac{\lceil(1-\alpha)(m+1)\rceil}{m+1}\\
+&\ge 1-\alpha,
+\end{align*}
+so $M(u^\star)\le\alpha$, distribution-free and finite-sample.
+\item[(b)] \emph{Data-reuse, uniform calibration.} Suppose instead the same $D_n$ builds
+$C(\cdot)$ within a back-off class $\mathcal C$ of covering number $N(\mathcal C,\varepsilon)$ and
+selects $u^\star$. Calibrate $C$ so the empirical miss on $D_n$ is at most $\alpha-\Delta$
+uniformly over $\mathcal U$, with
+\[
+\Delta=\sqrt{\frac{\log N(\mathcal C,\varepsilon)+\log(2/\delta)}{2n}}+\varepsilon L,
+\]
+where $L$ is a Lipschitz constant of $u\mapsto M(u)$. Then with probability at least $1-\delta$
+over $D_n$, $M(u^\star)\le\alpha$ simultaneously for every $u^\star\in\mathcal U$, hence for the
+data-selected optimum.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) Conditional on $D_n$, the point $u^\star$ is fixed and independent of the fresh sample, so the
+residuals $R_j'=g(u^\star,z_j')-\hat g(u^\star)$ and the deployment residual
+$R'=g(u^\star,z)-\hat g(u^\star)$ are i.i.d.\ by Assumption~\ref{ass:exch}. Split-conformal
+validity \cite{vovk2005,lei2018} gives $\mathbb P[R'\le R_{(k)}']\ge k/(m+1)$ with
+$k=\lceil(1-\alpha)(m+1)\rceil$; taking $C(u^\star)=R_{(k)}'$ and complementing gives the claim.
+The selection is independent of the calibration sample and does not enter.
+
+(b) Let $\widehat M(u)=\frac1n\sum_{i=1}^n\mathbf 1\{g(u_i,z_i)>\hat g(u_i)+C(u_i)\}$ be the
+empirical miss and $M(u)$ its population value. Over an $\varepsilon$-cover of $\mathcal C$ of size
+$N(\mathcal C,\varepsilon)$, Hoeffding's inequality and a union bound give, with probability
+$\ge1-\delta$, $\sup_{C\in\mathcal C}|\widehat M-M|\le\sqrt{(\log N(\mathcal C,\varepsilon)+
+\log(2/\delta))/(2n)}$; Lipschitz continuity of $M$ adds the discretization term $\varepsilon L$,
+so $\sup_{u\in\mathcal U}|\widehat M(u)-M(u)|\le\Delta$. Calibrating $\widehat M(u)\le\alpha-\Delta$
+for all $u$ yields $M(u)\le\alpha$ for all $u$, hence for $u^\star\in\mathcal U$ regardless of how
+it was chosen from $D_n$.
+\end{proof}
+
+For the low-dimensional decisions typical of RTO, $u\in\mathbb R^d$ with small $d$ and a
+finite-dimensional back-off class, $\log N(\mathcal C,\varepsilon)=O(d\log(1/\varepsilon))$, so
+optimizing $\varepsilon$ gives $\Delta=\tilde O(\sqrt{d/n})$: the uniform guarantee costs only a
+mild inflation of the calibration level (here $d=2$). Part~(a) is the tighter route when the plant
+can be run at $u^\star$ to collect a calibration batch before committing; part~(b) is the
+guarantee when only historical design data are available. The CQR back-off of
+Section~\ref{sec:methods-backoffs} is the practical instantiation, targeting the conditional
+quantile so the systematic selection gap of Theorem~\ref{thm:vacuous} vanishes and only the
+finite-sample term remains.
+
+\begin{corollary}[The inflation factor as a data-adequacy diagnostic]
+\label{cor:kappa}
+Let $C_0$ be the conditional back-off and
+$\kappa^\star=\min\{\kappa\ge1:M(u^\star(\kappa))\le\alpha\}$ the smallest multiplier of $C_0$ that
+certifies the target at the resolved optimum
+$u^\star(\kappa)=\arg\max_u\{\pi(u):\hat g(u)+\kappa C_0(u)\le\bar g\}$. Then $\kappa^\star\to1$ when
+$C_0$ is already conditionally valid (Theorem~\ref{thm:repair} with $\Delta\to0$), $\kappa^\star$
+increases as the calibration sample shrinks relative to the disturbance spread, and the instance
+is certifiably infeasible when no finite $\kappa$ attains $M\le\alpha$. Thus $\kappa^\star$ is an
+observable surrogate for the calibration adequacy $\Delta$.
+\end{corollary}
+
+Operationally, $\kappa^\star$ is found by the a-posteriori search: after solving \eqref{eq:backoff}
+with $C_0$, inflate the back-off by $\kappa$, re-solve, and take the smallest $\kappa$ whose
+resolved optimum meets the target on held-out data, using a fixed validation sample so the search
+is monotone and deterministic and an independent test sample for the reported violation; when even
+the largest feasible $\kappa$ violates, the instance is declared infeasible, the honest outcome
+when the data cannot certify the target. Section~\ref{sec:results} shows $\kappa^\star$ climbing
+from near unity to nearly sixfold before the conditional method exhausts its calibration data,
+which is the empirical face of Corollary~\ref{cor:kappa}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/F1_rto_loop.png}
+\caption{Chance-constrained RTO with a conformal constraint back-off. The nominal model and the
+back-off feed the optimizer, which sets $(R,D)$ on the twin. The constrained bottoms composition
+$x_B$ is not measured online; a closed-loop soft-sensor feedback path (grey, dashed) is left to
+future work. The back-off $C(u)$ is one of the fixed, normalized, or CQR constructions of Section~\ref{sec:methods-backoffs}; the twin is a nine-stage binary n-butane/n-hexane column.}
+\label{fig:rto}
+\end{figure}
+
+\section{Process Twin and Experimental Design}
+\label{sec:case}
+
+The plant is a rigorous DWSIM 9.0.5 model of a debutanizer \cite{dwsim}, reduced to the binary
+n-butane/n-hexane system (light key and stabilized-gasoline proxy) under the Peng-Robinson
+equation of state \cite{peng1976}, with nine equilibrium stages (condenser indexed $0$, reboiler
+$8$), feed on stage $4$, top pressure $4.7$\,bar, a $0.4$\,bar column drop, and feed
+$100$\,kmol\,h$^{-1}$. The model is driven from Python through DWSIM's automation interface; a
+feed-composition campaign over a grid in $(z,R,D)$ yields the plant evaluations. The binary
+reduction keeps every twin state checkable against first-principles vapor-liquid equilibrium and
+matches the soft-sensor physics proxy of the companion work \cite{companion2026}.
+
+Two Gaussian-process surfaces stand in for the plant in \eqref{eq:backoff}. The truth surface
+$g(u,z)=x_B(R,D,z)$ is fit on the full campaign and supplies the realized bottoms composition used
+to score violations and define the oracle; the nominal surfaces $\hat g(u)$, distillate purity,
+and reboiler duty are fit on the nominal ($z_0=0.35$) sweep and define the optimizer's model and
+objective. All GPs use a Mat\'ern-$5/2$ kernel on standardized inputs with a
+maximum-a-posteriori regularization of the log-hyperparameters and a fixed optimizer seed for
+reproducibility. Operating profit values the overhead at the light-key (LPG) price and the bottoms
+at the stabilized-gasoline price, both by mass, less the reboiler energy cost; because gasoline
+outvalues the light key per unit mass, profit rises as the column rides the bottoms-composition
+spec from below, making the constraint economically active and the back-off width a direct cost.
+
+We sweep the disturbance magnitude $\sigma_z\in\{0.006,0.010,0.015,0.020,0.025\}$, from the
+operationally realistic $0.006$ to more than four times that, and for each solve \eqref{eq:backoff}
+with the fixed, normalized, CQR, and oracle back-offs at $\alpha=0.10$. Realized violation is a
+Monte-Carlo estimate on an independent test disturbance sample; the a-posteriori inflation uses a
+separate validation sample.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{The selection effect is real and large}
+The normalized back-off, marginally valid and adaptive in width, is the method a soft-sensor
+interval would supply. Under optimization it realizes a violation of $0.429$ at the realistic
+disturbance, rising to $0.488$ across the range, roughly five times the $0.10$ target
+(Fig.~\ref{fig:violation}, Table~\ref{tab:regime}). The optimizer settles in the low-$D$ corner
+near $R\approx2.83$, $D\approx33.7$, close to the deterministic optimum, precisely where the
+adaptive margin under-covers the conditional quantile. The fixed margin over-violates more
+modestly, between $0.11$ and $0.19$, and becomes infeasible beyond $\sigma_z=0.010$ as the spec
+back-off it must add exceeds the achievable range. This is Theorem~\ref{thm:vacuous} in the data: marginal validity does not
+transfer to the selected operating point.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/F3_violation_vs_sigma.png}
+\caption{Realized constraint-violation rate versus disturbance magnitude $\sigma_z$ for the four
+back-offs, with the nominal target $\alpha=0.10$ and the realistic $\sigma_z$ marked. Marginal
+back-offs (fixed, normalized) violate well above target; CQR with a-posteriori calibration tracks
+the oracle. Shaded band is the Monte-Carlo uncertainty.}
+\label{fig:violation}
+\end{figure}
+
+\subsection{The oracle isolates the cause}
+The oracle back-off, which knows the true conditional quantile, holds the realized violation at
+$0.079$ at the realistic disturbance and near $\alpha$ throughout, at a setpoint that backs the
+column off to $R=3.00$, $D=34.3$. Because the oracle satisfies the chance constraint by
+construction while the marginal methods do not, the failure lies in the back-off, not in the
+chance-constrained formulation \eqref{eq:chance}. This is the empirical counterpart of the
+oracle's role in the theory.
+
+\subsection{Conditional calibration restores safety at near-oracle profit}
+The CQR back-off with a-posteriori calibration holds the realized violation between $0.063$ and
+$0.105$ for $\sigma_z\le0.020$, within about $0.01$ of the target and of the oracle, backing the
+setpoint from $D\approx34.3$ at $\sigma_z=0.006$ to $D\approx36.6$ at $\sigma_z=0.020$ as the
+disturbance grows. Where the conditional quantile alone is slightly optimistic, the a-posteriori
+step closes the gap: at $\sigma_z=0.006$ an inflation $\kappa^\star=1.53$ restores the target. This
+is Theorem~\ref{thm:repair} in the data, with the CQR construction supplying conditional validity
+and the a-posteriori step supplying the residual finite-sample correction.
+
+\subsection{The inflation factor bounds the safe regime}
+The method is not unconditionally safe, and the inflation factor is the signal
+(Fig.~\ref{fig:kappa}). Because the calibration budget scales with the disturbance
+($n_{\mathrm{cal}}=1500\max(1,\sigma_z/0.006)$), $\kappa^\star$ does not climb monotonically; it is
+near unity where the conditional quantile is adequate, rises where it is locally optimistic
+($\kappa^\star=1.53$ at $\sigma_z=0.006$ and $\kappa^\star=5.78$ at $\sigma_z=0.015$), and at
+$\sigma_z=0.025$, more than four times the realistic disturbance, no finite inflation certifies the
+target and the instance is declared infeasible. Its excursions and the terminal infeasibility both
+mark where the conditional estimate can no longer certify safety, making data inadequacy a readable
+property of the method rather than a silent failure, as Corollary~\ref{cor:kappa} predicts.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\linewidth]{figures/F7_kappa_vs_sigma.png}
+\caption{A-posteriori inflation factor $\kappa^\star$ for the CQR method versus $\sigma_z$. The
+margin is stretched (rising $\kappa^\star$) before the method becomes infeasible; the dashed
+horizontal line marks $\kappa^\star=1$ (no tightening). This makes
+$\kappa^\star$ a data-adequacy diagnostic.}
+\label{fig:kappa}
+\end{figure}
+
+\subsection{Calibrated safety, not profit}
+At the realistic disturbance every method lies within half a percent of the deterministic
+optimum in profit (Table~\ref{tab:regime}); the constraint is barely active there, so there is
+little profit to separate the methods. The value of the conditional method is therefore the
+violation it removes, not any profit it adds: it converts a fivefold constraint breach into a
+calibrated one at negligible economic cost.
+
+\subsection{Twin validation and reproducibility}
+The truth surface is validated by leave-one-feed-composition-out interpolation, fitting on all
+$z\neq0.375$ and predicting the held-out $z=0.375$ slice, giving $R^2=0.917$ and a mean absolute
+error of $0.0053$ in $x_B$, comfortably below the specification. Monte-Carlo estimation moves
+individual violation rates by at most $\pm0.01$ to $0.02$ across platforms while leaving the regime
+structure, the fivefold failure, and the data-starvation boundary intact.
+
+\begin{table}[t]
+\centering
+\caption{Regime map over disturbance magnitude $\sigma_z$. For each method: operating profit
+(USD\,h$^{-1}$), realized violation $\hat v$, a-posteriori inflation $\kappa^\star$, and setpoint
+$(R^\star,D^\star)$. INF denotes an infeasible instance; the realistic disturbance is
+$\sigma_z=0.006$.}
+\label{tab:regime}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+$\sigma_z$ & method & profit & $\hat v$ & $\kappa^\star$ & $R^\star$ & $D^\star$ \\
+\midrule
+0.006 & fixed       & 5381 & 0.167 & 1.00 & 3.00 & 34.1 \\
+      & normalized  & 5394 & 0.449 & 1.00 & 2.83 & 33.7 \\
+      & CQR         & 5376 & 0.101 & 1.53 & 3.00 & 34.3 \\
+      & oracle      & 5374 & 0.079 & 1.00 & 3.00 & 34.3 \\
+\midrule
+0.010 & fixed       & 5356 & 0.112 & 1.00 & 2.93 & 34.8 \\
+      & normalized  & 5396 & 0.488 & 1.00 & 2.93 & 33.7 \\
+      & CQR         & 5335 & 0.066 & 1.00 & 2.60 & 35.3 \\
+      & oracle      & 5351 & 0.106 & 1.00 & 2.80 & 34.9 \\
+\midrule
+0.015 & fixed       & ---  & INF   & ---  & ---  & ---  \\
+      & normalized  & 5396 & 0.481 & 1.00 & 3.00 & 33.7 \\
+      & CQR         & 5298 & 0.105 & 5.78 & 3.00 & 36.2 \\
+      & oracle      & 5310 & 0.095 & 1.00 & 2.43 & 35.9 \\
+\midrule
+0.020 & fixed       & ---  & INF   & ---  & ---  & ---  \\
+      & normalized  & 5394 & 0.483 & 1.00 & 3.00 & 33.7 \\
+      & CQR         & 5282 & 0.094 & 1.00 & 2.37 & 36.6 \\
+      & oracle      & 5288 & 0.087 & 1.00 & 2.20 & 36.5 \\
+\midrule
+0.025 & fixed       & ---  & INF   & ---  & ---  & ---  \\
+      & normalized  & 5396 & 0.502 & 1.00 & 3.00 & 33.7 \\
+      & CQR         & ---  & INF   & ---  & ---  & ---  \\
+      & oracle      & 5271 & 0.105 & 1.00 & 2.23 & 36.9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{The design rule}
+The result is narrow in its case study but general in mechanism. Nothing in
+Theorem~\ref{thm:vacuous} is specific to distillation or to feed disturbance: it follows whenever
+a conformal interval is placed inside an optimization. First, split and normalized conformal
+back-offs guarantee coverage on average and are unsafe at the optimum. Second, the optimizer is a
+selection operator, so conditional validity, not marginal validity, is the binding requirement.
+The portable rule is to size the margin conditionally and to read the a-posteriori inflation as
+the signal that the data can no longer certify the target.
+
+\subsection{Limitations}
+The plant is a simulation twin, rigorous but not a real column; the mechanism is structural and
+should transfer, but the specific magnitudes are twin-specific. The guarantees of
+Theorem~\ref{thm:repair} assume exchangeable calibration (Assumption~\ref{ass:exch}); a real feed
+stream is autocorrelated and drifts, which breaks exchangeability. The weighted and
+beyond-exchangeability conformal machinery \cite{tibshirani2019,barber2023,gibbs2021} lifts this
+assumption and is the route to a plant guarantee under drift; developing it, together with a
+closed-loop realization in which an online soft sensor supplies the constrained estimate and the
+disturbance evolves in time, is the natural next step. Finally, the a-posteriori step of
+part~(a) requires an independent calibration draw at the selected point; in deployment this is a
+held-out window of operating data, and its size sets the residual gap of Theorem~\ref{thm:repair}.
+
+\section{Conclusion}
+\label{sec:conclusion}
+Real-time optimization must subtract a back-off from a quality specification to protect a
+constraint it cannot measure, and conformal prediction is the natural distribution-free way to
+size it. We proved that the natural choice is unsafe under optimization: a marginally valid
+back-off carries no coverage guarantee at the operating point the optimizer selects, a
+constraint-space winner's curse. We then proved that conditional calibration restores a
+finite-sample, distribution-free guarantee, exactly under a-posteriori recalibration and up to an
+$O(\sqrt{d/n})$ term under uniform calibration, and that the required inflation factor is an
+observable data-adequacy diagnostic. On a rigorous debutanizer twin the theory holds: marginal
+back-offs realize fivefold violations, the conditional method tracks a plant-aware oracle at
+near-oracle profit, and the inflation factor bounds the safe operating regime. The mechanism and
+its remedy apply to any conformal interval used as a hard optimization constraint, which makes
+conditional calibration a general design requirement for safe data-driven optimization.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\vspace{-0.8em}
+\section*{Biography}
+\includegraphics[width=1in]{bio_busico.jpg}
+
+\textbf{Bien Don Busico}
+was born in Butuan City, Philippines, in 2000. He received the B.S. degree in chemical
+engineering from Mapua Malayan Colleges Mindanao, Davao City, Philippines, in 2025. He is
+currently pursuing the M.S. degree in chemical engineering with the University of the
+Philippines Diliman, Quezon City, Philippines.
+
+He is a board-certified Chemical Engineer and the developer of the Integrated Process
+Intelligence System (IPIS), an open-source framework for guaranteed-safe, data-driven process
+operation; its companion modules, including a physics-informed drift-adaptive soft sensor,
+similarity-calibrated conformal prognostics, and a composed closed-loop coverage certificate,
+are under review at the Journal of Process Control, Reliability Engineering \& System Safety,
+and Computers \& Chemical Engineering. His research interests include distribution-free
+uncertainty quantification, real-time optimization under uncertainty, and safe data-driven
+control of process systems.
+
+
+\end{document}
