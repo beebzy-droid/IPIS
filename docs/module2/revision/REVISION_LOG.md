@@ -24,7 +24,7 @@ ad hoc and was not reproducible; that is fixed here.
 | R1.1 | Bound conservatism vs base-model complexity | experiment | TODO | — |
 | R1.4 | Misspecified physics may amplify shift | experiment | **DONE** | `scripts/r14_misspecification.py` |
 | R1.2 | Design guideline: units/SNR needed for "holds" | experiment | TODO | — |
-| R2.1 | Certificate on a second, non-authored dataset | new dataset | TODO | C-MAPSS FD002/FD004 |
+| R2.1 | Certificate on a second, non-authored dataset | new dataset | **DONE (mixed result, reported honestly)** | `scripts/cmapss_loader.py`, `scripts/r21_cmapss.py` |
 | R2.2 | Derive psi for Lundberg-Palmgren + numeric example | appendix | TODO | — |
 | R2.4 | Back-off 1.01 vs own degeneracy definition | concession | TODO | — |
 | R1.3 | FEMTO is a lab testbed, not "field" | writing sweep | TODO | — |
@@ -176,3 +176,77 @@ similitude departure. This was not claimed in the submitted manuscript and shoul
 
 **Manuscript action:** new subsection quantifying the tolerance band, the coupled-case fragility,
 and the diagnostic's detection of both; extend Section 3.5 to state the diagnostic's dual role.
+
+
+## R2.1 — C-MAPSS FD002/FD004 (DONE; the method replicates, the departure model does not)
+
+**Dataset and power.** FD002: 260 engines. FD004: 249 engines. Exactly SIX operating regimes in
+each, and every engine visits every regime, so each regime carries ~260 units against FEMTO's
+~6 bearings per condition, a **43x improvement in units per regime**. This is the well-powered,
+physically grounded, externally authored dataset the reviewer asked for. Verified directly:
+26 columns, 53759 rows (FD002) and 61249 rows (FD004), matching the published specification.
+
+**Referred conditions are derived, not fitted.** theta and delta come from the recorded
+altitude, Mach and throttle through the standard atmosphere and the isentropic stagnation
+relations. Sanity check passes exactly: regime 0 (sea-level static) returns theta = 1.0000,
+delta = 0.9999. Damage clock spans 3.5x across regimes.
+
+**Which dimensionless reduction restores exchangeability** (FD002, mean coverage gap over 30
+ordered regime pairs, target 0.90, engine-disjoint splits, unit-level snapshots):
+
+| reduction | gap |
+|---|---|
+| A raw sensors | 0.590 |
+| B ambient referral by theta, delta | 0.550 |
+| **C gas-path deviation from the regime's healthy baseline** | **0.060** |
+
+Reduction C is the physically correct one for a turbofan: degradation appears as a departure
+from nominal performance at matched corrected conditions, which is standard gas-path analysis.
+It uses early-life HEALTHY data at the target regime and **no target failure data**, so the
+method's central claim is preserved.
+
+**Result 1 (positive, replicated): the mechanism transfers to real data.**
+
+| dataset | engines | naive gap | SCC gap | improvement |
+|---|---|---|---|---|
+| FD002 | 260 | 0.590 | **0.060** | 9.8x |
+| FD004 | 249 | 0.567 | **0.058** | 9.8x |
+
+Regime-blind conformal loses about 0.58 of coverage on real turbofan data; the dimensionless
+calibration recovers it to within 0.06 of target, on two datasets, with ~260 units per regime.
+
+**Result 2 (negative, and the honest core of this comment): the a-priori departure model does
+not transfer.** Two physically motivated candidates for psi were tested:
+
+| psi candidate | corr(psi, gap) FD002 | bound holds FD002 | bound holds FD004 |
+|---|---|---|---|
+| ambient referred distance in (log theta, log delta) | 0.289 | 67% | 75% |
+| healthy gas-path signature distance | -0.122 | 67% | 83% |
+
+Neither predicts the residual gap; the fitted slopes are about 0.001, i.e. the residual is a
+near-constant **floor** (~0.06) rather than a departure-proportional term. On the catalyst
+testbed, where psi is identified from first principles, the bound holds on 100% of held-out
+configurations; on a turbofan neither candidate psi identifies it.
+
+**Interpretation.** The two halves of the contribution separate cleanly and should be reported
+that way:
+* the dimensionless CALIBRATION (coverage recovery without target failure data) is now
+  validated on real, externally authored, well-powered data, replicated across two datasets;
+* the A-PRIORI CERTIFICATE requires psi to be identified from the governing physics, which the
+  catalyst testbed permits and a turbofan gas path does not, at least not by either candidate
+  tested here.
+
+This is a stronger and more useful outcome than a manufactured success, and it connects
+directly to R2.2: the reviewer asks for psi to be worked out for a real degradation law
+precisely because identifying psi is the crux of applying the method.
+
+**Manuscript actions.** (i) Add C-MAPSS as the second case study with the coverage-recovery
+result. (ii) State plainly that the a-priori bound was checked there and that the departure
+model did not identify the residual, so the certificate's scope is assets whose degradation law
+supplies psi. (iii) Narrow the certificate claim accordingly in the abstract and conclusions.
+(iv) Use this to motivate the diagnostic as the deployment safeguard for complex assets.
+
+**PROVENANCE TO VERIFY (for Bien):** the data was obtained from a GitHub mirror
+(`edwardzjl/CMAPSSData`) because the NASA PCoE host is outside the sandbox allowlist. Structure
+and row counts match the published specification, but the copy should be checked against the
+official NASA release before the numbers go into the manuscript.
