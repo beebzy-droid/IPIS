@@ -21,9 +21,9 @@ ad hoc and was not reproducible; that is fixed here.
 | R2m2 | Bound%=100 may mean loose, not valid; report tightness | analysis | **DONE** | `scripts/r15b_certificate.py` |
 | — | Finite-sample sweep not reproducible from repo | reproducibility | **DONE** | `scripts/r15b_certificate.py` |
 | R2.3 | Discrete-mode (Javanmardi) baseline in Fig. 2 | experiment | **DONE** | `scripts/r23_discrete_mode.py` |
-| R1.1 | Bound conservatism vs base-model complexity | experiment | TODO | — |
+| R1.1 | Bound conservatism vs base-model complexity | experiment | **DONE** | `scripts/r11_base_model.py` |
 | R1.4 | Misspecified physics may amplify shift | experiment | **DONE** | `scripts/r14_misspecification.py` |
-| R1.2 | Design guideline: units/SNR needed for "holds" | experiment | TODO | — |
+| R1.2 | Design guideline: units/SNR needed for "holds" | experiment | **DONE** | `scripts/r12_design_guideline.py` |
 | R2.1 | Certificate on a second, non-authored dataset | new dataset | **DONE (mixed result, reported honestly)** | `scripts/cmapss_loader.py`, `scripts/r21_cmapss.py` |
 | R2.2 | Derive psi for Lundberg-Palmgren + numeric example | appendix | TODO | — |
 | R2.4 | Back-off 1.01 vs own degeneracy definition | concession | TODO | — |
@@ -247,6 +247,64 @@ supplies psi. (iii) Narrow the certificate claim accordingly in the abstract and
 (iv) Use this to motivate the diagnostic as the deployment safeguard for complex assets.
 
 **PROVENANCE TO VERIFY (for Bien):** the data was obtained from a GitHub mirror
-(`edwardzjl/CMAPSSData`) because the NASA PCoE host is outside the sandbox allowlist. Structure
-and row counts match the published specification, but the copy should be checked against the
-official NASA release before the numbers go into the manuscript.
+(`edwardzjl/CMAPSSData`) because the NASA PCoE host is outside the sandbox allowlist.
+**PROVENANCE CONFIRMED 2026-09-08:** the official NASA release of `train_FD002.txt` was
+supplied and is BYTE-IDENTICAL to the mirror copy, MD5 `b6eaab2a6b589e5e41d43ca2f99e379b`,
+9,082,480 bytes, 53,759 lines. Cite Saxena and Goebel (2008), NASA Prognostics Data Repository,
+NASA Ames Research Center; official download
+`https://phm-datasets.s3.amazonaws.com/NASA/6.+Turbofan+Engine+Degradation+Simulation+Data+Set.zip`.
+
+
+## R1.1 — base-model complexity (DONE; reviewer's concern confirmed for the naive case only)
+
+The predictor is developed on the SOURCE condition and deployed on the target. Naive uses raw
+coordinates; SCC trains the same model class in dimensionless coordinates, which is the paper's
+prescription applied to a learned predictor rather than a closed form. Coverage gap, target 0.90:
+
+| base model | naive (eta=0) | SCC (eta=0) | naive (eta=2) | SCC (eta=2) |
+|---|---|---|---|---|
+| physics (closed form) | 0.127 | 0.014 | 0.335 | 0.102 |
+| linear (ridge) | 0.275 | 0.008 | 0.317 | 0.061 |
+| forest (random forest) | 0.449 | 0.014 | 0.450 | 0.085 |
+| mlp (neural network) | 0.346 | 0.007 | 0.483 | 0.046 |
+
+**The reviewer is right about the risk, and it falls entirely on the unscaled baseline.** Naive
+miscoverage worsens sharply with model capacity, from 0.127 for the closed-form extrapolator to
+0.449 for a random forest, a factor of 3.5: a flexible learner fitted to one operating regime
+fails harder when deployed on another.
+
+**SCC is insensitive to base-model complexity.** The eta=0 gap is flat at 0.007 to 0.014 across
+all four classes, and under departure the more flexible learners are BETTER, not worse (mlp
+0.046 against physics 0.102 at eta=2), because a flexible model fitted in dimensionless
+coordinates absorbs part of the residual departure. Conservatism does not degrade with capacity.
+
+**Caveat to state in the manuscript:** the drop-in claim holds provided the learned predictor is
+fitted in the dimensionless coordinates. A model fitted in raw coordinates cannot be repaired by
+calibration alone, because no conformal layer can fix a point predictor that does not transfer.
+
+## R1.2 — design guideline for a usable diagnostic verdict (DONE)
+
+Fraction of trials returning the correct "holds" verdict under exact similitude, by units per
+condition and unit-to-unit life scatter (40 trials per cell):
+
+| units | scatter 0.10 | 0.25 | 0.50 | 0.80 |
+|---|---|---|---|---|
+| 3 | 0.90 | 0.75 | 0.20 | 0.05 |
+| 6 | 0.97 | 0.90 | 0.50 | 0.00 |
+| 10 | 0.95 | 0.88 | 0.82 | 0.17 |
+| 20 | 0.97 | 0.95 | 0.85 | 0.68 |
+| 40 | 1.00 | 0.95 | 0.85 | 0.93 |
+
+**Design guideline (smallest fleet reaching 80% power):** 3 units at scatter 0.10, **6 units at
+0.25**, **10 units at 0.50**, 40 units at 0.80.
+
+**This explains FEMTO exactly rather than excusing it.** At n=6 with large scatter the
+diagnostic returns holds only 0.50 of the time at scatter 0.50 and 0.00 at scatter 0.80, with
+indeterminate at 0.45 and 0.90. FEMTO has about six bearings per condition and a sevenfold
+within-condition life spread, which places it in the worst corner of this map. The indeterminate
+verdict was predictable from the data environment, not a quirk.
+
+**Answer to the deployability concern:** the requirement is modest. Ten units per condition
+suffice at moderate scatter, which is within reach of an ordinary industrial fleet, and C-MAPSS
+at ~260 units per regime sits far inside the feasible region. The method is not restricted to
+rare data environments; FEMTO is simply an unusually thin one.
