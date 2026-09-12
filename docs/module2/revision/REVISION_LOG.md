@@ -25,8 +25,8 @@ ad hoc and was not reproducible; that is fixed here.
 | R1.4 | Misspecified physics may amplify shift | experiment | **DONE** | `scripts/r14_misspecification.py` |
 | R1.2 | Design guideline: units/SNR needed for "holds" | experiment | **DONE** | `scripts/r12_design_guideline.py` |
 | R2.1 | Certificate on a second, non-authored dataset | new dataset | **DONE (mixed result, reported honestly)** | `scripts/cmapss_loader.py`, `scripts/r21_cmapss.py` |
-| R2.2 | Derive psi for Lundberg-Palmgren + numeric example | appendix | TODO | — |
-| R2.4 | Back-off 1.01 vs own degeneracy definition | concession | TODO | — |
+| R2.2 | Derive psi for Lundberg-Palmgren + numeric example | appendix | **DONE** | `scripts/r22_lundberg_palmgren.py` |
+| R2.4 | Back-off 1.01 vs own degeneracy definition | concession | **DONE (conceded)** | `scripts/r24_actionability.py` |
 | R1.3 | FEMTO is a lab testbed, not "field" | writing sweep | TODO | — |
 | R2m1 | State m=1 in tested case; norm choice for m>1 | writing | TODO | — |
 | R2m3 | Move the (pair, eta) clarification into Sec 3.4 | writing | TODO | — |
@@ -308,3 +308,89 @@ verdict was predictable from the data environment, not a quirk.
 suffice at moderate scatter, which is within reach of an ordinary industrial fleet, and C-MAPSS
 at ~260 units per regime sits far inside the feasible region. The method is not restricted to
 rare data environments; FEMTO is simply an unusually thin one.
+
+
+## R2.2 — sigma and psi derived for Lundberg-Palmgren, with a numerical instance (DONE)
+
+**Derivation.** Quantities: life t [T], dynamic equivalent load P [F], basic dynamic load rating
+C [F], speed n [1/T]. Two dimensions and four quantities give two groups,
+
+    Pi_1 = t*n  (revolutions),    Pi_2 = P/C  (load ratio),
+
+and Lundberg-Palmgren is the relation between them, Pi_1 = 10^6 * Pi_2^-p. The scale is therefore
+
+    sigma = 10^6 (C/P)^p / (60 n)   [hours].
+
+**What psi is, stated explicitly.** ISO 281 does not stop at the basic rating life; the modified
+life is L_nm = a_1 * a_ISO * L_10 with a_ISO = f(e_C*C_u/P, kappa). The arguments of a_ISO are
+exactly the groups the basic rating life does NOT absorb, so for rolling-contact fatigue
+
+    sigma absorbs LOAD and SPEED;
+    psi is the LUBRICATION REGIME, principally the viscosity ratio kappa = nu/nu_1,
+        together with the contamination group e_C*C_u/P.
+
+The reference viscosity is fixed by geometry and speed (ISO 281:
+nu_1 = 4500 n^-0.5 d_m^-0.5 for n >= 1000 rpm), and nu follows the lubricant and its OPERATING
+TEMPERATURE via Walther/ASTM D341. Two conditions are in similitude when they share kappa,
+whatever their loads and speeds.
+
+**Numerical instance** (NSK 6804RS, C = 4000 N, d_m = 26 mm, published PRONOSTIA conditions):
+
+| cond | n [rpm] | P [N] | C/P | L10 [Mrev] | sigma [h] |
+|---|---|---|---|---|---|
+| 1 | 1800 | 4000 | 1.000 | 1.000 | 9.26 |
+| 2 | 1650 | 4200 | 0.952 | 0.864 | 8.73 |
+| 3 | 1500 | 5000 | 0.800 | 0.512 | 5.69 |
+
+Characteristic-life ratio **1.63x**, which reproduces from first principles the L10 ratio already
+quoted for FEMTO in the manuscript. Internal consistency check passes.
+
+Lubrication regime, illustrative ISO VG 100 grease base oil:
+
+| case | kappa_1 | kappa_2 | kappa_3 | max ||d psi|| |
+|---|---|---|---|---|
+| all conditions at 60 C | 1.933 | 1.851 | 1.765 | **0.091** |
+| thermal spread 50/60/75 C | 2.957 | 1.851 | 1.025 | **1.060** |
+
+**Practitioner's lesson.** Load and speed differ enough to move the characteristic life by 1.63x
+and cost NOTHING in similitude, because sigma absorbs them exactly. At a matched thermal state
+the residual departure is 0.091; a 25 C spread in operating temperature raises it to 1.060,
+**12x larger**. For rolling-contact fatigue it is the THERMAL AND LUBRICATION state, not the
+load, that breaks similitude and must be matched or reported as psi.
+
+**This also explains the C-MAPSS negative.** Where the governing standard enumerates the residual
+groups, as ISO 281 does through a_ISO, psi is identifiable and the certificate is applicable.
+No equivalent enumeration exists for a turbofan gas path, which is why neither psi candidate
+tested in R2.1 identified the residual. Identifiability of psi, not the bound itself, is the
+practical boundary of the method.
+
+## R2.4 — actionability threshold: the reviewer is right, and we concede (DONE)
+
+Criterion stated in the paper's own terms. SCC returns a one-sided lower bound
+RUL_lower = RUL_pred - q_T; with relative back-off b = q_T/mean(RUL_T), the planner's usable
+quantity is the certified fraction of predicted life, 1 - b:
+
+    b < 0.5      ACTIONABLE  (more than half the predicted life is certified)
+    0.5 <= b < 1 DEGRADED    (positive but shrinking lead time)
+    b >= 1       DEGENERATE  (certified lower bound non-positive on average; the interval says
+                              only "failure has not yet occurred" and carries no schedule)
+
+Measured under unit-level calibration:
+
+| eta | coverage gap | back-off b | certified 1-b | verdict |
+|---|---|---|---|---|
+| 0.00 | 0.011 | 0.283 | 0.717 | ACTIONABLE |
+| 0.25 | 0.015 | 0.354 | 0.646 | ACTIONABLE |
+| 0.50 | 0.028 | 0.437 | 0.563 | ACTIONABLE |
+| 1.00 | 0.054 | 0.611 | 0.389 | DEGRADED |
+| 1.50 | 0.079 | 0.804 | 0.196 | DEGRADED |
+| **2.00** | 0.097 | **1.011** | **-0.011** | **DEGENERATE** |
+| 3.00 | 0.121 | 1.413 | -0.413 | DEGENERATE |
+
+Crossings: the actionable band ends at **eta = 0.68**; degeneracy begins at **eta = 1.97**.
+
+**Concession.** The submitted manuscript called eta = 2 graceful while its own efficiency
+definition marks it degenerate. Coverage does remain certified there (gap 0.097), but the
+certified lower bound is essentially zero, so the interval is not usable for scheduling. The
+revision states this plainly and reframes the result as a stated operating envelope: SCC is
+actionable to eta ~ 0.7, degraded to eta ~ 2, and degenerate beyond. Do not argue this point.
