@@ -71,11 +71,12 @@ Coverage $\alpha$ & 0.05 & 0.138 & 0.004 & 0.073 & 100 \\
 \end{tabular}
 \end{table}
 
-\subsection{Knowing when not to trust the method: the diagnostic and a field-data limit}\label{sec:res-diag}
+\subsection{Knowing when not to trust the method: the diagnostic on a thin experimental benchmark}\label{sec:res-diag}
 On synthetic data the runtime diagnostic discriminates correctly: it returns \emph{holds} when lives
 obey L10, \emph{violated} when they do not (with adequate units), and \emph{indeterminate} when the
 within-condition spread swamps the structural signal (Fig.~\ref{fig:diag}). The FEMTO bearing
-benchmark~\cite{nectoux2012pronostia} falls in the last category: with roughly six bearings per
+benchmark~\cite{nectoux2012pronostia} is an accelerated laboratory test platform, not field data
+from an operating fleet, and it falls in the last category: with roughly six bearings per
 condition and a $7\times$ within-condition life spread, the bootstrap CI on $g$ spans a factor of
 2.6--4.4, far too wide to resolve the $1.63\times$ life ratio that L10 predicts between its load/speed
 conditions. The diagnostic therefore returns \emph{indeterminate} and SCC declines its a-priori

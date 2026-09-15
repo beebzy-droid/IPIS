@@ -12,7 +12,9 @@ the rebuild instructions, and the remaining work.
 
 ## 1. Where the revision stands
 
-**All analysis is COMPLETE. 10 of 12 reviewer items closed. Everything remaining is writing.**
+**All analysis is COMPLETE. 10 of the 12 reviewer comments are closed, plus the
+reproducibility rebuild. R1.3 was closed in the source on 2026-09-15. Remaining: R2m1 and
+R2m3 (writing), the manuscript rewrite, and the response letter.**
 
 | Item | Status |
 |---|---|
@@ -26,7 +28,7 @@ the rebuild instructions, and the remaining work.
 | R1.2 design guideline | DONE — `scripts/r12_design_guideline.py` |
 | R2.2 Lundberg-Palmgren psi derivation | DONE — `scripts/r22_lundberg_palmgren.py` |
 | R2.4 actionability concession | DONE — `scripts/r24_actionability.py` |
-| **R1.3 terminology sweep** | **TODO (writing)** |
+| R1.3 terminology sweep | DONE 2026-09-15 - `scripts/r13_terminology_sweep.py` (`--audit` guards it) |
 | **R2m1, R2m3** | **TODO (writing)** |
 | **Manuscript rewrite** | **TODO** |
 | **Response-to-reviewers letter** | **TODO** |
@@ -47,6 +49,9 @@ the rebuild instructions, and the remaining work.
   This rule exists because the previously published finite-sample sweep was unreproducible.
 * Prose uses hyphens only. No em-dashes or en-dashes.
 * No `\paragraph{}` run-in heads (that formatting caused the first desk rejection).
+* "field" means operational in-service data ONLY. FEMTO is an accelerated laboratory test
+  platform; C-MAPSS is externally authored simulation. Neither is field data. Run
+  `python scripts/r13_terminology_sweep.py --audit` before committing any paper3 prose.
 * Proofs stay in the appendix; the body stays an engineering narrative.
 * Single-column `\documentclass[review,times]{elsarticle}`, no microtype.
 
@@ -194,7 +199,8 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
 
 ## 7. Remaining task checklist
 
-1. Terminology sweep R1.3 across `paper3/sections/*.tex` ("field" -> "experimental").
+1. **DONE 2026-09-15.** Terminology sweep R1.3 across `paper3/` (abstract, Sections 1, 5.5,
+   6, 7). Re-run the audit after each task below, including the new C-MAPSS text.
 2. Apply the Section 5 number changes throughout, honouring the statistical warning.
 3. New results subsection: C-MAPSS (positive result + honest negative).
 4. New results subsection or additions: discrete-mode baseline (R2.3), base-model complexity
@@ -212,6 +218,6 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
 
 * `docs/module2/revision/REVISION_LOG.md` — all evidence, tables, numbers, manuscript actions.
 * `docs/module2/revision/REVISION_HANDOFF.md` — this file.
-* `scripts/r1*.py`, `scripts/r2*.py`, `scripts/cmapss_loader.py` — 11 revision scripts, all
+* `scripts/r1*.py`, `scripts/r2*.py`, `scripts/cmapss_loader.py` — 13 revision scripts, all
   black- and ruff-clean, each reproducing the numbers it reports.
 * `paper3/` — manuscript source (single-column elsarticle, sections 01-08).

@@ -27,7 +27,7 @@ ad hoc and was not reproducible; that is fixed here.
 | R2.1 | Certificate on a second, non-authored dataset | new dataset | **DONE (mixed result, reported honestly)** | `scripts/cmapss_loader.py`, `scripts/r21_cmapss.py` |
 | R2.2 | Derive psi for Lundberg-Palmgren + numeric example | appendix | **DONE** | `scripts/r22_lundberg_palmgren.py` |
 | R2.4 | Back-off 1.01 vs own degeneracy definition | concession | **DONE (conceded)** | `scripts/r24_actionability.py` |
-| R1.3 | FEMTO is a lab testbed, not "field" | writing sweep | TODO | — |
+| R1.3 | FEMTO is a lab testbed, not "field" | writing sweep | **DONE** | `scripts/r13_terminology_sweep.py` |
 | R2m1 | State m=1 in tested case; norm choice for m>1 | writing | TODO | — |
 | R2m3 | Move the (pair, eta) clarification into Sec 3.4 | writing | TODO | — |
 
@@ -394,3 +394,54 @@ definition marks it degenerate. Coverage does remain certified there (gap 0.097)
 certified lower bound is essentially zero, so the interval is not usable for scheduling. The
 revision states this plainly and reframes the result as a stated operating envelope: SCC is
 actionable to eta ~ 0.7, degraded to eta ~ 2, and degenerate beyond. Do not argue this point.
+
+## R1.3 - terminology: FEMTO is an accelerated laboratory testbed, not field data (DONE)
+
+**The reviewer is right, and the fix is a scope correction, not a defence.** PRONOSTIA/FEMTO is an
+accelerated life-test platform; the submitted manuscript called it a "field benchmark" in the
+introduction and the discussion and titled Section 5.5 around a "field-data limit". Nothing in this
+work uses operational, in-service data.
+
+**Rule adopted for the whole revision.** "field" is reserved for genuinely operational in-service
+data. FEMTO is an accelerated laboratory test platform, reported as the experimental benchmark.
+C-MAPSS, added at R2.1, is externally authored simulation, so it is not field data either and must
+never be described as such when the new results text is written.
+
+Six passages rewritten (2026-09-15):
+
+| # | Location | Before | After |
+|---|---|---|---|
+| 1 | abstract | "the FEMTO bearing benchmark" | "the FEMTO accelerated-laboratory bearing benchmark" |
+| 2 | abstract | "adequately powered field data" | "adequately powered operational field data" |
+| 3 | Sec. 1, scope paragraph | "the one field benchmark (FEMTO bearings)" | "the one experimental benchmark (FEMTO bearings, an accelerated laboratory test platform rather than in-service field data)"; next-step sentence now says "operational field data" |
+| 4 | Sec. 5.5 title | "the diagnostic and a field-data limit" | "the diagnostic on a thin experimental benchmark" |
+| 5 | Sec. 5.5 body | "The FEMTO bearing benchmark falls in the last category" | "... is an accelerated laboratory test platform, not field data from an operating fleet, and it falls in the last category" |
+| 6 | Sec. 6 (iii) and Sec. 7 | "the single field benchmark" / "On the FEMTO benchmark" | "the single experimental benchmark, an accelerated laboratory test platform rather than field data" / "On the FEMTO experimental benchmark, an accelerated laboratory test platform rather than field data" |
+
+**One deviation from the handoff instruction, deliberate.** The handoff said to replace
+"field data limit" with "experimental benchmark". A literal swap gives an awkward heading, and the
+5.5 result is not really a limit of field data at all: R1.2 shows the indeterminate verdict is
+predicted by FEMTO's position on the units-by-scatter power map (about 6 units, 7x spread). The
+heading therefore reads "the diagnostic on a thin experimental benchmark", which removes the
+mislabel and pre-aligns 5.5 with the R1.2 design-guideline text to be added. Alternative if this
+is disliked: "the diagnostic and an experimental-benchmark limit".
+
+**Standing audit, not a one-off edit.** `scripts/r13_terminology_sweep.py --audit` fails on any
+banned phrase ("field benchmark", "field-data limit", "field dataset", "field testbed") and on any
+occurrence of "field" that is not qualified as operational, in-service, or explicitly contrasted
+("rather than field data", "not field data"). Verified: 9 violations on the submitted source,
+0 after the sweep. Re-run it after every remaining writing task, especially the C-MAPSS subsection.
+
+**Build verification (revised vs submitted, same toolchain).** 19 pages both, 0 errors both,
+6 overfull hboxes both, worst 17.99 pt both; 0 undefined citations, 0 undefined references.
+Abstract 244 -> 246 words against the 250-word cap, so the C-MAPSS sentence still owed to the
+abstract at task 3 must come out of a trim, not an addition.
+
+**Response text (drafted, for the point-by-point letter).**
+> We agree, and we have corrected the terminology throughout. FEMTO/PRONOSTIA is an accelerated
+> laboratory test platform, not operational field data, and the revised manuscript describes it as
+> the experimental benchmark wherever it appears (abstract, Sections 1, 5.5, 6 and 7), including
+> the heading of Section 5.5. We now reserve "field" for genuinely operational in-service data,
+> which this study does not have, and the second dataset added at your co-reviewer's request
+> (C-MAPSS) is likewise identified as externally authored simulation rather than field data. The
+> validation roadmap in Section 6 states the outstanding step in those terms.
