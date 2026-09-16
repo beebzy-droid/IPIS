@@ -30,7 +30,11 @@ is the shortfall against the promised reliability. \emph{Efficiency}, the relati
 $q_T/\overline{\text{RUL}}_T$, measures conservatism, i.e.\ the cost of unnecessarily early
 replacement (smaller is more informative; a diverging value signals degenerate, uselessly wide
 intervals). We also report the \emph{operational bound} $2(a+L\lVert\Delta\boldsymbol\psi\rVert)$ and
-the \emph{diagnostic} verdict. Numbers are averaged over five seeds. Three acceptance criteria were
-fixed before running: (1) naive conformal miscovers while SCC recovers at $\eta=0$; (2) the a-priori
+the \emph{diagnostic} verdict. Calibration is \emph{unit-level}: every unit contributes one
+score, taken at a single randomly chosen monitoring fraction, so the calibration set is
+exchangeable across units. Numbers are averaged over five seeds, and coverage gaps are averaged
+over (pair, seed) after the clip at zero, so an averaged gap is not the gap of the averaged
+coverage; we keep the clipped convention throughout as the conservative reading. Three acceptance
+criteria were fixed before running: (1) naive conformal miscovers while SCC recovers at $\eta=0$; (2) the a-priori
 bound, with $L$ fit on a subset of (pair, $\eta$) configurations, upper-bounds the gap on
 \emph{held-out} configurations; and (3) the gap degrades gracefully and monotonically with $\eta$.

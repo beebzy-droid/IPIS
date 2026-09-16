@@ -1,44 +1,54 @@
 \section{Results}\label{sec:results}
 \subsection{Does SCC restore coverage under regime transfer?}\label{sec:res-cov}
 At $\eta=0$, calibrating on one temperature and deploying on another, naive conformal miscovers
-badly: coverage collapses to 0.58 when calibrating on short-lived and deploying on long-lived units
-(a gap of up to 0.34), and over-covers wastefully in the reverse direction. In maintenance terms, a
-0.34 gap means roughly a third of the intervals promised at 90\% reliability fail to contain the true
-life, an unsafe basis for a replacement decision. SCC recovers coverage to within 0.006 of the 0.90
-target across all calibrate--deploy pairs (Fig.~\ref{fig:cov}), and the non-exchangeable bound
+badly: coverage collapses to 0.572 when calibrating on short-lived and deploying on long-lived
+units (a gap of 0.328), and over-covers wastefully in the reverse direction, reaching 1.000. In
+maintenance terms, a 0.328 gap means roughly a third of the intervals promised at 90\% reliability
+fail to contain the true life, an unsafe basis for a replacement decision. SCC holds every
+calibrate--deploy pair between 0.891 and 0.908, so no pair falls more than 0.009 below the 0.90
+target, for a mean coverage gap of 0.011 (Fig.~\ref{fig:cov}), and the non-exchangeable bound
 $2\,\dtv(\tilde{\mathcal V})$ contains the SCC gap on every pair. The dimensionless transform removes
 the $10.2\times$ scale difference exactly, the behaviour the zero-departure case of~\eqref{eq:cert}
 predicts.
 
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{figures/fig1_coverage.pdf}
-\caption{Naive vs.\ SCC coverage at $\eta=0$ across calibrate$\to$deploy temperature pairs. Naive
-miscovers (or over-covers); SCC tracks the 0.90 target.}\label{fig:cov}
+\caption{Naive vs.\ SCC coverage at $\eta=0$ across calibrate$\to$deploy temperature pairs, under
+unit-level calibration. Naive miscovers (0.572) or over-covers (1.000); SCC tracks the 0.90 target
+(0.891--0.908).}\label{fig:cov}
 \end{figure}
 
 \subsection{How does the guarantee degrade as physics departs from similitude?}\label{sec:res-deg}
-As the unmodelled secondary channel is weighted up, the SCC coverage gap rises monotonically (0.006
-at $\eta=0$ to 0.103 at $\eta=2$) and the interval back-off grows from 0.28 to 1.01
-(Fig.~\ref{fig:dep}). Coverage is preserved at a quantified and predictable cost in conservatism:
-rather than failing abruptly, the method trades a little efficiency for continued validity as its
-premise weakens. Reporting efficiency alongside coverage rules out the degenerate outcome in which
-coverage is held only by trivially wide, uninformative intervals.
+As the unmodelled secondary channel is weighted up, the SCC coverage gap rises monotonically (0.011
+at $\eta=0$ to 0.097 at $\eta=2$) and the interval back-off grows from 0.283 to 1.011
+(Fig.~\ref{fig:dep}). Coverage is preserved at a quantified cost in conservatism, but that cost is
+not uniformly benign: a back-off of 1.011 at $\eta=2$ means the certified lower bound is no longer
+positive on average, so the interval remains valid while carrying no replacement schedule.
+Reporting efficiency alongside coverage is what exposes this, instead of leaving a healthy-looking
+coverage number to stand on its own.
 
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{figures/fig2_departure.pdf}
 \caption{Under a controlled departure $\eta$ from similitude, the SCC coverage gap (left axis) and
-the relative interval back-off (right axis) degrade gracefully and monotonically.}\label{fig:dep}
+the relative interval back-off (right axis) degrade monotonically. The back-off reaches 1.011 at
+$\eta=2$, where the certified lower bound is no longer positive on average.}\label{fig:dep}
 \end{figure}
 
 \subsection{Is the coverage bound reliable before deployment?}\label{sec:res-cert}
 With the intercept $a$ and slope $L$ fit on 60\% of (pair, $\eta$) configurations, the physical
 departure $\delta=\eta\lvert h(S)-h(T)\rvert$ predicts the dimensionless score-distribution mismatch
-on the held-out 40\% with $R^2=0.79$ (correlation 0.95), and the resulting a-priori bound
+on the held-out 40\% with $R^2=0.773$ (correlation 0.947), and the resulting a-priori bound
 $2(a+L\delta)$ upper-bounds the measured coverage gap on \emph{100\%} of held-out configurations
-(Fig.~\ref{fig:cert}). The bound is deliberately conservative, since it is an upper bound, and its
-finite-sample intercept shrinks as $n^{-1/2}$ (from 0.12 at $n=200$ to 0.04 at $n=1600$ per
-condition). For deployment this means the worst-case coverage shortfall can be quoted from physical
-parameters before the target asset is run.
+(Fig.~\ref{fig:cert}). Validity is not sharpness, and the margin says which one this is: across
+held-out configurations the mean certified bound is 0.384 against a mean measured gap of 0.046, a
+margin of 0.339 (range 0.268--0.552), so the certificate is conservative by roughly a factor of
+eight. The looseness sits in the intercept rather than the physical slope, since at $\delta=0$ the
+bound is $2a=0.278$ against a measured gap of 0.011. That intercept is the finite-sample floor of
+the plug-in total-variation estimator and decays as $n^{-1/2}$ in the number of calibration units
+(0.424 at 50 units to 0.096 at 800, a log-log slope of $-0.513$ against the $-0.500$ predicted), so
+the certificate tightens as the calibration fleet grows. For deployment this means the worst-case
+coverage shortfall can be quoted from physical parameters before the target asset is run, as a
+worst-case planning bound rather than a sharp estimate.
 
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{figures/fig3_certificate.pdf}
@@ -51,23 +61,26 @@ points.}\label{fig:cert}
 The acceptance criteria survive across the departure's temperature-dependence ($E_2=95$--150~kJ/mol
 at matched magnitude), its magnitude (15--60\% perturbation), and the coverage target
 ($\alpha=0.05/0.10/0.20$); Table~\ref{tab:robust}. At every setting naive conformal miscovers
-($\approx0.13$), SCC recovers ($\approx0.009$), the a-priori bound holds on 100\% of held-out
-configurations, the gap stays monotone, and its magnitude orders with the steepness and size of the
-departure. The behaviour is a property of the method rather than of a single tuning.
+($\approx0.13$), SCC recovers ($\approx0.011$), the a-priori bound holds on 100\% of held-out
+configurations while carrying a margin of 0.30--0.50, the same conservatism reported in
+Section~\ref{sec:res-cert}, the gap stays monotone, and its magnitude orders with the steepness and
+size of the departure. The behaviour is a property of the method rather than of a single tuning.
 
 \begin{table}[t]\centering\footnotesize
-\setlength{\tabcolsep}{12pt}\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{9pt}\renewcommand{\arraystretch}{1.2}
 \caption{Robustness of the acceptance criteria across the departure's temperature-dependence, its
-magnitude, and the coverage level. $g_0$: coverage gap at $\eta=0$; $g_{\max}$: SCC coverage gap at
-$\eta=2$; Bound\,\%: fraction of held-out configurations on which the a-priori bound holds.}\label{tab:robust}
-\begin{tabular}{@{}llcccc@{}}\toprule
-Perturbation axis & Value & Naive $g_0$ & SCC $g_0$ & SCC $g_{\max}$ & Bound\,\% \\\midrule
-$E_2$ (kJ/mol) & 95   & 0.130 & 0.009 & 0.046 & 100 \\
-               & 150  & 0.130 & 0.009 & 0.214 & 100 \\
-Perturbation   & 15\,\% & 0.130 & 0.009 & 0.049 & 100 \\
-               & 60\,\% & 0.130 & 0.009 & 0.128 & 100 \\
-Coverage $\alpha$ & 0.05 & 0.138 & 0.004 & 0.073 & 100 \\
-               & 0.20 & 0.101 & 0.011 & 0.129 & 100 \\\bottomrule
+magnitude, and the coverage level, under unit-level calibration. $g_0$: coverage gap at $\eta=0$;
+$g_{\max}$: SCC coverage gap at $\eta=2$; Margin: mean of (certified bound $-$ measured gap) over
+held-out configurations, so a positive value means valid and a large value means loose; Bound\,\%:
+fraction of held-out configurations on which the a-priori bound holds.}\label{tab:robust}
+\begin{tabular}{@{}llccccc@{}}\toprule
+Perturbation axis & Value & Naive $g_0$ & SCC $g_0$ & SCC $g_{\max}$ & Margin & Bound\,\% \\\midrule
+$E_2$ (kJ/mol) & 95   & 0.132 & 0.011 & 0.043 & 0.302 & 100 \\
+               & 150  & 0.132 & 0.011 & 0.218 & 0.502 & 100 \\
+Perturbation   & 15\,\% & 0.132 & 0.011 & 0.055 & 0.302 & 100 \\
+               & 60\,\% & 0.132 & 0.011 & 0.131 & 0.400 & 100 \\
+Coverage $\alpha$ & 0.05 & 0.138 & 0.008 & 0.071 & 0.372 & 100 \\
+               & 0.20 & 0.103 & 0.011 & 0.127 & 0.323 & 100 \\\bottomrule
 \end{tabular}
 \end{table}
 
