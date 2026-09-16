@@ -12,7 +12,9 @@ the rebuild instructions, and the remaining work.
 
 ## 1. Where the revision stands
 
-**All analysis is COMPLETE. 10 of 12 reviewer items closed. Everything remaining is writing.**
+**All analysis is COMPLETE. 10 of the 12 reviewer comments are closed, plus the
+reproducibility rebuild. R1.3 was closed in the source on 2026-09-15. Remaining: R2m1 and
+R2m3 (writing), the manuscript rewrite, and the response letter.**
 
 | Item | Status |
 |---|---|
@@ -26,7 +28,7 @@ the rebuild instructions, and the remaining work.
 | R1.2 design guideline | DONE — `scripts/r12_design_guideline.py` |
 | R2.2 Lundberg-Palmgren psi derivation | DONE — `scripts/r22_lundberg_palmgren.py` |
 | R2.4 actionability concession | DONE — `scripts/r24_actionability.py` |
-| **R1.3 terminology sweep** | **TODO (writing)** |
+| R1.3 terminology sweep | DONE 2026-09-15 - `scripts/r13_terminology_sweep.py` (`--audit` guards it) |
 | **R2m1, R2m3** | **TODO (writing)** |
 | **Manuscript rewrite** | **TODO** |
 | **Response-to-reviewers letter** | **TODO** |
@@ -47,6 +49,9 @@ the rebuild instructions, and the remaining work.
   This rule exists because the previously published finite-sample sweep was unreproducible.
 * Prose uses hyphens only. No em-dashes or en-dashes.
 * No `\paragraph{}` run-in heads (that formatting caused the first desk rejection).
+* "field" means operational in-service data ONLY. FEMTO is an accelerated laboratory test
+  platform; C-MAPSS is externally authored simulation. Neither is field data. Run
+  `python scripts/r13_terminology_sweep.py --audit` before committing any paper3 prose.
 * Proofs stay in the appendix; the body stays an engineering narrative.
 * Single-column `\documentclass[review,times]{elsarticle}`, no microtype.
 
@@ -72,6 +77,10 @@ Sandbox network note: NASA's host is NOT reachable from the sandbox allowlist (G
 only). Use the verified mirror, or have the file uploaded.
 
 ## 5. Numbers that MUST change in the manuscript
+
+**APPLIED 2026-09-15.** Every change below is now in `paper3/`; see the task-2 section of
+`REVISION_LOG.md`. Table 1 was additionally re-run under unit-level calibration
+(`scripts/r15d_robustness_unit.py`), and its Bound% is now a genuine held-out number.
 
 Old values came from stacked calibration (3 dependent scores per unit). New values use
 unit-level calibration. **Old -> New:**
@@ -194,17 +203,25 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
 
 ## 7. Remaining task checklist
 
-1. Terminology sweep R1.3 across `paper3/sections/*.tex` ("field" -> "experimental").
-2. Apply the Section 5 number changes throughout, honouring the statistical warning.
+1. **DONE 2026-09-15.** Terminology sweep R1.3 across `paper3/` (abstract, Sections 1, 5.5,
+   6, 7). Re-run the audit after each task below, including the new C-MAPSS text.
+2. **DONE 2026-09-15.** Section 5 number changes applied; the clipped per-seed convention is
+   stated in Section 4.3. Table 1 re-run unit-level with a margin column.
 3. New results subsection: C-MAPSS (positive result + honest negative).
 4. New results subsection or additions: discrete-mode baseline (R2.3), base-model complexity
    (R1.1), misspecification and detectability (R1.4), design guideline (R1.2).
 5. New appendix: Lundberg-Palmgren psi derivation (R2.2).
 6. Extend Section 3.5 to state the diagnostic's dual role (departure AND scale misspecification).
-7. Rewrite Section 4.3 and 5.2 for the actionability envelope (R2.4); delete "graceful" at eta=2.
+7. Rewrite Section 4.3 and 5.2 for the actionability envelope (R2.4); delete "graceful" at
+   eta=2. Section 5.2 and the Fig. 2 caption are already done; the remaining "graceful" claims
+   are `scc_paper.tex:44`, `04_experimental_design.tex:40` (acceptance criterion 3),
+   `06_discussion.tex:18`, `07_conclusions.tex:10`.
 8. Narrow the certificate claim in abstract and conclusions per decision 3.
 9. Add R2m1, R2m2, R2m3 edits.
-10. Regenerate figures affected by unit-level numbers; add a discrete-mode series.
+10. Regenerate figures affected by unit-level numbers; add a discrete-mode series. Figures 1-3
+    are STALE as of 2026-09-15 (prose is unit-level, plots are still stacked): fig1 from
+    `r15c_directional.py`, fig2 from `r15_exchangeability.py` + `r24_actionability.py`, fig3
+    from `r15b_certificate.py`. Figure 4 is unaffected.
 11. Write the point-by-point response letter (9 major + 3 minor).
 12. Rebuild the flat EM variant and zip; verify single-column, no run-in heads, 0 undefined cites.
 
@@ -212,6 +229,6 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
 
 * `docs/module2/revision/REVISION_LOG.md` — all evidence, tables, numbers, manuscript actions.
 * `docs/module2/revision/REVISION_HANDOFF.md` — this file.
-* `scripts/r1*.py`, `scripts/r2*.py`, `scripts/cmapss_loader.py` — 11 revision scripts, all
+* `scripts/r1*.py`, `scripts/r2*.py`, `scripts/cmapss_loader.py` — 14 revision scripts, all
   black- and ruff-clean, each reproducing the numbers it reports.
 * `paper3/` — manuscript source (single-column elsarticle, sections 01-08).
