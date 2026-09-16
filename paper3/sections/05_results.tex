@@ -84,6 +84,60 @@ Coverage $\alpha$ & 0.05 & 0.138 & 0.008 & 0.071 & 0.372 & 100 \\
 \end{tabular}
 \end{table}
 
+\subsection{Does the method transfer to a fleet we did not author?}\label{sec:res-cmapss}
+On C-MAPSS the calibration transfers and the a-priori certificate does not. The two halves scope the
+contribution differently, so we report them separately.
+
+Regime-blind conformal fails harder on the real fleet than on the testbed: calibrating on one regime
+and deploying on another loses a mean 0.590 of coverage across the 30 ordered pairs of FD002.
+Referring the sensors to standard day is not by itself enough and still loses 0.550; calibrating in
+the gas-path deviation coordinate recovers coverage to within 0.060 of the 0.90 target, a
+$9.8\times$ reduction in the gap, and FD004 replicates it at 0.567 to 0.058
+(Table~\ref{tab:cmapss}). The mechanism therefore survives contact with an externally authored,
+well-powered dataset, still without target failure data. The size of the naive failure does depend
+on the predictor: a random forest on raw sensors can partly infer the regime from the sensor levels
+themselves and loses only 0.128 on FD002, but SCC improves on it there too (0.053), so the recovery
+is not an artefact of a weak baseline.
+
+The certificate is a different matter. Neither departure candidate identifies the residual gap: the
+ambient referred distance correlates 0.289 with it on FD002 and 0.179 on FD004, and the healthy
+gas-path signature distance correlates $-0.122$ and $-0.086$. Held out, both regressions explain
+nothing, with $R^2$ between $-0.074$ and 0.022. The gap is dominated instead by an offset that the
+departure term does not touch, the fitted intercepts being 0.026 to 0.058 against mean gaps of 0.060
+and 0.058. The bound consequently holds on 67 to 83\% of held-out regime pairs, against 100\% on the
+testbed, where the departure predicts the score-distribution mismatch the bound is built from with
+$R^2=0.773$.
+
+We report this as the boundary of the contribution rather than as a failure of it. The dimensionless
+calibration, which is the part a practitioner deploys, is now validated on real, externally authored
+data with about 260 units per regime and replicated across two datasets. The a-priori certificate
+requires $\boldsymbol\psi$ to be identified from the governing degradation law, which the catalyst
+testbed supplies and a turbofan gas path does not, at least not through either candidate tested
+here. Where $\boldsymbol\psi$ is unavailable the runtime diagnostic of
+Section~\ref{sec:diagnostic} is the deployment safeguard, and the next subsection shows what it does
+when the evidence is too thin to support the premise.
+
+\begin{table}[t]\centering\footnotesize
+\setlength{\tabcolsep}{7pt}\renewcommand{\arraystretch}{1.2}
+\caption{C-MAPSS, 30 ordered regime pairs per dataset, target coverage 0.90, unit-level calibration
+on engine-disjoint splits. Top: coverage gap for the regime-blind baseline and for SCC calibrated in
+the gas-path deviation coordinate. Bottom: the a-priori certificate with $\boldsymbol\psi$ taken in
+turn as each candidate; $R^2$ is on held-out regime pairs, and the same certificate holds on 100\%
+of held-out configurations on the catalyst testbed.}\label{tab:cmapss}
+\begin{tabular}{@{}llccc@{}}\toprule
+Dataset & Base model & Naive & SCC & Improvement \\\midrule
+FD002 (260 engines) & ridge & 0.590 & 0.060 & $9.8\times$ \\
+FD004 (249 engines) & ridge & 0.567 & 0.058 & $9.8\times$ \\
+FD002 (260 engines) & random forest & 0.128 & 0.053 & $2.4\times$ \\
+FD004 (249 engines) & random forest & 0.123 & 0.033 & $3.7\times$ \\\midrule
+Dataset & $\boldsymbol\psi$ candidate & corr & held-out $R^2$ & Bound\,\% \\\midrule
+FD002 & ambient referred distance & 0.289 & 0.022 & 67 \\
+FD002 & healthy gas-path signature & $-0.122$ & $-0.037$ & 67 \\
+FD004 & ambient referred distance & 0.179 & $-0.010$ & 75 \\
+FD004 & healthy gas-path signature & $-0.086$ & $-0.074$ & 83 \\\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{Knowing when not to trust the method: the diagnostic on a thin experimental benchmark}\label{sec:res-diag}
 On synthetic data the runtime diagnostic discriminates correctly: it returns \emph{holds} when lives
 obey L10, \emph{violated} when they do not (with adequate units), and \emph{indeterminate} when the

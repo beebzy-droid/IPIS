@@ -515,3 +515,76 @@ as a contradiction.
 
 Build after the sweep: 19 pp, 0 errors, 6 overfull hboxes (worst 17.99 pt, all pre-existing),
 0 undefined citations, abstract 246 words.
+
+## Task 3 - C-MAPSS written into the manuscript (DONE 2026-09-16)
+
+Data supplied by Bien and re-verified in session: `train_FD002.txt` MD5
+`b6eaab2a6b589e5e41d43ca2f99e379b`, 9,082,480 bytes, 53,759 lines, identical to the value recorded
+on 2026-09-08. `train_FD004.txt` MD5 `8b510e2c1460ba87214f58ceb3cd0266`, 10,350,705 bytes, 61,249
+lines (recorded here for the first time).
+
+Every C-MAPSS number in the manuscript was re-run before it was written:
+
+| Claim in the manuscript | Value | Script |
+|---|---|---|
+| fleet size and structure | FD002 260 engines / 53,759 rows, FD004 249 / 61,249, six regimes, ~260 units per regime (43x FEMTO) | `cmapss_loader.py` |
+| referral sanity check | sea-level static returns theta 1.0000, delta_p 0.9999; damage clock spans 3.5x | `cmapss_loader.py` |
+| reduction ladder (FD002, ridge) | raw 0.590, standard-day referral 0.550, gas-path deviation 0.060 | `r21_probe.py` |
+| coverage recovery | FD002 0.590 -> 0.060 (9.8x), FD004 0.567 -> 0.058 (9.8x) | `r21_cmapss.py` |
+| capacity check | random forest: FD002 0.128 -> 0.053 (2.4x), FD004 0.123 -> 0.033 (3.7x) | `r21_cmapss.py` |
+| psi candidates | see below | `r21b_psi_candidates.py` (new) |
+
+### The second psi candidate had no committed script; now it does
+
+The log's ambient-referred-distance row (corr 0.289, bound 67%/75%) was not reproducible from any
+committed script, only the gas-path-signature candidate was. `scripts/r21b_psi_candidates.py`
+computes both on identical SCC gaps (same engine-disjoint thirds, same ridge predictor in
+gas-path-deviation coordinates, 3 seeds, 30 ordered pairs), so only psi differs between arms:
+
+| dataset | psi candidate | corr | slope L | held-out R^2 | intercept a | bound holds |
+|---|---|---|---|---|---|---|
+| FD002 | ambient referred distance | 0.289 | 0.0481 | 0.022 | 0.026 | 67% |
+| FD002 | healthy gas-path signature | -0.122 | -0.0007 | -0.037 | 0.058 | 67% |
+| FD004 | ambient referred distance | 0.179 | 0.0115 | -0.010 | 0.045 | 75% |
+| FD004 | healthy gas-path signature | -0.086 | 0.0012 | -0.074 | 0.045 | 83% |
+
+Residual SCC gap: FD002 mean 0.060 (sd 0.066, range 0.000-0.207), FD004 mean 0.058 (sd 0.059,
+range 0.000-0.221).
+
+**Correction to an earlier log claim.** This log previously said "the fitted slopes are about
+0.001" for both candidates. That holds only for the gas-path signature; the ambient candidate's
+slope is 0.048 on FD002. The manuscript states the held-out R^2 (between -0.074 and 0.022) instead,
+which is the honest summary: out of sample neither departure term explains anything, and the gap is
+carried by the intercept (0.026 to 0.058 against mean gaps of 0.060 and 0.058). Also avoid the
+phrase "near-constant floor" in the response letter: the per-pair spread is as large as the mean
+(sd 0.066 against mean 0.060), so the residual is an unexplained offset, not a constant.
+
+### What went into the manuscript
+
+* Section 4 retitled "Case studies: a controlled testbed and an external turbofan fleet"; new
+  Section 4.4 describing the fleet, the referred-parameter reduction, the gas-path deviation
+  coordinate, the engine-disjoint protocol, and the two psi candidates. The stagnation pressure
+  ratio is written delta_p to keep it distinct from the scalar departure delta of Section 5.3.
+* New Section 5.5 (the diagnostic subsection moves to 5.6): positive result, capacity check,
+  the certificate negative, and the scope statement. New Table 2 carries both halves.
+* Introduction: contribution 4 now names the external replication on 509 engines, and the scope
+  paragraph no longer claims FEMTO is the only external evidence (it was false once C-MAPSS
+  entered).
+* Discussion limitation (iii) rewritten: the evidence is graded, with coverage recovery replicated
+  externally and the certificate validated only where the governing law identifies psi.
+* `scc_refs.bib`: added `saxena2008cmapss` (dataset) and `saxena2008damage` (the C-MAPSS
+  simulation paper).
+
+### Judgement calls worth knowing
+
+* The random-forest rows are reported even though they weaken the headline (naive loses 0.128, not
+  0.590). A reviewer with the data would find this in an afternoon, and the SCC advantage survives
+  it. Note the tension with R1.1, where naive miscoverage WORSENS with capacity on the testbed: on
+  C-MAPSS the raw sensors carry the operating regime itself, so a flexible learner can partly infer
+  it. When the R1.1 subsection is written (task 4), state that reason explicitly or the two results
+  will look contradictory.
+* No citation was added for gas-path analysis as a practice. If you want one, Volponi's gas-turbine
+  health-management review is the usual choice; I did not add a reference I could not verify.
+
+Build after the addition: 22 pp (was 19), 0 errors, 6 overfull hboxes (worst 17.99 pt, all
+pre-existing), 0 undefined citations or references. Terminology audit clean.

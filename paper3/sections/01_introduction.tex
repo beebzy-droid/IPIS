@@ -49,13 +49,16 @@ quantity $\boldsymbol\psi$, so the worst-case loss can be checked before an asse
 self-aware operating envelope and a conservative fallback when its premise is unsupported
 (Section~\ref{sec:method});
 \item a non-circular validation on a controlled process-reliability testbed, stress-testing the
-guarantee against a graded, physically meaningful departure from similitude
+guarantee against a graded, physically meaningful departure from similitude, together with an
+external replication on 509 run-to-failure turbofan engines we did not author, on which the
+coverage recovery holds and the a-priori bound is reported to fail
 (Sections~\ref{sec:design}--\ref{sec:results}).
 \end{enumerate}
 
 We are deliberate about scope. The guarantee is conditional on two physical hypotheses that are
 falsifiable rather than assumed; the validation uses a controlled simulation in which similitude is
-real but is never assumed by the estimator; and the one experimental benchmark (FEMTO bearings,
-an accelerated laboratory test platform rather than in-service field data) is correctly reported
-by the diagnostic as outside the method's envelope rather than forced into a positive result.
-Validation on adequately powered operational field data is the natural next step.
+real but is never assumed by the estimator; the coverage recovery is replicated on an externally
+authored turbofan fleet, where the a-priori bound is also checked and reported to fail; and the thin
+FEMTO bearing benchmark (an accelerated laboratory test platform rather than in-service field data)
+is reported by the diagnostic as outside the method's envelope rather than forced into a positive
+result. Validation on adequately powered operational field data is the natural next step.

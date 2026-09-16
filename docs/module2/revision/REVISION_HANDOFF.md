@@ -23,7 +23,7 @@ R2m3 (writing), the manuscript rewrite, and the response letter.**
 | finite-sample sweep rebuilt (reproducibility gap) | DONE — `scripts/r15b_certificate.py` |
 | R2.3 discrete-mode baseline | DONE — `scripts/r23_discrete_mode.py` |
 | R1.4 misspecification + detectability | DONE — `scripts/r14_misspecification.py` |
-| R2.1 C-MAPSS second dataset | DONE — `scripts/cmapss_loader.py`, `scripts/r21_cmapss.py` |
+| R2.1 C-MAPSS second dataset | DONE — `scripts/cmapss_loader.py`, `scripts/r21_cmapss.py`, `scripts/r21b_psi_candidates.py`; written into the manuscript 2026-09-16 |
 | R1.1 base-model complexity | DONE — `scripts/r11_base_model.py` |
 | R1.2 design guideline | DONE — `scripts/r12_design_guideline.py` |
 | R2.2 Lundberg-Palmgren psi derivation | DONE — `scripts/r22_lundberg_palmgren.py` |
@@ -69,7 +69,9 @@ Official source: `https://phm-datasets.s3.amazonaws.com/NASA/6.+Turbofan+Engine+
 Cite: A. Saxena and K. Goebel (2008), "Turbofan Engine Degradation Simulation Data Set", NASA
 Prognostics Data Repository, NASA Ames Research Center, Moffett Field, CA.
 Place `train_FD002.txt` and `train_FD004.txt` in `/tmp/rev/data/cmapss/`.
-**Verified provenance:** `train_FD002.txt` MD5 `b6eaab2a6b589e5e41d43ca2f99e379b`,
+**Verified provenance (re-checked 2026-09-16 against the files Bien supplied):**
+`train_FD004.txt` MD5 `8b510e2c1460ba87214f58ceb3cd0266`, 10,350,705 bytes, 61,249 lines.
+`train_FD002.txt` MD5 `b6eaab2a6b589e5e41d43ca2f99e379b`,
 9,082,480 bytes, 53,759 lines. A GitHub mirror (`edwardzjl/CMAPSSData`) was confirmed
 byte-identical to the official NASA release on 2026-09-08.
 
@@ -207,7 +209,9 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
    6, 7). Re-run the audit after each task below, including the new C-MAPSS text.
 2. **DONE 2026-09-15.** Section 5 number changes applied; the clipped per-seed convention is
    stated in Section 4.3. Table 1 re-run unit-level with a margin column.
-3. New results subsection: C-MAPSS (positive result + honest negative).
+3. **DONE 2026-09-16.** C-MAPSS written in: Section 4.4 (design), Section 5.5 (results,
+   Table 2), intro contribution 4 and scope paragraph, discussion limitation (iii), two bib
+   entries. Both psi candidates now have a committed script, `r21b_psi_candidates.py`.
 4. New results subsection or additions: discrete-mode baseline (R2.3), base-model complexity
    (R1.1), misspecification and detectability (R1.4), design guideline (R1.2).
 5. New appendix: Lundberg-Palmgren psi derivation (R2.2).
@@ -229,6 +233,6 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
 
 * `docs/module2/revision/REVISION_LOG.md` — all evidence, tables, numbers, manuscript actions.
 * `docs/module2/revision/REVISION_HANDOFF.md` — this file.
-* `scripts/r1*.py`, `scripts/r2*.py`, `scripts/cmapss_loader.py` — 14 revision scripts, all
+* `scripts/r1*.py`, `scripts/r2*.py`, `scripts/cmapss_loader.py` — 15 revision scripts, all
   black- and ruff-clean, each reproducing the numbers it reports.
 * `paper3/` — manuscript source (single-column elsarticle, sections 01-08).

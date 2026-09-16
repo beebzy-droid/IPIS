@@ -1,4 +1,4 @@
-\section{Case study: a controlled process-reliability testbed}\label{sec:design}
+\section{Case studies: a controlled testbed and an external turbofan fleet}\label{sec:design}
 \subsection{Why a controlled testbed}\label{sec:why}
 Demonstrating an a-priori certificate honestly requires data in which the governing physics actually
 controls degradation, so that the similitude departure $\boldsymbol\psi$ is meaningful and the
@@ -38,3 +38,39 @@ coverage; we keep the clipped convention throughout as the conservative reading.
 criteria were fixed before running: (1) naive conformal miscovers while SCC recovers at $\eta=0$; (2) the a-priori
 bound, with $L$ fit on a subset of (pair, $\eta$) configurations, upper-bounds the gap on
 \emph{held-out} configurations; and (3) the gap degrades gracefully and monotonically with $\eta$.
+
+\subsection{Second case study: an externally authored turbofan fleet}\label{sec:cmapss}
+The testbed above is ours, so its departure from similitude is a knob we set. To test the method
+where the physics was authored elsewhere we add the NASA C-MAPSS turbofan
+datasets~\cite{saxena2008cmapss,saxena2008damage}. FD002 contains 260 run-to-failure engines and
+FD004 contains 249, and every engine visits all six operating regimes of the fleet, so each regime
+carries roughly 260 units against the six bearings per condition available in the FEMTO benchmark,
+a $43\times$ improvement in replication per condition.
+
+The dimensionless coordinate is again derived rather than fitted. Gas-turbine performance collapses
+onto referred (corrected) parameters built from the stagnation ratios $\theta=T_t/T_{\mathrm{std}}$
+and $\delta_{\mathrm{p}}=P_t/P_{\mathrm{std}}$ (subscripted to keep it distinct from the scalar
+departure $\delta$ of Section~\ref{sec:res-cert}), which follow from the recorded altitude, Mach
+number and throttle setting through the standard atmosphere and the isentropic stagnation
+relations; temperatures are referred by $\theta$, pressures by $\delta_{\mathrm{p}}$, speeds by
+$\sqrt{\theta}$ and flows by $\delta_{\mathrm{p}}/\sqrt{\theta}$. The reduction is self-checking:
+the sea-level
+static regime returns $\theta=1.0000$ and $\delta_{\mathrm{p}}=0.9999$, and the implied damage clock
+$\delta_{\mathrm{p}}/\sqrt{\theta}$ spans $3.5\times$ across the six regimes, so the regimes are far
+apart in exactly the sense the method cares about.
+
+Degradation is not the operating point but the departure from it, so the coordinate in which SCC
+calibrates here is the deviation of each referred sensor from its regime's healthy baseline, the
+standard construction of gas-path analysis. That baseline is taken over the first 20 cycles of
+operation at the target regime, which a commissioned asset has, and uses no target failure data, so
+the method's central claim is preserved. Engines are split disjointly into thirds for predictor
+training, calibration and test, because every engine visits every regime and sharing engines would
+leak dependence across the split; calibration takes one snapshot per engine per regime, matching the
+unit-level scheme of Section~\ref{sec:metrics}. A ridge predictor is fitted on the source regime and
+deployed on the target across all 30 ordered regime pairs at $\alpha=0.10$, with a random forest as
+a capacity check.
+
+Two departure quantities are computable before any target failure is observed, and both are tested
+as candidates for $\boldsymbol\psi$: the distance between regimes in the referred ambient
+coordinates $(\log\theta,\log\delta_{\mathrm{p}})$, and the distance between the regimes' healthy
+gas-path signatures.
