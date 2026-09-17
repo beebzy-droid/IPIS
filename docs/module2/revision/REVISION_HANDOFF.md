@@ -224,7 +224,10 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
    criterion), envelope stated in Section 5.2 (actionable to eta=0.68, degenerate from
    eta=1.97), Fig. 2 caption updated, and all four remaining "graceful" claims rewritten. Zero
    occurrences left in source or PDF.
-8. Narrow the certificate claim in abstract and conclusions per decision 3.
+8. **DONE 2026-09-16.** Abstract restructured (249/250 words) with C-MAPSS and the scoped,
+   conservative bound; conclusions split into three paragraphs separating the calibration claim
+   from the certificate claim. FEMTO dropped from the abstract for space, so the drafted R1.3
+   response text in the log needs a one-line fix before the letter goes out.
 9. Add R2m1, R2m2, R2m3 edits.
 10. Regenerate figures affected by unit-level numbers; add a discrete-mode series, and draw the
     actionability band edges (eta=0.68, eta=1.97) on Fig. 2. Figures 1-3
@@ -233,6 +236,8 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
     from `r15b_certificate.py`. Figure 4 is unaffected.
 11. Write the point-by-point response letter (9 major + 3 minor).
 12. Rebuild the flat EM variant and zip; verify single-column, no run-in heads, 0 undefined cites.
+    Also rewrite `paper3/highlights.docx` (5 bullets, <=85 chars, must reflect C-MAPSS and the
+    scoped certificate) and `paper3/cover_letter.docx`, both of which predate the narrowing.
 
 ## 8. Files
 

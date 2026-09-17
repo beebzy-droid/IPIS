@@ -2,16 +2,28 @@
 We presented Similarity-Calibrated Conformal prediction, a deployable method that delivers reliable
 remaining-useful-life intervals when an asset is operated in a regime different from the one its model
 was calibrated on. By calibrating the conformal quantile in a physics-derived dimensionless
-coordinate, SCC restores coverage under operating-regime transfer with no target failure data, fills
-the gap between dimensionless transfer learning (which lacks a coverage guarantee) and weighted
-conformal (which needs target data), and comes with two features a practitioner can act on: an
-a-priori coverage bound computable from physical parameters, and a runtime diagnostic that gives the
-method a self-aware operating envelope. On a controlled catalyst-deactivation reliability testbed the
-method recovers coverage where regime-blind conformal fails, degrades monotonically and within a
-stated actionability envelope under a controlled departure from similitude, with the a-priori bound
-holding on all held-out configurations, and is
-robust across the structure and magnitude of the departure and the coverage level. On the FEMTO
-experimental benchmark, an accelerated laboratory test platform rather than field data, the
-diagnostic correctly places that dataset outside the method's envelope, demonstrating the intended
-fault-tolerant behaviour. The method is ready for the decisive test, validation on adequately
-powered run-to-failure field data from an operating process, which is the focus of continuing work.
+coordinate, SCC restores coverage under operating-regime transfer with no target failure data,
+filling the gap between dimensionless transfer learning, which lacks a coverage guarantee, and
+weighted conformal, which needs target data.
+
+The evidence supports two claims of different strength, and we separate them. The dimensionless
+calibration is the deployable part and is validated twice. On a controlled catalyst-deactivation
+reliability testbed it recovers coverage where regime-blind conformal fails, degrades monotonically
+and within a stated actionability envelope under a controlled departure from similitude, and is
+robust across the structure and magnitude of the departure, the coverage level and the choice of
+base predictor. On 509 externally authored turbofan engines it cuts the cross-regime coverage gap
+from 0.590 to 0.060, replicated across two datasets. The a-priori bound is the narrower claim. It
+holds on every held-out configuration of the testbed but with a mean margin of 0.339, so it is a
+planning bound rather than a sharp estimate, and it requires the governing degradation law to
+identify the similitude-departure quantity. ISO~281 supplies that identification for rolling-contact
+fatigue (see~\ref{app:bearing}); no comparable enumeration exists for a turbofan gas path, and
+neither candidate tested there predicted the residual gap. We therefore claim the certificate for
+assets whose degradation law supplies $\boldsymbol\psi$, and the calibration and the runtime
+diagnostic more broadly.
+
+On the FEMTO experimental benchmark, an accelerated laboratory test platform rather than field data,
+the diagnostic correctly places that dataset outside the method's envelope, demonstrating the
+intended fault-tolerant behaviour; the design map of Section~\ref{sec:res-diag} shows that verdict
+was predictable from six bearings per condition and a sevenfold life spread rather than peculiar to
+the dataset. The decisive test remains validation on adequately powered run-to-failure field data
+from an operating process, which is the focus of continuing work.

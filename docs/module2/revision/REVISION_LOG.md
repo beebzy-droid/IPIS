@@ -747,3 +747,53 @@ clause.
 
 Build after task 7: 30 pp (was 29), 0 errors, 6 overfull hboxes (worst 17.99 pt, all pre-existing),
 0 undefined citations or references. Terminology audit clean.
+
+## Task 8 - certificate claim narrowed in abstract and conclusions (DONE 2026-09-16)
+
+Decision D3 applied. The abstract was restructured rather than patched, because it also had to
+absorb C-MAPSS and the R2m2 tightness qualifier inside the 250-word cap.
+
+**Abstract, now 249 words (was 248).** What changed: the opening compressed; the C-MAPSS
+replication added ("509 externally authored turbofan engines, where the gap falls from 0.590 to
+0.060"); the certificate sentence rewritten to "valid but conservative, and we claim it only where
+the governing degradation law identifies psi, as ISO 281 does for rolling-contact fatigue and no
+comparable standard does for a turbofan gas path". The FEMTO sentence was cut for space. The
+abstract now carries two honest limits (bound scope, bound conservatism) plus the diagnostic
+mechanism, so nothing is buried, but see the correction below.
+
+**Correction to the drafted R1.3 response text.** The R1.3 entry in this log drafted a sentence
+saying the revised manuscript calls FEMTO the experimental benchmark "wherever it appears
+(abstract, Sections 1, 5.5, 6 and 7)". The abstract no longer mentions FEMTO at all. Fix that
+sentence when the response letter is written, or the letter states something the manuscript does
+not support. If Bien would rather keep FEMTO in the abstract, the trade is roughly ten words
+against the C-MAPSS sentence; my recommendation is to leave it out, since Section 5.8 now carries
+the design map that makes the FEMTO verdict predictable rather than anecdotal.
+
+**Conclusions, restructured into three paragraphs.** Paragraph 2 now states the two claims at
+different strengths explicitly: the calibration is validated twice (testbed plus 509 engines,
+0.590 to 0.060) and the bound is the narrower claim, holding on every held-out testbed
+configuration but with a mean margin of 0.339, requiring the governing law to identify psi, with
+ISO 281 as the positive instance and the turbofan gas path as the negative. Paragraph 3 keeps
+FEMTO and now notes the design map explains that verdict.
+
+### Defect found and fixed: every appendix reference read "Appendix Appendix B"
+
+elsarticle expands `\thesection` in the appendix to "Appendix B", so the manuscript's own
+convention is `in~\ref{app:proof}` with no literal word. The task 5 cross-references used
+`Appendix~\ref{app:bearing}` and rendered as "Appendix Appendix B" in three places; the new
+conclusions sentence would have been a fourth. All four now use `~\ref{app:bearing}`. The task 5
+check verified that references RESOLVE (no `??` in the PDF) but not that they READ correctly, which
+is the lesson: grep the rendered text for the reference wording, not just for unresolved marks.
+
+Also rewrapped four source lines that had grown past 100 characters across tasks 4, 5 and 8,
+including a 380-character line left by the task 4 FEMTO insertion, and fixed a comma splice created
+while removing the duplicated "Appendix" in Section 5.5.
+
+Build after task 8: 30 pp, 0 errors, 6 overfull hboxes (worst 15.66 pt, down from 17.99 because the
+abstract reflowed), 0 undefined citations or references, 0 duplicated appendix words. Terminology
+audit clean.
+
+**Still owed on the submission package:** `paper3/highlights.docx` and `paper3/cover_letter.docx`
+both predate the narrowing and the second dataset. Highlights need five bullets at 85 characters or
+fewer reflecting C-MAPSS and the scoped certificate; the cover letter needs the revision framing.
+Fold into task 12.

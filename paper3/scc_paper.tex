@@ -26,25 +26,26 @@ remaining-useful-life intervals under operating-regime transfer}
 \address{Map\'ua Malayan College Mindanao, Davao City, Philippines}
 
 \begin{abstract}
-Prognostics supports condition-based maintenance and safety decisions, where a remaining-useful-life
-(RUL) interval is only as good as its stated confidence. Conformal prediction gives a
-distribution-free coverage guarantee for such models, but only under exchangeability, which fails
-when a model calibrated on assets in one operating regime is deployed on assets in another: the
-interval then miscovers with no warning. The two standard fixes do not suit reliability practice:
-reweighting methods need target failure data a new asset lacks, and dimensionless transfer learning
-improves point accuracy but carries no coverage guarantee. We present Similarity-Calibrated Conformal
-(SCC) prediction, a deployable method that calibrates the conformal quantile in a physics-derived
-dimensionless coordinate (via the Buckingham $\Pi$ theorem) so that coverage transfers across
-operating regimes with no target failure data. SCC adds two features a practitioner can act on: an
-a-priori coverage bound computable from physical parameters alone, the cross-regime shortfall being
-at most $2L\lVert\Delta\boldsymbol\psi\rVert$ in a similitude-departure quantity, and a runtime
-diagnostic returning holds, violated, or indeterminate so the method declines to certify rather than
-miscover. On a controlled catalyst-deactivation reliability testbed, regime-blind conformal miscovers
-(coverage falls to 0.572) while SCC recovers it to within 0.011 of target; under a controlled
-departure both degrade monotonically and the method stays actionable to a quantified threshold,
-and the a-priori bound holds on 100\% of held-out configurations. On the FEMTO accelerated-laboratory
-bearing benchmark the diagnostic correctly places that dataset outside the method's envelope.
-Validation on adequately powered operational field data is the next step.
+In condition-based maintenance and safety decisions, a remaining-useful-life (RUL) interval is only
+as good as its stated confidence. Conformal prediction gives a
+distribution-free coverage guarantee, but only under exchangeability, which fails when a model
+calibrated on assets in one operating regime is deployed in another: the interval then miscovers
+with no warning. The standard fixes do not suit reliability practice: reweighting needs target
+failure data a new asset lacks, and dimensionless transfer learning carries no coverage guarantee.
+We present Similarity-Calibrated Conformal (SCC) prediction, which calibrates the
+conformal quantile in a physics-derived dimensionless coordinate (via the Buckingham $\Pi$ theorem)
+so coverage transfers across operating regimes with no target failure data. On a controlled
+catalyst-deactivation testbed, regime-blind conformal miscovers (coverage falls to 0.572) while SCC
+recovers it to within 0.011 of target, degrades monotonically under a graded departure from
+similitude and stays actionable to a quantified threshold. The calibration replicates on 509
+externally authored turbofan engines, where the gap falls from 0.590 to 0.060.
+SCC adds two features a practitioner can act on: a runtime diagnostic returning holds, violated or
+indeterminate, so the method declines to certify rather than miscover; and an a-priori coverage
+bound, at most $2L\lVert\Delta\boldsymbol\psi\rVert$ in a similitude-departure quantity computed
+from physical parameters. The bound is valid but conservative, and we claim it only where the
+governing degradation law identifies $\boldsymbol\psi$, as ISO 281 does for rolling-contact fatigue
+and no comparable standard does for a turbofan gas path. Validation on adequately powered
+operational field data is the next step.
 \end{abstract}
 
 \begin{keyword}
