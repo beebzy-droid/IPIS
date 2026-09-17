@@ -26,10 +26,16 @@ The predictor extrapolates remaining life from the observed activity using the n
 conformal layer covers the residual. Each metric is read in maintenance terms. \emph{Coverage}
 (target $1-\alpha=0.90$) is the fraction of intervals that contain the true RUL, i.e.\ the realised
 reliability of the maintenance decision; the \emph{coverage gap} $\max(0,(1-\alpha)-\text{coverage})$
-is the shortfall against the promised reliability. \emph{Efficiency}, the relative interval back-off
-$q_T/\overline{\text{RUL}}_T$, measures conservatism, i.e.\ the cost of unnecessarily early
-replacement (smaller is more informative; a diverging value signals degenerate, uselessly wide
-intervals). We also report the \emph{operational bound} $2(a+L\lVert\Delta\boldsymbol\psi\rVert)$ and
+is the shortfall against the promised reliability. \emph{Efficiency} is the relative interval
+back-off $b=q_T/\overline{\text{RUL}}_T$, which measures conservatism, that is the cost of
+unnecessarily early replacement. With the one-sided score $V=\hat y(X)-Y$ the certified set is
+$\{y\ge\hat y(X)-q_T\}$, so a planner acts on the certified fraction of predicted life $1-b$, and
+we report it against three fixed bands: $b<0.5$ is
+\emph{actionable}, more than half the predicted life being certified; $0.5\le b<1$ is
+\emph{degraded}, a positive but shrinking lead time; and $b\ge1$ is \emph{degenerate}, the certified
+lower bound being non-positive on average, so that the interval states only that failure has not
+yet occurred and carries no replacement schedule. We also report the \emph{operational bound}
+$2(a+L\lVert\Delta\boldsymbol\psi\rVert)$ and
 the \emph{diagnostic} verdict. Calibration is \emph{unit-level}: every unit contributes one
 score, taken at a single randomly chosen monitoring fraction, so the calibration set is
 exchangeable across units. Numbers are averaged over five seeds, and coverage gaps are averaged
@@ -37,7 +43,8 @@ over (pair, seed) after the clip at zero, so an averaged gap is not the gap of t
 coverage; we keep the clipped convention throughout as the conservative reading. Three acceptance
 criteria were fixed before running: (1) naive conformal miscovers while SCC recovers at $\eta=0$; (2) the a-priori
 bound, with $L$ fit on a subset of (pair, $\eta$) configurations, upper-bounds the gap on
-\emph{held-out} configurations; and (3) the gap degrades gracefully and monotonically with $\eta$.
+\emph{held-out} configurations; and (3) the coverage gap and the back-off degrade monotonically
+with $\eta$. The three bands above are a reporting scale for the envelope, not a fourth criterion.
 
 \subsection{Second case study: an externally authored turbofan fleet}\label{sec:cmapss}
 The testbed above is ours, so its departure from similitude is a knob we set. To test the method

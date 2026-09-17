@@ -702,3 +702,48 @@ sentence in Section 5.8 about the 0.95^3 ceiling. Do not revisit this without a 
 
 Build after task 5: 29 pp (was 27), 0 errors, 6 overfull hboxes (worst 17.99 pt, all pre-existing),
 0 undefined citations or references. Terminology audit clean.
+
+## Task 7 - actionability envelope stated, "graceful" removed (DONE 2026-09-16)
+
+`scripts/r24_actionability.py` re-run; every value reproduced (b = 0.283, 0.354, 0.437, 0.611,
+0.804, 1.011, 1.413 at eta = 0, 0.25, 0.5, 1, 1.5, 2, 3; crossings at eta = 0.68 and eta = 1.97).
+
+### How the concession is framed
+
+* Section 4.3 now defines efficiency as b = q_T / mean(RUL_T) and attaches three bands:
+  b < 0.5 actionable, 0.5 <= b < 1 degraded, b >= 1 degenerate, with the reason given in the
+  paper's own notation (the one-sided score V = yhat - Y makes the certified set {y >= yhat - q_T},
+  so the planner's quantity is 1 - b).
+* Section 5.2 states the envelope: actionable out to eta = 0.68, degraded to eta = 1.97, degenerate
+  beyond, with the certified fraction at eta = 2 equal to -0.011. Coverage is still certified there
+  (gap 0.097) and the text says so, then says the interval carries no schedule.
+* Figure 2's caption now marks both band edges. Task 10 should draw them on the figure itself.
+
+**The bands are a reporting scale, not a fourth acceptance criterion.** Criterion (3) stays as it
+was pre-specified, minus the word "gracefully": the coverage gap and the back-off degrade
+monotonically with eta. Rewriting a pre-registered criterion after seeing the data would look like
+moving the goalposts, which is a worse charge than the one R2.4 makes.
+
+### "graceful" is gone from the manuscript
+
+All four remaining sites rewritten: the abstract now says both quantities degrade monotonically and
+the method stays actionable to a quantified threshold; acceptance criterion (3) in Section 4.3; the
+discussion's deployment paragraph now says "announced degradation rather than an unannounced loss of
+coverage", which is the defensible version of the same claim; the conclusions say "degrades
+monotonically and within a stated actionability envelope". Zero occurrences of the word remain in
+source or in the rendered PDF.
+
+### Notation caught in review
+
+The first draft of the 4.3 sentence introduced $\widehat{\mathrm{RUL}}$, a symbol the paper does not
+use. Section 3.2 already defines the predictor as $\hat y$ with score $V = \hat y(X) - Y$, so the
+sentence now uses that. Watch for this in the response letter too: the letter should quote the
+manuscript's symbols, not invent readable ones.
+
+Abstract is at 248 words against the 250-word cap, so the C-MAPSS sentence still owed to the
+abstract in task 8 has to come out of a trim. Candidates: the diagnostic clause in the opening
+sentence, which Section 5.8 covers in full, and the FEMTO sentence, which could compress to a
+clause.
+
+Build after task 7: 30 pp (was 29), 0 errors, 6 overfull hboxes (worst 17.99 pt, all pre-existing),
+0 undefined citations or references. Terminology audit clean.

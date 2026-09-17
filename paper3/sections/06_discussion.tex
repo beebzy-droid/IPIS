@@ -15,8 +15,9 @@ planner quote a worst-case coverage shortfall, and therefore a worst-case reliab
 maintenance decision, before the target unit is commissioned. The runtime diagnostic acts as an
 online monitor: when its premise is unsupported it returns \emph{indeterminate} or \emph{violated},
 and the system falls back to conservative data-driven conformal rather than issuing an interval whose
-confidence is silently wrong. The result is graceful degradation, the property a safety-relevant
-prognostic function needs, instead of an unannounced loss of coverage.
+confidence is silently wrong. The result is announced degradation rather than an unannounced loss
+of coverage: where the method weakens, the weakening is visible in the reported efficiency and in
+the diagnostic verdict, which is the property a safety-relevant prognostic function needs.
 
 \subsection{Limitations and validation roadmap}\label{sec:disc-limits}
 Four limitations bound the claims. (i) The guarantee is conditional on the physical hypotheses

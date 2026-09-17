@@ -27,7 +27,7 @@ R2m3 (writing), the manuscript rewrite, and the response letter.**
 | R1.1 base-model complexity | DONE — `scripts/r11_base_model.py`; manuscript Section 5.4 2026-09-16 |
 | R1.2 design guideline | DONE — `scripts/r12_design_guideline.py`; manuscript Section 5.8 2026-09-16 |
 | R2.2 Lundberg-Palmgren psi derivation | DONE — `scripts/r22_lundberg_palmgren.py`; manuscript Appendix B 2026-09-16 |
-| R2.4 actionability concession | DONE — `scripts/r24_actionability.py` |
+| R2.4 actionability concession | DONE — `scripts/r24_actionability.py`; manuscript Sections 4.3, 5.2, abstract, discussion, conclusions 2026-09-16 |
 | R1.3 terminology sweep | DONE 2026-09-15 - `scripts/r13_terminology_sweep.py` (`--audit` guards it) |
 | **R2m1, R2m3** | **TODO (writing)** |
 | **Manuscript rewrite** | **TODO** |
@@ -220,13 +220,14 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
 5. **DONE 2026-09-16.** Appendix B with Tables B.1 and B.2; cross-referenced from Sections 3.2,
    5.5 and 5.8. `scc_paper.tex` now resets appendix float counters (latent numbering bug).
 6. **DONE 2026-09-16.** Section 3.5 now states the dual role and points at Section 5.7.
-7. Rewrite Section 4.3 and 5.2 for the actionability envelope (R2.4); delete "graceful" at
-   eta=2. Section 5.2 and the Fig. 2 caption are already done; the remaining "graceful" claims
-   are `scc_paper.tex:44`, `04_experimental_design.tex:40` (acceptance criterion 3),
-   `06_discussion.tex:18`, `07_conclusions.tex:10`.
+7. **DONE 2026-09-16.** Bands defined in Section 4.3 as a reporting scale (not a fourth
+   criterion), envelope stated in Section 5.2 (actionable to eta=0.68, degenerate from
+   eta=1.97), Fig. 2 caption updated, and all four remaining "graceful" claims rewritten. Zero
+   occurrences left in source or PDF.
 8. Narrow the certificate claim in abstract and conclusions per decision 3.
 9. Add R2m1, R2m2, R2m3 edits.
-10. Regenerate figures affected by unit-level numbers; add a discrete-mode series. Figures 1-3
+10. Regenerate figures affected by unit-level numbers; add a discrete-mode series, and draw the
+    actionability band edges (eta=0.68, eta=1.97) on Fig. 2. Figures 1-3
     are STALE as of 2026-09-15 (prose is unit-level, plots are still stacked): fig1 from
     `r15c_directional.py`, fig2 from `r15_exchangeability.py` + `r24_actionability.py`, fig3
     from `r15b_certificate.py`. Figure 4 is unaffected.

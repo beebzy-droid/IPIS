@@ -20,18 +20,23 @@ unit-level calibration. Naive miscovers (0.572) or over-covers (1.000); SCC trac
 
 \subsection{How does the guarantee degrade as physics departs from similitude?}\label{sec:res-deg}
 As the unmodelled secondary channel is weighted up, the SCC coverage gap rises monotonically (0.011
-at $\eta=0$ to 0.097 at $\eta=2$) and the interval back-off grows from 0.283 to 1.011
-(Fig.~\ref{fig:dep}). Coverage is preserved at a quantified cost in conservatism, but that cost is
-not uniformly benign: a back-off of 1.011 at $\eta=2$ means the certified lower bound is no longer
-positive on average, so the interval remains valid while carrying no replacement schedule.
-Reporting efficiency alongside coverage is what exposes this, instead of leaving a healthy-looking
-coverage number to stand on its own.
+at $\eta=0$ to 0.097 at $\eta=2$) and so does the interval back-off, from $b=0.283$ through 0.437 at
+$\eta=0.5$ and 0.611 at $\eta=1$ to 1.011 at $\eta=2$ (Fig.~\ref{fig:dep}). Read against the bands
+of Section~\ref{sec:metrics} this is an operating envelope rather than a smooth decline: SCC is
+actionable out to $\eta=0.68$, where $b$ reaches 0.5, degraded from there to $\eta=1.97$, and
+degenerate beyond it. At $\eta=2$ the certified fraction of predicted life is $-0.011$. Coverage is
+still certified at that point, the gap being 0.097, but the interval then states only that failure
+has not yet occurred and carries no replacement schedule, so $\eta=2$ marks the edge of the useful
+envelope rather than a comfortable operating point. We report the envelope because the alternative,
+quoting the coverage number alone, leaves a healthy-looking guarantee attached to an interval a
+planner cannot act on.
 
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{figures/fig2_departure.pdf}
 \caption{Under a controlled departure $\eta$ from similitude, the SCC coverage gap (left axis) and
-the relative interval back-off (right axis) degrade monotonically. The back-off reaches 1.011 at
-$\eta=2$, where the certified lower bound is no longer positive on average.}\label{fig:dep}
+the relative interval back-off (right axis) degrade monotonically. The actionable band ($b<0.5$)
+ends at $\eta=0.68$ and degeneracy ($b\ge1$) begins at $\eta=1.97$, where the certified lower bound
+is no longer positive on average.}\label{fig:dep}
 \end{figure}
 
 \subsection{Is the coverage bound reliable before deployment?}\label{sec:res-cert}
