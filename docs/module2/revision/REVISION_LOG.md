@@ -657,3 +657,48 @@ silently when subsections are inserted, and LaTeX will not warn.
 Build after task 4: 27 pp (was 22), 0 errors, 6 overfull hboxes (worst 17.99 pt, all pre-existing),
 0 undefined citations or references, no unresolved cross-references in the PDF. Terminology audit
 clean.
+
+## Task 5 - Lundberg-Palmgren appendix written (DONE 2026-09-16)
+
+`scripts/r22_lundberg_palmgren.py` re-run this session; every value reproduced. The derivation was
+also checked by hand rather than taken on trust:
+
+* sigma_1 = 1e6 (4000/4000)^3 / (60 x 1800) = 9.26 h, sigma_3 = 0.512e6 / (60 x 1500) = 5.69 h,
+  ratio 1.627, which is the 1.63x already quoted for FEMTO in Section 5.8.
+* nu_1 = 4500 n^-0.5 d_m^-0.5 (ISO 281, n >= 1000 rpm, d_m in mm) gives 20.80, 21.73, 22.79 mm^2/s
+  at 1800/1650/1500 rpm with d_m = 26 mm. Implied nu at 60 C is 40.2 mm^2/s, consistent with an
+  ISO VG 100 base oil.
+* C = 4 kN and d_m = 26 mm are the catalogue values for the 6804 deep-groove ball bearing
+  (20 x 32 x 7 mm) used in PRONOSTIA, so the instance is physically anchored, not invented.
+
+**Clarification the log previously left implicit.** The reported departures 0.091 and 1.060 are
+log-ratios: psi = ln kappa, not kappa. |ln(1.933/1.765)| = 0.0910 and |ln(2.957/1.025)| = 1.0596.
+The appendix now states psi = ln kappa explicitly, because a reader who took psi = kappa would get
+0.168 and 1.932 and conclude the numbers do not reconcile.
+
+**Honesty guard in the manuscript.** The FEMTO record does not report the lubricant or its
+operating temperature, so the kappa table is labelled illustrative and the text says the comparison
+between the two thermal rows, not the absolute values, is the point.
+
+Written as Appendix B, "Worked instance: sigma and psi for rolling-contact fatigue": the two-group
+dimensional analysis, Eq. (B.1) for the scale, the ISO 281 a_ISO argument identifying psi as the
+lubrication regime, Table B.1 (scale on the three FEMTO conditions), Table B.2 (kappa at matched
+and spread thermal states), and the practitioner's reading. Cross-references added from
+Section 3.2, from the C-MAPSS scope paragraph in Section 5.5, and from the FEMTO paragraph in
+Section 5.8 where the 1.63x first appears.
+
+### A latent numbering bug, found and fixed
+
+Appendix A carries no floats, so nobody noticed that `\appendix` in this build does not reset the
+float counters. The first appendix table came out as "Table Appendix B.7". `scc_paper.tex` now
+resets both counters after `\appendix` and sets
+`\thetable = \Alph{section}.\arabic{table}` (same for figures), giving Table B.1 and B.2 with body
+tables 1-6 untouched. Any appendix figure added later would have hit the same bug.
+
+### Open decision from task 4, now closed
+
+Bien ratified leaving the diagnostic as submitted: no multiplicity correction, keep the honest
+sentence in Section 5.8 about the 0.95^3 ceiling. Do not revisit this without a new instruction.
+
+Build after task 5: 29 pp (was 27), 0 errors, 6 overfull hboxes (worst 17.99 pt, all pre-existing),
+0 undefined citations or references. Terminology audit clean.

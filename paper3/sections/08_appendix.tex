@@ -59,3 +59,86 @@ scale $\sigma(\theta_T)$. \emph{(b)} Under incomplete similitude, coverage is ce
 $1-\alpha-2L\lVert\Delta\boldsymbol\psi\rVert$ given a bound on the departure. Neither regime estimates
 a density ratio, the property that distinguishes SCC from weighted and covariate-shift conformal.
 \end{corollary}
+
+\section{Worked instance: $\sigma$ and $\boldsymbol\psi$ for rolling-contact fatigue}\label{app:bearing}
+Definition~\ref{def:pi} splits the dimensionless groups into a scale $\sigma$ and a residual
+departure $\boldsymbol\psi$, and the certificate is only as concrete as those two objects. This
+appendix carries the split through for the best-standardised degradation law in the reliability
+literature, rolling-contact fatigue, and evaluates both on the FEMTO operating
+conditions~\cite{nectoux2012pronostia}.
+
+\subsection*{The scale}
+The governing quantities are life $t$~[T], dynamic equivalent load $P$~[F], basic dynamic load
+rating $C$~[F] and rotational speed $n$~[1/T]. Four quantities in two dimensions give two
+independent groups,
+\[
+\Pi_1=t\,n \quad\text{(revolutions)},\qquad \Pi_2=P/C,
+\]
+and Lundberg--Palmgren~\cite{lundberg1947dynamic,iso281} is precisely a relation between them,
+$\Pi_1=10^{6}\,\Pi_2^{-p}$ with $p=3$ for ball bearings. Solving for life in hours gives the scale
+\begin{equation}\label{eq:sigma-bearing}
+\sigma=\frac{10^{6}}{60\,n}\left(\frac{C}{P}\right)^{p}\quad[\text{h}],
+\end{equation}
+so $\sigma$ absorbs load and speed exactly. Table~\ref{tab:bearing-sigma} evaluates
+Eq.~\eqref{eq:sigma-bearing} on the three published FEMTO conditions for the 6804 deep-groove ball
+bearing of that testbed, using its catalogue rating $C=4$~kN and mean diameter $d_m=26$~mm. The
+characteristic life varies by $1.63\times$ across the conditions, which recovers from first
+principles the L10 ratio quoted in Section~\ref{sec:res-diag}.
+
+\begin{table}[h]\centering\footnotesize
+\setlength{\tabcolsep}{10pt}\renewcommand{\arraystretch}{1.2}
+\caption{The scale on the FEMTO conditions, from Eq.~\eqref{eq:sigma-bearing} with $C=4$~kN,
+$p=3$. L10 is normalised to condition~1.}\label{tab:bearing-sigma}
+\begin{tabular}{@{}lcccc@{}}\toprule
+Condition & $n$ [rpm] & $P$ [N] & L10 [normalised] & $\sigma$ [h] \\\midrule
+1 & 1800 & 4000 & 1.000 & 9.26 \\
+2 & 1650 & 4200 & 0.864 & 8.73 \\
+3 & 1500 & 5000 & 0.512 & 5.69 \\\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{The departure parameter}
+ISO~281 does not stop at the basic rating life. The modified life is
+$L_{nm}=a_1\,a_{\mathrm{ISO}}\,L_{10}$, where the life modification factor
+$a_{\mathrm{ISO}}=f(e_C C_u/P,\ \kappa)$ depends on the contamination group $e_C C_u/P$ and the
+viscosity ratio $\kappa=\nu/\nu_1$. The arguments of $a_{\mathrm{ISO}}$ are exactly the groups the
+basic rating life does not absorb, so for this law the standard itself enumerates
+$\boldsymbol\psi$: the lubrication regime, principally $\kappa$, together with the contamination
+group. We take $\boldsymbol\psi=\ln\kappa$, the viscosity ratio being multiplicative. The reference
+viscosity is fixed by geometry and speed, $\nu_1=4500\,n^{-0.5}d_m^{-0.5}$ for $n\ge1000$~rpm, while
+$\nu$ follows from the lubricant and its \emph{operating temperature} through the Walther relation
+of ASTM~D341. Two conditions are in similitude when they share $\kappa$, whatever their loads and
+speeds.
+
+Table~\ref{tab:bearing-psi} evaluates $\boldsymbol\psi$ on the same three conditions for an
+illustrative ISO~VG~100 grease base oil. The lubricant and its temperatures are illustrative, since
+the FEMTO record does not report them; the point is the comparison between the two rows, not the
+absolute values.
+
+\begin{table}[h]\centering\footnotesize
+\setlength{\tabcolsep}{9pt}\renewcommand{\arraystretch}{1.2}
+\caption{The departure parameter on the FEMTO conditions for an illustrative ISO~VG~100 base oil,
+with $\nu_1=4500\,n^{-0.5}d_m^{-0.5}$ and $\boldsymbol\psi=\ln\kappa$. The last column is the
+largest pairwise departure $\lVert\Delta\boldsymbol\psi\rVert$ entering the
+certificate.}\label{tab:bearing-psi}
+\begin{tabular}{@{}lcccc@{}}\toprule
+Thermal state & $\kappa_1$ & $\kappa_2$ & $\kappa_3$ & $\lVert\Delta\boldsymbol\psi\rVert$ \\\midrule
+All conditions at 60\,$^\circ$C            & 1.933 & 1.851 & 1.765 & 0.091 \\
+Spread 50 / 60 / 75\,$^\circ$C             & 2.957 & 1.851 & 1.025 & 1.060 \\\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{What this tells a practitioner}
+Load and speed differ enough across these conditions to move the characteristic life by
+$1.63\times$, and they cost nothing in similitude because $\sigma$ absorbs them exactly. At a matched
+thermal state the residual departure is 0.091; a 25\,$^\circ$C spread in operating temperature
+raises it to 1.060, roughly $12\times$ larger. For rolling-contact fatigue it is therefore the
+thermal and lubrication state, not the load, that breaks similitude and has to be matched or
+reported as $\boldsymbol\psi$. That is an actionable instruction for commissioning a fleet, and it
+is not the instruction an engineer would guess from the rating-life formula alone.
+
+It also delimits the certificate. Where the governing standard enumerates the residual groups, as
+ISO~281 does through $a_{\mathrm{ISO}}$, $\boldsymbol\psi$ is identifiable and the a-priori bound is
+applicable. No equivalent enumeration exists for a turbofan gas path, which is the most plausible
+reading of the negative result in Section~\ref{sec:res-cmapss}: identifiability of
+$\boldsymbol\psi$, rather than the bound itself, is the practical boundary of the method.

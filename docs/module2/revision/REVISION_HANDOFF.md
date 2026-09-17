@@ -26,7 +26,7 @@ R2m3 (writing), the manuscript rewrite, and the response letter.**
 | R2.1 C-MAPSS second dataset | DONE — `scripts/cmapss_loader.py`, `scripts/r21_cmapss.py`, `scripts/r21b_psi_candidates.py`; written into the manuscript 2026-09-16 |
 | R1.1 base-model complexity | DONE — `scripts/r11_base_model.py`; manuscript Section 5.4 2026-09-16 |
 | R1.2 design guideline | DONE — `scripts/r12_design_guideline.py`; manuscript Section 5.8 2026-09-16 |
-| R2.2 Lundberg-Palmgren psi derivation | DONE — `scripts/r22_lundberg_palmgren.py` |
+| R2.2 Lundberg-Palmgren psi derivation | DONE — `scripts/r22_lundberg_palmgren.py`; manuscript Appendix B 2026-09-16 |
 | R2.4 actionability concession | DONE — `scripts/r24_actionability.py` |
 | R1.3 terminology sweep | DONE 2026-09-15 - `scripts/r13_terminology_sweep.py` (`--audit` guards it) |
 | **R2m1, R2m3** | **TODO (writing)** |
@@ -215,9 +215,10 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
 4. **DONE 2026-09-16.** R1.1 in Section 5.4 (Table 2), R2.3 in new Section 5.6 (Table 4), R1.4
    in new Section 5.7 (Table 5), R1.2 at the head of Section 5.8 (Table 6). One open decision
    raised in the log: whether to multiplicity-correct the diagnostic verdict, which currently
-   has a ceiling near 0.86 under exact similitude. Recommendation is to leave it and keep the
-   honest sentence.
-5. New appendix: Lundberg-Palmgren psi derivation (R2.2).
+   has a ceiling near 0.86 under exact similitude. CLOSED 2026-09-16: Bien ratified leaving the
+   diagnostic as submitted, honest sentence kept.
+5. **DONE 2026-09-16.** Appendix B with Tables B.1 and B.2; cross-referenced from Sections 3.2,
+   5.5 and 5.8. `scc_paper.tex` now resets appendix float counters (latent numbering bug).
 6. **DONE 2026-09-16.** Section 3.5 now states the dual role and points at Section 5.7.
 7. Rewrite Section 4.3 and 5.2 for the actionability envelope (R2.4); delete "graceful" at
    eta=2. Section 5.2 and the Fig. 2 caption are already done; the remaining "graceful" claims
