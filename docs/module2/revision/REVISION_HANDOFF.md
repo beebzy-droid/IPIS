@@ -12,9 +12,9 @@ the rebuild instructions, and the remaining work.
 
 ## 1. Where the revision stands
 
-**All analysis is COMPLETE. 10 of the 12 reviewer comments are closed, plus the
-reproducibility rebuild. R1.3 was closed in the source on 2026-09-15. Remaining: R2m1 and
-R2m3 (writing), the manuscript rewrite, and the response letter.**
+**All analysis is COMPLETE and all 12 reviewer comments are now answered in the manuscript
+(last one written 2026-09-16), plus the reproducibility rebuild. Remaining: figures (task 10),
+the response letter (task 11), and the submission package (task 12).**
 
 | Item | Status |
 |---|---|
@@ -29,7 +29,7 @@ R2m3 (writing), the manuscript rewrite, and the response letter.**
 | R2.2 Lundberg-Palmgren psi derivation | DONE — `scripts/r22_lundberg_palmgren.py`; manuscript Appendix B 2026-09-16 |
 | R2.4 actionability concession | DONE — `scripts/r24_actionability.py`; manuscript Sections 4.3, 5.2, abstract, discussion, conclusions 2026-09-16 |
 | R1.3 terminology sweep | DONE 2026-09-15 - `scripts/r13_terminology_sweep.py` (`--audit` guards it) |
-| **R2m1, R2m3** | **TODO (writing)** |
+| R2m1, R2m3 | DONE 2026-09-16 — R2m1 in Sections 3.3, 5.3 and Appendix B; R2m3 moved into Section 3.4 |
 | **Manuscript rewrite** | **TODO** |
 | **Response-to-reviewers letter** | **TODO** |
 
@@ -228,7 +228,10 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
    conservative bound; conclusions split into three paragraphs separating the calibration claim
    from the certificate claim. FEMTO dropped from the abstract for space, so the drafted R1.3
    response text in the log needs a one-line fix before the letter goes out.
-9. Add R2m1, R2m2, R2m3 edits.
+9. **DONE 2026-09-16.** R2m1 ($m=1$ here, norm immaterial at $m=1$, concrete $m=2$ case in
+   Appendix B), R2m2 completed with the irreducible factor of two from Lemma 1, R2m3 moved into
+   Section 3.4. Fixed a symbol collision: Section 3.4 had used $m$ for the number of source
+   conditions while $m$ is the dimension of psi elsewhere.
 10. Regenerate figures affected by unit-level numbers; add a discrete-mode series, and draw the
     actionability band edges (eta=0.68, eta=1.97) on Fig. 2. Figures 1-3
     are STALE as of 2026-09-15 (prose is unit-level, plots are still stacked): fig1 from

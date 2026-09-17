@@ -80,12 +80,23 @@ $1-\alpha-2L\lVert\Delta\boldsymbol\psi\rVert$ once the departure is bounded, so
 shortfall is known before deployment. Neither case estimates a density ratio, which is what separates
 SCC from weighted and covariate-shift conformal.
 
+The dimension $m$ of $\boldsymbol\psi$ is set by the physics rather than by the method, and the case
+exercised in this paper has $m=1$: the departure is the scalar weight on a single unmodelled
+channel, so the norm in~\eqref{eq:cert} reduces to an absolute value and its choice is immaterial.
+When $m>1$, as it becomes for rolling-contact fatigue once the contamination group is carried
+alongside the lubrication regime (\ref{app:bearing}), the norm has to be fixed at the same time as
+$\boldsymbol\psi$, since $L$ is estimated in that norm and rescales with it.
+
 \subsection{Estimating the departure sensitivity $L$}\label{sec:estL}
-The constant $L$ in~\eqref{eq:cert} is obtained from source data alone. With $m\ge2$ source
+The constant $L$ in~\eqref{eq:cert} is obtained from source data alone. With at least two source
 conditions, regress the empirical total-variation distance between dimensionless score laws,
 $\dtv(\tilde{\mathcal V}_S,\tilde{\mathcal V}_{S'})$, on the physical departure
-$\lVert\Delta\boldsymbol\psi\rVert$ over source pairs; the slope estimates $L$ and the intercept $a$
-estimates the finite-sample floor, which decays as $n^{-1/2}$. The operational bound
+$\lVert\Delta\boldsymbol\psi\rVert$; the slope estimates $L$ and the intercept $a$ estimates the
+finite-sample floor, which decays as $n^{-1/2}$. The design points are configurations, not conditions:
+each ordered pair of source conditions contributes one point per distinct departure magnitude the
+source data exhibits, so a fleet with three conditions supplies far more than three points. In the
+study of Section~\ref{sec:res-cert} this gives 30 (pair, departure) configurations, of which 60\% are
+used for the fit and the remaining 40\% are held out to validate the resulting bound. The operational bound
 $2(a+L\lVert\Delta\boldsymbol\psi\rVert)$ then upper-bounds the target coverage gap using only
 source-side information.
 

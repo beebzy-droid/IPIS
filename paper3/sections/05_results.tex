@@ -41,7 +41,8 @@ is no longer positive on average.}\label{fig:dep}
 
 \subsection{Is the coverage bound reliable before deployment?}\label{sec:res-cert}
 With the intercept $a$ and slope $L$ fit on 60\% of (pair, $\eta$) configurations, the physical
-departure $\delta=\eta\lvert h(S)-h(T)\rvert$ predicts the dimensionless score-distribution mismatch
+departure $\delta=\eta\lvert h(S)-h(T)\rvert$, the scalar $m=1$ instance of $\lVert\Delta\boldsymbol\psi\rVert$,
+predicts the dimensionless score-distribution mismatch
 on the held-out 40\% with $R^2=0.773$ (correlation 0.947), and the resulting a-priori bound
 $2(a+L\delta)$ upper-bounds the measured coverage gap on \emph{100\%} of held-out configurations
 (Fig.~\ref{fig:cert}). Validity is not sharpness, and the margin says which one this is: across
@@ -51,7 +52,10 @@ eight. The looseness sits in the intercept rather than the physical slope, since
 bound is $2a=0.278$ against a measured gap of 0.011. That intercept is the finite-sample floor of
 the plug-in total-variation estimator and decays as $n^{-1/2}$ in the number of calibration units
 (0.424 at 50 units to 0.096 at 800, a log-log slope of $-0.513$ against the $-0.500$ predicted), so
-the certificate tightens as the calibration fleet grows. For deployment this means the worst-case
+the certificate tightens as the calibration fleet grows. A second factor of two is irreducible: the
+swap argument of Lemma~\ref{lem:barber} bounds the perturbation of the calibration set by twice the
+total-variation distance between the source and target score laws, and no amount of calibration
+data removes it. For deployment this means the worst-case
 coverage shortfall can be quoted from physical parameters before the target asset is run, as a
 worst-case planning bound rather than a sharp estimate.
 

@@ -797,3 +797,43 @@ audit clean.
 both predate the narrowing and the second dataset. Highlights need five bullets at 85 characters or
 fewer reflecting C-MAPSS and the scoped certificate; the cover letter needs the revision framing.
 Fold into task 12.
+
+## Task 9 - R2m1, R2m2 and R2m3 (DONE 2026-09-16)
+
+**R2m1, the dimension of psi and the norm.** Section 3.3 now says the dimension $m$ is set by the
+physics rather than the method, that the case exercised in this paper has $m=1$ (a scalar weight on
+one unmodelled channel, so the norm in Eq. (1) reduces to an absolute value and its choice is
+immaterial), and that for $m>1$ the norm has to be fixed at the same time as psi because $L$ is
+estimated in that norm and rescales with it. Section 5.3 labels delta as "the scalar $m=1$ instance
+of the departure". Appendix B supplies the concrete $m=2$ case: carrying the contamination group
+alongside the lubrication regime makes psi two-dimensional, and we say why we take the scalar
+ln kappa instead (the FEMTO record reports nothing about contamination).
+
+**R2m2, the second source of conservatism.** The margin numbers, the intercept diagnosis and the
+planning-bound framing went in at task 2. What was missing is the irreducible half: Section 5.3 now
+states that a second factor of two comes from the swap argument of Lemma 1, which bounds the
+perturbation of the calibration set by twice the total-variation distance between source and target
+score laws, and that no amount of calibration data removes it. That completes the honest account:
+one loose term that shrinks with n, one that does not.
+
+**R2m3, what the L regression is fit on.** Moved up from Section 5.3 into Section 3.4. The text now
+says the design points are configurations rather than conditions, each ordered pair contributing one
+point per distinct departure magnitude the source data exhibits, so three conditions supply far more
+than three points; in the Section 5.3 study this is 30 (pair, departure) configurations, 60% fit and
+40% held out. Consistent with `r15b_certificate.py`, whose eta grid of five values over six ordered
+pairs gives exactly 30 rows. Note the robustness sweep in Table 1 uses a four-value eta grid and
+therefore 24 configurations; the sentence is scoped to Section 5.3 so the two do not collide.
+
+### Symbol collision found while doing R2m3
+
+Section 3.4 used $m$ for the NUMBER OF SOURCE CONDITIONS ("with $m\ge2$ source conditions") while
+Section 3.2 and Appendix A use $m$ for the DIMENSION of psi. Writing "the tested case has $m=1$" for
+R2m1 next to "with $m\ge2$ source conditions" would have read as a flat contradiction, and a
+reviewer who noticed it would have been right. Section 3.4 now says "with at least two source
+conditions" and uses no symbol, so $m$ means the dimension of psi everywhere in the paper.
+
+Build after task 9: 31 pp (was 30), 0 errors, 6 overfull hboxes (worst 15.66 pt, all pre-existing),
+0 undefined citations or references, 0 duplicated appendix words. Terminology audit clean.
+
+All twelve reviewer comments are now answered in the manuscript. What remains is presentation:
+figures (task 10), the response letter (task 11), and the submission package (task 12).
