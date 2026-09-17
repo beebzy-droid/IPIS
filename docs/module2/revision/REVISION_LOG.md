@@ -588,3 +588,72 @@ phrase "near-constant floor" in the response letter: the per-pair spread is as l
 
 Build after the addition: 22 pp (was 19), 0 errors, 6 overfull hboxes (worst 17.99 pt, all
 pre-existing), 0 undefined citations or references. Terminology audit clean.
+
+## Task 4 - R1.1, R2.3, R1.4 and R1.2 written into the manuscript (DONE 2026-09-16)
+
+All four scripts were re-run in this session before any prose was written, and every value
+reproduced the figure recorded in the sections above exactly: `r11_base_model.py` (88 s),
+`r23_discrete_mode.py` (<1 s), `r14_misspecification.py` (2 s), `r12_design_guideline.py` (48 s).
+
+| Item | Where it landed | Table |
+|---|---|---|
+| R1.1 base-model complexity | Section 5.4, second paragraph | Table 2 |
+| R2.1 (already written) | Section 5.5 | Table 3 |
+| R2.3 discrete-mode baseline | new Section 5.6 | Table 4 |
+| R1.4 misspecification and detectability | new Section 5.7 | Table 5 |
+| R1.2 design guideline | opening of Section 5.8 | Table 6 |
+| diagnostic dual role (checklist item 6) | closing paragraph of Section 3.5 | -- |
+
+Table numbering is now 1 robustness, 2 base model, 3 C-MAPSS, 4 discrete mode, 5 misspecification,
+6 design map. The C-MAPSS table moved from 2 to 3; use the final numbers when the response letter
+points the reviewers at specific tables.
+
+### New finding: the design map has a ceiling of about 0.86, and it is a multiplicity artefact
+
+`r12_design_guideline.py` prints rows at 80 and 160 units where the holds rate does not keep
+rising (0.82 and 0.78 at scatter 0.25). A probe run this session rules out the obvious
+explanation, an estimator bias in $g$: at scatter 0.25 the mean worst-pair $g$ is 0.989 to 1.007
+for 10 to 320 units, and the mean $\lvert\ln g\rvert$ across pairs falls monotonically from 0.095
+to 0.020, exactly as a consistent estimator should. The cause is multiplicity. The reported verdict
+is the worst of three pairwise interval tests at a nominal 95% each, so under exact similitude the
+expected holds rate is about 0.95^3 = 0.86, which is where the larger fleets settle. The manuscript
+now states this in Section 5.8 and calls a multiplicity-corrected verdict the obvious refinement.
+
+**Open decision for Bien (not built).** The diagnostic could be corrected now, either Bonferroni at
+1 - 0.05/3 per pair or a joint test across pairs. Arguments for: it raises the ceiling toward 1 and
+removes a soft target. Arguments against: it changes a method definition mid-revision, it re-runs
+every diagnostic number in the paper including Figure 4, and it makes intervals wider, which pushes
+marginal cases from violated toward indeterminate. FEMTO stays indeterminate either way, since its
+verdict is driven by CI width. My recommendation is to leave the method as submitted and keep the
+honest sentence, because a reviewer asked for a design guideline, not for a redesigned test. Say
+the word if you want it corrected instead.
+
+### R1.1 and R2.1 disagree about model capacity, and the manuscript now says why
+
+On the testbed the naive gap worsens with capacity (0.127 closed form to 0.449 random forest); on
+C-MAPSS it improves (0.590 ridge to 0.128 random forest). Section 5.4 now states the reason: the
+C-MAPSS raw sensors encode the operating regime itself, so a flexible learner can partly infer the
+regime and compensate, while the testbed's raw signal carries no such marker. The invariant across
+both is that SCC is the better arm in every row. This closes the item flagged at the end of the
+task 3 entry.
+
+### A broken cross-reference, found and fixed
+
+The C-MAPSS subsection ended by pointing at "the next subsection" for the diagnostic. Inserting
+Sections 5.6 and 5.7 between them made that false; it now points at Section~\ref{sec:res-diag} by
+label. Worth remembering for the remaining tasks: prose that says "the next section" breaks
+silently when subsections are inserted, and LaTeX will not warn.
+
+### Judgement calls
+
+* Section 5.8 keeps the R1.3 title fix and gains the design envelope:
+  "Knowing when not to trust the method: the design envelope and a thin experimental benchmark".
+* Table 6 includes the 80- and 160-unit rows even though they weaken the appearance of the power
+  curve. The script prints them, so a reviewer who runs it sees them; better to explain the ceiling
+  than to crop the table at 40 units.
+* Table 5 drops the decoupled naive column, which is 0.132 at every row by construction, and says
+  so in the caption. Six columns fit; seven did not.
+
+Build after task 4: 27 pp (was 22), 0 errors, 6 overfull hboxes (worst 17.99 pt, all pre-existing),
+0 undefined citations or references, no unresolved cross-references in the PDF. Terminology audit
+clean.

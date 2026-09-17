@@ -99,3 +99,10 @@ interval gives \emph{holds}; $1$ outside gives \emph{violated}; an interval wide
 gives \emph{indeterminate} (underpowered). On the latter two, SCC declines the a-priori certificate
 and falls back to data-driven conformal, so an unsupported premise produces a conservative fallback
 rather than a silent miscoverage.
+
+The same check does double duty. Because it tests the invariance of the dimensionless life, it is
+sensitive not only to a departure from similitude but also to misspecification of the scale itself:
+an assumed activation energy that is wrong distorts the between-condition behaviour of $\sigma$ and
+breaks the same invariance. Section~\ref{sec:res-misspec} reports it returning \emph{violated} at
+every misspecification tested, including the smallest one at which a wrong scale makes SCC worse
+than not scaling at all, so both failure modes are caught by one runtime test.

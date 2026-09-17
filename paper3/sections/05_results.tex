@@ -84,6 +84,42 @@ Coverage $\alpha$ & 0.05 & 0.138 & 0.008 & 0.071 & 0.372 & 100 \\
 \end{tabular}
 \end{table}
 
+The result also survives a change of base predictor, which is the sharper form of the question:
+a more flexible learner might be expected to degrade the guarantee. The predictor is developed on
+the source condition and deployed on the target, the naive baseline fitting it in raw coordinates
+and SCC fitting the same model class in the dimensionless ones
+(Table~\ref{tab:basemodel}). The risk is real and it falls entirely on the unscaled baseline: the
+naive gap at $\eta=0$ worsens from 0.127 for the closed-form extrapolator to 0.449 for a random
+forest, a factor of $3.5$, because a learner fitted flexibly to one operating regime fails harder
+when deployed on another. SCC is flat at 0.007 to 0.014 across all four model classes, and under
+departure the more flexible learners are the better ones (0.046 for the neural network against
+0.102 for the closed form at $\eta=2$), since a model fitted in dimensionless coordinates absorbs
+part of the residual departure. Conservatism does not degrade with capacity.
+
+Two qualifications belong with that claim. The drop-in property holds provided the learned
+predictor is fitted in the dimensionless coordinates; a model fitted in raw coordinates cannot be
+repaired by calibration alone, because no conformal layer can fix a point predictor that does not
+transfer. And the ordering of the naive column is a property of the testbed rather than a law: on
+C-MAPSS it runs the other way (Section~\ref{sec:res-cmapss}), where the raw sensors encode the
+operating regime itself, so a flexible learner can partly infer the regime and compensate, while on
+the testbed the raw signal carries no such marker. What is invariant across both datasets is that
+SCC is the better arm in every row.
+
+\begin{table}[t]\centering\footnotesize
+\setlength{\tabcolsep}{10pt}\renewcommand{\arraystretch}{1.2}
+\caption{Coverage gap by base predictor, trained on the source condition and deployed on the
+target, under unit-level calibration. Naive fits the predictor in raw coordinates; SCC fits the same
+model class in the dimensionless ones.}\label{tab:basemodel}
+\begin{tabular}{@{}lcccc@{}}\toprule
+& \multicolumn{2}{c}{$\eta=0$} & \multicolumn{2}{c}{$\eta=2$} \\\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Base predictor & Naive & SCC & Naive & SCC \\\midrule
+Closed-form physics & 0.127 & 0.014 & 0.335 & 0.102 \\
+Ridge regression    & 0.275 & 0.008 & 0.317 & 0.061 \\
+Random forest       & 0.449 & 0.014 & 0.450 & 0.085 \\
+Neural network      & 0.346 & 0.007 & 0.483 & 0.046 \\\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{Does the method transfer to a fleet we did not author?}\label{sec:res-cmapss}
 On C-MAPSS the calibration transfers and the a-priori certificate does not. The two halves scope the
 contribution differently, so we report them separately.
@@ -114,8 +150,8 @@ data with about 260 units per regime and replicated across two datasets. The a-p
 requires $\boldsymbol\psi$ to be identified from the governing degradation law, which the catalyst
 testbed supplies and a turbofan gas path does not, at least not through either candidate tested
 here. Where $\boldsymbol\psi$ is unavailable the runtime diagnostic of
-Section~\ref{sec:diagnostic} is the deployment safeguard, and the next subsection shows what it does
-when the evidence is too thin to support the premise.
+Section~\ref{sec:diagnostic} is the deployment safeguard, and Section~\ref{sec:res-diag} shows what it
+does when the evidence is too thin to support the premise.
 
 \begin{table}[t]\centering\footnotesize
 \setlength{\tabcolsep}{7pt}\renewcommand{\arraystretch}{1.2}
@@ -138,7 +174,119 @@ FD004 & healthy gas-path signature & $-0.086$ & $-0.074$ & 83 \\\bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Knowing when not to trust the method: the diagnostic on a thin experimental benchmark}\label{sec:res-diag}
+\subsection{Comparison with discrete-mode conformal}\label{sec:res-mondrian}
+The natural alternative to a physical scale is to treat each operating condition as a discrete mode
+and calibrate within it~\cite{javanmardi2023conformal}. We give that baseline the most favourable
+reading available, supplying the three testbed temperatures as known modes, and separate the two
+cases that differ operationally (Table~\ref{tab:mondrian}).
+
+When the target condition has its own run-to-failure history, discrete-mode calibration is
+near-oracle and, once the departure is large, better than SCC (0.009 against 0.045 at $\eta=1$). SCC
+matches it under exact similitude (0.009 against 0.011) while using no target failure data at all.
+We state the implication plainly: where failure data already exists at the deployment condition, the
+discrete remedy is the right tool and the physical scale is not needed.
+
+The second case is the one SCC exists for. When the target condition has no failure history the
+discrete method has no calibration set for that mode, must fall back to the nearest mode, and lands
+close to regime-blind pooling (0.078 to 0.138 against 0.093 to 0.159 pooled). SCC holds at 0.009 to
+0.040, a gap smaller by $3.5\times$ to $8.7\times$, because the physical scale transports the
+calibration instead of requiring it to be re-earned at every condition. A newly commissioned unit, a
+new operating point, or any condition the fleet has not yet run to failure is always in this case.
+
+\begin{table}[t]\centering\footnotesize
+\setlength{\tabcolsep}{10pt}\renewcommand{\arraystretch}{1.2}
+\caption{Coverage gap against discrete-mode conformal, unit-level calibration, mean over target
+conditions and five seeds. \emph{Target history} indicates whether the deployment condition has its
+own run-to-failure data; pooled is regime-blind calibration over all conditions and does not apply
+when the target has its own data.}\label{tab:mondrian}
+\begin{tabular}{@{}llccc@{}}\toprule
+$\eta$ & Target history & Discrete-mode & SCC & Pooled \\\midrule
+0.0 & available   & 0.011 & 0.009 & n/a \\
+0.5 & available   & 0.017 & 0.031 & n/a \\
+1.0 & available   & 0.009 & 0.045 & n/a \\\midrule
+0.0 & unavailable & 0.078 & \textbf{0.009} & 0.093 \\
+0.5 & unavailable & 0.109 & \textbf{0.025} & 0.128 \\
+1.0 & unavailable & 0.138 & \textbf{0.040} & 0.159 \\\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{What happens when the assumed physics is wrong?}\label{sec:res-misspec}
+The scale is built from an assumed activation energy, so the method has to be tested against that
+assumption being wrong. We perturb the assumed $E_1$ while holding $k(T_{\mathrm{ref}})$ fixed, so
+only the between-condition behaviour of $\sigma$ is distorted, which is the part similitude depends
+on (Table~\ref{tab:misspec}).
+
+Two cases separate sharply. When only the scale is wrong and the predictor is unaffected, the
+tolerance is wide: the SCC gap stays at or below 0.05 out to $\lvert\Delta E/E\rvert=31\%$, remains
+better than not scaling at all out to $+62\%$, and becomes worse than the unscaled baseline only at
+$+100\%$ (0.139 against 0.132). When a single wrong model drives both the predictor and the scale,
+which is the realistic case, the method is much more fragile: SCC is already worse than the unscaled
+baseline at $-10\%$ (0.072 against 0.061) and clearly worse at $-19\%$ (0.157 against 0.030).
+
+The mitigation is that the dangerous regime is detectable before deployment, from source data alone.
+The dimensionless-life invariance check returns \emph{holds} only at the correct scale ($g=0.967$,
+interval $[0.92,1.01]$) and \emph{violated} at every misspecification tested, including the $-10\%$
+point at which the coupled case first turns against the method ($g=1.215$, $[1.16,1.27]$) and the
+$+10\%$ point ($g=0.769$, $[0.73,0.81]$). This is a capability the submitted manuscript did not
+claim: the runtime check tests the invariance of the dimensionless life, so it is sensitive to
+misspecification of the scale itself as well as to a departure from similitude. The failure mode the
+reviewer identifies is real, and it is not silent.
+
+\begin{table}[t]\centering\footnotesize
+\setlength{\tabcolsep}{7pt}\renewcommand{\arraystretch}{1.2}
+\caption{Misspecified activation energy. \emph{Scale only}: the assumed $E_1$ enters the
+dimensionless scale but not the predictor, so the naive baseline is 0.132 at every row by
+construction. \emph{Coupled}: the same wrong model drives predictor and scale. $g$ and its bootstrap
+interval are the runtime invariance check computed from source data only, with \emph{holds} returned
+when 1 lies inside the interval.}\label{tab:misspec}
+\begin{tabular}{@{}lccccc@{}}\toprule
+& Scale only & \multicolumn{2}{c}{Coupled} & \multicolumn{2}{c}{Invariance check} \\
+\cmidrule(lr){2-2}\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+$\Delta E/E$ & SCC & Naive & SCC & $g$ & 95\% interval \\\midrule
+$-50\%$  & 0.076 & 0.326 & 0.367 & 3.039 & [2.90, 3.19] \\
+$-31\%$  & 0.047 & 0.246 & 0.275 & 1.978 & [1.89, 2.07] \\
+$-19\%$  & 0.029 & 0.030 & 0.157 & 1.485 & [1.42, 1.56] \\
+$-10\%$  & 0.016 & 0.061 & 0.072 & 1.215 & [1.16, 1.27] \\
+$0\%$    & 0.011 & 0.132 & 0.011 & 0.967 & [0.92, 1.01] \\
+$+10\%$  & 0.020 & 0.211 & 0.055 & 0.769 & [0.73, 0.81] \\
+$+19\%$  & 0.036 & 0.269 & 0.142 & 0.629 & [0.60, 0.66] \\
+$+62\%$  & 0.105 & 0.381 & 0.401 & 0.231 & [0.22, 0.24] \\
+$+100\%$ & 0.139 & 0.393 & 0.443 & 0.098 & [0.09, 0.10] \\\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Knowing when not to trust the method: the design envelope and a thin experimental
+benchmark}\label{sec:res-diag}
+A diagnostic that abstains is useful only if the data environment it needs is attainable, so we map
+that first. Under exact similitude, where \emph{holds} is the correct answer, the fraction of trials
+returning it depends on the units per condition and on the unit-to-unit life scatter
+(Table~\ref{tab:power}). The requirement is modest: three units suffice at a scatter of 0.10, six at
+0.25 and ten at 0.50, which is within reach of an ordinary industrial fleet, and the C-MAPSS fleet
+at roughly 260 units per regime sits far inside the feasible region. Only at a scatter of 0.80 does
+the requirement rise to about forty units. The map should be read as a floor on fleet size rather
+than as a power curve approaching one: the reported verdict is the worst of three pairwise interval
+tests at a nominal 95\% each, so even under exact similitude the achievable rate is about
+$0.95^3\approx0.86$, which is where the larger fleets settle. A multiplicity-corrected verdict is
+the obvious refinement and would raise that ceiling.
+
+\begin{table}[t]\centering\footnotesize
+\setlength{\tabcolsep}{12pt}\renewcommand{\arraystretch}{1.2}
+\caption{Fraction of trials in which the diagnostic returns the correct \emph{holds} verdict under
+exact similitude, by units per condition and unit-to-unit life scatter $\sigma_{\ln A}$. Forty
+trials per cell, so each entry carries a standard error of about 0.06.}\label{tab:power}
+\begin{tabular}{@{}lcccc@{}}\toprule
+& \multicolumn{4}{c}{Life scatter $\sigma_{\ln A}$} \\\cmidrule(lr){2-5}
+Units per condition & 0.10 & 0.25 & 0.50 & 0.80 \\\midrule
+3   & 0.90 & 0.75 & 0.20 & 0.05 \\
+6   & 0.97 & 0.90 & 0.50 & 0.00 \\
+10  & 0.95 & 0.88 & 0.82 & 0.17 \\
+20  & 0.97 & 0.95 & 0.85 & 0.68 \\
+40  & 1.00 & 0.95 & 0.85 & 0.93 \\
+80  & 0.97 & 0.82 & 0.90 & 0.88 \\
+160 & 0.90 & 0.78 & 0.88 & 0.82 \\\bottomrule
+\end{tabular}
+\end{table}
+
 On synthetic data the runtime diagnostic discriminates correctly: it returns \emph{holds} when lives
 obey L10, \emph{violated} when they do not (with adequate units), and \emph{indeterminate} when the
 within-condition spread swamps the structural signal (Fig.~\ref{fig:diag}). The FEMTO bearing
@@ -150,7 +298,7 @@ conditions. The diagnostic therefore returns \emph{indeterminate} and SCC declin
 certificate, deferring to data-driven conformal. This is an honest applicability limit rather than a
 failure, and it is consistent with the dataset authors' report that L10 does not govern FEMTO lives;
 it also shows the diagnostic doing its safety job, refusing to certify on evidence too weak to
-support the premise.
+support the premise. The map also predicts this outcome rather than excusing it: at six units per condition with a spread comparable to the two rightmost columns of Table~\ref{tab:power}, \emph{holds} is returned in 0.50 to 0.00 of trials and \emph{indeterminate} in 0.45 to 0.90, so the verdict follows from the data environment rather than from anything peculiar to the dataset.
 
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{figures/fig4_diagnostic.pdf}
