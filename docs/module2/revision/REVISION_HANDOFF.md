@@ -18,7 +18,7 @@ the response letter (task 11), and the submission package (task 12).**
 
 | Item | Status |
 |---|---|
-| R1.5 within-unit dependence | DONE — `scripts/r15_exchangeability.py` |
+| R1.5 within-unit dependence | DONE — `scripts/r15_exchangeability.py`; manuscript Section 3.4 and Section 4.3 2026-09-16 |
 | R2m2 bound tightness | DONE — `scripts/r15b_certificate.py` |
 | finite-sample sweep rebuilt (reproducibility gap) | DONE — `scripts/r15b_certificate.py` |
 | R2.3 discrete-mode baseline | DONE — `scripts/r23_discrete_mode.py`; manuscript Section 5.6 2026-09-16 |
@@ -238,7 +238,10 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
     the one figure with no generator; closing that needs the n and departure it was drawn
     with. Fixed a caption that wrote the bound as $2(a+b\\delta)$, colliding with the
     back-off $b$ from task 7.
-11. Write the point-by-point response letter (9 major + 3 minor).
+11. **DONE 2026-09-16.** `paper3/response_to_reviewers.tex` (8 pp). Comment blocks hold OUR
+    restatements, not verbatim reviewer text: paste the real comments into the twelve
+    `\\begin{comment}` blocks before submitting. Writing it exposed a missing R1.5 change, now
+    fixed as new Section 3.4 (rho = 0.908, design effect 2.82, block conformal).
 12. Rebuild the flat EM variant and zip; verify single-column, no run-in heads, 0 undefined cites.
     Also rewrite `paper3/highlights.docx` (5 bullets, <=85 chars, must reflect C-MAPSS and the
     scoped certificate) and `paper3/cover_letter.docx`, both of which predate the narrowing.

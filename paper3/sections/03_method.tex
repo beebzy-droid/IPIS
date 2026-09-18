@@ -87,6 +87,23 @@ When $m>1$, as it becomes for rolling-contact fatigue once the contamination gro
 alongside the lubrication regime (\ref{app:bearing}), the norm has to be fixed at the same time as
 $\boldsymbol\psi$, since $L$ is estimated in that norm and rescales with it.
 
+\subsection{What exchangeability requires, and block calibration}\label{sec:exch}
+The calibration hypothesis behind~\eqref{eq:cert} is exchangeability across \emph{units}, not across
+time steps within a unit. A monitored asset yields a score at every inspection point, and stacking
+several points per unit inflates the nominal calibration size without adding a matching amount of
+information: on the testbed of Section~\ref{sec:design}, scores taken at three monitoring fractions
+of the same unit correlate at $\rho=0.908$ on average, a design effect $1+(F-1)\rho=2.82$, so 1200
+stacked scores carry about 426 independent ones against 400 units. We therefore calibrate with one
+score per unit throughout, and the reported calibration size is a count of units.
+
+Where the guarantee wanted is coverage \emph{simultaneously at every monitoring point} of a unit
+rather than at one sampled point, the principled generalisation is block (per-unit) conformal
+calibration on the per-unit maximum score, which is exchangeable across units by construction. It
+is the stronger maintenance statement and it costs conservatism: on the testbed it gives a coverage
+gap of 0.007 at $\eta=0$ and 0.173 at $\eta=2$, against 0.011 and 0.097 for single-point unit-level
+calibration. We report single-point unit-level calibration as the default and block calibration as
+the option for multi-point monitoring.
+
 \subsection{Estimating the departure sensitivity $L$}\label{sec:estL}
 The constant $L$ in~\eqref{eq:cert} is obtained from source data alone. With at least two source
 conditions, regress the empirical total-variation distance between dimensionless score laws,

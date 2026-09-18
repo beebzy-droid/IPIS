@@ -901,3 +901,59 @@ Figure 1. File names and float numbers do not line up; use `\ref{fig:cov}`, `\re
 Build after task 10: 31 pp, 0 errors, 6 overfull hboxes (worst 15.66 pt, all pre-existing),
 0 undefined citations or references. Terminology audit clean. `scc_figures.py` is black- and
 ruff-clean, and reformatting it left the rendered figures byte-identical in their text layer.
+
+## Task 11 - response letter written, plus the R1.5 gap it exposed (DONE 2026-09-16)
+
+### Writing the letter found a missing manuscript change
+
+Drafting the R1.5 reply meant checking what the manuscript actually says about within-unit
+dependence. It said very little: Section 4.3 stated that calibration is unit-level, but nothing in
+the paper carried rho = 0.908, the design effect, or block conformal, which decision D2 had ratified
+as "reported as the principled generalisation for multi-point monitoring". The letter would have
+claimed something the manuscript does not contain.
+
+Fixed before writing the reply. New Section 3.4, "What exchangeability requires, and block
+calibration", states that the hypothesis is exchangeability across units rather than across time
+steps within a unit, gives the measured dependence (rho = 0.908, design effect 2.82, 1200 stacked
+scores carrying about 426 independent ones against 400 units), and reports block conformal on the
+per-unit maximum score as the option for multi-point monitoring with its cost (gap 0.007 at eta = 0
+and 0.173 at eta = 2 against 0.011 and 0.097). Numbers re-verified by re-running
+`scripts/r15_exchangeability.py` in this session. Sections 3.5 and 3.6 renumber accordingly; all
+cross-references are by label, so nothing broke.
+
+### The letter
+
+`paper3/response_to_reviewers.tex`, 8 pages, compiles with 0 errors and 0 overfull boxes. Structure:
+an editor-facing summary of the five substantive changes, a comment-to-location table, then the
+twelve point-by-point replies, then a reproducibility note.
+
+Two deliberate choices in the framing:
+
+* The opening volunteers the two errors we found ourselves (Table 1 computed under stacked
+  calibration; its Bound% computed in sample while the caption said held-out). A reviewer who finds
+  a self-reported error reads it as diligence; one who finds a concealed error reads it as the
+  opposite.
+* Reviewer 1 comment 2 volunteers the diagnostic's own 0.95^3 ceiling and says we left the test as
+  submitted rather than redesign it mid-revision. That converts a discoverable weakness into a
+  stated design choice.
+
+**The comment text in the letter is OUR RESTATEMENT, not the reviewers' words**, because the
+verbatim report is not in this repository. Each comment sits in a `\begin{comment}` block so the
+verbatim text can be pasted in without touching anything else: twelve blocks, one edit each. Do that
+before submission if the editor expects quoted comments, which most do.
+
+### Cross-check performed
+
+Every decimal number in the letter was matched against the compiled manuscript text: 65 of the 70
+distinct values appear verbatim in the paper. The five that do not are correct by construction, being
+letter-only: 0.006 (the previously published gap, cited as the old value), 0.965 / 0.883 / 0.877 (the
+pairwise correlations, of which the manuscript quotes only the mean 0.908), and 1.73 (sqrt 3).
+
+Final numbering used throughout the letter: Sections 3.4 exchangeability, 3.5 L estimation, 3.6
+diagnostic, 4.4 C-MAPSS design, 5.5 C-MAPSS results, 5.6 discrete mode, 5.7 misspecification, 5.8
+design envelope and FEMTO; Tables 1 robustness, 2 base model, 3 C-MAPSS, 4 discrete mode, 5
+misspecification, 6 design map, B.1 and B.2; Figures 1 workflow, 2 coverage, 3 departure, 4
+certificate, 5 diagnostic.
+
+Build after task 11: manuscript 31 pp, 0 errors, 6 overfull hboxes, 0 undefined references;
+terminology audit clean. Letter 8 pp, 0 errors, 0 overfull.
