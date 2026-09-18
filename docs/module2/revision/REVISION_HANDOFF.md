@@ -232,11 +232,12 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
    Appendix B), R2m2 completed with the irreducible factor of two from Lemma 1, R2m3 moved into
    Section 3.4. Fixed a symbol collision: Section 3.4 had used $m$ for the number of source
    conditions while $m$ is the dimension of psi elsewhere.
-10. Regenerate figures affected by unit-level numbers; add a discrete-mode series, and draw the
-    actionability band edges (eta=0.68, eta=1.97) on Fig. 2. Figures 1-3
-    are STALE as of 2026-09-15 (prose is unit-level, plots are still stacked): fig1 from
-    `r15c_directional.py`, fig2 from `r15_exchangeability.py` + `r24_actionability.py`, fig3
-    from `r15b_certificate.py`. Figure 4 is unaffected.
+10. **DONE 2026-09-16.** `scripts/scc_figures.py` (new) regenerates fig1-fig3 from the
+    evidence scripts: fig1 gains a C-MAPSS panel and a discrete-mode series, fig2 shades the
+    actionability bands, fig3 annotates the margin. fig4_diagnostic is untouched and remains
+    the one figure with no generator; closing that needs the n and departure it was drawn
+    with. Fixed a caption that wrote the bound as $2(a+b\\delta)$, colliding with the
+    back-off $b$ from task 7.
 11. Write the point-by-point response letter (9 major + 3 minor).
 12. Rebuild the flat EM variant and zip; verify single-column, no run-in heads, 0 undefined cites.
     Also rewrite `paper3/highlights.docx` (5 bullets, <=85 chars, must reflect C-MAPSS and the
@@ -246,6 +247,7 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
 
 * `docs/module2/revision/REVISION_LOG.md` — all evidence, tables, numbers, manuscript actions.
 * `docs/module2/revision/REVISION_HANDOFF.md` — this file.
+* `scripts/scc_figures.py` — regenerates fig1-fig3 from the evidence JSONs and scripts.
 * `scripts/r1*.py`, `scripts/r2*.py`, `scripts/cmapss_loader.py` — 15 revision scripts, all
   black- and ruff-clean, each reproducing the numbers it reports.
 * `paper3/` — manuscript source (single-column elsarticle, sections 01-08). Tables as of

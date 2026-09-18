@@ -837,3 +837,67 @@ Build after task 9: 31 pp (was 30), 0 errors, 6 overfull hboxes (worst 15.66 pt,
 
 All twelve reviewer comments are now answered in the manuscript. What remains is presentation:
 figures (task 10), the response letter (task 11), and the submission package (task 12).
+
+## Task 10 - figures regenerated, and they now have a generator (DONE 2026-09-16)
+
+### The figures had no generator at all
+
+Nothing in `scripts/` produced `paper3/figures/*.pdf`. The four figures were made ad hoc in an
+earlier session, so the standing rule (no number enters the manuscript unless a committed script
+reproduces it) did not hold for anything printed on an axis. `scripts/scc_figures.py` closes that:
+it reads the evidence JSONs the r-scripts write (`out/directional.json`,
+`out/r24_actionability.json`) and imports the r-scripts' own functions for anything the JSONs do
+not carry, so a figure cannot drift from the evidence behind it.
+
+    PYTHONPATH=src python3 scripts/scc_figures.py --out paper3/figures
+
+Requires `out/directional.json` and `out/r24_actionability.json` (run `r15c_directional.py` and
+`r24_actionability.py` first) and the C-MAPSS files for panel (b).
+
+### What changed in each figure
+
+* **fig1_coverage** is now two panels. (a) is the testbed at eta = 0 with unit-level numbers
+  (naive 0.572 worst, SCC 0.891-0.908) plus a third series: discrete-mode conformal at a
+  deployment condition with no failure history, which falls back to the nearest mode and therefore
+  inherits naive's directional failure. Its value depends on the deployment condition alone, which
+  the caption states, because otherwise the repeated bars look like an error. (b) is C-MAPSS, all
+  30 ordered regime pairs of each dataset, as a strip plot with group means.
+* **fig2_departure** is unit-level and now shades the three actionability bands with the crossings
+  at eta = 0.68 and eta = 1.97 marked. Bands are computed in the script by interpolating the same
+  back-off curve the prose quotes, not hard-coded.
+* **fig3_certificate** is unit-level, fills the slack between the measured gaps and the bound, and
+  annotates the mean margin 0.339, which makes the R2m2 conservatism visible rather than only
+  stated.
+
+### A finding worth keeping: C-MAPSS naive coverage is bimodal
+
+Per-pair naive coverage is not "low", it is all-or-nothing: 20 of 30 pairs sit at or near zero and
+most of the rest over-cover near 1.0 (FD002 median 0.00, mean 0.344; FD004 median 0.17, mean 0.370).
+SCC sits in 0.68-0.97 on both. The clipped mean gap of 0.590 that Section 5.5 reports is therefore
+an average over a bimodal distribution, not a typical value. The figure shows this honestly and the
+caption says so. If a reviewer asks why the mean gap is 0.590 when coverage can reach 1.0, that is
+the answer.
+
+### Two defects fixed along the way
+
+1. The Figure 3 caption wrote the a-priori bound as $2(a+b\delta)$, using $b$ for the slope. Task 7
+   defined $b$ as the interval back-off, so the caption collided with the new notation. It now reads
+   $2(a+L\delta)$, matching Eq. (1) and Section 3.4.
+2. Canvas sizes: the old figures were 3.5 in wide and got scaled up by about 1.5x at
+   `\includegraphics[width=\linewidth]`, which inflates every label. The regenerated figures are
+   drawn at about the text width, so the 9 pt labels in the script are close to 9 pt on the page.
+
+### Debt: fig4_diagnostic still has no generator
+
+Its three cases (n = 40 under similitude, n = 40 violated, n = 6 FEMTO-like) do not correspond to
+any committed evidence script, so regenerating it would mean inventing parameters. It is untouched
+and still correct as published, but it remains the one figure in the paper that no script
+reproduces. Closing it needs a decision on the exact n and departure used, which only Bien has.
+
+Note on names: `fig1_coverage.pdf` is Figure 2 in the typeset paper, because `fig_overview.pdf` is
+Figure 1. File names and float numbers do not line up; use `\ref{fig:cov}`, `\ref{fig:dep}`,
+`\ref{fig:cert}` when writing the response letter.
+
+Build after task 10: 31 pp, 0 errors, 6 overfull hboxes (worst 15.66 pt, all pre-existing),
+0 undefined citations or references. Terminology audit clean. `scc_figures.py` is black- and
+ruff-clean, and reformatting it left the rendered figures byte-identical in their text layer.

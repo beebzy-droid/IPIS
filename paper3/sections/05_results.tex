@@ -13,9 +13,14 @@ predicts.
 
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{figures/fig1_coverage.pdf}
-\caption{Naive vs.\ SCC coverage at $\eta=0$ across calibrate$\to$deploy temperature pairs, under
-unit-level calibration. Naive miscovers (0.572) or over-covers (1.000); SCC tracks the 0.90 target
-(0.891--0.908).}\label{fig:cov}
+\caption{Coverage under unit-level calibration. (a) Catalyst testbed at $\eta=0$ across
+calibrate$\to$deploy temperature pairs: naive either miscovers (0.572) or over-covers (1.000),
+and discrete-mode conformal, which has no calibration set at a deployment condition without
+failure history and falls back to the nearest mode, inherits the same directional failure, so its
+value depends on the deployment condition alone. SCC tracks the 0.90 target (0.891--0.908).
+(b) The same comparison on C-MAPSS over all 30 ordered regime pairs of each dataset, group means
+marked: naive coverage is bimodal, collapsing to zero on 20 of the 30 pairs and over-covering on
+most of the rest, while SCC stays within 0.68--0.97.}\label{fig:cov}
 \end{figure}
 
 \subsection{How does the guarantee degrade as physics departs from similitude?}\label{sec:res-deg}
@@ -34,9 +39,10 @@ planner cannot act on.
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{figures/fig2_departure.pdf}
 \caption{Under a controlled departure $\eta$ from similitude, the SCC coverage gap (left axis) and
-the relative interval back-off (right axis) degrade monotonically. The actionable band ($b<0.5$)
-ends at $\eta=0.68$ and degeneracy ($b\ge1$) begins at $\eta=1.97$, where the certified lower bound
-is no longer positive on average.}\label{fig:dep}
+the relative interval back-off (right axis) degrade monotonically. Shading marks the actionability
+bands of Section~\ref{sec:metrics}: the actionable band ($b<0.5$) ends at $\eta=0.68$ and
+degeneracy ($b\ge1$) begins at $\eta=1.97$, where the certified lower bound is no longer positive
+on average.}\label{fig:dep}
 \end{figure}
 
 \subsection{Is the coverage bound reliable before deployment?}\label{sec:res-cert}
@@ -61,9 +67,10 @@ worst-case planning bound rather than a sharp estimate.
 
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{figures/fig3_certificate.pdf}
-\caption{Held-out measured coverage gap vs.\ the physical departure $\delta$, with the a-priori bound
-$2(a+b\delta)$ fit on disjoint configurations. The bound holds on 100\% of held-out
-points.}\label{fig:cert}
+\caption{Held-out measured coverage gap vs.\ the physical departure $\delta$, with the a-priori
+bound $2(a+L\delta)$ fit on disjoint configurations. The bound holds on 100\% of held-out points
+and carries a mean margin of 0.339, so the shaded slack is the conservatism discussed in the
+text.}\label{fig:cert}
 \end{figure}
 
 \subsection{Robustness across operating and tuning choices}\label{sec:res-rob}
