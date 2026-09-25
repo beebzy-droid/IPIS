@@ -1171,6 +1171,18 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-09-26 (M3 Gate 2b done; Option 2 failed its novelty gate; decision pending)** -- Twin re-run:
+  1,000 trials, exact scoring, `docs/module3/tmlr/evidence/gate2_twin.json` via
+  `scripts/paper2_tmlr/gate2_twin_certified.py` (needs the two DWSIM CSVs). At sigma_z = 0.006:
+  plug-in CQR 67.5% unsafe deployments, TCST v2 procedure 32.0%, certify-then-deploy 1.0-2.0%
+  (8.9-13.5 USD/h below oracle), sampling-and-discarding 0.0-0.5% (3.2-9.3 USD/h below oracle,
+  never abstains). Discarding (plant model inside the optimizer) matches certification on safety
+  and beats it on profit, as the scalar-monotone argument predicted. Option 2 (twin-powered
+  certification) FAILED Gate 0: covered by semi-supervised risk control via PPI (Einbinder, Ringel,
+  Romano, arXiv:2412.11174, IEEE TPAMI 2025) and R-AutoEval+ (NeurIPS 2025). M3's statistical
+  content is prior art (CPP, Learn-then-Test, PPI risk control, scenario theory); its original value
+  is the process-RTO evidence. Decision pending with Bien: (A) bank as technical report, (B) applied
+  journal, (C) TMLR empirical study. Details: `docs/module3/tmlr/theory_v2.md` section 7.
 - **2026-09-25 (M3: TCST rejection absorbed; theory corrected; TMLR reforge Gate 1 PASSED)** -- IEEE
   TCST 26-0876 v2 prescreen-rejected 2026-08-28 by EiC Kolmanovsky: out of scope (both theorems
   judged conformal/statistical results; static RTO, no dynamics/feedback/stability). Four
