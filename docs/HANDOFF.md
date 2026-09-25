@@ -47,7 +47,7 @@ to a horizon guarantee and moves IPIS off the quasi-static twin. Start a fresh s
 | Paper | Module | Journal | ID | Date | Source |
 |---|---|---|---|---|---|
 | 1 | M1 soft sensor | Journal of Process Control | JPROCONT-D-26-00618 | 2026-06-12 | `paper/` |
-| 2 | M3 RTO (post-selection safety guarantee) | IEEE TCST | 26-0876 v2, UNDER REVIEW | 2026-07-23 | `paper2/tcst/` |
+| 2 | M3 RTO (certify-then-deploy) | TMLR (target) | none; rej. TCST 26-0876 (scope) | 2026-09-25 | `docs/module3/tmlr/` |
 | 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04700** | **2026-06-30** | `paper3/` |
 | 4 | M4 integration (composed certificate) | Computers & Chemical Engineering | **CACE-D-26-01079** | **2026-06-30** | `paper4/` |
 
@@ -223,7 +223,7 @@ action is the Module 2 paper draft.**
   guarantee (Theorems 1-2) and RETARGETED to **IEEE Transactions on Control Systems Technology**
   (free at <=12pp, guarantee-friendly community). New title: "Safe real-time optimization under
   unmeasured disturbances: a finite-sample, distribution-free constraint-satisfaction guarantee."
-  **UNDER REVIEW at IEEE TCST as 26-0876 (Version 2, 2026-07-23).** Senior Editor Luigi Glielmo acknowledged receipt directly and confirmed it is under review as a Full Paper; expected processing 3-4 months (decision window ~Nov 2026). Source `paper2/tcst/`; evidence `docs/module3/paper/`. First IPIS RTO paper to reach actual peer review (JPC and CACE both desk-rejected).
+  **REJECTED at IEEE TCST (26-0876 v2, 2026-08-28, EiC Kolmanovsky: out of scope, contribution judged statistical rather than control; no reviewers).** Retargeted to **TMLR** (free; correctness-and-interest criteria). Pre-build audit found TCST Theorem 2(b) invalid and 2(a) overstated; theory v2 (certify-then-deploy, Theorem 3) validated at Gate 1: `docs/module3/tmlr/theory_v2.md`. arXiv HELD until the corrected paper exists. `paper2/tcst/` is frozen history.
 - **2026-06-23 (cross-ref propagation)** — propagated **CACE-D-26-01040** + new title from `paper2/` into ADR-016, `paper4/references.bib`, `docs/module4/formalization-spike.md`, `src/ipis/integration/health_rto.py`, and the `docs/module3/paper/` working drafts; corrected the §2 vision pointer (Module 2 -> complete, Module 5 -> next). No code or results changed.
 - **Module 2 — Predictive Maintenance (anomaly detection + RUL): COMPLETE.** SCC paper under
   review (JRESS-D-26-04700); built as Modules 2A-2D.
@@ -484,7 +484,7 @@ framework with five modules on a first-principles physics layer:
 1. **Module 1 — Soft Sensor** — real-time prediction of hard-to-measure quality
    variables. **(✅ complete; paper under review, CACE-D-26-00944)**
 2. **Module 2 — Predictive Maintenance** — anomaly detection + RUL. **(✅ complete; paper under review, JRESS-D-26-04700)**
-3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; UNDER REVIEW, IEEE TCST 26-0876 v2)**
+3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; paper being rebuilt for TMLR)**
 4. **Module 4 — Composed certificate** — the integrated SCC coverage guarantee. **(✅ complete; IECR submission prep)**
 5. **Module 5 — Dynamic / horizon realization** — closed-loop ACI horizon coverage. **(▶ NEXT — experimental backbone complete, paper next)**
 
@@ -1171,6 +1171,33 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-09-25 (M3: TCST rejection absorbed; theory corrected; TMLR reforge Gate 1 PASSED)** -- IEEE
+  TCST 26-0876 v2 prescreen-rejected 2026-08-28 by EiC Kolmanovsky: out of scope (both theorems
+  judged conformal/statistical results; static RTO, no dynamics/feedback/stability). Four
+  rejections, zero reviewers. Bien ratified the reforge for TMLR (free). **Pre-build audit found an
+  error in the TCST paper:** Theorem 2(b) is invalid (proof converts a supremum of the empirical
+  marginal miss over the back-off class into a supremum of a pointwise miss over decisions; the
+  claimed distribution-free, uniform-in-u, sqrt(d/n) conditional validity does not follow and
+  conflicts with Foygel Barber et al. 2021); Theorem 2(a) is correct only in expectation and omits
+  the post-recalibration feasibility check. arXiv posting of the TCST version is therefore HELD.
+  Replacement: Theorem 3 (certify-then-deploy: fixed-sequence Clopper-Pearson certification over the
+  nested kappa family; P(deploy unsafe) <= delta, distribution-free, valid under selection over u and
+  kappa, dimension-free), Props. 1-2 (vacuity; optimizer's curse), Corollary 4 (budget m*: 29 at
+  zero violations). Gate 1 (400-trial exact-ground-truth synthetic, m = 200): certified 1.5%
+  unsafe deployments [95% CI 0.6-3.2%] vs 34.5% for the TCST v2 plug-in procedure and 93-100% for
+  marginal back-offs; price 11.9% below oracle vs 26.2% scenario (N = 46) and 13.4%
+  sampling-and-discarding at equal budget. Files: `docs/module3/tmlr/theory_v2.md`,
+  `docs/module3/tmlr/evidence/gate1_validation.json`, `scripts/paper2_tmlr/gate1_validate_theory.py`.
+  **Dependency check:** paper4 does not use TCST Thm 2(b) (selection handled by its own causal-timing
+  assumption), no propagation. **For the paper4 owner:** `paper4/03_framework.tex` L102 cites
+  `busico_m3` for the similarity-calibrated conformal certificate, which is Module 2; likely should
+  be `busico_m2`. **Ledger conflict to resolve (M5 owner):** ledger says M5 targets IEEE TCST (in
+  prep); project memory says M5 was submitted to CACE. Note Kolmanovsky's report: TCST prescreens
+  out papers whose theorems are statistical with thin control content. NEXT: G2 (dimension sweep;
+  DWSIM-twin re-run needs the M3 campaign CSV), G3 manuscript (unmodified TMLR style, anonymized,
+  <=12pp, twin text written fresh: TMLR forbids reuse with papers under review at archival venues),
+  G4 audit, G5 arXiv + OpenReview (preconditions: OpenReview profile; arXiv endorsement, since
+  institutional email alone no longer qualifies as of 2026-01-21).
 - **2026-07-23 (26-0876 RESUBMITTED as Version 2 -- CLEARED SCREEN, NOW UNDER REVIEW)** -- Version 2
   uploaded to PaperPlaza with the mandatory author's response file; status Received, and Senior
   Editor Luigi Glielmo acknowledged receipt directly, confirming it is under review as a Full Paper
