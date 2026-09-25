@@ -191,3 +191,53 @@ Findings:
 - Vovk (2012). Conditional validity of inductive conformal predictors. ACML, PMLR 25.
 - Zhao et al. (2024). Conformal predictive programming for chance constrained optimization.
   arXiv:2402.07407.
+
+## 7. Gate 2b results (DWSIM twin) and Gate 0 for Option 2 (2026-09-26)
+
+**Gate 2b.** 1,000 trials (200 per sigma_z), frozen 3B pipeline on the DWSIM campaign CSVs,
+every deployed decision scored by its exact violation probability (x_B monotone in z at 99.56%
+of the 4,087 grid points). Oracle reproduces the frozen regime map (sigma_z = 0.006:
+5,373.9 USD/h at R = 3.00, D = 34.33). Evidence: `evidence/gate2_twin.json`.
+
+Realistic disturbance, sigma_z = 0.006 (oracle 5,373.9 USD/h, V = 0.083):
+
+| Method | P(deploy unsafe) [95% CI] | Mean V | Deploy rate | Gap to oracle |
+|---|---|---|---|---|
+| Fixed split-conformal margin | 1.000 [0.982, 1.000] | 0.157 | 1.00 | beyond safe set |
+| CQR plug-in | 0.675 [0.605, 0.739] | 0.147 | 1.00 | beyond safe set |
+| TCST v2 a-posteriori procedure | 0.320 [0.256, 0.389] | 0.077 | 0.93 | 2.0 USD/h |
+| Certify-then-deploy, m = 200 | 0.010 [0.001, 0.036] | 0.042 | 0.86 | 13.5 USD/h (0.25%) |
+| Certify-then-deploy, m = 1000 | 0.020 [0.005, 0.050] | 0.056 | 0.88 | 8.9 USD/h (0.17%) |
+| Sampling-and-discarding, N = 200 | 0.005 [0.000, 0.028] | 0.043 | 1.00 | 9.3 USD/h (0.17%) |
+| Sampling-and-discarding, N = 1000 | 0.000 [0.000, 0.018] | 0.064 | 1.00 | 3.2 USD/h (0.06%) |
+| Scenario, N = 46 | 0.005 [0.000, 0.028] | 0.020 | 1.00 | 27.3 USD/h (0.51%) |
+
+Across sigma_z in {0.006, 0.010, 0.015, 0.020, 0.025}: plug-in CQR unsafe in 67.5-83.0% of
+trials; TCST v2 procedure 12.0-35.5%; certify-then-deploy at most 2.5% (every sigma, both m);
+sampling-and-discarding at most 0.5%. For sigma_z >= 0.020 most methods abstain (data
+starvation), as in the frozen regime map.
+
+Reading: (1) naive practice is unsafe on the rigorous twin, and so was the TCST procedure;
+(2) certify-then-deploy holds delta everywhere; (3) sampling-and-discarding, which evaluates the
+truth model inside the optimizer, is equally safe and more profitable at equal budget, and never
+abstains for sigma_z <= 0.015. With a scalar disturbance and monotone response, classical
+scenario methods are the right tool whenever the plant model fits inside the optimizer.
+Certification keeps only an architectural advantage (the optimizer needs only the nominal model).
+(4) Rigorous methods sit within 1% of oracle profit for sigma_z <= 0.015: the value is
+calibrated safety, not profit.
+
+**Gate 0 for Option 2 (twin-powered certification): FAILED on novelty.** Semi-supervised risk
+control via prediction-powered inference (Einbinder, Ringel and Romano, arXiv:2412.11174; IEEE
+TPAMI 2025) already tunes risk-control parameters with unlabeled data plus model predictions and
+a small labeled set; R-AutoEval+ (NeurIPS 2025) extends this to evaluation with synthetic data
+via testing-by-betting. Twin runs are the predictions on unlabeled draws; paired plant runs are
+the labeled set. What would remain ours (process-RTO instantiation; optimizers concentrating
+candidates where the twin is optimistic) is the known model-exploitation effect of model-based
+optimization. Per the agreed gate, Option 2 is not pursued as a novelty claim. The tool is sound
+and can be used, with citation, inside later IPIS work.
+
+**Consequence.** M3's statistical content is covered by CPP (a posteriori calibration),
+Learn-then-Test (fixed-sequence tuning), semi-supervised risk control (twin-powered variant) and
+scenario theory (discarding). Its original value is the process-RTO evidence above and the
+practitioner's recipe. Decision pending with Bien: bank as a technical report, an applied
+journal, or a TMLR empirical study.
