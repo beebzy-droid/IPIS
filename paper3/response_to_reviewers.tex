@@ -1,4 +1,6 @@
 \documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage[margin=25mm]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
@@ -9,8 +11,7 @@
 
 \definecolor{quoteline}{gray}{0.55}
 
-% Reviewer comment block. Replace the argument with the reviewer's verbatim text if preferred;
-% the text below is our restatement of each comment.
+% Reviewer comments are quoted verbatim from the decision letter of 2026-09-08.
 \newenvironment{comment}
   {\begin{list}{}{\leftmargin=6mm \rightmargin=2mm}\item[]\color{quoteline}\itshape}
   {\end{list}}
@@ -19,23 +20,24 @@
 
 \title{\vspace{-12mm}\textbf{Response to Reviewers}\\[2mm]
 \large JRESS-D-26-04700 \\
-\large Similarity-Calibrated Conformal Prediction for Remaining-Useful-Life Intervals\\
-\large under Operating-Regime Transfer}
+\large Similarity-Calibrated Conformal prediction: data-free coverage guarantees for\\
+\large remaining-useful-life intervals under operating-regime transfer}
 \date{}
 
 \begin{document}
 \maketitle
 \vspace{-10mm}
 
-\section*{To the Editor and Reviewers}
+\section*{To Professor Cepin and the Reviewers}
 
 We thank both reviewers for reports that were unusually specific and, in two places, correct about
-problems we had not seen. The revision is substantial: one reviewer comment invalidated the
-calibration scheme behind every number in Section~5, and we re-ran the entire experimental campaign
-rather than patch around it. Five changes are worth flagging before the point-by-point replies.
+problems we had not seen. The revision is substantial: one comment invalidated the calibration
+scheme behind every number in Section~5, and we re-ran the entire experimental campaign rather than
+patch around it. All twelve comments are addressed below, and five changes are worth flagging
+first.
 
 \textbf{1. The calibration was not i.i.d., and every number has been recomputed.} Reviewer~1's
-comment on temporal dependence was correct. Scores stacked at three monitoring points per unit
+comment~5 was correct. Scores stacked at three monitoring points per unit
 correlate at $\rho=0.908$, a design effect of 2.82, so the published calibration set of 1200 scores
 carried the information of roughly 426 independent ones. The primary analysis is now unit-level,
 one score per unit. The headline survives: regime-blind conformal miscovers by 0.132 and SCC
@@ -97,40 +99,72 @@ R2 minor 3 ($L$ fit)          & addressed & Sec.~3.5 \\
 
 \subsection*{Comment 1: dependence on base-model complexity}
 \begin{comment}
-The results use a closed-form physics predictor. A more flexible learner might degrade the
-guarantee, and the paper does not test this.
+Although the authors claim that the proposed method is applicable to any pre-trained predictor as a
+``drop-in modification,'' the case study only tests extrapolation using an extremely simple nominal
+rate model. If a highly non-linear machine learning model (such as Random Forest or a Neural
+Network) were adopted as the base predictor, interpolation and extrapolation errors across
+operating regimes could become complicated. Consequently, there is a concern that the proposed
+dimensionless scale $\sigma(\theta)$ alone might not fully absorb the shift in the score
+distribution. The authors should evaluate how the conservatism of the a-priori bound changes when
+varying the complexity of the base model.
 \end{comment}
 
-\noindent\textbf{Response.} The risk is real, and the experiment shows it falls entirely on the
-unscaled baseline rather than on SCC. Across four model classes, the naive coverage gap at $\eta=0$
-worsens by a factor of 3.5, from 0.127 for the closed-form extrapolator to 0.449 for a random
-forest, because a learner fitted flexibly to one operating regime fails harder when deployed on
-another. SCC is flat at 0.007 to 0.014 across all four, and under departure the more flexible
-learners are the better ones, 0.046 for a neural network against 0.102 for the closed form at
-$\eta=2$, because a model fitted in the dimensionless coordinates absorbs part of the residual
-departure. We also state the caveat the result carries: the drop-in property holds provided the
-learned predictor is fitted in the dimensionless coordinates, since no conformal layer can repair a
-point predictor that does not transfer.
+\noindent\textbf{Response.} We ran the experiment with four predictors of increasing capacity, each
+trained on the source condition only and deployed on the target, and we answer both halves of the
+comment: what happens to coverage, and what happens to the conservatism of the bound.
+
+\emph{Coverage.} The concern is well founded, and the damage falls entirely on the unscaled
+baseline. The naive coverage gap at $\eta=0$ worsens by a factor of 3.5, from 0.127 for the
+closed-form extrapolator to 0.449 for a random forest, because a learner fitted flexibly to one
+operating regime fails harder when deployed on another. SCC is flat at 0.007 to 0.014 across all
+four classes, and under departure the more flexible learners are the better ones, 0.046 for a
+neural network against 0.102 for the closed form at $\eta=2$, because a model fitted in the
+dimensionless coordinates absorbs part of the residual departure.
+
+\emph{Conservatism of the bound.} We fitted the certificate separately for each predictor class over
+the same configurations. Validity is unaffected: the bound holds on 100\% of held-out configurations
+for all four, with margins in the narrow band 0.30 to 0.36, so its conservatism does not grow with
+model capacity. Its mechanism, however, does weaken, and we state that rather than leave it for a
+reader to find. The departure model explains the score-distribution mismatch well only for the
+closed-form predictor (held-out $R^2=0.90$, against $-2.8$ to $-0.02$ for the three learned ones),
+so with a learned predictor the bound holds on conservatism rather than because $\delta$ tracks the
+mismatch: the residual is then dominated by model error rather than by physical departure. This is
+the same pattern the C-MAPSS certificate shows in the reply to Reviewer~2's major comment~1, and a
+further reason the certificate claim has been narrowed in this revision.
+
+We also state the caveat the result carries: the drop-in property holds provided the learned
+predictor is fitted in the dimensionless coordinates, since no conformal layer can repair a point
+predictor that does not transfer.
 
 We note one further finding rather than hide it. On C-MAPSS the ordering of the naive column runs
 the other way, because the raw sensor levels there encode the operating regime itself, so a flexible
 learner can partly infer the regime and compensate. What is invariant across both datasets is that
 SCC is the better arm in every row.
 
-\where{New second paragraph and Table~2 in Section~5.4, with the C-MAPSS contrast stated
-explicitly.}
+\where{Second and third paragraphs of Section~5.4, the latter reporting the certificate fitted by
+predictor class, and two new columns in Table~2.}
 
 \subsection*{Comment 2: deployability and the data environment the method needs}
 \begin{comment}
-It is unclear how much data the diagnostic needs before it can return a usable verdict, which
-matters for whether the method is deployable outside unusually rich datasets.
+In the FEMTO dataset, the runtime diagnostic returns an ``indeterminate'' status and safely falls
+back, which the authors positively evaluate as an ``honest applicability limit.'' However, in the
+practical field of reliability engineering (PHM), if even a widely and commonly used benchmark
+dataset is rejected due to ``data scarcity and variability,'' the cases where this method can be
+truly considered ``deployable'' might be extremely limited. The authors should quantitatively
+clarify the practical requirements (design guidelines) regarding what kind of data environment
+(e.g., minimum required number of units or signal-to-noise ratio) is necessary to yield a ``holds''
+status.
 \end{comment}
 
-\noindent\textbf{Response.} We have mapped it. Under exact similitude, where \emph{holds} is the
-correct answer, the requirement is modest: three units per condition suffice at a unit-to-unit life
-scatter of 0.10, six at 0.25 and ten at 0.50, and only at a scatter of 0.80 does the requirement
-rise to about forty units. The C-MAPSS fleet, at roughly 260 units per regime, sits far inside the
-feasible region.
+\noindent\textbf{Response.} We have mapped the requirement on exactly the two axes the comment
+names: units per condition, and the unit-to-unit life scatter, which is the signal-to-noise ratio
+for this test, since the structural signal is the L10 life ratio between conditions and the noise is
+the spread within a condition.
+
+The requirement is modest. Three units per condition suffice at a scatter of 0.10, six at 0.25 and
+ten at 0.50; only at a scatter of 0.80 does it rise to about forty units. The C-MAPSS fleet added in
+this revision, at roughly 260 units per regime, sits far inside the feasible region, so the method
+is not confined to unusually rich datasets.
 
 The map also settles the status of the FEMTO result. With six bearings per condition and a
 sevenfold life spread, that dataset sits in the worst corner of the map, where \emph{holds} is
@@ -148,8 +182,12 @@ map.}
 
 \subsection*{Comment 3: FEMTO is described as field data}
 \begin{comment}
-FEMTO/PRONOSTIA is an accelerated laboratory testbed. Calling it a field benchmark overstates the
-evidence.
+In the Abstract, Conclusion, and Discussion, the FEMTO dataset is occasionally referred to as a
+``field benchmark'' or ``field data limit.'' However, FEMTO (PRONOSTIA) consists of accelerated
+degradation data acquired in a laboratory testbed. Since validation using true field data---such as
+an ``operating industrial process'' which the authors truly imply---has not been conducted, the
+terminology should be consistently revised to terms like ``experimental benchmark'' to avoid
+misleading readers into believing that field validation has already been achieved.
 \end{comment}
 
 \noindent\textbf{Response.} Agreed, and corrected throughout. FEMTO is now described as an
@@ -169,19 +207,30 @@ Section~6 limitation~(iii), Section~7.}
 
 \subsection*{Comment 4: what happens when the assumed physics is wrong}
 \begin{comment}
-The scale depends on an assumed activation energy. If that assumption is wrong, the method may fail
-silently.
+The proposed method assumes that accurate physical parameters (e.g., load, speed, temperature) and
+the governing equations are known a priori through the Buckingham Pi theorem. In actual complex
+industrial machinery, however, the governing equations for degradation (such as Arrhenius or
+Lundberg-Palmgren) are not always known. A sensitivity analysis or a theoretical discussion is
+required regarding the risk that the dimensionless correction could backfire (i.e., amplify the
+data shift) if the physical model is partially misspecified or if unknown environmental factors are
+present.
 \end{comment}
 
-\noindent\textbf{Response.} We have quantified both the tolerance and the detectability, and the
-second half is the part that answers the ``silently''.
+\noindent\textbf{Response.} The comment names two distinct risks and we now treat them separately.
 
-Tolerance separates into two cases. When only the scale is wrong and the predictor is unaffected,
-the SCC gap stays at or below 0.05 out to $\lvert\Delta E/E\rvert=31\%$, remains better than not
-scaling at all out to $+62\%$, and becomes worse than the unscaled baseline only at $+100\%$ (0.139
-against 0.132). When a single wrong model drives both the predictor and the scale, which is the
-realistic case, the method is much more fragile and is already worse than the unscaled baseline at
-$-10\%$ (0.072 against 0.061).
+\emph{Unknown environmental factors} are the case the departure sweep already covers: the secondary
+Arrhenius channel of weight $\eta$ is an unmodelled physical effect the scale does not know about,
+and Section~5.2 reports what it costs, together with the operating envelope requested by
+Reviewer~2's major comment~4.
+
+\emph{Partial misspecification of the governing law} is new work. We perturb the assumed activation
+energy while holding $k(T_{\mathrm{ref}})$ fixed, so only the between-condition behaviour of the
+scale is distorted, which is the part similitude depends on. When only the scale is wrong and the
+predictor is unaffected, the SCC gap stays at or below 0.05 out to $\lvert\Delta E/E\rvert=31\%$,
+remains better than not scaling at all out to $+62\%$, and backfires, in the reviewer's sense of
+being worse than the unscaled baseline, only at $+100\%$ (0.139 against 0.132). When a single wrong
+model drives both the predictor and the scale, which is the realistic case, the method is much more
+fragile and backfires already at $-10\%$ (0.072 against 0.061).
 
 The failure is not silent. The runtime invariance check returns \emph{holds} only at the correct
 scale ($g=0.967$, interval $[0.92,1.01]$) and \emph{violated} at every misspecification tested,
@@ -194,8 +243,14 @@ itself as well as to a departure from similitude.
 
 \subsection*{Comment 5: within-unit dependence in the calibration set}
 \begin{comment}
-Scores taken at several monitoring points of the same unit are not independent, so the calibration
-set does not satisfy the i.i.d.\ hypothesis of the theorem.
+When applying conformal prediction to time-series or degradation data like RUL, strong temporal
+correlations (dependencies) exist in data continuously acquired from the same unit (history between
+time steps). Strictly speaking, this causes the assumptions of i.i.d. or exchangeability to waver
+even within the same operating regime. While the proposed method addresses cross-regime shifts
+among different units (spatial shifts) using a physical scale, the authors should explain the
+theoretical consistency and the impact of temporal dependencies within the same unit on the
+validity of the conformal prediction layer (e.g., whether block conformal approaches are
+necessary).
 \end{comment}
 
 \noindent\textbf{Response.} The reviewer is right, and this was the most consequential comment in
@@ -225,24 +280,45 @@ Section~4.3; all of Section~5, Table~1 and Figures~2 to 4 recomputed unit-level.
 
 \subsection*{Major comment 1: no dataset the authors did not design}
 \begin{comment}
-The bound is never checked against an asset the authors did not design. A second, independent
-dataset is needed.
+The entire empirical demonstration of the coverage guarantee in Eq.~(1) uses a single simulator
+(Section 4.2, the first-order Arrhenius catalyst-deactivation ODE) in which the similitude-departure
+parameter $\psi$ is literally the knob $\eta$ that the author sets. Sections 5.1 through 5.4 and
+Table 1 all report results from this one system. FEMTO (Section 5.5) only tests the diagnostic,
+which correctly declines to certify, so it never exercises the certificate itself. That means there
+is no case in the paper where the coverage bound is checked against a physical asset whose true
+departure was not authored by the same person running the estimator. You could validate the
+certificate itself, not just the diagnostic, on a second physically grounded dataset with enough pe
+condition replication to establish ground truth. For instance, a bearing fatigue dataset with
+multiple load and speed conditions and enough units per condition that the L10 comparison in
+Section 3.5 is well powered rather than indeterminate as it was for FEMTO's six bearings per
+condition.
 \end{comment}
 
-\noindent\textbf{Response.} We have added NASA C-MAPSS, FD002 (260 engines) and FD004 (249), six
-operating regimes with every engine visiting all of them, so each regime carries roughly 260 units
-against the six bearings per condition in FEMTO. The dimensionless coordinate is derived rather than
-fitted, from referred (corrected) gas-turbine parameters, and it is self-checking: the sea-level
-static regime returns $\theta=1.0000$ and $\delta_{\mathrm{p}}=0.9999$.
+\noindent\textbf{Response.} We accepted this and added a second dataset. On the choice of dataset:
+we looked first for the bearing fleet the comment suggests, and to our knowledge no public
+run-to-failure bearing dataset provides the replication the L10 comparison needs. The standard sets
+give roughly five to six units per operating condition, an order of magnitude short of the
+requirement mapped in Section~5.8 at the life scatter those datasets exhibit, and that shortfall is
+what produced FEMTO's \emph{indeterminate} verdict in the first place, so a comparable bearing set
+would reproduce the same non-result. We therefore went to NASA C-MAPSS, FD002 (260 engines) and
+FD004 (249), six operating regimes with every engine visiting all of them, which gives roughly 260
+units per regime, about $43\times$ FEMTO's replication, and which we did not author.
 
-The calibration transfers. Regime-blind conformal loses a mean 0.590 of coverage across the 30
-ordered regime pairs of FD002; referring the sensors to standard day is not enough on its own and
+The dimensionless coordinate there is derived rather than fitted, from referred (corrected)
+gas-turbine parameters, and it is self-checking: the sea-level static regime returns
+$\theta=1.0000$ and $\delta_{\mathrm{p}}=0.9999$, and the implied damage clock spans $3.5\times$
+across the six regimes.
+
+\emph{The calibration transfers.} Regime-blind conformal loses a mean 0.590 of coverage across the
+30 ordered regime pairs of FD002; referring the sensors to standard day is not enough on its own and
 still loses 0.550; calibrating in the gas-path deviation coordinate recovers coverage to within
 0.060 of the 0.90 target, a $9.8\times$ reduction, and FD004 replicates it at 0.567 to 0.058. No
-target failure data is used.
+target failure data is used. We also checked that this is not an artefact of a weak base predictor:
+with a random forest on raw sensors the naive gap is 0.128 rather than 0.590, and SCC still improves
+on it at 0.053.
 
-The certificate does not transfer, and we report that plainly. Neither departure candidate
-identifies the residual gap: the ambient referred distance correlates 0.289 with it on FD002 and
+\emph{The certificate does not transfer, and we report that.} Neither departure candidate identifies
+the residual gap: the ambient referred distance correlates 0.289 with it on FD002 and
 0.179 on FD004, and the healthy gas-path signature distance correlates $-0.122$ and $-0.086$; held
 out, both regressions explain nothing, with $R^2$ between $-0.074$ and 0.022. The bound consequently
 holds on 67 to 83\% of held-out regime pairs against 100\% on the testbed. We therefore separate the
@@ -255,8 +331,15 @@ Figure~2(b), and the narrowed claim in the abstract and Section~7.}
 
 \subsection*{Major comment 2: $\boldsymbol\psi$ is never made concrete}
 \begin{comment}
-The departure parameter $\boldsymbol\psi$ is treated abstractly. For a real degradation law it is
-not clear what it is or how a practitioner would obtain it.
+Section 3.2 sketches how the dimensionless scale $\sigma$ and departure $\psi$ arise conceptually
+for two textbook cases, rolling-contact fatigue and Arrhenius kinetics, but $\psi$ is never
+actually derived for either one. Only the simulator's $\eta$ stands in for $\psi$ anywhere in the
+paper. A practitioner reading this paper and trying to apply SCC to their own asset has no worked
+example of identifying which Buckingham $\Pi$ groups become the scale and which become the residual
+departure outside the one system the author designed. Please work through the Lundberg-Palmgren
+case in an appendix, derive the actual dimensionless groups from the rating-life relation, state
+explicitly what physical effect constitutes $\psi$ for that model, and show at least one numerical
+instance of computing it from published bearing parameters.
 \end{comment}
 
 \noindent\textbf{Response.} A new appendix works the split through for rolling-contact fatigue,
@@ -283,8 +366,14 @@ of $\boldsymbol\psi$, rather than the bound itself, is the practical boundary of
 
 \subsection*{Major comment 3: comparison against discrete-mode conformal}
 \begin{comment}
-Treating each operating condition as a discrete mode and calibrating within it is the natural
-alternative and is not compared against.
+Section 2 discusses Javanmardi and Hüllermeier [5] as the closest prior treatment of conformalized
+RUL, noting that their fix for varying operating conditions is to cluster into discrete modes. That
+comparison stays qualitative. Section 5's case study never runs the clustering approach as a third
+baseline alongside naïve and SCC conformal in Fig. 2. Since [5] is presented as the direct
+predecessor this paper improves on. Please add a discretized-temperature clustering baseline
+(treating the three testbed temperatures as [5]'s discrete modes) to Fig. 2, so the reader sees
+quantitatively what continuous physical scaling buys over discrete mode clustering rather than
+taking the qualitative contrast on faith.
 \end{comment}
 
 \noindent\textbf{Response.} Added, with the most favourable reading given to the baseline: the
@@ -307,29 +396,45 @@ fallback inherits the same directional failure as regime-blind calibration.}
 
 \subsection*{Major comment 4: are the intervals actionable at large departures}
 \begin{comment}
-Coverage can be preserved by widening the interval. The paper should say whether the intervals
-remain useful for a maintenance decision as the departure grows.
+Section 4.3 defines efficiency such that a diverging value ``signals degenerate, uselessly wide
+intervals,'' and Section 5.2 reports that at $\eta = 2$ the relative back-off reaches 1.01
+(Fig. 3), meaning the certified interval half-width is roughly the size of the point RUL estimate
+itself. That same section describes this outcome as the gap and back-off degrading ``gracefully.''
+In my understanding, those two statements are in tension: by the paper's own definition of
+degeneracy, a back-off near 1.0 is close to the line the paper itself says marks an uninformative
+interval. Could you please state explicitly, using the paper's own efficiency criterion, what
+back-off value should be read as the point where SCC's output stops being actionable for a
+maintenance planner, and say plainly whether the $\eta = 2$ configuration in Fig. 3 is on the safe
+or the degenerate side of that line?
 \end{comment}
 
-\noindent\textbf{Response.} We concede the point rather than argue it. Efficiency is now defined as
-the relative back-off $b=q_T/\overline{\mathrm{RUL}}_T$, with three bands fixed in the text:
-$b<0.5$ actionable, $0.5\le b<1$ degraded, $b\ge1$ degenerate, the last meaning that the certified
-lower bound is non-positive on average, so the interval states only that failure has not yet
-occurred.
+\noindent\textbf{Response.} The two statements were in tension, and the reviewer is right about
+which one has to go. We answer the two questions plainly.
 
-Measured on the testbed, $b$ rises from 0.283 at $\eta=0$ to 1.011 at $\eta=2$. SCC is therefore
-actionable out to $\eta=0.68$, degraded to $\eta=1.97$, and degenerate beyond, and at $\eta=2$ the
-certified fraction of predicted life is $-0.011$. Coverage is still certified there, with a gap of
-0.097, and we say so, but the interval carries no replacement schedule. The word ``graceful'' has
-been removed from the manuscript; the operating envelope replaces it.
+\emph{Where actionability stops.} Efficiency is now defined as the relative back-off
+$b=q_T/\overline{\mathrm{RUL}}_T$, and because SCC returns a one-sided lower bound, the quantity a
+planner acts on is the certified fraction of predicted life, $1-b$. Three bands are fixed in
+Section~4.3: $b<0.5$ is actionable, since more than half the predicted life is certified;
+$0.5\le b<1$ is degraded, a positive but shrinking lead time; and $b\ge1$ is degenerate, because the
+certified lower bound is then non-positive on average, so the interval states only that failure has
+not yet occurred and carries no replacement schedule.
+
+\emph{Which side $\eta=2$ is on.} The degenerate side. The measured back-off there is 1.011 and the
+certified fraction of predicted life is $-0.011$. Coverage is still certified, with a gap of 0.097,
+and Section~5.2 says so, but the interval is not actionable. The envelope is now stated in full: SCC
+is actionable out to $\eta=0.68$, degraded to $\eta=1.97$, and degenerate beyond, with the band
+edges drawn on the figure. The word ``graceful'' has been removed from the manuscript entirely, in
+the abstract, Section~4.3, Section~6 and Section~7 as well as Section~5.2.
 
 \where{Efficiency and the bands defined in Section~4.3; the envelope stated in Section~5.2; bands
 shaded in Figure~3; ``graceful'' removed from the abstract, Section~4.3, Section~6 and Section~7.}
 
 \subsection*{Minor comment 1: the dimension of $\boldsymbol\psi$ and the choice of norm}
 \begin{comment}
-Equation~(1) uses a norm of $\Delta\boldsymbol\psi$ without specifying which norm, and the tested
-case appears to be one-dimensional.
+Definition 1 (Appendix A) defines $\psi$ as a vector in $\mathbb{R}^m$, but every case-study
+configuration varies a single scalar departure via $\eta$. Please state explicitly that the tested
+case is $m = 1$, and note whether the norm choice in Eq. (1) matters once $m > 1$ is actually
+exercised.
 \end{comment}
 
 \noindent\textbf{Response.} Correct, and now stated. The dimension $m$ is set by the physics rather
@@ -344,8 +449,9 @@ say why the appendix uses the scalar $\ln\kappa$ instead.
 
 \subsection*{Minor comment 2: the bound holds on 100\% of configurations, which suggests looseness}
 \begin{comment}
-A bound that is satisfied in every case may simply be loose. Tightness should be reported alongside
-validity.
+Table 1 reports Bound \% = 100 in every row. A bound that always holds could simply be loose
+everywhere rather than informative. You could report the average or worst-case gap between the
+bound and the measured coverage gap so a reader can judge tightness, not just validity.
 \end{comment}
 
 \noindent\textbf{Response.} The suspicion is correct and we now report it. Across held-out
@@ -365,8 +471,10 @@ Figure~4.}
 
 \subsection*{Minor comment 3: how $L$ is fitted}
 \begin{comment}
-The estimation of $L$ appears to rely on a small number of source pairs, which is described only in
-the results.
+Section 3.4 describes regressing $d_{TV}$ on $\lVert\Delta\psi\rVert$ ``over source pairs,'' which
+with three temperatures gives only three pairs, too few to fit a reliable slope. Section 5.3
+clarifies that the fit actually uses multiple (pair, $\eta$) configurations. Move that clarification
+into Section 3.4 itself so the estimation procedure is not misread as relying on three data points.
 \end{comment}
 
 \noindent\textbf{Response.} Clarified and moved to the method, where it belongs. The design points
@@ -377,6 +485,16 @@ supplies far more than three points. In the study reported in Section~5.3 this g
 out to validate the resulting bound.
 
 \where{Section~3.5.}
+
+\subsection*{One paper worth adding}
+\begin{comment}
+Javanmardi and Hüllermeier [5] is already cited but only described qualitatively, not run as a
+baseline; see Major Comment 3 for how the authors can put it to use as an empirical comparison
+rather than a narrative contrast.
+\end{comment}
+
+\noindent\textbf{Response.} It is now run as a baseline rather than described, as set out in the
+reply to major comment~3: Section~5.6, Table~4 and the third series in Figure~2(a).
 
 \section*{Reproducibility}
 

@@ -121,18 +121,33 @@ operating regime itself, so a flexible learner can partly infer the regime and c
 the testbed the raw signal carries no such marker. What is invariant across both datasets is that
 SCC is the better arm in every row.
 
+The reviewer's question extends to the certificate, so we fit it separately for each predictor
+class over the same configurations. Validity is unaffected: the a-priori bound holds on 100\% of
+held-out configurations for all four, with margins in the narrow band 0.30 to 0.36, so its
+conservatism does not grow with capacity. Its \emph{mechanism} does weaken. The departure model
+explains the score-distribution mismatch well only for the closed-form predictor (held-out
+$R^2=0.90$ against $-2.8$ to $-0.02$ for the three learned ones), so with a learned predictor the
+bound holds on conservatism rather than because $\delta$ tracks the mismatch. The residual there is
+dominated by model error rather than by physical departure, which is the same pattern the C-MAPSS
+certificate shows in Section~\ref{sec:res-cmapss} and a further reason the certificate is claimed
+narrowly.
+
 \begin{table}[t]\centering\footnotesize
 \setlength{\tabcolsep}{10pt}\renewcommand{\arraystretch}{1.2}
 \caption{Coverage gap by base predictor, trained on the source condition and deployed on the
 target, under unit-level calibration. Naive fits the predictor in raw coordinates; SCC fits the same
-model class in the dimensionless ones.}\label{tab:basemodel}
-\begin{tabular}{@{}lcccc@{}}\toprule
-& \multicolumn{2}{c}{$\eta=0$} & \multicolumn{2}{c}{$\eta=2$} \\\cmidrule(lr){2-3}\cmidrule(lr){4-5}
-Base predictor & Naive & SCC & Naive & SCC \\\midrule
-Closed-form physics & 0.127 & 0.014 & 0.335 & 0.102 \\
-Ridge regression    & 0.275 & 0.008 & 0.317 & 0.061 \\
-Random forest       & 0.449 & 0.014 & 0.450 & 0.085 \\
-Neural network      & 0.346 & 0.007 & 0.483 & 0.046 \\\bottomrule
+model class in the dimensionless ones. The last two columns fit the a-priori certificate separately
+for each predictor over the same configurations: the margin is the mean of (bound $-$ measured gap)
+on held-out configurations and $R^2$ is the held-out fit of the departure model. The bound holds on
+100\% of held-out configurations for every predictor class.}\label{tab:basemodel}
+\begin{tabular}{@{}lccccrr@{}}\toprule
+& \multicolumn{2}{c}{$\eta=0$} & \multicolumn{2}{c}{$\eta=2$}
+& \multicolumn{2}{c}{Certificate} \\\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+Base predictor & Naive & SCC & Naive & SCC & Margin & $R^2$ \\\midrule
+Closed-form physics & 0.127 & 0.014 & 0.335 & 0.102 & 0.361 & 0.90 \\
+Ridge regression    & 0.275 & 0.008 & 0.317 & 0.061 & 0.323 & $-2.76$ \\
+Random forest       & 0.449 & 0.014 & 0.450 & 0.085 & 0.299 & $-0.02$ \\
+Neural network      & 0.346 & 0.007 & 0.483 & 0.046 & 0.325 & $-0.03$ \\\bottomrule
 \end{tabular}
 \end{table}
 

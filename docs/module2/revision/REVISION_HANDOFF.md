@@ -24,7 +24,7 @@ the response letter (task 11), and the submission package (task 12).**
 | R2.3 discrete-mode baseline | DONE — `scripts/r23_discrete_mode.py`; manuscript Section 5.6 2026-09-16 |
 | R1.4 misspecification + detectability | DONE — `scripts/r14_misspecification.py`; manuscript Section 5.7 and Section 3.5 2026-09-16 |
 | R2.1 C-MAPSS second dataset | DONE — `scripts/cmapss_loader.py`, `scripts/r21_cmapss.py`, `scripts/r21b_psi_candidates.py`; written into the manuscript 2026-09-16 |
-| R1.1 base-model complexity | DONE — `scripts/r11_base_model.py`; manuscript Section 5.4 2026-09-16 |
+| R1.1 base-model complexity | DONE — `scripts/r11_base_model.py`, `scripts/r11b_bound_complexity.py`; manuscript Section 5.4 and Table 2, bound-vs-capacity added 2026-09-18 |
 | R1.2 design guideline | DONE — `scripts/r12_design_guideline.py`; manuscript Section 5.8 2026-09-16 |
 | R2.2 Lundberg-Palmgren psi derivation | DONE — `scripts/r22_lundberg_palmgren.py`; manuscript Appendix B 2026-09-16 |
 | R2.4 actionability concession | DONE — `scripts/r24_actionability.py`; manuscript Sections 4.3, 5.2, abstract, discussion, conclusions 2026-09-16 |
@@ -238,13 +238,13 @@ Section 5.3 up into Section 3.4, so the procedure is not misread as relying on t
     the one figure with no generator; closing that needs the n and departure it was drawn
     with. Fixed a caption that wrote the bound as $2(a+b\\delta)$, colliding with the
     back-off $b$ from task 7.
-11. **DONE 2026-09-16.** `paper3/response_to_reviewers.tex` (8 pp). Comment blocks hold OUR
-    restatements, not verbatim reviewer text: paste the real comments into the twelve
-    `\\begin{comment}` blocks before submitting. Writing it exposed a missing R1.5 change, now
-    fixed as new Section 3.4 (rho = 0.908, design effect 2.82, block conformal).
-12. Rebuild the flat EM variant and zip; verify single-column, no run-in heads, 0 undefined cites.
-    Also rewrite `paper3/highlights.docx` (5 bullets, <=85 chars, must reflect C-MAPSS and the
-    scoped certificate) and `paper3/cover_letter.docx`, both of which predate the narrowing.
+11. **DONE 2026-09-18.** `paper3/response_to_reviewers.tex` (10 pp) now quotes all twelve
+    comments VERBATIM from the decision letter, plus the "one paper worth adding" item. Writing
+    it exposed a missing R1.5 change (fixed as Section 3.4) and a half-answered R1.1 (fixed by
+    `scripts/r11b_bound_complexity.py` and a third paragraph in Section 5.4).
+12. **DONE 2026-09-18.** `main_EM.tex` rebuilt (32 pp, text layer identical to the split build,
+    0 undefined cites, no run-in heads), `highlights.docx` and `cover_letter.docx` rewritten for
+    the revision. Response letter ships as PDF: the pandoc .docx blanks its inline equations.
 
 ## 8. Files
 

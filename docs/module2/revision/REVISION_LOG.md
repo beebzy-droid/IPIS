@@ -957,3 +957,75 @@ certificate, 5 diagnostic.
 
 Build after task 11: manuscript 31 pp, 0 errors, 6 overfull hboxes, 0 undefined references;
 terminology audit clean. Letter 8 pp, 0 errors, 0 overfull.
+
+## Verbatim reviewer comments received, and what they changed (2026-09-18)
+
+Bien supplied the decision letter, so the response letter now quotes the reviewers verbatim instead
+of paraphrasing them. Reading the actual wording changed the work in one substantive way and
+sharpened four others.
+
+### R1.1 was only half answered
+
+The comment ends: "The authors should evaluate how the conservatism of the a-priori bound changes
+when varying the complexity of the base model." `r11_base_model.py` answered coverage by model
+class; nothing in the manuscript answered the bound. New script `scripts/r11b_bound_complexity.py`
+fits the certificate separately for each predictor, using `r15b_certificate.certificate` so the
+method matches Section 5.3:
+
+| predictor | a | L | held-out R^2 | gap | bound | margin | factor | holds |
+|---|---|---|---|---|---|---|---|---|
+| closed-form physics | 0.154 | 0.467 | 0.904 | 0.070 | 0.432 | 0.361 | 6.1x | 100% |
+| ridge | 0.105 | 0.581 | -2.761 | 0.042 | 0.365 | 0.323 | 8.7x | 100% |
+| random forest | 0.040 | 1.046 | -0.017 | 0.060 | 0.359 | 0.299 | 5.9x | 100% |
+| neural network | 0.096 | 0.617 | -0.025 | 0.033 | 0.357 | 0.325 | 11.0x | 100% |
+
+Validity is unaffected by capacity and the margin band is narrow (0.299 to 0.361). The mechanism is
+not: the departure model has held-out R^2 = 0.90 only for the closed-form predictor and about zero
+or negative for the three learned ones, so with a learned predictor the bound holds on conservatism
+rather than because delta tracks the mismatch. Same pattern as the C-MAPSS certificate, and a
+further reason the narrowed claim is right. Section 5.4 gained a third paragraph and Table 2 gained
+two columns (Margin, R^2). Do not compare the 0.904 here with the 0.773 of Section 5.3: different
+score construction, 3 seeds rather than 5, and a four-value eta grid. The comparison that matters is
+across the four rows of this table.
+
+### Four responses sharpened by the actual wording
+
+* R1.2 asks for "minimum required number of units or signal-to-noise ratio". The reply now names
+  the scatter axis as the SNR axis explicitly (signal = the L10 life ratio between conditions,
+  noise = the spread within one), which the paraphrase had lost.
+* R1.4 names two risks, partial misspecification AND unknown environmental factors. The reply now
+  separates them: the eta sweep already covers unknown environmental factors, Section 5.7 covers
+  misspecification. The paraphrase had collapsed them into one.
+* R2.1 explicitly suggests a BEARING dataset. The reply now says why C-MAPSS instead: no public
+  run-to-failure bearing set has the replication the L10 comparison needs (about five to six units
+  per condition), which is exactly what produced FEMTO's indeterminate verdict, so a bearing set
+  would reproduce the same non-result. Without this the reviewer could read C-MAPSS as dodging the
+  request.
+* R2.4 asks two specific questions and asks for a plain answer. The reply now answers them in the
+  reviewer's order and states "the degenerate side" in those words.
+
+Also added: the "one paper worth adding" item (Javanmardi and Hullermeier as a run baseline), which
+the paraphrase set had no entry for.
+
+## Task 12 - submission package (DONE 2026-09-18)
+
+* `paper3/highlights.docx` - five bullets, longest 83 characters, covering the guarantee, the
+  dimensionless calibration, the C-MAPSS result, the scoped bound and the diagnostic.
+* `paper3/cover_letter.docx` - revision framing, the five substantive changes, reproducibility.
+* `paper3/response_to_reviewers.tex` and `.pdf` - 10 pages, verbatim comments, 0 errors.
+* `paper3/main_EM.tex` - flat variant, sections inlined, bare figure paths.
+
+**The response letter is PDF only, deliberately.** A pandoc-produced .docx was built and rejected:
+LibreOffice renders its inline equations as blank, so "correlate at rho = 0.908" came out as
+"correlate at ," and "at eta = 2 the back-off" as "at the back-off". Word may render the OMML
+correctly, but an editor seeing blanks is not a risk worth taking when Editorial Manager accepts
+PDF for Response to Reviewers. If a .docx is ever required, the fix is a math-free variant of the
+source, not a converter.
+
+**EM flat variant verified:** 32 pp, 0 errors, 0 undefined citations or references, and its text
+layer is byte-identical to the split build (md5 c74e0ad1f68d on whitespace-stripped text). Single
+column via `\documentclass[review,times]{elsarticle}`, no `\paragraph{}` run-in heads, five figures
+referenced by bare filename.
+
+Upload set for Editorial Manager: `main_EM.tex`, `scc_refs.bib`, the five figure PDFs,
+`highlights.docx`, `cover_letter.docx`, `response_to_reviewers.pdf`. Deadline 07 October 2026.
