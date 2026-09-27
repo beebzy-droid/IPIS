@@ -1171,6 +1171,39 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-09-27 (M3 CJCE package finalized against the official author guidelines)** -- Checked against the
+  CJCE Author Guidelines PDF (Wiley page, retrieved 2026-09-27). Manuscript `paper2/cjce/main.tex`: 12 pt Times,
+  2.5 cm margins, 1.5 spacing, left-aligned, single-spaced abstract (233 words, limit 250), numbered ALL-CAPS
+  level-1 headings, superscript square-bracket citations after punctuation, Chemistry-Material Sciences
+  references via `angew.bst` (full author lists, no titles), "FIGURE n"/"TABLE n" captions, one-sentence table
+  titles with units in bold headers, "Equation (n)" references, SI-first pressures (470 kPa (4.7 bar)),
+  italic n-prefixes, alphabetical singular keywords, Correspondence block, Nomenclature with Greek Letters,
+  Acknowledgements (AI disclosure kept verbatim per Bien), CRediT (all applicable roles; sole author),
+  no-funding statement, conflict of interest, Data Availability Statement. Build: 15 pp, about 3,470 body
+  words (limit 6,000), 0 errors, 0 undefined citations, 0 overfull boxes. Mandatory files built:
+  `Highlights_Most_Relevant_Contributions.docx`, `Cover_Letter_CJCE.docx` (to EiC Joao B. P. Soares).
+  Affiliation: Mapua Malayan Colleges Mindanao. Campaign CSVs committed to `docs/module3/cjce/data/` so the
+  Data Availability Statement is true. **Pending:** 3-4 suggested reviewers with complete addresses (research
+  run next; not at Mapua); then submission via Wiley Research Exchange (submission.wiley.com).
+- **2026-09-27 (M3 CJCE package finalized to Wiley rules)** -- Caught a venue mix-up: the guideline PDF
+  from cdnsciencepub.com/journal/cjce is the Canadian Journal of CIVIL Engineering (Canadian Science
+  Publishing, Harvard style, 150-word abstract, ScholarOne) and does NOT apply. Target is The Canadian
+  Journal of CHEMICAL Engineering (Wiley, ISSN 1939-019X, submission via Wiley Research Exchange).
+  Applied the verified Wiley CJCE rules: superscripted square-bracket citations after commas/periods and
+  before semicolons (natbib super + angew.bst, reference list "A. Author, J. Abbr. Year, Vol, Pages");
+  alphabetical keywords; abstract 216 words, no citations; double spacing, page and line numbers;
+  Nomenclature; Author contribution statement (CRediT, sole author); Funding (none); Conflict of interest
+  (none); Data availability statement; AI-use disclosure in Acknowledgements and Methods (Wiley policy:
+  substantive AI drafting/code must be disclosed); novelty narrowed to "first controlled head-to-head
+  comparison ... for chance-constrained steady-state RTO of a distillation column"; 10 references added
+  (Paulson and Mesbah 2018; Bradford 2020; Petsagkourakis 2022; Mesbah 2016; Koller 2018; Rafiei and
+  Ricardez-Sandoval 2018; Campi et al. 2009; O'Sullivan et al. CDC 2025; Ovalle et al. 2025; Learn-then-Test
+  journal version) and Rodriguez et al. 2025 completed. Build: 16 pp, about 4.4k words upper bound
+  (limit 6,000 excl. references, captions, tables), 0 LaTeX/BibTeX errors, 0 undefined, 0 overfull.
+  Files: `paper2/cjce/{main.tex,references.bib,angew.bst,main.pdf,highlights.txt,cover_letter.txt}`.
+  **Bien to confirm before submitting:** affiliation (manuscript and cover letter say Mapua Malayan Colleges
+  Mindanao), keep or edit the AI disclosure, suggested reviewers' current affiliations and emails, ORCID,
+  optional ChemRxiv preprint (then add its DOI to the cover letter).
 - **2026-09-26 (M3 -> The Canadian Journal of Chemical Engineering; manuscript built)** -- Venue chosen by
   the ratified rule "highest acceptance rate with chemical-engineering fit, $0": CJCE (Wiley/CSChE), 43%
   acceptance and 29-day first decision in 2024 (editor-reported), free subscription route, preprints
