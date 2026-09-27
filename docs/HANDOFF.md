@@ -1171,6 +1171,25 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-09-26 (M3 -> The Canadian Journal of Chemical Engineering; manuscript built)** -- Venue chosen by
+  the ratified rule "highest acceptance rate with chemical-engineering fit, $0": CJCE (Wiley/CSChE), 43%
+  acceptance and 29-day first decision in 2024 (editor-reported), free subscription route, preprints
+  allowed, direct precedent Rodriguez et al. 2025 (data-driven RTO of distillation, DOI 10.1002/cjce.25543).
+  Prestige alternative kept on file: ChERD (20% official, IF 4.0). **Rejection history used as design data:**
+  JPC "significance" -> added risk-adjusted economics (breakeven off-spec cost) and a selection guide;
+  CACE "novelty" -> explicit contribution statement naming all prior art, claim limited to the first
+  head-to-head evaluation; TCST "statistical not control" -> chemical-engineering framing first, statistics
+  in service of the operating decision; Gate-0 prior-art checks -> no novelty claimed for any method. New
+  evidence `docs/module3/cjce/evidence/gate3_economics.json` (script `scripts/paper2_tmlr/gate3_economics_figures.py`):
+  at sigma_z = 0.006 naive back-offs lose to certify-then-deploy above 0.030-0.032 USD/kg of off-spec bottoms
+  and to sampling-and-discarding above 0.017-0.021 USD/kg (2-4% of the 0.836 USD/kg product value); guaranteed
+  methods overtake the alpha = 0.10 oracle above 0.064-0.077 USD/kg (alpha is an economic choice).
+  Manuscript `paper2/cjce/main.tex` (article class, unsrtnat, 11 pp, ~3.9k words incl. captions and line
+  numbers, under the 6,000-word limit; 0 errors, 0 undefined, 0 overfull >5pt; 4 figures collision-checked).
+  **Pre-submission checks (Bien):** confirm CJCE formatting and reference style on the Wiley author page;
+  search CJCE/ChERD for "conformal" to confirm the "first head-to-head" claim; complete the
+  rodriguez2025cjce bib entry (authors, volume, pages); choose the affiliation (Mapua vs UP Diliman) to match
+  the ScholarOne profile; decide the AI-use disclosure required by Wiley policy; optional ChemRxiv preprint.
 - **2026-09-26 (M3 Gate 2b done; Option 2 failed its novelty gate; decision pending)** -- Twin re-run:
   1,000 trials, exact scoring, `docs/module3/tmlr/evidence/gate2_twin.json` via
   `scripts/paper2_tmlr/gate2_twin_certified.py` (needs the two DWSIM CSVs). At sigma_z = 0.006:
