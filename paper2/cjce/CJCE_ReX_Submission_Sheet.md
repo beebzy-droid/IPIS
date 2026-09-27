@@ -14,12 +14,15 @@ Real-time optimization (RTO) pushes a distillation column toward its product spe
 
 ## Step 2: File upload
 
-| File | Designation |
+| Upload slot | File |
 |---|---|
-| main.pdf | Main Document |
-| Highlights_Most_Relevant_Contributions.docx | Manuscript's Most Relevant Contributions |
+| Main Manuscript (MS Word or LaTeX) | CJCE_Busico_LaTeX.zip (flat bundle: main.tex, references.bib, angew.bst, main.bbl, main.pdf, 4 figures; tested to compile from a clean folder) |
+| Manuscript's Most Relevant Contributions | Highlights_Most_Relevant_Contributions.docx (5 bullets, 76 to 80 characters each) |
+| Cover letter / Comments | Cover_Letter_CJCE.docx (mandatory for CJCE even though the slot says optional) |
 
-LaTeX sources are uploaded only after acceptance. If the system insists on source now: main.tex as Main Document; references.bib, angew.bst, and the four PNG figures as TeX/LaTeX Supplementary File.
+Leave Figure, Table, Graphical Abstract, and all Supplementary slots empty: figures and tables are embedded, and the graphical abstract is optional.
+
+**Article Type page:** select Research Article and tick all six statements. The AI statement requires the declaration in the Methods section; it is now Section 4.4 of the manuscript, with the same wording as before.
 
 ## Step 3: Attributes
 
@@ -79,13 +82,13 @@ LaTeX sources are uploaded only after acceptance. If the system insists on sourc
 
 ## Step 6: Details and comments
 
-- Cover letter: upload Cover_Letter_CJCE.docx (mandatory).
+- Cover letter: already uploaded in Step 2.
 - Previously published or under consideration elsewhere: No.
 - Preprint: No.
 - Funding: This research received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors.
 - Conflict of interest: The author declares no conflict of interest.
 - Data availability statement: The data that support the findings of this study are openly available in GitHub at https://github.com/beebzy-droid/IPIS, including the DWSIM campaign data (docs/module3/cjce/data), the scripts that regenerate every figure and table from fixed random seeds, and the evidence files.
-- Use of generative AI (answer consistently with the Acknowledgements): The author used Claude (Anthropic; Claude Opus 5.5 and earlier versions), a large language model, to assist with drafting and editing the manuscript text and with writing and debugging parts of the Python analysis and plotting code. The author directed the study, reviewed and tested all outputs, verified every reported number against the regenerated evidence files, and takes full responsibility for the content. No generative AI tool was used to create or alter simulation data or results; the figures were produced by the author's code from the simulation data.
+- Use of generative AI (declared in Methods, Section 4.4; answer consistently): The author used Claude (Anthropic; Claude Opus 5.5 and earlier versions), a large language model, to assist with drafting and editing the manuscript text and with writing and debugging parts of the Python analysis and plotting code. The author directed the study, reviewed and tested all outputs, verified every reported number against the regenerated evidence files, and takes full responsibility for the content. No generative AI tool was used to create or alter simulation data or results; the figures were produced by the author's code from the simulation data.
 - Ethics approval, patient consent, clinical trial registration, permission to reproduce material: Not applicable.
 - Transparent Peer Review: default is to participate; opting out is allowed and does not affect the decision.
 

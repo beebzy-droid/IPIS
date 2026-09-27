@@ -1171,6 +1171,13 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-09-27 (M3 CJCE: fixes forced by the live ReX form)** -- (1) The Article Type page requires AI use to be
+  declared in the Methods section: the disclosure moved verbatim from Acknowledgements to Section 4.4 "Use of
+  generative artificial intelligence tools" (Acknowledgements section removed; cover letter updated). (2) Main
+  Manuscript accepts only Word or LaTeX: upload the flat bundle `paper2/cjce/CJCE_Busico_LaTeX.zip`, verified to
+  compile from a clean folder (14 pp, 0 errors, 0 undefined). (3) Highlights recommended at <=85 characters:
+  bullets now 76-80. Editorial-board check passed for all reviewers and swap-ins; note M. Guay (JPC EiC who
+  desk-rejected the earlier version) is a CJCE Associate Editor.
 - **2026-09-27 (M3 CJCE suggested reviewers confirmed; submission-ready)** -- Verified and confirmed by Bien:
   Prashant Mhaskar (McMaster), Zukui Li (Alberta), Kostas Margellos (Oxford), Joel Paulson (UW-Madison).
   Swap-ins: C. L. E. Swartz or Jinfeng Liu (RTO), Simone Garatti (scenario). Excluded as CJCE editors:
