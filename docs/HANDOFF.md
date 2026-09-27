@@ -1171,9 +1171,15 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-09-27 (M3 CJCE suggested reviewers confirmed; submission-ready)** -- Verified and confirmed by Bien:
+  Prashant Mhaskar (McMaster), Zukui Li (Alberta), Kostas Margellos (Oxford), Joel Paulson (UW-Madison).
+  Swap-ins: C. L. E. Swartz or Jinfeng Liu (RTO), Simone Garatti (scenario). Excluded as CJCE editors:
+  Ricardez-Sandoval, B. Huang, V. Prasad, S. Dubljevic; excluded for institution: UP Diliman, Mapua. All ReX field
+  values in `paper2/cjce/CJCE_ReX_Submission_Sheet.md`. **Pending (Bien):** browser check of the CJCE editorial
+  board for the four names, repo push so `docs/module3/cjce/data/` is public, ReX submission, manuscript ID.
 - **2026-09-27 (M3 CJCE package finalized against the official author guidelines)** -- Checked against the
   CJCE Author Guidelines PDF (Wiley page, retrieved 2026-09-27). Manuscript `paper2/cjce/main.tex`: 12 pt Times,
-  2.5 cm margins, 1.5 spacing, left-aligned, single-spaced abstract (233 words, limit 250), numbered ALL-CAPS
+  2.5 cm margins, 1.5 spacing, left-aligned, single-spaced abstract (215 words, limit 250), numbered ALL-CAPS
   level-1 headings, superscript square-bracket citations after punctuation, Chemistry-Material Sciences
   references via `angew.bst` (full author lists, no titles), "FIGURE n"/"TABLE n" captions, one-sentence table
   titles with units in bold headers, "Equation (n)" references, SI-first pressures (470 kPa (4.7 bar)),
