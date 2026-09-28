@@ -1,7 +1,7 @@
 # Module 3 — Real-Time Optimization (RTO)
 
-This directory holds Module 3 documentation. **Status: complete (3A + 3B); paper in
-preparation for TMLR (IEEE TCST 26-0876 rejected on scope). 3C closed-loop is future work.**
+This directory holds Module 3 documentation. **Status: complete (3A + 3B); paper under
+review at CJCE (1404930). 3C closed-loop is future work.**
 
 ## Files
 
@@ -64,8 +64,8 @@ optimum.
 
 ## Publication
 
-Module 3 is reported in **Paper 2**: "Safe real-time optimization under unmeasured disturbances: a finite-sample, distribution-free constraint-satisfaction guarantee,"
-in preparation for *Transactions on Machine Learning Research* (IEEE TCST 26-0876 rejected on scope, 2026-08-28). Theory v2 in `docs/module3/tmlr/`; frozen TCST source in `paper2/tcst/`;
+Module 3 is reported in **Paper 2**: "Safe real-time optimization of a distillation column under feed-composition uncertainty: a comparative study of distribution-free constraint back-offs,"
+under review at *The Canadian Journal of Chemical Engineering* (**1404930**, submitted 2026-09-27). Source in `paper2/cjce/`; theory v2 evidence in `docs/module3/tmlr/`; frozen earlier versions in `paper2/tcst/`;
 markdown working copy, figures, and frozen evidence in `docs/module3/paper/`.
 
 See `docs/architecture/decisions/` (ADR-013, ADR-014) for the reasoning behind each decision, and
