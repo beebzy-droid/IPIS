@@ -1,4 +1,4 @@
-# M1 revision audit and plan (JPROCONT-D-26-00618, rejected 2026-07-27)
+# M1 revision audit and plan (JPROCONT-D-26-00618, rejected; decision date TBC from EM header)
 
 Four reviewers, three recommending rejection. Reviewer 1 called the core idea novel and
 recommended major revision. This document records what was verified against the code,
@@ -146,5 +146,28 @@ Engineering Science, Engineering Applications of Artificial Intelligence.
 - The four reviews are archived verbatim in `docs/module1/reviews/JPROCONT-D-26-00618/`.
 
 ---
-*Audit performed 2026-07-27 against commit state on `main`. Findings A1-A8, A10-A12
+*Audit performed against commit state on `main` (2026). Findings A1-A8, A10-A12
 verified against file contents; A9 outstanding and assigned to Phase 0.*
+
+
+---
+
+## Addendum 2026-09-28: A9 resolved, and the plan superseded by N1
+
+**A9 verdict: CONFIRMED on both halves, plus two provenance findings.**
+- TEP: `scripts/conformal_eval.py` loads the full regime file, calls
+  `diagnose_transport_lag(df)` (argmax |corr(XMEAS_3, y)|, lags 0-40) on train, validation
+  and test together, and only then calls `time_ordered_split(df)`. Leakage.
+- SECOM: `select_vm_target(df)` ranks |point-biserial r| against the fail label over all
+  1,567 rows, test period included. The docstring defends it as problem definition; the
+  test-period labels are nonetheless consulted.
+- Debutanizer: lag 15 is a hard-coded default in `physics_features.py`; no scan exists in
+  `src/`. Provenance not reproducible from the repository.
+- Physics features rest on assumed ranges in `physics_bridge/bridge.py`: tray-6
+  temperature 100-112 C, column pressure 4.5-5.5 bar; n-hexane heavy proxy; bubble-point
+  estimate clipped to [0, 1]. Nominal assumptions, not dataset facts (R2.6a, R4.6).
+
+**Plan status.** The phased plan in Part 3 is superseded by `M1_NARROWING_PROPOSAL.md`
+(N1) once ratified. Phase 0 integrity fixes carry over unchanged. SECOM, migration and the
+physics-attribution claim leave the manuscript; every reviewer comment keeps a disposition
+in `docs/reviews/REVIEW_REGISTER.csv`.

@@ -64,12 +64,122 @@ that could have been false and was tested.** Everything below serves that.
   journal's production class (for Elsevier process journals: elsarticle
   `final,5p,times,twocolumn`), not the review class, when a page cap is stated. Wide
   tables and figures span columns (`table*`, `figure*`). A page cap is almost always a
-  format problem masquerading as a length problem — measure in the production format
+  format problem masquerading as a length problem: measure in the production format
   before cutting content.
 - A cover letter that owns an unfavorable history (a transfer, a desk-reject) reads as
   confidence. State it plainly.
 
-## 6. Prose register (MIT/Harvard standard = clarity, not ornament)
+## 6. Venue integrity: one submission at a time, and how to vet an invitation
+
+Added in 2026, after an unsolicited invitation arrived from a 2024-founded journal
+(Opast Publishing Group) while M1 was under active review at JPC. The lesson has two
+parts: an absolute rule that admits no exceptions, and a filter for judging any venue
+that approaches you.
+
+### 6.1 The absolute rule (no exceptions, no judgment calls)
+
+**A manuscript is submitted to exactly one journal at a time.** While a paper is under
+review anywhere, it may not be submitted, offered, or promised to any other venue, no
+matter how attractive the offer or how slow the current review. Simultaneous submission
+is research misconduct under COPE guidance and under Elsevier, Springer, Wiley, IEEE,
+and ACS policy. Consequences escalate from immediate rejection to retraction to an
+author-level flag that follows you across a publisher's entire editorial system.
+
+Corollaries worth stating so they are never re-litigated under pressure:
+- A desk-rejection releases the paper; a "revise and resubmit" does not.
+- Withdrawing is a formal act, done in the submission system and confirmed by the
+  editorial office, before any new submission. Silence is not withdrawal.
+- A preprint (SSRN, arXiv) is not a prior publication and does not block submission to
+  the journals that permit preprints, which includes Elsevier process journals. Verify
+  per venue, but preprinting is compatible with the rule above.
+- Republishing work already published elsewhere, even in a low-quality venue, is prior
+  publication. Publishing once in a predatory journal can permanently disqualify the
+  work from a legitimate one. This is why a bad venue is worse than no venue.
+
+### 6.2 Recognizing a predatory or low-value solicitation
+
+None of these signals is conclusive alone. Three or more together is a decision.
+
+- **It came to you unsolicited**, praising work it has not read, often quoting only your
+  title. Reputable journals do not recruit manuscripts by cold email. Legitimate special
+  issue invitations exist, but come from a named guest editor with a verifiable academic
+  affiliation, reference specific relevant work, and name the journal's indexing.
+- **Scope mismatch.** The venue's stated field does not contain your paper. A chemical
+  process control manuscript solicited by a general "data analytics and decision making"
+  journal is being harvested, not selected.
+- **Youth without pedigree.** Volume 1 in the last two or three years, no society or
+  university backing, no recognizable editorial board.
+- **Fee prominence.** An article-processing charge advertised as a primary navigation
+  item rather than disclosed in author guidelines. Legitimate open access charges exist
+  and are often high; the tell is prominence and eagerness, not existence.
+- **Language and register.** Generic flattery, grammatical irregularity in official
+  correspondence, phrases that invert the relationship ("help us improve our journal"),
+  promises of rapid publication, guaranteed acceptance, or a named turnaround measured
+  in days for peer review.
+- **Unverifiable people.** Managing editors with no institutional email, no ORCID, no
+  publication record; editorial boards listing scholars who never agreed to serve.
+- **Metrics that do not exist.** Invented indices ("Global Impact Factor," "Journal
+  Influence Score") standing in for Clarivate Impact Factor or Scopus CiteScore.
+- **Hijacked identity.** A cloned site imitating a legitimate indexed journal, often
+  differing by one character in the domain. Check the Retraction Watch Hijacked Journal
+  Checker before trusting a familiar-sounding name reached through an emailed link.
+
+### 6.3 Positive verification checklist (run before any submission, including invited)
+
+Verify the venue, never the email. Navigate to sources independently; do not follow
+links supplied in the solicitation.
+
+1. **Indexing, the primary filter.** Confirm the exact title and ISSN appear in Scopus
+   (Elsevier source list) and/or Web of Science (Clarivate Master Journal List). Also
+   check Scopus's discontinued-sources list: removal for quality reasons is a serious
+   negative signal that a current listing can hide.
+2. **ISSN record.** portal.issn.org confirms the registered publisher, country, and
+   first issue. This is how the 2024 founding date and publisher identity were
+   established in the case that prompted this section.
+3. **DOAJ**, for open access venues: inclusion signals vetted editorial practice.
+4. **COPE membership** for the publisher, and whether stated ethics policies exist and
+   are specific rather than boilerplate.
+5. **Editorial board spot-check.** Pick two board members, find their institutional
+   pages, confirm the affiliation is real and, where possible, that the appointment is
+   acknowledged.
+6. **Read the last two issues.** Does the journal publish work of the kind and quality
+   you intend to submit? This doubles as the scope-fit check from Section 5.
+7. **Archiving and DOIs.** Registered DOIs (Crossref) and a preservation arrangement
+   (CLOCKSS, Portico, or a national library deposit) indicate permanence.
+8. **Think.Check.Submit.** The standing community checklist; use it as the final pass.
+
+A venue that fails filter 1 requires an affirmative reason to proceed. New,
+society-backed journals with credible boards can be worth supporting before indexing
+arrives, but that is a deliberate choice, not a default.
+
+### 6.4 Standing procedure when an invitation arrives
+
+1. Note whether the paper named is under review elsewhere. If yes, the answer is no,
+   and no further evaluation is needed.
+2. Do not reply. A reply confirms a live address and multiplies future volume. Do not
+   click unsubscribe links in suspect mail.
+3. If the venue is plausibly legitimate and the paper is genuinely free, run 6.3 before
+   any response.
+4. Record the outcome. One line in the citation ledger or handoff is enough, so the same
+   solicitation is not re-evaluated in six months.
+
+### 6.5 Why this matters specifically for the IPIS program
+
+- **Preprint scraping is the expected cost of a deliberate choice.** IPIS posts preprints
+  (SSRN via Elsevier) for the DOI, the priority date, and early citation. Predatory
+  publishers harvest preprint servers, so solicitation volume will rise as M2 through M5
+  appear. This is noise to filter, not a reason to stop preprinting.
+- **The program's targets are indexed venues.** JPC, CACE, RESS, IECR, ChemEngSci and
+  their peers. Every IPIS paper belongs in a venue that a PhD committee, a hiring panel,
+  and a future book publisher all recognize without explanation.
+- **A predatory listing is a permanent liability**, not a neutral extra line: it burns the
+  manuscript for legitimate publication, and on a CV aimed at a US doctoral program it
+  invites questions about judgment that no amount of good science later erases.
+- **Volume is not the goal.** The charter's mandate is field-defining work, and that is
+  measured by what other researchers build on, never by publication count. A paper placed
+  in a venue no practitioner reads has, for program purposes, not been published.
+
+## 7. Prose register (MIT/Harvard standard = clarity, not ornament)
 
 - Lead every section with its point; the reader should never hunt for the claim.
 - No em-dashes as a stylistic tic (they read as machine-generated); use the punctuation
@@ -81,7 +191,7 @@ that could have been false and was tested.** Everything below serves that.
 - Tables and figures are self-contained: a reader skimming only the captions should get
   the argument.
 
-## 7. The program view (the actual path to field-defining work)
+## 8. The program view (the actual path to field-defining work)
 
 - No single paper is field-defining; a *program* is. IPIS M1->M5 plus the plantwide
   generalization is the unit that matters. Each paper must earn its novelty the way M1
@@ -89,6 +199,37 @@ that could have been false and was tested.** Everything below serves that.
 - A paper that opens a method others adopt outweighs a paper with a larger one-time
   result. Optimize for the contribution that becomes other people's tool.
 
+## 9. Lessons from peer review (derived from `docs/reviews/REVIEW_REGISTER.csv`)
+
+Each line is a failure that reached a reviewer, stated as the rule that would have stopped it.
+
+- **L1. Write methods from the code, never from memory.** Diff every protocol description
+  against its implementation before submission. (A3: S3.2 described leave-one-block-out;
+  the code ran forward-chaining TimeSeriesSplit.)
+- **L2. Identification needs matched controls.** Vary exactly one factor on the same
+  process, target, estimator and split. A cross-dataset contrast illustrates; it does not
+  identify. (A12: three of four reviewers, independently.)
+- **L3. Apply your own stated rules to your own tables before a reviewer does.** (A1: the
+  one-SE rule selected k = 1; the paper deployed k = 4.)
+- **L4. Do the sample-size arithmetic before writing a precision claim.** (A5: a 0.006
+  coverage spread at n = 300 is 0.35 binomial standard errors.)
+- **L5. Every data-dependent choice is made on the training partition only**: lags,
+  targets, thresholds, screens that consult labels. (A9.)
+- **L6. A property the paper claims must be exercised by the experiment that produces the
+  reported numbers.** Correct software is not evidence. (A2: the pairing rule lived in
+  `service.py`; Table 3 came from a loop that never used it.)
+- **L7. Re-sweep the literature immediately before submission.** In fast fields directly
+  relevant work can appear within weeks (arXiv 2609.07251 appeared three weeks before the
+  planned resubmission and removed one candidate contribution).
+- **L8. Marginal metrics can hide dynamics.** Report distributional and local diagnostics
+  beside every marginal number. (Pilot: marginal coverage 0.900 with 55 % infinite
+  intervals.)
+- **L9. A pilot's simplification must not manufacture its effect.** Check the mechanism
+  against the production implementation before interpreting. (Pilot: a nominal-scale
+  quantile created artifactual infinite intervals under drift.)
+- **L10. Stamp only dates you can verify.** Record "TBC" rather than an inferred date.
+
 ---
-*Standard adopted 2026-06-29. Revisit after each review cycle; every reviewer objection
-that lands is a gap in this list to close.*
+*Standard adopted 2026-06-29. Amended 2026 (Section 6, venue integrity); 2026-09-28 (Section 9, peer-review lessons).
+Revisit after each review cycle; every reviewer objection that lands, and every
+solicitation that tests the rules, is a gap in this list to close.*
