@@ -8,18 +8,23 @@ structured data in `REVIEW_REGISTER.csv`.
 
 ## Timeline
 
-| Date | Paper | Venue | Manuscript | Event | Outcome |
-|---|---|---|---|---|---|
-| 2026-06-12 | M1 | CACE | CACE-D-26-00944 | Submitted | |
-| between 06-12 and 06-29 | M1 | CACE | CACE-D-26-00944 | Editor desk decision | Rejected without review on scope and novelty; transfer offered |
-| 2026-06-29 | M1 | JPC | JPROCONT-D-26-00618 | Transferred, reframed (negative-control spine), 13 pp production format | Under review |
-| TBC | M3 | JPC | TBC | Technical send-back | Page cap 12-15 pp in Elsevier template; M3 session owns follow-up |
-| TBC | M1 | n/a | n/a | Unsolicited invitation, predatory indicators | Not engaged; THESIS_STANDARDS S6 |
-| after 2026-07-25, TBC | M1 | JPC | JPROCONT-D-26-00618 | Decision after peer review, 4 reviewers | Rejected; 3 recommend rejection, R1 recommends major revision |
-| 2026-09-07 | external | arXiv | 2609.07251 | El Halabi & Brandt, delayed-feedback ACI | Removes one candidate contribution; shapes N1 |
-| 2026-09-28 | M1 | n/a | n/a | Audit A1-A12 closed; register built; N1 proposed | Awaiting ratification |
+Evidence levels: RECORDED (written in a dated repo or chat record), EM (Editorial Manager
+status line pasted by the author), BOUND (interval fixed by recorded events on either side).
+Exact email-header dates replace BOUND entries when available; nothing is inferred beyond the
+stated bound (THESIS_STANDARDS L10).
 
-Fill every TBC from the email headers; do not infer dates (THESIS_STANDARDS L10).
+| Date | Level | Paper | Venue / ID | Event | Outcome |
+|---|---|---|---|---|---|
+| 2026-06-12 | RECORDED | M1 | CACE-D-26-00944 | Submitted | |
+| after 06-12, on or before 06-29 | BOUND | M1 | CACE-D-26-00944 | Desk decision | Rejected without review (scope, novelty); transfer offered |
+| on or before 2026-06-23 | BOUND | M3 | JPROCONT-D-26-00565 | Technical send-back | 12-15 pp cap in Elsevier template |
+| on or before 2026-06-23 | RECORDED | M3 | JPROCONT-D-26-00565 | Desk decision | Rejected on significance, no reviewers; M3 moved to CACE-D-26-01040 |
+| 2026-06-29 | EM | M1 | JPROCONT-D-26-00618 | Transfer submitted (reframed, 13 pp) | Under review |
+| 2026-07-25 | EM | M1 | JPROCONT-D-26-00618 | Status date | Under review |
+| after 06-29, pasted on or after 07-25 | BOUND | M1 | n/a | Unsolicited invitation, predatory indicators | Not engaged (THESIS_STANDARDS S6) |
+| after 07-25, on or before 09-28 | BOUND | M1 | JPROCONT-D-26-00618 | Decision after review, 4 reviewers | Rejected; R1 major revision, 3 reject |
+| 2026-09-07 | RECORDED | external | arXiv 2609.07251 | El Halabi and Brandt, delayed-feedback ACI | Removes one candidate contribution |
+| 2026-09-28 | RECORDED | M1 | n/a | Audit A1-A12 closed; register; N1 ratified; Phase 0 code-ready | Phase 0 in progress |
 
 ## Register summary (JPROCONT-D-26-00618 plus CACE)
 

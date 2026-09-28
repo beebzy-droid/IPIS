@@ -83,13 +83,16 @@ def _regime_arrays_from_pipeline(
     )
 
     df = TEPLoader().load(data_dir / f"tep_{mode}.csv")
-    lag = diagnose_transport_lag(df) if transport_lag < 0 else transport_lag
+    split = time_ordered_split(df)
+    # Lag diagnosed on the TRAINING split only (M1 audit A9, reviewer R4.5). Diagnosing on the
+    # full file let test-period targets choose this hyperparameter. Evidence frozen before
+    # 2026-09-28 was produced with the full-file diagnosis.
+    lag = diagnose_transport_lag(split.train) if transport_lag < 0 else transport_lag
 
     def feats(seg: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
         x, y = make_tep_physics_features(seg, transport_lag=lag)
         return np.asarray(x, float), np.asarray(y, float).ravel()
 
-    split = time_ordered_split(df)
     x_tr, y_tr = feats(split.train)
     x_va, y_va = feats(split.val)
     x_te, y_te = feats(split.test)
