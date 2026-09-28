@@ -11,3 +11,8 @@ Synthetic, seeded, standalone (numpy + scipy). Run from this folder.
 
 `drift_pilot.py` is intentionally NOT included: it held the quantile at nominal scale,
 which manufactured infinite intervals after the drift step (THESIS_STANDARDS L9).
+
+Timing note (2026-09-28): the `phase` loop in these pilots set the level for step t+theta
+from err[t] before that label had arrived, i.e. one step less delay than the other loops.
+Negligible at theta = 60 but biased in that method's favour. The library
+(`delayed_aci.py`) uses the correct period theta + 1; cite only library-generated numbers.

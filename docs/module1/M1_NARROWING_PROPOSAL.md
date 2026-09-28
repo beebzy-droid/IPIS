@@ -1,7 +1,7 @@
 # M1 narrowing proposal (N1): the delayed-label calibration loop
 
-Status: PROPOSED 2026-09-28, awaiting ratification. Nothing downstream is built until
-ratified. Inputs: `docs/reviews/REVIEW_REGISTER.csv` (42 records), `M1_REVISION_AUDIT.md`
+Status: RATIFIED 2026-09-28 by Bien Busico, with D-P0.1 (obey the one-SE rule, k = 1).
+Phase 0 started the same day; see Section 10. Inputs: `docs/reviews/REVIEW_REGISTER.csv` (42 records), `M1_REVISION_AUDIT.md`
 (A1-A12), a literature check, and three falsification-first pilots
 (`scripts/pilots/`, synthetic data, reproducible).
 
@@ -78,9 +78,11 @@ Linear stochastic model (impulse-response noise gain, var(eta) = alpha*(1 - alph
 | 60 | 0.95 | 0.168 | 0.091 | +85 % | 27.6 % | 16.8 % |
 
 The model is accurate in the design region (<= 0.8 gamma_crit) and fails near the boundary,
-where saturation caps alpha. Design rule candidate, largest gamma with predicted infinite
-fraction <= 1 %: 0.030 (theta = 4), 0.024 (20), 0.0146 (60), 0.0093 (120), 0.0054 (240).
-The repository default gamma = 0.05 violates it at every delay tested.
+where saturation caps alpha. Design rule, computed by `delayed_aci.design_gamma` (the source
+of truth; a coarser pilot grid gave 0.030 at theta = 4): the largest gamma with predicted
+infinite share <= 1 % is 0.0347 (theta = 4), 0.0244 (20), 0.0146 (60), 0.0093 (120) and
+0.0052 (240, capped at 0.8 gamma_crit because the unconstrained 1 % value lies outside the
+validated region). The repository default gamma = 0.05 violates the rule at every delay tested.
 
 Recovery after a residual-scale step (1 to 3, theta = 60):
 
@@ -177,3 +179,28 @@ acceptance rate alone would push toward less selective venues a PhD committee di
   Phase 1 tests it with estimated quantiles on process data.
 - Race risk: the arXiv authors could publish a single-state follow-up. Mitigation is pace
   without shortcuts, and a preprint as soon as Phase 1 evidence is frozen.
+
+## 10. Ratification record and positioning constraints (2026-09-28)
+
+Ratified: N1 as M1's single claim; D-P0.1 (point model = the one-SE selection, k = 1,
+u5 at the transport lag); D-P0.2 (physics features leave the core, assumptions documented).
+
+Positioning constraints from `LITERATURE_SWEEP_N1.md` (the claim must respect all four):
+- Do not claim that large gamma makes the level oscillate: Gibbs and Candes (2021, S2.1)
+  state it qualitatively and chose gamma = 0.005 empirically.
+- Do not claim the concept that gamma should depend on delay: El Halabi and Brandt (2026,
+  Fig. 18) select gamma* per delay empirically, for the phase-interleaved recursion. Ours is
+  the analytical noise-gain rule for the single-state recursion, with a prediction of the
+  infinite-interval share.
+- Required baselines: projected ACI (level clipped to a band, as used with delayed feedback in
+  arXiv 2607.05882), decaying step sizes (Angelopoulos, Barber and Bates 2024), phase-interleaved
+  tau-DACI, plus the design-rule and Smith variants.
+- Pilot correction: the phase-interleaved pilot updated the level one step before its label
+  arrived (one step less delay; 1.7 % at theta = 60, favouring that method). The library uses
+  period theta + 1; all Phase 1 numbers come from the library, not the pilots.
+
+Phase 0 deliverables (code-ready, validated on synthetic data, 11 tests passing):
+`evaluation/delayed_aci.py` (loops, event-queue pairing, noise-gain model, design rule,
+diagnostics), TEP lag diagnosed on the training split in `scripts/conformal_eval.py`, and
+`scripts/diagnose_debutanizer_lag.py` (pool-only lag provenance). Real-data runs are
+owner-side; their outputs are frozen as evidence before any Phase 1 number is reported.
