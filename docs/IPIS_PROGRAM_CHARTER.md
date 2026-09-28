@@ -61,8 +61,10 @@ that happens to work is not.
 3. A negative control or an equivalent attribution argument present.
 4. Every number regenerates from a single command; pipeline reproduced on a second
    machine; limits reported as results.
-5. Journal fit confirmed against the target's aims AND last two issues; manuscript built
-   in the target's production format within its page cap.
+5. Journal fit confirmed against the target's aims AND last two issues; venue integrity
+   verified per THESIS_STANDARDS S6.3 (indexing in Scopus and/or Web of Science first);
+   the paper is under review at no other venue; manuscript built in the target's
+   production format within its page cap.
 6. Industry-relevance sentence: what a plant does differently because of this result.
 7. Program-fit sentence: how this paper advances the M1->M5 composition and the book.
 8. Cross-paper metadata synced via CITATION_LEDGER before submission.
@@ -78,5 +80,5 @@ that happens to work is not.
   the plant?" Steer accordingly.
 
 ---
-*Charter adopted 2026-06-29. Author: Bien Busico. PM: Claude (process-systems-engineering
+*Charter adopted 2026-06-29. Amended 2026 (gate item 5: venue integrity). Author: Bien Busico. PM: Claude (process-systems-engineering
 advisor mode). Revisit at each module boundary and after each review cycle.*
