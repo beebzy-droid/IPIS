@@ -47,7 +47,7 @@ to a horizon guarantee and moves IPIS off the quasi-static twin. Start a fresh s
 | Paper | Module | Journal | ID | Date | Source |
 |---|---|---|---|---|---|
 | 1 | M1 soft sensor | Journal of Process Control | JPROCONT-D-26-00618 | 2026-06-12 | `paper/` |
-| 2 | M3 RTO (certify-then-deploy) | TMLR (target) | none; rej. TCST 26-0876 (scope) | 2026-09-25 | `docs/module3/tmlr/` |
+| 2 | M3 RTO (distribution-free back-offs, comparative) | CJCE | 1404930, UNDER REVIEW | 2026-09-27 | `paper2/cjce/` |
 | 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04700** | **2026-06-30** | `paper3/` |
 | 4 | M4 integration (composed certificate) | Computers & Chemical Engineering | **CACE-D-26-01079** | **2026-06-30** | `paper4/` |
 
@@ -223,7 +223,7 @@ action is the Module 2 paper draft.**
   guarantee (Theorems 1-2) and RETARGETED to **IEEE Transactions on Control Systems Technology**
   (free at <=12pp, guarantee-friendly community). New title: "Safe real-time optimization under
   unmeasured disturbances: a finite-sample, distribution-free constraint-satisfaction guarantee."
-  **REJECTED at IEEE TCST (26-0876 v2, 2026-08-28, EiC Kolmanovsky: out of scope, contribution judged statistical rather than control; no reviewers).** Retargeted to **TMLR** (free; correctness-and-interest criteria). Pre-build audit found TCST Theorem 2(b) invalid and 2(a) overstated; theory v2 (certify-then-deploy, Theorem 3) validated at Gate 1: `docs/module3/tmlr/theory_v2.md`. arXiv HELD until the corrected paper exists. `paper2/tcst/` is frozen history.
+  **UNDER REVIEW at The Canadian Journal of Chemical Engineering as 1404930 (submitted 2026-09-27)**, after desk/prescreen rejections at JPC, CACE and IEEE TCST. Reframed as a comparative evaluation with risk-adjusted economics; no new method claimed. Source `paper2/cjce/`; submission record `paper2/cjce/CJCE_ReX_Submission_Sheet.md`; earlier versions frozen in `paper2/tcst/`.
 - **2026-06-23 (cross-ref propagation)** — propagated **CACE-D-26-01040** + new title from `paper2/` into ADR-016, `paper4/references.bib`, `docs/module4/formalization-spike.md`, `src/ipis/integration/health_rto.py`, and the `docs/module3/paper/` working drafts; corrected the §2 vision pointer (Module 2 -> complete, Module 5 -> next). No code or results changed.
 - **Module 2 — Predictive Maintenance (anomaly detection + RUL): COMPLETE.** SCC paper under
   review (JRESS-D-26-04700); built as Modules 2A-2D.
@@ -484,7 +484,7 @@ framework with five modules on a first-principles physics layer:
 1. **Module 1 — Soft Sensor** — real-time prediction of hard-to-measure quality
    variables. **(✅ complete; paper under review, CACE-D-26-00944)**
 2. **Module 2 — Predictive Maintenance** — anomaly detection + RUL. **(✅ complete; paper under review, JRESS-D-26-04700)**
-3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; paper being rebuilt for TMLR)**
+3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; under review, CJCE 1404930)**
 4. **Module 4 — Composed certificate** — the integrated SCC coverage guarantee. **(✅ complete; IECR submission prep)**
 5. **Module 5 — Dynamic / horizon realization** — closed-loop ACI horizon coverage. **(▶ NEXT — experimental backbone complete, paper next)**
 
@@ -1171,6 +1171,13 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-09-27 (M3 SUBMITTED to CJCE: manuscript ID 1404930)** -- Submitted via Wiley Research Exchange as a
+  Research Article. Main Manuscript: flat LaTeX bundle `paper2/cjce/CJCE_Busico_LaTeX.zip`; highlights, cover letter,
+  12 CRediT roles, 4 suggested reviewers (Mhaskar, Z. Li, Margellos, Paulson; board check passed), data statement
+  pointing to `docs/module3/cjce/data`, preprint question answered Yes (public GitHub repo), AI use Yes (Methods 4.4),
+  Transparent Peer Review Yes. Editor-reported CJCE 2024 average first decision 29 days, so expect a decision around
+  late October 2026. Status propagated to ledger, README, Module 3 spec, PROJECT_STRUCTURE, and this file.
+  **Do not modify `paper2/cjce/` while under review.**
 - **2026-09-27 (M3 CJCE: fixes forced by the live ReX form)** -- (1) The Article Type page requires AI use to be
   declared in the Methods section: the disclosure moved verbatim from Acknowledgements to Section 4.4 "Use of
   generative artificial intelligence tools" (Acknowledgements section removed; cover letter updated). (2) Main
