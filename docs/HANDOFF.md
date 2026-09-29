@@ -47,7 +47,7 @@ to a horizon guarantee and moves IPIS off the quasi-static twin. Start a fresh s
 | Paper | Module | Journal | ID | Date | Source |
 |---|---|---|---|---|---|
 | 1 | M1 soft sensor | Journal of Process Control | JPROCONT-D-26-00618 | 2026-06-12 | `paper/` |
-| 2 | M3 RTO (distribution-free back-offs, comparative) | CJCE | 1404930, UNDER REVIEW | 2026-09-27 | `paper2/cjce/` |
+| 2 | M3 RTO (distribution-free back-offs, comparative) | CJCE | 1404930, DESK-REJECTED; paused | 2026-09-28 | `paper2/cjce/` |
 | 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04700** | **2026-06-30** | `paper3/` |
 | 4 | M4 integration (composed certificate) | Computers & Chemical Engineering | **CACE-D-26-01079** | **2026-06-30** | `paper4/` |
 
@@ -223,7 +223,7 @@ action is the Module 2 paper draft.**
   guarantee (Theorems 1-2) and RETARGETED to **IEEE Transactions on Control Systems Technology**
   (free at <=12pp, guarantee-friendly community). New title: "Safe real-time optimization under
   unmeasured disturbances: a finite-sample, distribution-free constraint-satisfaction guarantee."
-  **UNDER REVIEW at The Canadian Journal of Chemical Engineering as 1404930 (submitted 2026-09-27)**, after desk/prescreen rejections at JPC, CACE and IEEE TCST. Reframed as a comparative evaluation with risk-adjusted economics; no new method claimed. Source `paper2/cjce/`; submission record `paper2/cjce/CJCE_ReX_Submission_Sheet.md`; earlier versions frozen in `paper2/tcst/`.
+  **DESK-REJECTED at The Canadian Journal of Chemical Engineering as 1404930 (2026-09-28, no reasons given)**: the fourth venue after JPC, CACE and IEEE TCST, with zero reviewers across all attempts. Paused. Reframed as a comparative evaluation with risk-adjusted economics; no new method claimed. Source `paper2/cjce/`; submission record `paper2/cjce/CJCE_ReX_Submission_Sheet.md`; earlier versions frozen in `paper2/tcst/`.
 - **2026-06-23 (cross-ref propagation)** — propagated **CACE-D-26-01040** + new title from `paper2/` into ADR-016, `paper4/references.bib`, `docs/module4/formalization-spike.md`, `src/ipis/integration/health_rto.py`, and the `docs/module3/paper/` working drafts; corrected the §2 vision pointer (Module 2 -> complete, Module 5 -> next). No code or results changed.
 - **Module 2 — Predictive Maintenance (anomaly detection + RUL): COMPLETE.** SCC paper under
   review (JRESS-D-26-04700); built as Modules 2A-2D.
@@ -484,7 +484,7 @@ framework with five modules on a first-principles physics layer:
 1. **Module 1 — Soft Sensor** — real-time prediction of hard-to-measure quality
    variables. **(✅ complete; paper under review, CACE-D-26-00944)**
 2. **Module 2 — Predictive Maintenance** — anomaly detection + RUL. **(✅ complete; paper under review, JRESS-D-26-04700)**
-3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; under review, CJCE 1404930)**
+3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; paper paused after four desk rejections)**
 4. **Module 4 — Composed certificate** — the integrated SCC coverage guarantee. **(✅ complete; IECR submission prep)**
 5. **Module 5 — Dynamic / horizon realization** — closed-loop ACI horizon coverage. **(▶ NEXT — experimental backbone complete, paper next)**
 
@@ -1171,6 +1171,16 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-09-28 (M3 desk-rejected at CJCE, 1404930; paused)** -- Rejected without review and without reasons one day
+  after submission. Record across the M3 lineage: four venues (JPC, CACE, IEEE TCST, CJCE), five editorial decisions,
+  zero reviewers. With a rough 50% desk-reject base rate per venue (general knowledge, not measured), four in a row
+  by chance is about 6%, so the contribution type, not venue choice, is the likely cause. Reading (inference):
+  process journals treat a comparison of existing methods on a small simulation as routine analysis (CJCE's scope
+  rule), and control journals treat the guarantees as statistical. Decision options put to Bien: (A) accept a Wiley
+  Transfer Desk offer only if $0 and in scope, with no rework; (B) post to ChemRxiv for a citable DOI so M4/M5 cite
+  a stable record; (C) fold M3's certification evidence into the plantwide epsilon-budget work after a novelty gate.
+  Recommended: A and B now, C later; no new M3 build effort. Ledger citation for busico_m3 is now "Unpublished
+  manuscript" until a DOI exists. Active effort goes to M1 (revision after JPC review) and M2 (RESS major revision).
 - **2026-09-27 (M3 SUBMITTED to CJCE: manuscript ID 1404930)** -- Submitted via Wiley Research Exchange as a
   Research Article. Main Manuscript: flat LaTeX bundle `paper2/cjce/CJCE_Busico_LaTeX.zip`; highlights, cover letter,
   12 CRediT roles, 4 suggested reviewers (Mhaskar, Z. Li, Margellos, Paulson; board check passed), data statement
