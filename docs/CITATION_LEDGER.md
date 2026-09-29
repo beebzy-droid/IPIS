@@ -20,7 +20,7 @@ Last updated: 2026-06-30 (M4 received CACE-D-26-01079; FULL downstream hygiene p
 |---|---|---|---|---|---|---|
 | `busico_m1` | M1 soft sensor | When does a calibrated soft sensor keep its promise? A negative-control study of validity without accuracy under drift and delayed labels | Journal of Process Control (transfer from CACE) | JPROCONT-D-26-00618 (orig. CACE-D-26-00944) | under review | `paper/` |
 | `busico_m2` | M2 prognostics (SCC) | Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer | Reliability Engineering & System Safety | JRESS-D-26-04700 (resub. of JRESS-D-26-04509) | under review (deliverable-first restructure) | `paper3/` |
-| `busico_m3` | M3 RTO | Safe real-time optimization of a distillation column under feed-composition uncertainty: a comparative study of distribution-free constraint back-offs | The Canadian Journal of Chemical Engineering | 1404930 | under review (submitted 2026-09-27) | `paper2/cjce/` |
+| `busico_m3` | M3 RTO | Safe real-time optimization of a distillation column under feed-composition uncertainty: a comparative study of distribution-free constraint back-offs | none (paused) | none (rejected: CJCE 1404930, TCST 26-0876, CACE-D-26-01040, JPROCONT-D-26-00565) | paused; Wiley Transfer Desk offer pending | `paper2/cjce/` |
 | `busico_m4` | M4 integration | A composed coverage certificate for closed-loop process operation: certified joint product-quality and equipment-survival guarantees under feedback | Computers & Chemical Engineering | CACE-D-26-01079 | under review | `paper4/` |
 | `busico_m5` | M5 dynamic / horizon | Horizon-wide safety guarantees for closed-loop process operation via adaptive conformal calibration | IEEE Trans. Control Systems Technology (target; retargeted from CACE per 2026-07-04 de-risk) | none (in prep) | `paper5/` |
 
@@ -57,7 +57,7 @@ Downstream `references.bib` files must contain exactly these for the keys they c
 
 @misc{busico_m3,
   title={{Safe real-time optimization of a distillation column under feed-composition uncertainty: a comparative study of distribution-free constraint back-offs}},
-  author={Busico, Bien}, year={2026}, note={Manuscript 1404930, under review at The Canadian Journal of Chemical Engineering}}
+  author={Busico, Bien}, year={2026}, note={Unpublished manuscript}}
 
 @misc{busico_m4,
   title={{A composed coverage certificate for closed-loop process operation: certified joint product-quality and equipment-survival guarantees under feedback}},
