@@ -2,7 +2,7 @@
 
 **Status:** Accepted
 **Date:** 2026-06-04
-**Decision owner:** Bien Busico
+**Decision owner:** Bien Don Busico
 **Module:** 1 (soft sensor) — methodology transfer to Tennessee Eastman (TEP)
 **Extends:** ADR-007 (physics-anchored model), ADR-008 (drift detection + bias-update),
 ADR-003 (three-dataset hierarchy: TEP is the transfer dataset)

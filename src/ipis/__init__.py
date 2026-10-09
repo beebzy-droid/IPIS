@@ -6,4 +6,4 @@ process manufacturing.
 """
 
 __version__ = "0.1.0"
-__author__ = "Bien Busico"
+__author__ = "Bien Don Busico"

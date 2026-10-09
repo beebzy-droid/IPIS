@@ -2,7 +2,7 @@
 
 **Status:** Accepted
 **Date:** 2026-05-28
-**Decision owner:** Bien Busico
+**Decision owner:** Bien Don Busico
 
 ## Context
 

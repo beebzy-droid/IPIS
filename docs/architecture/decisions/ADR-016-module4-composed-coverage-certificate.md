@@ -2,7 +2,7 @@
 
 **Status:** Accepted (ratified twice during the Module 4 build; logged here for the record)
 **Date:** 2026-06-23
-**Decision owner:** Bien Busico
+**Decision owner:** Bien Don Busico
 **Module:** 4 (full integration) — health-aware RTO with a joint safety certificate
 **Relates to:** ADR-007 (physics-anchored soft sensor / M1), ADR-014 (conditional conformal
 in M3 / RTO), ADR-015 (M2 PdM scope), and the `ipis.shared.state_bus` contract that the three

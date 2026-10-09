@@ -13,7 +13,7 @@ Checks
 2. references  same count; each first-author surname and year present in the proof
 3. floats      number of distinct Table and Figure captions
 4. symbols     Greek and math symbol counts; a large drop means equations failed to typeset
-5. strings     title, Zenodo DOI, canonical affiliation (docs/AUTHOR.md), e-mail, no monorepo URL
+5. strings     title, Zenodo DOI, byline, canonical affiliation (docs/AUTHOR.md), e-mail, no monorepo URL
 
 Usage
 -----
@@ -43,6 +43,7 @@ ZENODO = "10.5281/zenodo.23211276"
 AFFILIATION = "Malayan Colleges Mindanao"  # canonical, docs/AUTHOR.md (decided 2026-10-09)
 RETIRED_AFFILIATION = "Malayan College Mindanao"  # singular; the accepted Word file carries it
 EMAIL = "bienbusico@gmail.com"
+BYLINE = "Bien Don Busico"  # docs/AUTHOR.md; the accepted Word file has "Bien Busico" (C8)
 SYMBOLS = "ψΨηδΔσαθκρΠπΣ∥√≤≥×"
 DECIMAL = re.compile(r"(?<![\d.])\d+\.\d+(?![\d.])")
 
@@ -194,6 +195,11 @@ def main() -> int:
                 else "affiliation not found"
             )
         ),
+    )
+    report(
+        "byline",
+        BYLINE in flat,
+        BYLINE + (" present" if BYLINE in flat else " NOT found (correction C8)"),
     )
     report(
         "e-mail",

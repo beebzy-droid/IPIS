@@ -3,7 +3,7 @@
 Scans the tracked text files and reports file:line for each of these:
 - a retired affiliation form: singular "Malayan College Mindanao", unaccented "Mapua", or an
   added "Davao del Sur";
-- a retired byline: "Bien Don Busico" or "B. D. Busico";
+- a retired byline: "Bien Busico" (no middle name), `Busico, Bien}` in a .bib, or "B. Busico";
 - an author e-mail other than bienbusico@gmail.com;
 - an elsarticle `\\address{...}` that is not exactly the canonical one.
 
@@ -43,7 +43,10 @@ RULES = [
     ("singular affiliation", re.compile(r"Malayan\s+College\s+Mindanao")),
     ("unaccented Mapua", re.compile(r"\bMapua\b")),
     ("Davao del Sur added", re.compile(r"Davao del Sur")),
-    ("retired byline", re.compile(r"Bien[~\s]+Don[~\s]+Busico|\bB\.~?\s*D\.~?\s*Busico")),
+    (
+        "retired byline",
+        re.compile(r"\bBien[~\s]+Busico|Busico,\s*Bien\s*[}\"]|\bB\.(?:~|\s)*Busico"),
+    ),
     (
         "other author e-mail",
         re.compile(r"[\w.+-]*busico[\w.+-]*@[\w.-]+|[\w.+-]*@[\w.-]*busico[\w.-]*", re.I),

@@ -37,9 +37,9 @@ TITLE = (
 OLD_CITATION = re.compile(r"> B\. Busico, \"Similarity-Calibrated.*?\(JRESS-D-26-04700\)\.", re.S)
 
 
-def citation(doi: str, volume: str, number: str, year: str) -> str:
+def citation(doi: str, volume: str, number: str, year: str, author: str) -> str:
     return (
-        f'> B. Busico, "{TITLE}",\n'
+        f'> {author}, "{TITLE}",\n'
         f"> *Reliability Engineering & System Safety* {volume} ({year}) {number}.\n"
         f"> https://doi.org/{doi}"
     )
@@ -52,6 +52,11 @@ def main() -> int:
     p.add_argument("--article-number", required=True, help="Elsevier article number (e-locator)")
     p.add_argument("--year", required=True)
     p.add_argument("--out", type=Path, default=Path("scc-code-v1.0.1.zip"))
+    p.add_argument(
+        "--author",
+        default="B. D. Busico",
+        help="author as printed in the published article (proof correction C8 adds the D.)",
+    )
     a = p.parse_args()
 
     if not re.fullmatch(r"10\.1016/j\.ress\.\d{4}\.\d+", a.article_doi):
@@ -66,7 +71,7 @@ def main() -> int:
     if len(OLD_CITATION.findall(readme)) != 1:
         sys.exit("refusing: the v1.0.0 citation block was not found exactly once in the README")
     new_readme = OLD_CITATION.sub(
-        lambda _: citation(a.article_doi, a.volume, a.article_number, a.year), readme
+        lambda _: citation(a.article_doi, a.volume, a.article_number, a.year, a.author), readme
     ).replace("Code accompanying the manuscript:", "Code accompanying the article:")
 
     with zipfile.ZipFile(a.out, "w", zipfile.ZIP_DEFLATED) as dst:
@@ -88,7 +93,10 @@ def main() -> int:
         sys.exit(f"verification failed: changed members {changed}, expected only {README}")
 
     print(f"wrote {a.out}: {len(names_out)} members, only {README} changed (verified)")
-    print("\nNew citation block:\n" + citation(a.article_doi, a.volume, a.article_number, a.year))
+    print(
+        "\nNew citation block:\n"
+        + citation(a.article_doi, a.volume, a.article_number, a.year, a.author)
+    )
     print(
         "\nZenodo: open doi:10.5281/zenodo.23211276 -> New version -> replace the file with "
         f"{a.out.name} -> Version 1.0.1 -> Related works: {a.article_doi}, relation "

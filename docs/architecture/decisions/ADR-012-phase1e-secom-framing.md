@@ -2,7 +2,7 @@
 
 **Status:** Accepted
 **Date:** 2026-06-05
-**Decision owner:** Bien Busico
+**Decision owner:** Bien Don Busico
 **Module:** 1 (soft sensor) — Phase 1E stress test
 **Extends:** ADR-007 (model + blocked CV/one-SE), ADR-008 (bias-update), ADR-010 (conformal)
 

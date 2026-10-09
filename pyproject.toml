@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = {file = "LICENSE"}
 authors = [
-    {name = "Bien Busico"}
+    {name = "Bien Don Busico"}
 ]
 keywords = [
     "soft-sensor",

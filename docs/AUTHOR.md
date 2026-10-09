@@ -4,14 +4,17 @@ Every paper, cover letter, submission form and EM profile uses exactly these str
 writing front matter copies from this file, never from another paper, and runs the check at the
 bottom before a submission or a proof is approved.
 
-Decided by Bien on 2026-10-09. The affiliation evidence: the institution's website and the
+Decided by Bien on 2026-10-09 (affiliation; byline "Bien Don Busico" to match his ORCID record).
+The affiliation evidence: the institution's website and the
 encyclopedia entry both use the plural, "Colleges".
 
 ## The block
 
 | Field | Value |
 |---|---|
-| Byline name | Bien Busico |
+| Byline name | Bien Don Busico |
+| Name parts (for publisher forms and XML) | given names "Bien Don"; family name "Busico" |
+| Initials in reference lists | B.D. Busico (Elsevier), B. D. Busico (IEEE); BibTeX `author={Busico, Bien Don}` |
 | Affiliation (Unicode) | Mapúa Malayan Colleges Mindanao, Davao City, Philippines |
 | Affiliation (LaTeX) | `Map\'ua Malayan Colleges Mindanao, Davao City, Philippines` |
 | Affiliation (ASCII fallback) | `Mapua Malayan Colleges Mindanao, Davao City, Philippines`, only in a form field that rejects diacritics |
@@ -26,30 +29,33 @@ Rules:
   a government source). Indexers match the string, so one form only.
 - Keep the accent (Mapúa) wherever the system accepts it; the ASCII form is a fallback, not an
   alternative.
-- The byline is "Bien Busico" because that is what the accepted M2 article (JRESS-D-26-04700R1)
-  carries and what M4 (CACE-D-26-01079) carries under review. If Bien adopts "Bien Don Busico"
-  instead, change it here first, then everywhere the check reports, and request it as a proof
-  correction for M2 before the proof is approved; after publication it cannot change.
+- The byline is "Bien Don Busico", the name on Bien's ORCID record. "Bien Busico" is retired.
+- "Don" is a given name, not the Spanish honorific and not part of the surname. Every form that
+  splits the name (EM profile, CRediT form, proof corrections, Zenodo creators) must put "Bien
+  Don" in given names and "Busico" in family name; otherwise indexers file the papers under
+  "Don Busico" or drop the D.
+- Accepted M2 (JRESS-D-26-04700R1) and M4 under review (CACE-D-26-01079) were submitted as "Bien
+  Busico": M2 is corrected at proof (PROOF_CHECKLIST C8), M4 in its revision or proof.
 
 ## Ready-to-paste front matter
 
 elsarticle (Elsevier: M1/N1, M2, M4, M5):
 ```latex
-\author{Bien Busico}
+\author{Bien Don Busico}
 \address{Map\'ua Malayan Colleges Mindanao, Davao City, Philippines}
 \ead{bienbusico@gmail.com}
 ```
 
 IEEEtran:
 ```latex
-\author{Bien~Busico%
-\thanks{B. Busico is with Map\'ua Malayan Colleges Mindanao, Davao City, Philippines
+\author{Bien~Don~Busico%
+\thanks{B. D. Busico is with Map\'ua Malayan Colleges Mindanao, Davao City, Philippines
 (e-mail: bienbusico@gmail.com).}}
 ```
 
 Cover-letter sign-off:
 ```
-Bien Busico
+Bien Don Busico
 Mapúa Malayan Colleges Mindanao, Davao City, Philippines
 bienbusico@gmail.com
 ORCID 0009-0006-7755-2470
@@ -59,9 +65,10 @@ ORCID 0009-0006-7755-2470
 
 | Place | What to set | Why it matters |
 |---|---|---|
-| Elsevier EM profile, every journal site used (RESS, CACE, JPROCONT) | affiliation as above; ORCID linked | production takes the published affiliation and ORCID link from the profile and manuscript; M4 is under review with the singular form |
-| ORCID record, Employment/Education | organization "Mapúa Malayan Colleges Mindanao" | Scopus and Crossref author matching |
+| Elsevier EM profile, every journal site used (RESS, CACE, JPROCONT) | first name "Bien Don", last name "Busico"; affiliation as above; ORCID linked | production takes the published affiliation and ORCID link from the profile and manuscript; M4 is under review with the singular form and "Bien Busico" |
+| ORCID record, Employment/Education | name already "Bien Don Busico" (Bien, 2026-10-09); organization "Mapúa Malayan Colleges Mindanao" | Scopus and Crossref author matching |
 | Wiley ReX / IEEE ScholarOne profiles (M3 venues) | same | next M3 submission |
+| Zenodo record 10.5281/zenodo.23211276, creator field | "Busico, Bien Don" (metadata edits do not need a new version) | the deposit is cited by the article |
 
 ## What is frozen and is not edited
 

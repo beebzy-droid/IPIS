@@ -62,6 +62,6 @@ Thank you for considering this work.
 
 Sincerely,
 
-Bien Busico
+Bien Don Busico
 Mapúa Malayan Colleges Mindanao, Davao City, Philippines
 bienbusico@gmail.com

@@ -2,7 +2,7 @@
 
 **Status:** Superseded by ADR-007 (2026, Phase 1A) — the as-built Module 1 model is a dynamic physics-*anchored* linear model, not the Path-B PINN/residual hybrid. Path A (PINN) remains private future work per this ADR's revisit triggers.
 **Date:** 2026-05-28
-**Decision owner:** Bien Busico
+**Decision owner:** Bien Don Busico
 
 ## Context
 
