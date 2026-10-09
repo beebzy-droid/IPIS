@@ -27,14 +27,14 @@ Opened 2026-10-09 by the M2 session. File:line references are as of the 2026-10-
 
 | ID | Item | Evidence | Done when | Status |
 |---|---|---|---|---|
-| OI-06 | Byline and affiliation in `paper2/` brought to the canonical block (`docs/AUTHOR.md`) on 2026-10-09: "Mapua" became "Mapúa"/`Map\'ua`, and "Davao del Sur" was dropped. The generated `paper2/cjce/Cover_Letter_CJCE.docx` still carries the old strings | `python scripts/check_author_block.py` is clean on the sources; `.docx` files are not scanned | Regenerate every `.docx` from its source before the next M3 submission, and update the ReX/ScholarOne profile | open (at next submission) |
+| OI-06 | Byline and affiliation in `paper2/` brought to the canonical block (`docs/AUTHOR.md`) on 2026-10-09: "Bien Don Busico" became "Bien Busico", "Mapua" became "Mapúa"/`Map\'ua`, and "Davao del Sur" was dropped. The generated `paper2/cjce/Cover_Letter_CJCE.docx` still carries the old strings | `python scripts/check_author_block.py` is clean on the sources; `.docx` files are not scanned | Regenerate every `.docx` from its source before the next M3 submission, and update the ReX/ScholarOne profile | open (at next submission) |
 | (see OI-01) | M3's `companion2026` is one of the stale M1 cites | above | closed by OI-01 | open |
 
 ## M4 session
 
 | ID | Item | Evidence | Done when | Status |
 |---|---|---|---|---|
-| OI-07 | M4 is under review at CACE (CACE-D-26-01079) with the singular "College" and the byline "Bien Busico". The repo now carries the plural | `paper4/main.tex:33`, `paper4/em/main_EM.tex:34` and `paper4/cover_letter.md:44` were updated 2026-10-09; the submitted `paper4/cover_letter.docx` is the record | The CACE EM profile and the revision's front matter carry the canonical block; if the paper is accepted first, request the change at proof | open |
+| OI-07 | M4 is under review at CACE (CACE-D-26-01079) with the singular "College". The repo now carries the plural | `paper4/main.tex:33`, `paper4/em/main_EM.tex:34` and `paper4/cover_letter.md:44` were updated 2026-10-09; the submitted `paper4/cover_letter.docx` is the record | The CACE EM profile and the revision's front matter carry the canonical block; if the paper is accepted first, request the change at proof | open |
 | OI-08 | Stray `twin_coverage.png` at the repo root, MD5 `ea267f7a…`, which **differs** from the canonical `paper4/figures/twin_coverage.png` = `docs/module4/twin_coverage.png` (`9830e9c6…`) | Committed in b8bc355 (2026-06-30). `scripts/run_twin_coverage.py` defaults `--fig` to the current directory, which is how it gets written to the root | Confirm it is an older render, `git rm` it, and default `--fig` to `docs/module4/twin_coverage.png` | open (left for the owner because the content differs) |
 | OI-09 | `paper4/em/main_EM.tex` reports 3 missing-figure errors when built in place | It is flat by design (EM upload); the figures are in `paper4/figures/` | Not a defect. To build it: copy `paper4/figures/*.png` beside it (verified 2026-10-09: 0 errors, 27 pp) | closed (by design) |
 
@@ -51,5 +51,5 @@ Opened 2026-10-09 by the M2 session. File:line references are as of the 2026-10-
 |---|---|---|---|
 | OI-12 | M2 rights form: subscription or open access. This sets how much of the M2 manuscript may stay public on GitHub and therefore the scope of OI-13 (see `docs/reviews/HISTORY_REWRITE.md`, "When") | Form submitted; choice recorded in PROOF_CHECKLIST §0 | waiting for Elsevier |
 | OI-13 | Remove the verbatim response letter from public history (rewrites 89263d2 to the tip; keeps all 222 earlier commits). Runbook tested 2026-10-09 | Run once after OI-12; GitHub Support asked to drop cached views; date recorded in HANDOFF | prepared, not run |
-| OI-14 | Author details outside the repo: Elsevier EM profiles (RESS, CACE, JPROCONT) with first name "Bien Don", last name "Busico", the plural affiliation and ORCID linked; ORCID employment record; Wiley ReX and IEEE profiles; Zenodo creator "Busico, Bien Don" | Each profile reads exactly as `docs/AUTHOR.md` | open |
-| OI-15 | Byline | **Decided 2026-10-09: "Bien Don Busico"** (matches ORCID). Applied to every live source and every self-citation; M2 is corrected at proof (C8) | **closed 2026-10-09** |
+| OI-14 | Author details outside the repo: Elsevier EM profiles (RESS, CACE, JPROCONT) with the plural affiliation and ORCID linked; ORCID employment record; Wiley ReX and IEEE profiles | Each profile reads exactly as `docs/AUTHOR.md` | open |
+| OI-15 | Byline | **Decided 2026-10-09: "Bien Busico" on every IPIS paper**, as already in all sources and in the accepted M2; no proof correction | **closed 2026-10-09** |

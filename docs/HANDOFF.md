@@ -1192,15 +1192,11 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
-- **2026-10-09 (byline: Bien Don Busico)** -- Bien decided on the byline "Bien Don Busico", to match
-  his ORCID record. `docs/AUTHOR.md` was updated: given names "Bien Don", family name "Busico",
-  initials B.D. The name was applied to 44 live files: paper front matter, CRediT lines, IEEE bios,
-  cover letters, every `busico_*`/`companion2026` bib entry and the inlined M4 EM bibitems, plus the
-  LICENSE, pyproject, package `__author__`, the README citation and the ADR owner lines.
-  `check_author_block.py` now treats "Bien Busico" as retired, and `proof_check.py` checks the
-  byline. New proof correction C8 asks Elsevier to correct the M2 author name, with given names
-  and family name stated explicitly. Earlier the same day the AI co-author trailers were removed from
-  the two newest commits (now 7b74f5c and a5ab488).
+- **2026-10-09 (byline decided: Bien Busico)** -- Bien decided that every IPIS paper keeps the byline
+  "Bien Busico", as already in all sources and in the accepted M2, so there is no proof-stage name
+  change. `docs/AUTHOR.md` records the decision, OPEN_ITEMS OI-15 is closed, and `proof_check.py`
+  now also checks the byline. The AI co-author trailers on the two newest commits were removed the
+  same day (now 7b74f5c and a5ab488).
 - **2026-10-09 (author block, open items, history-rewrite runbook)** -- Bien decided the affiliation:
   "Mapúa Malayan Colleges Mindanao, Davao City, Philippines" (plural, as the institution brands
   itself). New `docs/AUTHOR.md` is the single source for the byline, affiliation, e-mail and ORCID.

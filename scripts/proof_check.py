@@ -43,7 +43,7 @@ ZENODO = "10.5281/zenodo.23211276"
 AFFILIATION = "Malayan Colleges Mindanao"  # canonical, docs/AUTHOR.md (decided 2026-10-09)
 RETIRED_AFFILIATION = "Malayan College Mindanao"  # singular; the accepted Word file carries it
 EMAIL = "bienbusico@gmail.com"
-BYLINE = "Bien Don Busico"  # docs/AUTHOR.md; the accepted Word file has "Bien Busico" (C8)
+BYLINE = "Bien Busico"  # docs/AUTHOR.md (decided 2026-10-09)
 SYMBOLS = "ψΨηδΔσαθκρΠπΣ∥√≤≥×"
 DECIMAL = re.compile(r"(?<![\d.])\d+\.\d+(?![\d.])")
 
@@ -199,7 +199,8 @@ def main() -> int:
     report(
         "byline",
         BYLINE in flat,
-        BYLINE + (" present" if BYLINE in flat else " NOT found (correction C8)"),
+        BYLINE
+        + (" present" if BYLINE in flat else " NOT found (byline changed by the typesetter)"),
     )
     report(
         "e-mail",
