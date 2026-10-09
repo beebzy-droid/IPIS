@@ -1,5 +1,8 @@
 # Formalization Spike — Composed Coverage for the IPIS Closed Loop
 
+> **Before working (M4 session):** read the "M4 session" section of `docs/OPEN_ITEMS.md`, and take
+> all front matter (name, affiliation, e-mail, ORCID) from `docs/AUTHOR.md`.
+
 **Status:** Theory frozen for Paper 4 core. Build-blocking decisions resolved; open items flagged in §8.
 **Scope of formal claim:** debutanizer / binary-key distillation (the dimensionless framework is the generalization vehicle, not a universal proof).
 **Cross-refs:** Paper 1 / M1 (JPROCONT-D-26-00618, soft sensor), Paper 2 / M2 (JRESS-D-26-04700, similarity-calibrated conformal prognostics), Paper 3 / M3 (CACE-D-26-01040, conditionally calibrated conformal back-offs in RTO). ChemE grounding verified against Perry's 9th ed. (see `docs/module4/perry-verification.md`).

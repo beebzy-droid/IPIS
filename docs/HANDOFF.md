@@ -23,6 +23,8 @@ this committed file.
   file before close.
 
 **Resume order for a new session:**
+0. `docs/OPEN_ITEMS.md`, your module's section (open items left for you by other sessions), and
+   `docs/AUTHOR.md` before writing any front matter (canonical name, affiliation, e-mail, ORCID).
 1. This file (`docs/HANDOFF.md`) — working agreement + live thread.
 2. The latest ADR in `docs/architecture/decisions/`.
 3. `docs/module1/results.md` + `docs/module1/lessons-learned.md`.
@@ -41,6 +43,12 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 > revision (N1). M3 is paused after four desk rejections. M4 is under review at CACE
 > (CACE-D-26-01079). M5 is in progress. The papers table below is current; the prose after it
 > predates these events.
+>
+> **2026-10-09, later the same day:** the affiliation is decided as the plural "Mapúa Malayan
+> Colleges Mindanao", and every live source now carries the canonical author block in
+> `docs/AUTHOR.md` (checked in CI by `scripts/check_author_block.py`). Open items for each session
+> are in `docs/OPEN_ITEMS.md`. The repo is public; a tested history rewrite that removes the verbatim
+> response letter is waiting on the M2 rights form (`docs/reviews/HISTORY_REWRITE.md`).
 
 **All three IPIS module papers are under review, and Module 4 (full integration) is now
 COMPLETE: the IECR manuscript is drafted, polished, and submission-ready (Phase 1 done; see
@@ -442,6 +450,10 @@ commit **and a `git push`** to `github.com/beebzy-droid/IPIS`. Claude then verif
 the pushed state from the remote (raw URL / tarball) to confirm Bien is on track and
 nothing was missed. Nothing sits uncommitted except the deliberately-excluded
 canonical-TEP WIP.
+
+**No AI trailers in commit messages (standing rule, 2026-10-09).** Commit messages carry no
+`Co-Authored-By:` or `Claude-Session:` lines and no "Generated with" footer; Bien asked for them
+to be removed. The commit message files Claude ships follow this rule.
 
 **Document every task + update HANDOFF (standing rule, 2026-06-16).** Every task
 updates its doc trail (spec / results / lessons-learned / ADR as appropriate) **and**
@@ -1180,6 +1192,20 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-10-09 (author block, open items, history-rewrite runbook)** -- Bien decided the affiliation:
+  "Mapúa Malayan Colleges Mindanao, Davao City, Philippines" (plural, as the institution brands
+  itself). New `docs/AUTHOR.md` is the single source for the byline, affiliation, e-mail and ORCID.
+  All 19 live sources were brought to it (47 findings to 0), including the M3 sources, whose byline
+  changed from "Bien Don Busico" to "Bien Busico" to match the accepted M2. `\ead` was added to
+  `paper3/`. Frozen records were left as sent. New `scripts/check_author_block.py` runs in CI. All 11
+  paper builds were compared before and after: identical error counts and page counts. New
+  `docs/OPEN_ITEMS.md` holds per-session open items (OI-01 to OI-15); the paper5 "missing figures"
+  flag was wrong, since the flat EM variant is figure-less by design. The repo is public (Bien), so
+  `docs/reviews/HISTORY_REWRITE.md` prepares a tested `git filter-repo --refs` rewrite: 14 commits
+  rewritten, 222 of 236 kept. It runs once, after the M2 rights form, because the subscription
+  route would widen its scope. PROOF_CHECKLIST: C6 decided, C7 (e-mail, ORCID) added, and the
+  nectoux2012 source confirmed (no DOI exists). The FEMTO probe scripts moved from the repo root
+  into `scripts/`.
 - **2026-10-09 (M2 ACCEPTED at RESS: JRESS-D-26-04700R1)** -- Accepted two days after the R1
   submission, with no further revisions: the first IPIS paper through peer review. Repo hygiene
   pass: ledger (`busico_m2` -> `@article`, in press) synced into paper4/paper5 (both rebuilt, render

@@ -1,7 +1,11 @@
 # Module 1 — Soft Sensor
 
-This directory holds Module 1 documentation. **Status: complete; paper under review
-(CACE-D-26-00944).**
+> **Before working:** read your section ("M1 / N1 session") in `docs/OPEN_ITEMS.md`, and take all
+> front matter (name, affiliation, e-mail, ORCID) from `docs/AUTHOR.md`.
+
+This directory holds Module 1 documentation. **Status: complete; paper rejected after review
+at the Journal of Process Control (JPROCONT-D-26-00618, transferred from CACE-D-26-00944); in
+revision as N1 (`VENUE_STRATEGY_N1.md`, `M1_NARROWING_PROPOSAL.md`).**
 
 ## Files
 

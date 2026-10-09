@@ -13,7 +13,7 @@ Checks
 2. references  same count; each first-author surname and year present in the proof
 3. floats      number of distinct Table and Figure captions
 4. symbols     Greek and math symbol counts; a large drop means equations failed to typeset
-5. strings     title, Zenodo DOI, and which affiliation spelling the proof carries
+5. strings     title, Zenodo DOI, canonical affiliation (docs/AUTHOR.md), e-mail, no monorepo URL
 
 Usage
 -----
@@ -40,7 +40,9 @@ TITLE = (
     "remaining-useful-life intervals under operating-regime transfer"
 )
 ZENODO = "10.5281/zenodo.23211276"
-AFFILIATIONS = ("Malayan Colleges Mindanao", "Malayan College Mindanao")
+AFFILIATION = "Malayan Colleges Mindanao"  # canonical, docs/AUTHOR.md (decided 2026-10-09)
+RETIRED_AFFILIATION = "Malayan College Mindanao"  # singular; the accepted Word file carries it
+EMAIL = "bienbusico@gmail.com"
 SYMBOLS = "ψΨηδΔσαθκρΠπΣ∥√≤≥×"
 DECIMAL = re.compile(r"(?<![\d.])\d+\.\d+(?![\d.])")
 
@@ -179,11 +181,24 @@ def main() -> int:
         "exact title present" if TITLE.lower() in flat.lower() else "title differs",
     )
     report("zenodo doi", ZENODO in flat, ZENODO + (" present" if ZENODO in flat else " NOT found"))
-    found = [a for a in AFFILIATIONS if a in flat]
+    plural, singular = AFFILIATION in flat, RETIRED_AFFILIATION in flat
     report(
         "affiliation",
-        len(found) == 1,
-        f"proof carries {found or 'neither form'} (decide College vs Colleges before approving)",
+        plural and not singular,
+        (
+            "canonical 'Mapua Malayan Colleges Mindanao'"
+            if plural and not singular
+            else (
+                "proof carries the singular 'College' (correction C6)"
+                if singular
+                else "affiliation not found"
+            )
+        ),
+    )
+    report(
+        "e-mail",
+        EMAIL in flat,
+        EMAIL + (" present" if EMAIL in flat else " NOT found (correction C7)"),
     )
     github = "github.com/beebzy-droid/IPIS" in flat
     report(

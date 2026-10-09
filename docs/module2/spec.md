@@ -1,5 +1,8 @@
 # Module 2 — Predictive Maintenance (anomaly detection + RUL)
 
+> **Before working:** read your section ("M2 session (proof stage)") in `docs/OPEN_ITEMS.md`, and take all
+> front matter (name, affiliation, e-mail, ORCID) from `docs/AUTHOR.md`.
+
 This directory holds Module 2 documentation. **Status: complete (2A–2D); SCC paper accepted
 in *Reliability Engineering & System Safety* (JRESS-D-26-04700R1, 2026-10-09); in production.**
 

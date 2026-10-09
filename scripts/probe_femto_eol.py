@@ -7,7 +7,7 @@ RMS at the last snapshot, for both channels. If EOL peak clusters near ~20 g the
 threshold is solid; bearings well short of it are flagged hard cases.
 
     set PYTHONPATH=src
-    python probe_femto_eol.py
+    python scripts/probe_femto_eol.py   (from the repo root; data paths are root-relative)
 """
 
 from __future__ import annotations

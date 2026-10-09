@@ -6,6 +6,10 @@ reports are conventionally treated as confidential (general publication-ethics p
 not verified as a specific journal rule). Each comment is captured as paraphrased,
 structured data in `REVIEW_REGISTER.csv`.
 
+Known exception (2026-10-09): the M2 response letter, which quotes both RESS reviewers verbatim,
+was tracked from 2026-09-18 to 2026-10-09 and is still in public git history. A tested rewrite
+that removes it is in `HISTORY_REWRITE.md`; it will run once, after the M2 rights form.
+
 ## Timeline
 
 Evidence levels: RECORDED (written in a dated repo or chat record), EM (Editorial Manager

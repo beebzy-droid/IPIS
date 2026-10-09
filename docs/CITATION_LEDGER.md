@@ -12,7 +12,7 @@ downstream paper. Chasing those by hand across `references.bib`, `README.md`, st
 working drafts is lossy and token-expensive. This ledger plus the protocol makes propagation
 mechanical and one-directional.
 
-Last updated: 2026-10-09 (M2 ACCEPTED at RESS as JRESS-D-26-04700R1: `busico_m2` -> `@article`, in press, synced into paper4/paper5; M1 status corrected to rejected-after-review per the 2026-09-28 review register; open items for M1 and M5 owners in Section 6).
+Last updated: 2026-10-09 (affiliation decided, canonical author block `docs/AUTHOR.md`; open items per session in `docs/OPEN_ITEMS.md`. Earlier the same day: M2 ACCEPTED at RESS as JRESS-D-26-04700R1: `busico_m2` -> `@article`, in press, synced into paper4/paper5; M1 status corrected to rejected-after-review per the 2026-09-28 review register; open items for M1 and M5 owners in Section 6).
 
 ## 1. Canonical ledger
 
@@ -102,6 +102,18 @@ canonical metadata in Sections 1 and 3, plus the open-debt list in Section 6, ar
 prompt is passed between sessions.
 
 ## 6. Open propagation debt (fix in the owning session)
+
+**2026-10-09 later pass (author block; open items moved).** The open items below are now tracked
+per session in `docs/OPEN_ITEMS.md` (OI-01 for `busico_m1`, OI-10 for `busico_m5`), which is
+what each session reads first. Corrections to the flags in the earlier 2026-10-09 entry:
+- Affiliation: **resolved.** Bien decided on the plural "Mapúa Malayan Colleges Mindanao, Davao City,
+  Philippines". It is canonical in `docs/AUTHOR.md` and applied to every live source (CI check
+  `scripts/check_author_block.py`). It is not a citation field, so there is no domino.
+- `paper5/` figures: **not missing.** `main_EM.tex` is the flat EM variant and is figure-less by
+  design; the PNGs are in `docs/module5/figures/`. Both variants build with 0 errors once the
+  figures are on the path (OPEN_ITEMS OI-11).
+- `busico_m1`: the dead ID also reaches M3 under the key `companion2026` (three `paper2/` bibs),
+  which the earlier entry missed. Grep by author, not by key (rule from the 2026-06-30 pass).
 
 **2026-10-09 pass (M2 accepted at RESS).** Upstream change: `busico_m2` is accepted, so it is
 cited as a journal article in press. The manuscript ID is dropped from the canonical entry,

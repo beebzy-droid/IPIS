@@ -1,5 +1,8 @@
 # Module 3 — Real-Time Optimization (RTO)
 
+> **Before working:** read your section ("M3 session") in `docs/OPEN_ITEMS.md`, and take all
+> front matter (name, affiliation, e-mail, ORCID) from `docs/AUTHOR.md`.
+
 This directory holds Module 3 documentation. **Status: complete (3A + 3B); paper desk-rejected at
 CJCE (1404930); paused. 3C closed-loop is future work.**
 

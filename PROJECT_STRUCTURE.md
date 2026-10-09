@@ -72,6 +72,8 @@ IPIS/
 │
 ├── docs/
 │   ├── HANDOFF.md                Single source of truth for resuming work (read first)
+│   ├── OPEN_ITEMS.md             Open items per owning session (read your section first)
+│   ├── AUTHOR.md                 Canonical author block (name, affiliation, e-mail, ORCID) for all papers
 │   ├── architecture/
 │   │   ├── system-overview.md
 │   │   └── decisions/            ADRs 001–006 (bare) + ADR-007…016 (prefixed) + TEMPLATE

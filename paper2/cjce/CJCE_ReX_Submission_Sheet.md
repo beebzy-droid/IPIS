@@ -30,7 +30,7 @@ Leave Figure, Table, Graphical Abstract, and all Supplementary slots empty: figu
 
 ## Step 4: Authors and institutions
 
-- Bien Don Busico (corresponding author), Mapua Malayan Colleges Mindanao, Davao City, Davao del Sur, Philippines; bienbusico@gmail.com; ORCID 0009-0006-7755-2470
+- Bien Busico (corresponding author), Mapúa Malayan Colleges Mindanao, Davao City, Philippines; bienbusico@gmail.com; ORCID 0009-0006-7755-2470
 
 **CRediT roles to tick (12):** Conceptualization; Data curation; Formal analysis; Investigation; Methodology; Project administration; Resources; Software; Validation; Visualization; Writing - original draft; Writing - review & editing. Leave Funding acquisition and Supervision unticked.
 

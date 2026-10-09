@@ -13,7 +13,7 @@ distinguishes this from genuine early degradation: flat-then-rising RMS + early 
 firing => contamination; rising-from-zero RMS => real early degradation.
 
     set PYTHONPATH=src
-    python probe_femto_fpt.py
+    python scripts/probe_femto_fpt.py   (from the repo root; data paths are root-relative)
 """
 
 from __future__ import annotations

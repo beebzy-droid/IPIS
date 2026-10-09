@@ -34,3 +34,12 @@ repos:
           - types-PyYAML
         args: [--ignore-missing-imports, --check-untyped-defs]
         files: ^src/
+
+  - repo: local
+    hooks:
+      - id: author-block
+        name: canonical author block (docs/AUTHOR.md)
+        entry: python scripts/check_author_block.py
+        language: system
+        pass_filenames: false
+        always_run: true

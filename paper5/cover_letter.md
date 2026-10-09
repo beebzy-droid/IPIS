@@ -46,5 +46,5 @@ under uncertainty, and process monitoring and predictive maintenance.
 Thank you for your consideration.
 
 Bien Busico
-Mapúa Malayan College Mindanao, Davao City, Philippines
+Mapúa Malayan Colleges Mindanao, Davao City, Philippines
 bienbusico@gmail.com

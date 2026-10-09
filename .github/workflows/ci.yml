@@ -25,6 +25,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-serving.txt
           pip install pytest pytest-asyncio pytest-cov "ruff==0.15.16" "black==24.10.0" httpx
+      - name: Author block (docs/AUTHOR.md)
+        # Every live paper source must carry the canonical name, affiliation and e-mail.
+        run: python scripts/check_author_block.py
       - name: Ruff
         # Scope to the stable library + tests. scripts/ holds active WIP
         # (canonical-TEP) and is linted locally; re-add "scripts" here once it lands.
