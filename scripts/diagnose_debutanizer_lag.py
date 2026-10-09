@@ -6,14 +6,17 @@ full profile as provenance-stamped evidence, so the lag used downstream is repro
 the repository instead of being a hard-coded constant.
 
     set PYTHONPATH=src
-    python scripts\\diagnose_debutanizer_lag.py --path <file used by bias_update_eval.py> --json
+    python scripts\\diagnose_debutanizer_lag.py --json
 """
 
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
 
 import numpy as np
+
+DEFAULT_DATA_PATH = Path("data/raw/debutanizer/debutanizer_data.txt")
 
 
 def lag_profile(u: np.ndarray, y: np.ndarray, max_lag: int) -> np.ndarray:
@@ -28,7 +31,12 @@ def lag_profile(u: np.ndarray, y: np.ndarray, max_lag: int) -> np.ndarray:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Debutanizer lag scan on the training pool only")
-    ap.add_argument("--path", required=True, help="same data file as bias_update_eval.py --path")
+    ap.add_argument(
+        "--path",
+        type=Path,
+        default=DEFAULT_DATA_PATH,
+        help="debutanizer data file (default matches bias_update_eval.py)",
+    )
     ap.add_argument("--driver", default="u5")
     ap.add_argument("--target", default="y")
     ap.add_argument("--max-lag", type=int, default=40)
