@@ -1,6 +1,7 @@
 # Formalization Spike — Composed Coverage for the IPIS Closed Loop
 
-> **Before working (M4 session):** read the "M4 session" section of `docs/OPEN_ITEMS.md`, and take
+> **Before working (M4 session):** the manuscripts live in the private `ipis-papers` repo; read
+> `docs/PAPER_LIFECYCLE.md` first. Then read the "M4 session" section of `docs/OPEN_ITEMS.md`, and take
 > all front matter (name, affiliation, e-mail, ORCID) from `docs/AUTHOR.md`.
 
 **Status:** Theory frozen for Paper 4 core. Build-blocking decisions resolved; open items flagged in §8.

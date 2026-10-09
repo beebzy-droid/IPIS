@@ -6,9 +6,10 @@ reports are conventionally treated as confidential (general publication-ethics p
 not verified as a specific journal rule). Each comment is captured as paraphrased,
 structured data in `REVIEW_REGISTER.csv`.
 
-Known exception (2026-10-09): the M2 response letter, which quotes both RESS reviewers verbatim,
-was tracked from 2026-09-18 to 2026-10-09 and is still in public git history. A tested rewrite
-that removes it is in `HISTORY_REWRITE.md`; it will run once, after the M2 rights form.
+Resolved 2026-10-09: the M2 response letter, which quotes both RESS reviewers verbatim, was
+tracked from 2026-09-18 to 2026-10-09 and was removed from public git history by the rewrite
+recorded in `HISTORY_REWRITE.md`. All peer-review material now lives in the private `ipis-papers`
+repo (`docs/PAPER_LIFECYCLE.md`).
 
 ## Timeline
 
@@ -55,7 +56,7 @@ which invalidated every number in Section 5 and was answered by recomputing all 
 
 What the M2 record adds to the program evidence: a paper that reached reviewers was accepted after
 one round, and the response letter volunteered two errors found during the revision. The full
-evidence trail is `docs/module2/revision/REVISION_LOG.md`.
+evidence trail is `docs/module2/revision/REVISION_LOG.md` in the private `ipis-papers` repo.
 
 ## How to use the register
 

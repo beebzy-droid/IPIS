@@ -74,6 +74,11 @@ directly from the repo and reconciles its own files. No prompt is passed between
 
 When a reviewer-driven change to paper N alters its title, venue, or manuscript ID:
 
+**Which repo:** this ledger and the status surfaces are in the public IPIS repo; every file inside
+a manuscript (`references.bib`, an inlined `.bbl`, cover-letter prose) is in the private
+`ipis-papers` repo, except in a frozen preprint, which is never edited
+(`docs/PAPER_LIFECYCLE.md`).
+
 **Upstream session (the paper that changed), as its LAST step after the change is committed:**
 1. Update this ledger: the row in Section 1 and the `@misc` block in Section 3 for `busico_mN`.
 2. Update paper N's own front matter / status / internal drafts as needed (its own concern).
@@ -102,6 +107,12 @@ canonical metadata in Sections 1 and 3, plus the open-debt list in Section 6, ar
 prompt is passed between sessions.
 
 ## 6. Open propagation debt (fix in the owning session)
+
+**2026-10-09 (manuscripts split into a private repo).** The ledger stays here and stays public: it
+holds citations, not manuscript text. The manuscripts themselves moved to the private
+`beebzy-droid/ipis-papers` repo, and this repo keeps each paper's frozen as-submitted copy, so a
+domino that edits a `.bib` or a `.bbl` inside a manuscript now runs in **that** repo. Protocol:
+`docs/PAPER_LIFECYCLE.md`.
 
 **2026-10-09 later pass (author block; open items moved).** The open items below are now tracked
 per session in `docs/OPEN_ITEMS.md` (OI-01 for `busico_m1`, OI-10 for `busico_m5`), which is

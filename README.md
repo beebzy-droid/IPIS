@@ -57,7 +57,7 @@ IPIS addresses all three with one architecture, validated across heterogeneous b
 | Module 2 — Predictive Maintenance | ✅ Complete | Feature-complete (2A–2D); SCC paper **accepted** in *Reliability Engineering & System Safety* (2026-10-09), in production |
 | Module 3 — Real-Time Optimization | ✅ Complete | Paper paused after desk rejections (latest CJCE 1404930) |
 | Module 4 — Integration (composed certificate) | ✅ Under review | Closed-loop coverage certificate validated on the debutanizer twin; under review at *Computers & Chemical Engineering* (CACE-D-26-01079), reframed and ported after IECR declined on scope (`paper4/`) |
-| Module 5 — Dynamic / horizon realization | 🚧 In progress | Dynamic plant, closed-loop orchestrator, and adaptive-conformal horizon coverage validated (62 tests; three results frozen); Paper 5 drafting (`paper5/`) |
+| Module 5 — Dynamic / horizon realization | 🚧 In progress | Dynamic plant, closed-loop orchestrator, and adaptive-conformal horizon coverage validated (62 tests; three results frozen); Paper 5 drafting in the private `ipis-papers` repo |
 
 ## Publications
 
@@ -71,7 +71,8 @@ differs from the module numbering for Modules 2 and 3; the module mapping below 
   Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under
   operating-regime transfer.* **Accepted**, *Reliability Engineering & System Safety* (2026, in
   press). Code: [doi:10.5281/zenodo.23211276](https://doi.org/10.5281/zenodo.23211276).
-  Source: `paper3/`; version of record: `paper3/submission_R1/`.
+  Source as submitted: `paper3/` (frozen 2026-06-30 preprint); accepted version and proof record:
+  private `ipis-papers` repo (see `docs/PAPER_LIFECYCLE.md`).
 - **Module 3 — Real-Time Optimization:** *Safe real-time optimization of a distillation column under feed-composition uncertainty: a comparative study of distribution-free constraint back-offs.* Desk-rejected at
   *The Canadian Journal of Chemical Engineering* (1404930); paused. Source: `paper2/cjce/`.
 - **Module 4 — Integration (composed coverage certificate):** *A composed coverage certificate for
@@ -80,7 +81,7 @@ differs from the module numbering for Modules 2 and 3; the module mapping below 
   IECR submission was declined on scope). Source: `paper4/`.
 - **Module 5 — Dynamic / horizon realization (this paper):** *Horizon-wide safety guarantees for
   closed-loop process operation via adaptive conformal calibration.* In preparation, *Computers &
-  Chemical Engineering* (`paper5/`).
+  Chemical Engineering*; drafting in the private `ipis-papers` repo.
 
 ## Project lifecycle and roadmap
 

@@ -66,12 +66,12 @@ IPIS/
 │   ├── references.bib  figures/{loop_schematic,l1_sweep,twin_coverage}.png
 │   ├── cover_letter.md  suggested_reviewers.md
 │
-├── paper5/                       PAPER 5 / MODULE 5 (dynamic / horizon realization) — elsarticle (CACE)
-│   ├── main.tex  abstract.tex  01_intro.tex … 07_conclusion.tex   (line-numbered; lineno+amsmath)
-│   ├── references.bib            (figures resolved via ../docs/module5/figures/)
+│   (PAPER 5 / MODULE 5 is not here: never submitted, so it is drafted in the private
+│    ipis-papers repo and arrives here as a frozen copy when it is submitted)
 │
 ├── docs/
 │   ├── HANDOFF.md                Single source of truth for resuming work (read first)
+│   ├── PAPER_LIFECYCLE.md       Which repo holds which version of each paper (read before any manuscript work)
 │   ├── OPEN_ITEMS.md             Open items per owning session (read your section first)
 │   ├── AUTHOR.md                 Canonical author block (name, affiliation, e-mail, ORCID) for all papers
 │   ├── architecture/
@@ -99,7 +99,9 @@ IPIS/
 - **Source layout** `src=["src"]`; conda env `ipis` (Python 3.11). Quality gates before every
   commit: `black src tests scripts`, `ruff check src tests`, `pytest tests/unit -q`. CI lints
   `src tests` and runs unit tests; `scripts/` are not CI-tested (they need gitignored data).
-- **Five papers.** `paper/`, `paper2/`, `paper3/`, `paper4/`, and `paper5/` hold the LaTeX submission packages.
+- **Papers.** `paper/`, `paper2/`, `paper3/` and `paper4/` hold each paper's **frozen as-submitted**
+  LaTeX package and are read-only; every revision, accepted version and proof lives in the private
+  `beebzy-droid/ipis-papers` repo. Read `docs/PAPER_LIFECYCLE.md` before touching any of them.
   `paper/` and `paper2/` share the markdown-working-copy layout; `paper3/` is self-contained
   split-section elsarticle; `paper4/` (Module 4) is achemso/ACS for IECR; `paper5/` (Module 5) is split-section elsarticle for CACE. NOTE the directory numbers
   follow authoring order: `paper2/`=Module 3 (RTO), `paper3/`=Module 2 (SCC). Module mapping is in

@@ -25,7 +25,14 @@ CANONICAL_ADDRESS = r"\address{Map\'ua Malayan Colleges Mindanao, Davao City, Ph
 EMAIL = "bienbusico@gmail.com"
 
 # Records of what was sent, and documents that discuss the retired forms on purpose.
+# paper3/ in the public repo is the frozen 2026-06-30 preprint, which the publisher's policy
+# allows to be public only as submitted; it keeps the singular affiliation on purpose
+# (docs/PAPER_LIFECYCLE.md). In the private ipis-papers repo it is the working copy and IS checked.
 FROZEN = (
+    "paper3/scc_paper.tex",
+    "paper3/scc_refs.bib",
+    "paper3/sections/",
+    "paper3/README.txt",
     "paper3/submission_R1/",
     "docs/reviews/",
     "docs/module2/revision/",
@@ -33,6 +40,7 @@ FROZEN = (
     "docs/CITATION_LEDGER.md",
     "docs/AUTHOR.md",
     "docs/OPEN_ITEMS.md",
+    "docs/PAPER_LIFECYCLE.md",
     "docs/module2/proof/PROOF_CHECKLIST.md",
     "scripts/check_author_block.py",
     "scripts/proof_check.py",

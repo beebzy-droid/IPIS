@@ -6,13 +6,13 @@ README citation, so the deposit points at the published article. Everything else
 byte-identical, because the article cites what the reviewers could run.
 
 So this script does not re-collect files from the repo (which may have moved on since). It opens
-the frozen v1.0.0 archive in `paper3/submission_R1/scc-code.zip`, rewrites the citation in
+the frozen v1.0.0 archive (`paper3/submission_R1/scc-code.zip` in the private ipis-papers repo), rewrites the citation in
 `scc-code/README.md`, copies every other member unchanged, and then verifies that claim member by
 member before writing anything.
 
-Usage (at proof stage, values from the proof or the article page):
+Usage (at proof stage, values from the proof or the article page; run it from ipis-papers):
 
-    python scripts/zenodo_scc_v101.py --article-doi 10.1016/j.ress.2026.112345 \
+    python ../IPIS/scripts/zenodo_scc_v101.py --article-doi 10.1016/j.ress.2026.112345 \
         --volume 266 --article-number 112345 --year 2026
 
 Output: `scc-code-v1.0.1.zip` in the current directory, plus the Zenodo fields to enter.
@@ -27,7 +27,7 @@ import sys
 import zipfile
 from pathlib import Path
 
-FROZEN = Path("paper3/submission_R1/scc-code.zip")
+FROZEN_DEFAULT = Path("paper3/submission_R1/scc-code.zip")  # relative to the ipis-papers repo
 FROZEN_MD5 = "4850f5676e3dce5a876bf5d90fc01c8e"
 README = "scc-code/README.md"
 TITLE = (
@@ -52,16 +52,22 @@ def main() -> int:
     p.add_argument("--article-number", required=True, help="Elsevier article number (e-locator)")
     p.add_argument("--year", required=True)
     p.add_argument("--out", type=Path, default=Path("scc-code-v1.0.1.zip"))
+    p.add_argument(
+        "--frozen",
+        type=Path,
+        default=FROZEN_DEFAULT,
+        help="the frozen v1.0.0 zip; it lives in the private ipis-papers repo",
+    )
     a = p.parse_args()
 
     if not re.fullmatch(r"10\.1016/j\.ress\.\d{4}\.\d+", a.article_doi):
         sys.exit(
             f"refusing: '{a.article_doi}' does not look like a RESS DOI (10.1016/j.ress.YYYY.N)"
         )
-    if hashlib.md5(FROZEN.read_bytes()).hexdigest() != FROZEN_MD5:
-        sys.exit(f"refusing: {FROZEN} is not the frozen v1.0.0 deposit (MD5 mismatch)")
+    if hashlib.md5(a.frozen.read_bytes()).hexdigest() != FROZEN_MD5:
+        sys.exit(f"refusing: {a.frozen} is not the frozen v1.0.0 deposit (MD5 mismatch)")
 
-    src = zipfile.ZipFile(FROZEN)
+    src = zipfile.ZipFile(a.frozen)
     readme = src.read(README).decode("utf-8")
     if len(OLD_CITATION.findall(readme)) != 1:
         sys.exit("refusing: the v1.0.0 citation block was not found exactly once in the README")

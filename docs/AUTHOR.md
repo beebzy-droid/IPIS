@@ -66,7 +66,9 @@ ORCID 0009-0006-7755-2470
 ## What is frozen and is not edited
 
 Files that record what was actually sent keep the strings they were sent with:
-`paper3/submission_R1/` (the accepted M2 upload set, singular form), dated entries in
+every `paperN/` directory in this public repo (each one is a paper's frozen as-submitted copy, so
+`paper3/` keeps the singular form and is excluded from the check; see `docs/PAPER_LIFECYCLE.md`),
+`paper3/submission_R1/` in the private repo, dated entries in
 `docs/HANDOFF.md`, `docs/CITATION_LEDGER.md` Section 6 and `docs/reviews/`, and any submitted
 `.docx` (regenerated from its `.md` source at the next submission). Every live source (LaTeX, bib,
 cover-letter `.md`, EM-flat variant, submission sheet) carries the canonical block.

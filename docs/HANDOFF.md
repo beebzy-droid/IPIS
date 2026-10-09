@@ -23,8 +23,11 @@ this committed file.
   file before close.
 
 **Resume order for a new session:**
-0. `docs/OPEN_ITEMS.md`, your module's section (open items left for you by other sessions), and
-   `docs/AUTHOR.md` before writing any front matter (canonical name, affiliation, e-mail, ORCID).
+0. `docs/PAPER_LIFECYCLE.md` FIRST if the task touches a manuscript: the papers live in the
+   private `beebzy-droid/ipis-papers` repo, and this public repo keeps only each paper's frozen
+   as-submitted copy. Then `docs/OPEN_ITEMS.md`, your module's section (open items left for you by
+   other sessions), and `docs/AUTHOR.md` before writing any front matter (canonical name,
+   affiliation, e-mail, ORCID).
 1. This file (`docs/HANDOFF.md`) — working agreement + live thread.
 2. The latest ADR in `docs/architecture/decisions/`.
 3. `docs/module1/results.md` + `docs/module1/lessons-learned.md`.
@@ -44,7 +47,13 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 > (CACE-D-26-01079). M5 is in progress. The papers table below is current; the prose after it
 > predates these events.
 >
-> **2026-10-09, later the same day:** the affiliation is decided as the plural "Mapúa Malayan
+> **2026-10-09, manuscripts split out:** the five manuscripts now live in the private repo
+> `beebzy-droid/ipis-papers`; this repo keeps each paper's frozen as-submitted copy and no
+> revision, accepted or published text. The protocol is `docs/PAPER_LIFECYCLE.md`, which every
+> session must read before touching a manuscript. M2's proof checklist moved to
+> `ipis-papers/docs/module2/proof/PROOF_CHECKLIST.md`.
+>
+> **2026-10-09, earlier the same day:** the affiliation is decided as the plural "Mapúa Malayan
 > Colleges Mindanao", and every live source now carries the canonical author block in
 > `docs/AUTHOR.md` (checked in CI by `scripts/check_author_block.py`). Open items for each session
 > are in `docs/OPEN_ITEMS.md`. The repo is public; a tested history rewrite that removes the verbatim

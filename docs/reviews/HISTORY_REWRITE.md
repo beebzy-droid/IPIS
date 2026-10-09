@@ -1,7 +1,10 @@
-# Runbook: remove the verbatim M2 response letter from public git history
+# Runbook: the 2026-10-09 public history rewrite (EXECUTED)
 
-Status: **prepared and tested 2026-10-09; not run.** Owner: Bien (it needs a force-push).
-Run it once, after the M2 rights form is decided (see "When" below).
+Status: **executed 2026-10-09**, after the subscription rights form was signed. Kept as the record
+of what was removed and what GitHub may still hold. The scope grew beyond the response letter: the
+manuscripts moved to the private `ipis-papers` repo at the same time (`docs/PAPER_LIFECYCLE.md`),
+so the rewrite also removed the accepted M2 manuscript, its revision and proof documents from
+public history. Commits from 2026-09-07 onward were rewritten; the 205 before that were untouched.
 
 ## Why
 

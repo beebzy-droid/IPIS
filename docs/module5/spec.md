@@ -1,6 +1,7 @@
 # Module 5 — Dynamic / physical realization (spec)
 
-> **Before working:** read your section ("M5 session") in `docs/OPEN_ITEMS.md`, and take all
+> **Before working:** the manuscripts live in the private `ipis-papers` repo; read
+> `docs/PAPER_LIFECYCLE.md` first. Then read your section ("M5 session") in `docs/OPEN_ITEMS.md`, and take all
 > front matter (name, affiliation, e-mail, ORCID) from `docs/AUTHOR.md`.
 
 Status: ACTIVE. Increment 1 complete. One session per module; this is Module 5.

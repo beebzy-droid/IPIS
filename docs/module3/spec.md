@@ -1,6 +1,7 @@
 # Module 3 — Real-Time Optimization (RTO)
 
-> **Before working:** read your section ("M3 session") in `docs/OPEN_ITEMS.md`, and take all
+> **Before working:** the manuscripts live in the private `ipis-papers` repo; read
+> `docs/PAPER_LIFECYCLE.md` first. Then read your section ("M3 session") in `docs/OPEN_ITEMS.md`, and take all
 > front matter (name, affiliation, e-mail, ORCID) from `docs/AUTHOR.md`.
 
 This directory holds Module 3 documentation. **Status: complete (3A + 3B); paper desk-rejected at

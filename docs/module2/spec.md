@@ -1,10 +1,12 @@
 # Module 2 — Predictive Maintenance (anomaly detection + RUL)
 
-> **Before working:** read your section ("M2 session (proof stage)") in `docs/OPEN_ITEMS.md`, and take all
+> **Before working:** the manuscripts live in the private `ipis-papers` repo; read
+> `docs/PAPER_LIFECYCLE.md` first. Then read your section ("M2 session (proof stage)") in `docs/OPEN_ITEMS.md`, and take all
 > front matter (name, affiliation, e-mail, ORCID) from `docs/AUTHOR.md`.
 
 This directory holds Module 2 documentation. **Status: complete (2A–2D); SCC paper accepted
-in *Reliability Engineering & System Safety* (JRESS-D-26-04700R1, 2026-10-09); in production.**
+in *Reliability Engineering & System Safety* (JRESS-D-26-04700R1, 2026-10-09); in production. The manuscript, its revision record and the proof checklist are in the private
+`ipis-papers` repo; `paper3/` here is the frozen 2026-06-30 submitted version.**
 
 Module 2 is feature-complete across phases 2A–2D and is largely independent of Modules 1
 and 3 (≈10–20 % asset reuse — the conformal/drift/serving stack and the `state_bus`

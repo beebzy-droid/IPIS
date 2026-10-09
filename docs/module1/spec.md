@@ -1,6 +1,7 @@
 # Module 1 — Soft Sensor
 
-> **Before working:** read your section ("M1 / N1 session") in `docs/OPEN_ITEMS.md`, and take all
+> **Before working:** the manuscripts live in the private `ipis-papers` repo; read
+> `docs/PAPER_LIFECYCLE.md` first. Then read your section ("M1 / N1 session") in `docs/OPEN_ITEMS.md`, and take all
 > front matter (name, affiliation, e-mail, ORCID) from `docs/AUTHOR.md`.
 
 This directory holds Module 1 documentation. **Status: complete; paper rejected after review

@@ -1,6 +1,9 @@
 # Open items by owning session
 
-Cross-session register. **Every session reads its own section before starting work** (pointer
+Cross-session register. **Manuscripts live in the private `ipis-papers` repo: read
+`docs/PAPER_LIFECYCLE.md` before touching one.** Paths below that start with `paper`, or with
+`docs/module2/revision` or `docs/module2/proof`, are in that private repo unless the row says
+frozen. **Every session reads its own section before starting work** (pointer
 in `docs/HANDOFF.md` §0 and at the top of each module's `spec.md`). When you close an item, change
 its status, give the commit and the evidence, and leave the row in place, so the next session
 can see it was done.
@@ -19,8 +22,8 @@ Opened 2026-10-09 by the M2 session. File:line references are as of the 2026-10-
 
 | ID | Item | Evidence | Done when | Status |
 |---|---|---|---|---|
-| OI-03 | Proof corrections C1 to C7, sent in one batch when the proof arrives | `docs/module2/proof/PROOF_CHECKLIST.md`; `scripts/proof_check.py` already FLAGs C1, C6, C7 and the table renumbering (P7) against the marked-up PDF | Proof approved with C1 to C7 applied and `proof_check.py` clean apart from the expected decisions | waiting for Elsevier |
-| OI-04 | After publication: Zenodo v1.0.1, ledger domino (full `busico_m2` reference into paper4 and paper5), source made to match the published article | PROOF_CHECKLIST §4; `scripts/zenodo_scc_v101.py` | All four §4 steps done and recorded in `paper3/submission_R1/EM_SUBMISSION_RECORD.md` | waiting for the article DOI |
+| OI-03 | Proof corrections C1 to C7, sent in one batch when the proof arrives | `ipis-papers/docs/module2/proof/PROOF_CHECKLIST.md`; `scripts/proof_check.py` already FLAGs C1, C6, C7 and the table renumbering (P7) against the marked-up PDF | Proof approved with C1 to C7 applied and `proof_check.py` clean apart from the expected decisions | waiting for Elsevier |
+| OI-04 | After publication: Zenodo v1.0.1, ledger domino (full `busico_m2` reference into paper4 and paper5), source made to match the published article | PROOF_CHECKLIST §4; `scripts/zenodo_scc_v101.py` | All four §4 steps done and recorded in `ipis-papers/paper3/submission_R1/EM_SUBMISSION_RECORD.md` | waiting for the article DOI |
 | OI-05 | Two FEMTO probe scripts sat at the repo root | Committed by accident in b8bc355 (2026-06-30, an M1 commit) | Moved to `scripts/probe_femto_eol.py` and `scripts/probe_femto_fpt.py`; usage lines updated | **closed 2026-10-09** |
 
 ## M3 session

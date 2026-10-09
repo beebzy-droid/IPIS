@@ -17,7 +17,8 @@ Checks
 
 Usage
 -----
-    python scripts/proof_check.py --accepted paper3/submission_R1/scc_paper.docx --proof proof.pdf
+    cd ../ipis-papers        # the accepted manuscript lives in the private repo
+    python ../IPIS/scripts/proof_check.py --accepted paper3/submission_R1/scc_paper.docx --proof proof.pdf
 
 Exit status is 1 if any check FLAGs, so the result can gate a commit. Requires `pdftotext`
 (poppler) or the `pypdf` package for the proof.
