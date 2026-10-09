@@ -88,6 +88,20 @@ git reset --hard origin/main
 `git status` must be clean before the reset. `private/` is git-ignored, so the reset does not touch
 it. Afterwards, delete the `ipis_rewrite` folder.
 
+## Execution record (2026-10-09)
+
+| Item | Value |
+|---|---|
+| Private repo created | `beebzy-droid/ipis-papers`, 82 commits of manuscript history, pushed 2026-10-09 |
+| Public force-push | `046ed25` -> `915721b`; 231 rewritten-history commits plus the split commit |
+| First changed commit | `86b144461b02f9d25663b02c6e8ea49dbb75de8c`, now `a1ab638d54c96ce609a4f9c91051929effbc85a9` |
+| Verification (fresh clone) | 0 restricted paths in any branch; largest overlap with the accepted manuscript or decision letters is 10 ten-word runs, all in a third-party bibliography |
+| Forks | 0 (checked on the repo page, 2026-10-09) |
+| GitHub Support ticket | **#4839390** "Remove cached views after history rewrite (beebzy-droid/IPIS)", opened 2026-10-09 15:37 PHT; category Repositories > Repository features > Branches; asks for cached-view removal and garbage collection, and states explicitly that the repository must not be deleted |
+
+If Support replies, answer from this record. Never accept an offer to delete, purge or transfer the
+repository: the request is only for cached views and garbage collection.
+
 ## What the rewrite cannot remove (GitHub documentation)
 
 - Existing clones and forks keep the old history. Check the fork count on the repo page; GitHub
