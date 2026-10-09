@@ -3,7 +3,7 @@
 **Status:** Accepted (D2 ratified by action — FEMTO + CWRU downloaded and placed
 2026-06-16; build proceeds to Phase 2A)
 **Date:** 2026-06-16
-**Decision owner:** Bien Don Busico
+**Decision owner:** Bien Busico
 **Module:** 2 (predictive maintenance) — anomaly detection + RUL
 **Relates to:** ADR-003 (three-dataset hierarchy), ADR-008 (drift detection),
 ADR-010 (from-primary conformal), ADR-014 (one-sided conformal in M3), and the

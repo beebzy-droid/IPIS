@@ -2,7 +2,7 @@
 
 **Status:** Accepted
 **Date:** 2026-06-14
-**Decision owner:** Bien Don Busico
+**Decision owner:** Bien Busico
 **Module:** 3 (RTO) — Phase 3B (uncertainty-aware RTO; paper-2 contribution)
 **Extends:** ADR-013 (DWSIM twin + deterministic RTO), scoping.md D1–D5 (feed-z
 disturbance ensemble at known R, D)

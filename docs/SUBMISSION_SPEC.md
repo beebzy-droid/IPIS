@@ -10,7 +10,7 @@ re-derive them. Update the venue/format rows per paper.
 - Article type: Full Length Article
 - Title: When does a calibrated soft sensor keep its promise? A negative-control study
   of validity without accuracy under drift and delayed labels
-- Author: Bien Don Busico (sole). Affiliation: Mapúa Malayan Colleges Mindanao, Davao City,
+- Author: Bien Busico (sole). Affiliation: Mapúa Malayan Colleges Mindanao, Davao City,
   Philippines. Email: bienbusico@gmail.com
 - Format: elsarticle final,5p,times,twocolumn ; no linenumbers ; 13 pp ; wide tables
   table* , wide figures figure* . Page cap 12-15 (met).

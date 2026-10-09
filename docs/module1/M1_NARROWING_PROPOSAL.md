@@ -1,6 +1,6 @@
 # M1 narrowing proposal (N1): the delayed-label calibration loop
 
-Status: RATIFIED 2026-09-28 by Bien Don Busico, with D-P0.1 (obey the one-SE rule, k = 1).
+Status: RATIFIED 2026-09-28 by Bien Busico, with D-P0.1 (obey the one-SE rule, k = 1).
 Phase 0 started the same day; see Section 10. Inputs: `docs/reviews/REVIEW_REGISTER.csv` (42 records), `M1_REVISION_AUDIT.md`
 (A1-A12), a literature check, and three falsification-first pilots
 (`scripts/pilots/`, synthetic data, reproducible).

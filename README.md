@@ -171,7 +171,7 @@ If you use this work in research, please cite:
 
 ```bibtex
 @software{busico_ipis_2026,
-  author = {Busico, Bien Don},
+  author = {Busico, Bien},
   title = {IPIS: Integrated Process Intelligence System},
   year = {2026},
   url = {https://github.com/beebzy-droid/IPIS}
@@ -184,4 +184,4 @@ MIT — see [LICENSE](LICENSE).
 
 ## Author
 
-**Bien Don Busico** — Process Engineer | Chemical Engineering × AI/ML × Industry 4.0
+**Bien Busico** — Process Engineer | Chemical Engineering × AI/ML × Industry 4.0

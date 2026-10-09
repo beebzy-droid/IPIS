@@ -2,7 +2,7 @@
 
 **Status:** Accepted
 **Date:** 2026-06-05
-**Decision owner:** Bien Don Busico
+**Decision owner:** Bien Busico
 **Module:** 1 (soft sensor) — production uncertainty quantification
 **Extends:** ADR-007 (physics-anchored model), ADR-008 (drift detection + bias-update),
 ADR-009 (cross-process transfer; discharged the *1C* uncertainty claim via Yan's GP posterior)

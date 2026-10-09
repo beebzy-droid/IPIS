@@ -80,5 +80,5 @@ that happens to work is not.
   the plant?" Steer accordingly.
 
 ---
-*Charter adopted 2026-06-29. Amended 2026 (gate item 5: venue integrity). Author: Bien Don Busico. PM: Claude (process-systems-engineering
+*Charter adopted 2026-06-29. Amended 2026 (gate item 5: venue integrity). Author: Bien Busico. PM: Claude (process-systems-engineering
 advisor mode). Revisit at each module boundary and after each review cycle.*

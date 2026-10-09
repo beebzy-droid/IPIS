@@ -2,7 +2,7 @@
 
 **Status:** Accepted
 **Date:** 2026-06-05
-**Decision owner:** Bien Don Busico
+**Decision owner:** Bien Busico
 **Module:** 1 (soft sensor) — production serving stack
 **Extends:** ADR-007 (physics-anchored model), ADR-008 (drift + bias-update),
 ADR-010 (conformal uncertainty)

@@ -2,7 +2,7 @@
 
 **Status:** Accepted
 **Date:** 2026-06-13
-**Decision owner:** Bien Don Busico
+**Decision owner:** Bien Busico
 **Module:** 3 (RTO) — Phase 3A (twin + deterministic RTO skeleton)
 **Extends:** ADR-006 (GPR belongs in Module 3), scoping.md D1–D5 (uncertainty-aware
 steady-state RTO; debutanizer twin first; DWSIM+GEKKO+CoolProp; state-bus interface)

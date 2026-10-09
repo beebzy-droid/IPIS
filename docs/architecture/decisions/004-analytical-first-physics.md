@@ -2,7 +2,7 @@
 
 **Status:** Accepted
 **Date:** 2026-05-29
-**Decision owner:** Bien Don Busico
+**Decision owner:** Bien Busico
 **Supersedes:** the DWSIM-first sequencing implied by ADR-001 and the master specification
 
 ## Context

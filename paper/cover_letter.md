@@ -32,6 +32,6 @@ prediction for time series, and process model migration under regime shift.
 
 Thank you for your consideration.
 
-Bien Don Busico
+Bien Busico
 Mapúa Malayan Colleges Mindanao, Davao City, Philippines
 bienbusico@gmail.com

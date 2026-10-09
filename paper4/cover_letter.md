@@ -40,6 +40,6 @@ adaptation, and prognostics and health management for process equipment.
 
 Thank you for your consideration.
 
-Bien Don Busico
+Bien Busico
 Mapúa Malayan Colleges Mindanao, Davao City, Philippines
 bienbusico@gmail.com
