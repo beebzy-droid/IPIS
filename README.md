@@ -53,8 +53,8 @@ IPIS addresses all three with one architecture, validated across heterogeneous b
 
 | Module | Status | Notes |
 |---|---|---|
-| Module 1 — Soft Sensor | ✅ Complete | Under review at Journal of Process Control (JPROCONT-D-26-00618; transfer from CACE) |
-| Module 2 — Predictive Maintenance | ✅ Complete | Feature-complete (2A–2D); SCC paper under review (JRESS-D-26-04700) |
+| Module 1 — Soft Sensor | ✅ Complete | Paper rejected after peer review at Journal of Process Control (JPROCONT-D-26-00618); in revision, narrowed to one claim |
+| Module 2 — Predictive Maintenance | ✅ Complete | Feature-complete (2A–2D); SCC paper **accepted** in *Reliability Engineering & System Safety* (2026-10-09), in production |
 | Module 3 — Real-Time Optimization | ✅ Complete | Paper paused after desk rejections (latest CJCE 1404930) |
 | Module 4 — Integration (composed certificate) | ✅ Under review | Closed-loop coverage certificate validated on the debutanizer twin; under review at *Computers & Chemical Engineering* (CACE-D-26-01079), reframed and ported after IECR declined on scope (`paper4/`) |
 | Module 5 — Dynamic / horizon realization | 🚧 In progress | Dynamic plant, closed-loop orchestrator, and adaptive-conformal horizon coverage validated (62 tests; three results frozen); Paper 5 drafting (`paper5/`) |
@@ -65,12 +65,13 @@ Listed by module. Submission directories `paperN/` are numbered by authoring ord
 differs from the module numbering for Modules 2 and 3; the module mapping below is authoritative.
 
 - **Module 1 — Soft Sensor:** *When does a calibrated soft sensor keep its promise? A negative-control study of validity
-  without accuracy under drift and delayed labels.* Under review, *Journal of Process Control* (JPROCONT-D-26-00618)
-  (CACE-D-26-00944). Source: `paper/`.
+  without accuracy under drift and delayed labels.* Rejected after peer review at *Journal of Process Control*
+  (JPROCONT-D-26-00618; earlier CACE-D-26-00944); in revision. Source: `paper/`.
 - **Module 2 — Predictive Maintenance (Similarity-Calibrated Conformal):** *Similarity-Calibrated
   Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under
-  operating-regime transfer.* Under review, *Reliability Engineering & System Safety*
-  (JRESS-D-26-04700). Source: `paper3/`.
+  operating-regime transfer.* **Accepted**, *Reliability Engineering & System Safety* (2026, in
+  press). Code: [doi:10.5281/zenodo.23211276](https://doi.org/10.5281/zenodo.23211276).
+  Source: `paper3/`; version of record: `paper3/submission_R1/`.
 - **Module 3 — Real-Time Optimization:** *Safe real-time optimization of a distillation column under feed-composition uncertainty: a comparative study of distribution-free constraint back-offs.* Desk-rejected at
   *The Canadian Journal of Chemical Engineering* (1404930); paused. Source: `paper2/cjce/`.
 - **Module 4 — Integration (composed coverage certificate):** *A composed coverage certificate for

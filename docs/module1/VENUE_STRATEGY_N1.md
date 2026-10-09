@@ -21,6 +21,10 @@ drew substantive, partly favourable engagement. The science is not what fails fi
 significance framing at the desk are. N1's venue choice is therefore designed against desk
 rejection before anything else.
 
+**Update 2026-10-09 (M2 session).** M2 (JRESS-D-26-04700) was accepted after one major revision
+(R1 submitted 2026-10-07, accepted 2026-10-09 with no further changes). Of the two papers that have
+reached reviewers, one is now accepted. The table above is left as recorded on 2026-09-28.
+
 ## 2. Rules
 
 1. Evidence of fit, not topic similarity: the target must have published, in its last 24
