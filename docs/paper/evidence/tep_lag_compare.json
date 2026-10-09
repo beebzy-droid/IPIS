@@ -1,0 +1,29 @@
+{
+  "_meta": {
+    "generated_utc": "2026-10-09T13:12:37+00:00",
+    "argv": [
+      "scripts\\_tep_lag_compare.py",
+      "--json"
+    ],
+    "python": "3.11.15"
+  },
+  "driver": "XMEAS_3",
+  "max_lag": 40,
+  "modes": {
+    "mode1": {
+      "full_file_lag": 0,
+      "train_only_lag": 0,
+      "same": true
+    },
+    "mode2": {
+      "full_file_lag": 0,
+      "train_only_lag": 0,
+      "same": true
+    },
+    "mode3": {
+      "full_file_lag": 0,
+      "train_only_lag": 0,
+      "same": true
+    }
+  }
+}

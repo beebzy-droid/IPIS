@@ -30,3 +30,24 @@ cannot see the failure; validation on process soft sensors at industrial delays.
 - P4. Cite the delayed-feedback online-learning literature for the regret view. Candidate
   references from general knowledge, NOT yet verified: Joulani, Gyorgy and Szepesvari (ICML
   2013); Quanrud and Khashabi (NeurIPS 2015). Verify before citing.
+
+## Update sweep, 2026-10-09 (web only; M1 session)
+
+| # | Query or source | Key hits | Bearing on N1 |
+|---|---|---|---|
+| 6 | adaptive conformal inference, delayed feedback, step size, stability (extended search) | arXiv 2609.07251 still at v1 (7 Sep 2026); no citing or follow-up work listed (pith.science record) | No single-state dead-time analysis found |
+| 7 | conformal prediction, soft sensor, delayed laboratory labels, online calibration | Only items already known (arXiv 1710.11595; online soft-sensor calibration tools) | No conformal soft sensor under laboratory delay found |
+| 8 | online conformal, delayed labels, dead time, integral controller | Classical control results only | No conformal dead-time analysis found |
+| 9 | label delay or delayed labels, conformal prediction, time series, 2026 | arXiv 2609.07251; Gauthier, Bach and Jordan, "Adaptive Coverage Policies in Conformal Prediction" (PMLR vol. 300, 2026; arXiv 2510.04318): abstract read, per-example coverage levels via e-values, batch calibration | Unrelated: no delay, no step size, no streaming |
+| 10 | conformal calibration, industrial analyzer delay, soft-sensor prediction intervals, 2026 | arXiv 2512.23602 (distribution-free process monitoring; in the project library); arXiv 2602.21478 read and found unrelated (inference after adaptive experiments); Zenodo record 19114006 (preprint, 2026-03-29) NOT read: the fetch was rate-limited | Zenodo 19114006 is to be read in the systematic sweep |
+
+Verdict: on the web evidence, F4 still does not fire. The Scopus, Web of Science and Google
+Scholar sweep (institutional access, owner-side) remains mandatory before submission, and must
+include the unread Zenodo record above.
+
+Program-internal overlap, checked the same day. Module 5 (never submitted; draft in the private
+repo) also runs delayed-label ACI, with stored pairing. Its dead-time figure reports only the
+S_k validity rate and marginal interval coverage, at gamma = 0.02 for label delays of 0 to 8
+cycles (`docs/module5/spec.md`). It does not analyse the single-state dead-time loop, so it does
+not pre-empt N1. However, it reports exactly the statistics N1 shows to be blind. Flagged for the
+M5 session as OI-17 in `docs/OPEN_ITEMS.md`.

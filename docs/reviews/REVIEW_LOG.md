@@ -54,6 +54,7 @@ Gmail and added the M3 and M4 events this log was missing (THESIS_STANDARDS L10,
 | 2026-09-29 | EMAIL 09-28 16:34Z | M3 | CJCE 1404930 | Desk decision, about 10 h after submission | Not considered for publication; no reasons stated; Wiley Transfer Desk offered |
 | 2026-10-07 | RECORDED | M2 | JRESS-D-26-04700 | R1 submitted (Word manuscript, marked-up PDF, response letter) | |
 | 2026-10-09 | RECORDED | M2 | JRESS-D-26-04700R1 | Decision | **Accepted**, no further revisions; to production |
+| 2026-10-09 | RECORDED | M1 | n/a | Phase 0 closed: lag provenance frozen as evidence (R4.5 closed), delayed-ACI library reproduced on Windows (11 tests) | Phase 1 pre-registration drafted and independently checked. A pre-data pilot shows the white-noise loop model misses the infinite-interval share at every persistence level and sd(alpha) at autocorrelation 0.9 or more, so a claim amendment (D-P1.1) awaits ratification |
 
 ## Program decision record (verified 2026-10-09 from email headers)
 

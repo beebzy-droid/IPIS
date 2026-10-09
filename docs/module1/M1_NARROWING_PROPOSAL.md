@@ -1,7 +1,9 @@
 # M1 narrowing proposal (N1): the delayed-label calibration loop
 
 Status: RATIFIED 2026-09-28 by Bien Busico, with D-P0.1 (obey the one-SE rule, k = 1).
-Phase 0 started the same day; see Section 10. Inputs: `docs/reviews/REVIEW_REGISTER.csv` (42 records), `M1_REVISION_AUDIT.md`
+Phase 0 started the same day (Section 10) and closed 2026-10-09 (Section 11). An amendment to the
+claim is proposed in `PHASE1_PREREGISTRATION.md` and is not ratified; until it is, Sections 3 to 6
+stand as ratified. Inputs: `docs/reviews/REVIEW_REGISTER.csv` (42 records), `M1_REVISION_AUDIT.md`
 (A1-A12), a literature check, and three falsification-first pilots
 (`scripts/pilots/`, synthetic data, reproducible).
 
@@ -204,3 +206,50 @@ Phase 0 deliverables (code-ready, validated on synthetic data, 11 tests passing)
 diagnostics), TEP lag diagnosed on the training split in `scripts/conformal_eval.py`, and
 `scripts/diagnose_debutanizer_lag.py` (pool-only lag provenance). Real-data runs are
 owner-side; their outputs are frozen as evidence before any Phase 1 number is reported.
+
+## 11. Phase 0 results (closed 2026-10-09)
+
+Evidence was produced owner-side on Windows (Python 3.11.15) and pushed in 1791362 and 56d0a0a.
+
+- Debutanizer lag (A9, R4.5): scanned on the train + validation pool only (n = 2034; the
+  360-row test block was not read). |r| peaks at lag 15 (r = -0.724, r^2 = 0.524), an interior
+  maximum on a flat plateau (r^2 >= 0.500 for lags 13 to 17). The sign is physical: a hotter
+  sixth tray means less C4 in the bottoms. Evidence: `docs/paper/evidence/debutanizer_lag_scan.json`.
+- TEP lag (A9, R4.5): the training-split lag equals the full-file lag in all three regimes
+  (0, 0, 0), so the leak changed no reported number. The printed result is committed as
+  `docs/paper/evidence/tep_lag_compare.json`, and R4.5 closes with that file. Lag 0 is a
+  boundary result from one driver, XMEAS_3, the E-feed flow, which the control system
+  manipulates. It says the scan found no transport delay; it does not show that none exists.
+  Phase 1 aligns TEP by the analyzer's documented dead time instead (product analysis sampled
+  every 0.25 h with 0.25 h dead time; Downs and Vogel 1993, Table 5).
+- Library: the 11 tests in `tests/unit/test_delayed_aci.py` pass on Windows and Linux.
+- Delay provenance (R4.7). Fortuna et al. (2007, Sec. 6.2, p. 117): the GC has a 15-min
+  measuring cycle and an estimated 30-min location delay, so C4 is known about 45 min late. With
+  Ts = 12 min their newest label is y(k-4), 48 min old. The previous manuscript's delay of 4 (its
+  bias-update code used the label 4 samples old) is therefore the documented latency at
+  Ts = 12 min, not only a NARMA convention. In the dead-time convention of `delayed_aci`
+  (theta = label age - 1) it is theta = 3.
+- Recording interval. The same book describes a debutanizer set with ten candidate inputs
+  recorded at Ts = 6 min (Sec. 4.1; Table 4.1 counts out of 2394). It also gives a delay range of
+  20 to 60 min (Sec. 5.5, p. 97). At 6 min the 45-min delay is a label age of 8 (theta = 7). The
+  public file has 2394 rows and the seven inputs of Table A.1, which Sec. 6.2 models at 12 min. The
+  book does not say whether it is the Sec. 4.1 recording; `scripts/phase1_precheck.py` tests which
+  Ts the file supports.
+- Code-ready items: R2.2, R2.3, R2.4, R2.m1, R3.3 and R4.8 (`evaluation/delayed_aci.py`).
+  R4.4 and R2.6b: the code is forward-chaining (`evaluation/blocked_cv.py`), so what remains is
+  the Methods text (Phase 4).
+
+Pre-data finding that changes Phase 1 (`scripts/pilots/persistence_pilot.py`, synthetic,
+library-generated; theta here is the library's theta).
+- On AR(1) residual streams with lag-1 autocorrelation 0.9 or more, the white-noise noise-gain
+  model of Section 4 under-predicts sd(alpha) by 38 to 76 %.
+- At that persistence, in every cell where the measured infinite-interval share exceeds 0.1 %,
+  the model under-predicts the share, by factors of 1.9 to more than 200.
+- With the sliding-window quantile, its infinite-share predictions miss by more than 25 % in some
+  cells at every persistence level tested, including uncorrelated residuals. F1 as specified would
+  therefore fire.
+- Under persistence the delay does more harm, not less. At gamma = 0.02 and autocorrelation 0.9,
+  the infinite share is 0.7 % with no delay, 8.4 % at theta = 4 and 14.9 % at theta = 8.
+- Marginal coverage reads 0.900 to 0.901 in every cell.
+
+The amendment proposed in response, and the Phase 1 design, are in `PHASE1_PREREGISTRATION.md`.
