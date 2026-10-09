@@ -27,12 +27,15 @@ EMAIL = "bienbusico@gmail.com"
 # Records of what was sent, and documents that discuss the retired forms on purpose.
 # paper3/ in the public repo is the frozen 2026-06-30 preprint, which the publisher's policy
 # allows to be public only as submitted; it keeps the singular affiliation on purpose
-# (docs/PAPER_LIFECYCLE.md). In the private ipis-papers repo it is the working copy and IS checked.
-FROZEN = (
+# (docs/PAPER_LIFECYCLE.md). In the private ipis-papers repo (recognised by paper3/submission_R1/)
+# paper3/ is the live working copy, so those sources are checked there.
+PREPRINT_SOURCES = (
     "paper3/scc_paper.tex",
     "paper3/scc_refs.bib",
     "paper3/sections/",
     "paper3/README.txt",
+)
+FROZEN = (
     "paper3/submission_R1/",
     "docs/reviews/",
     "docs/module2/revision/",
@@ -62,7 +65,9 @@ RULES = [
 
 def tracked() -> list[str]:
     out = subprocess.run(["git", "ls-files"], capture_output=True, text=True, check=True).stdout
-    return [f for f in out.splitlines() if TEXT.search(f) and not f.startswith(FROZEN)]
+    private_repo = Path("paper3/submission_R1").is_dir()
+    skip = FROZEN if private_repo else FROZEN + PREPRINT_SOURCES
+    return [f for f in out.splitlines() if TEXT.search(f) and not f.startswith(skip)]
 
 
 def findings(path: str) -> list[tuple[int, str, str]]:
