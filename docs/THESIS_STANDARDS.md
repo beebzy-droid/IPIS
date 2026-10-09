@@ -71,9 +71,11 @@ that could have been false and was tested.** Everything below serves that.
 
 ## 6. Venue integrity: one submission at a time, and how to vet an invitation
 
-Added in 2026, after an unsolicited invitation arrived from a 2024-founded journal
-(Opast Publishing Group) while M1 was under active review at JPC. The lesson has two
-parts: an absolute rule that admits no exceptions, and a filter for judging any venue
+Added in 2026, after an unsolicited invitation (sender domain researchnexis.com, journal
+ISSN 2998-8713) arrived on 2026-07-27 while M1 was under active review at JPC, two days after
+the journal's preprint service listed M1 on SSRN. An earlier version of this paragraph named a
+publisher and a founding year taken from a web-search match; neither appears in the email, so
+both were removed on 2026-10-09 (L10). The lesson has two parts: an absolute rule that admits no exceptions, and a filter for judging any venue
 that approaches you.
 
 ### 6.1 The absolute rule (no exceptions, no judgment calls)
@@ -168,7 +170,9 @@ arrives, but that is a deliberate choice, not a default.
 - **Preprint scraping is the expected cost of a deliberate choice.** IPIS posts preprints
   (SSRN via Elsevier) for the DOI, the priority date, and early citation. Predatory
   publishers harvest preprint servers, so solicitation volume will rise as M2 through M5
-  appear. This is noise to filter, not a reason to stop preprinting.
+  appear. Observed once already: SSRN registered M1 on 2026-07-25 and the invitation arrived on
+  2026-07-27, quoting the title in SSRN's title case. This is noise to filter, not a reason to
+  stop preprinting.
 - **The program's targets are indexed venues.** JPC, CACE, RESS, IECR, ChemEngSci and
   their peers. Every IPIS paper belongs in a venue that a PhD committee, a hiring panel,
   and a future book publisher all recognize without explanation.
@@ -228,6 +232,10 @@ Each line is a failure that reached a reviewer, stated as the rule that would ha
   against the production implementation before interpreting. (Pilot: a nominal-scale
   quantile created artifactual infinite intervals under drift.)
 - **L10. Stamp only dates you can verify.** Record "TBC" rather than an inferred date.
+- **L11. Take a paper's status from the editorial email, never from a status table or memory.**
+  M4 was desk-rejected on 2026-07-14 and stayed "under review" in the ledger, README and two
+  governance documents for 87 days. Re-derive every status from the publisher's emails at each
+  session start that touches it, and record the email's timestamp.
 
 ---
 *Standard adopted 2026-06-29. Amended 2026 (Section 6, venue integrity); 2026-09-28 (Section 9, peer-review lessons).

@@ -12,13 +12,13 @@ downstream paper. Chasing those by hand across `references.bib`, `README.md`, st
 working drafts is lossy and token-expensive. This ledger plus the protocol makes propagation
 mechanical and one-directional.
 
-Last updated: 2026-10-09 (affiliation decided, canonical author block `docs/AUTHOR.md`; open items per session in `docs/OPEN_ITEMS.md`. Earlier the same day: M2 ACCEPTED at RESS as JRESS-D-26-04700R1: `busico_m2` -> `@article`, in press, synced into paper4/paper5; M1 status corrected to rejected-after-review per the 2026-09-28 review register; open items for M1 and M5 owners in Section 6).
+Last updated: 2026-10-09, M1 session pass (`busico_m1` -> SSRN preprint doi:10.2139/ssrn.7181724; M4 and M5 status flags verified from email; see Section 6, first entry). Earlier the same day: (affiliation decided, canonical author block `docs/AUTHOR.md`; open items per session in `docs/OPEN_ITEMS.md`. Earlier the same day: M2 ACCEPTED at RESS as JRESS-D-26-04700R1: `busico_m2` -> `@article`, in press, synced into paper4/paper5; M1 status corrected to rejected-after-review per the 2026-09-28 review register; open items for M1 and M5 owners in Section 6).
 
 ## 1. Canonical ledger
 
 | bibkey | Module | Canonical title | Venue | Manuscript ID | Status | Source dir |
 |---|---|---|---|---|---|---|
-| `busico_m1` | M1 soft sensor | When does a calibrated soft sensor keep its promise? A negative-control study of validity without accuracy under drift and delayed labels | Journal of Process Control (transfer from CACE) | JPROCONT-D-26-00618 (orig. CACE-D-26-00944) | rejected after peer review (decision on or before 2026-09-28); in revision as N1 | `paper/` |
+| `busico_m1` | M1 soft sensor | When does a calibrated soft sensor keep its promise? A negative-control study of validity without accuracy under drift and delayed labels | Journal of Process Control (transfer from CACE) | JPROCONT-D-26-00618 (orig. CACE-D-26-00944); preprint SSRN 7181724 | rejected after peer review (decision 2026-08-11); in revision as N1; preprint doi:10.2139/ssrn.7181724 | `paper/` (frozen preprint) |
 | `busico_m2` | M2 prognostics (SCC) | Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer | Reliability Engineering & System Safety | JRESS-D-26-04700R1 (resub. of JRESS-D-26-04509) | **accepted 2026-10-09**; in production, proof pending | `paper3/` |
 | `busico_m3` | M3 RTO | Safe real-time optimization of a distillation column under feed-composition uncertainty: a comparative study of distribution-free constraint back-offs | none (paused) | none (rejected: CJCE 1404930, TCST 26-0876, CACE-D-26-01040, JPROCONT-D-26-00565) | paused; Wiley Transfer Desk offer pending | `paper2/cjce/` |
 | `busico_m4` | M4 integration | A composed coverage certificate for closed-loop process operation: certified joint product-quality and equipment-survival guarantees under feedback | Computers & Chemical Engineering | CACE-D-26-01079 | under review | `paper4/` |
@@ -49,7 +49,7 @@ Downstream `references.bib` files must contain exactly these for the keys they c
 ```bibtex
 @misc{busico_m1,
   title={{When does a calibrated soft sensor keep its promise? A negative-control study of validity without accuracy under drift and delayed labels}},
-  author={Busico, Bien}, year={2026}, note={Manuscript JPROCONT-D-26-00618, Journal of Process Control (transfer from CACE-D-26-00944); reframed as a negative-control study}}
+  author={Busico, Bien}, year={2026}, howpublished={SSRN preprint 7181724}, note={doi:10.2139/ssrn.7181724}}
 
 @article{busico_m2,
   title={{Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer}},
@@ -107,6 +107,27 @@ canonical metadata in Sections 1 and 3, plus the open-debt list in Section 6, ar
 prompt is passed between sessions.
 
 ## 6. Open propagation debt (fix in the owning session)
+
+**2026-10-09, M1 session (`busico_m1` canonical entry; status flags verified from email).**
+- `busico_m1` now cites the SSRN preprint of the version submitted to JPC: SSRN 7181724,
+  doi:10.2139/ssrn.7181724, registered 2026-07-25 through the journal's preprint service and added
+  to the author's ORCID record on 2026-07-26 (SSRN and ORCID emails). It replaces the dead manuscript
+  ID with a public object that has a DOI, which is why it is not "Unpublished manuscript". When N1 is
+  published, the entry switches to the N1 article. The DOI sits in `howpublished` + `note`, not a
+  `doi` field: tested with plainnat, unsrtnat, achemso and CJChE's `angew.bst` (prints exactly once,
+  0 bibtex errors). elsarticle-num-names could not be tested in the sandbox; the next build of any
+  paper confirms it.
+- Downstream pulls (OI-01), in `ipis-papers` at each paper's next build or submission; frozen
+  preprints in IPIS are not edited: M4 `paper4/` (entry, the inlined bibitem in `em/main_EM.tex`,
+  cover-letter prose), M5 `paper5/`, M3 `paper2/` key `companion2026` (root, `cjce/`, `tcst/`).
+
+Flagged for the owning sessions, NOT changed this pass (verified from the author's email):
+- **M4 is not under review.** CACE-D-26-01079 was rejected by the editor without external review on
+  2026-07-14 (reason given: within aims and scope, insufficient novelty). Only Elsevier transfer
+  reminders followed (2026-07-17, 07-28, 08-04); there is no appeal or resubmission. Section 1's M4
+  row and the `busico_m4` note are stale, and `busico_m4` now has the dead-ID problem `busico_m1`
+  had (blast radius M5). OPEN_ITEMS OI-16.
+- **M5 was never submitted.** No journal sent a submission email for its title. Evidence for OI-10.
 
 **2026-10-09 (manuscripts split into a private repo).** The ledger stays here and stays public: it
 holds citations, not manuscript text. The manuscripts themselves moved to the private

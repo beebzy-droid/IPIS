@@ -18,5 +18,9 @@ for mode in ("mode1", "mode2", "mode3"):
     df = TEPLoader().load(DATA_DIR / f"tep_{mode}.csv")
     full = diagnose_transport_lag(df)
     train = diagnose_transport_lag(time_ordered_split(df).train)
-    verdict = "SAME" if full == train else "DIFFERENT: evidence produced with the full-file lag must be regenerated"
+    verdict = (
+        "SAME"
+        if full == train
+        else "DIFFERENT: evidence produced with the full-file lag must be regenerated"
+    )
     print(f"{mode}: full-file lag = {full:2d} | train-only lag = {train:2d} | {verdict}")

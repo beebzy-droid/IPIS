@@ -44,6 +44,7 @@ def main() -> int:
     args = ap.parse_args()
 
     import pandas as pd
+
     from ipis.module1_soft_sensor.data.loaders import DebutanizerLoader
     from ipis.module1_soft_sensor.data.preprocessing import time_ordered_split
 
