@@ -73,7 +73,7 @@ to a horizon guarantee and moves IPIS off the quasi-static twin. Start a fresh s
 |---|---|---|---|---|---|---|
 | 1 | M1 soft sensor | Journal of Process Control | JPROCONT-D-26-00618 | 2026-06-12 | rejected after review; in revision (N1) | `paper/` |
 | 2 | M3 RTO (distribution-free back-offs, comparative) | CJCE | 1404930, DESK-REJECTED; paused | 2026-09-28 | paused | `paper2/cjce/` |
-| 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04700R1** | **2026-10-07** | **ACCEPTED 2026-10-09; in production** | `paper3/` |
+| 3 | M2 SCC | Reliability Engineering & System Safety | **JRESS-D-26-04700R1** | **2026-10-07** | **ACCEPTED 2026-10-09; online 2026-10-14, doi:10.1016/j.ress.2026.113634** | `paper3/` (preprint); `ipis-papers` |
 | 4 | M4 integration (composed certificate) | Computers & Chemical Engineering | **CACE-D-26-01079** | **2026-06-30** | under review | `paper4/` |
 
 - **Paper 3 (SCC) final state: ACCEPTED 2026-10-09 (JRESS-D-26-04700R1).** One major revision
@@ -1201,6 +1201,11 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-10-14 (M2 online)** -- RESS 113634 published online (Articles in Press, before proof),
+  doi:10.1016/j.ress.2026.113634. Ledger `busico_m2` gains the DOI; README publications list updated; domino run in the
+  private repo (paper4/paper5 bibs, M4 EM bibitem). Zenodo record linked to the article ("Is
+  supplement to") by metadata edit; v1.0.1 still waits for volume and article number. Earlier
+  (2026-10-11): production query on unnumbered captions answered with a corrected Word file.
 - **2026-10-09 (byline decided: Bien Busico)** -- Bien decided that every IPIS paper keeps the byline
   "Bien Busico", as already in all sources and in the accepted M2, so there is no proof-stage name
   change. `docs/AUTHOR.md` records the decision, OPEN_ITEMS OI-15 is closed, and `proof_check.py`

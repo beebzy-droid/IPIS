@@ -5,7 +5,8 @@
 > front matter (name, affiliation, e-mail, ORCID) from `docs/AUTHOR.md`.
 
 This directory holds Module 2 documentation. **Status: complete (2A–2D); SCC paper accepted
-in *Reliability Engineering & System Safety* (JRESS-D-26-04700R1, 2026-10-09); in production. The manuscript, its revision record and the proof checklist are in the private
+in *Reliability Engineering & System Safety* (JRESS-D-26-04700R1, 2026-10-09); online 2026-10-14,
+doi:10.1016/j.ress.2026.113634; proof pending. The manuscript, its revision record and the proof checklist are in the private
 `ipis-papers` repo; `paper3/` here is the frozen 2026-06-30 submitted version.**
 
 Module 2 is feature-complete across phases 2A–2D and is largely independent of Modules 1

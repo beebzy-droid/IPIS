@@ -12,14 +12,14 @@ downstream paper. Chasing those by hand across `references.bib`, `README.md`, st
 working drafts is lossy and token-expensive. This ledger plus the protocol makes propagation
 mechanical and one-directional.
 
-Last updated: 2026-10-09, M1 session pass (`busico_m1` -> SSRN preprint doi:10.2139/ssrn.7181724; M4 and M5 status flags verified from email; see Section 6, first entry). Earlier the same day: (affiliation decided, canonical author block `docs/AUTHOR.md`; open items per session in `docs/OPEN_ITEMS.md`. Earlier the same day: M2 ACCEPTED at RESS as JRESS-D-26-04700R1: `busico_m2` -> `@article`, in press, synced into paper4/paper5; M1 status corrected to rejected-after-review per the 2026-09-28 review register; open items for M1 and M5 owners in Section 6).
+Last updated: 2026-10-14 (M2 online, `busico_m2` doi:10.1016/j.ress.2026.113634; Section 6). Earlier: 2026-10-09, M1 session pass (`busico_m1` -> SSRN preprint doi:10.2139/ssrn.7181724; M4 and M5 status flags verified from email; see Section 6, first entry). Earlier the same day: (affiliation decided, canonical author block `docs/AUTHOR.md`; open items per session in `docs/OPEN_ITEMS.md`. Earlier the same day: M2 ACCEPTED at RESS as JRESS-D-26-04700R1: `busico_m2` -> `@article`, in press, synced into paper4/paper5; M1 status corrected to rejected-after-review per the 2026-09-28 review register; open items for M1 and M5 owners in Section 6).
 
 ## 1. Canonical ledger
 
 | bibkey | Module | Canonical title | Venue | Manuscript ID | Status | Source dir |
 |---|---|---|---|---|---|---|
 | `busico_m1` | M1 soft sensor | When does a calibrated soft sensor keep its promise? A negative-control study of validity without accuracy under drift and delayed labels | Journal of Process Control (transfer from CACE) | JPROCONT-D-26-00618 (orig. CACE-D-26-00944); preprint SSRN 7181724 | rejected after peer review (decision 2026-08-11); in revision as N1; preprint doi:10.2139/ssrn.7181724 | `paper/` (frozen preprint) |
-| `busico_m2` | M2 prognostics (SCC) | Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer | Reliability Engineering & System Safety | JRESS-D-26-04700R1 (resub. of JRESS-D-26-04509) | **accepted 2026-10-09**; in production, proof pending | `paper3/` |
+| `busico_m2` | M2 prognostics (SCC) | Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer | Reliability Engineering & System Safety | JRESS-D-26-04700R1 (resub. of JRESS-D-26-04509) | **accepted 2026-10-09; online 2026-10-14**, doi:10.1016/j.ress.2026.113634; proof pending | `paper3/` (preprint); working copy in `ipis-papers` |
 | `busico_m3` | M3 RTO | Safe real-time optimization of a distillation column under feed-composition uncertainty: a comparative study of distribution-free constraint back-offs | none (paused) | none (rejected: CJCE 1404930, TCST 26-0876, CACE-D-26-01040, JPROCONT-D-26-00565) | paused; Wiley Transfer Desk offer pending | `paper2/cjce/` |
 | `busico_m4` | M4 integration | A composed coverage certificate for closed-loop process operation: certified joint product-quality and equipment-survival guarantees under feedback | Computers & Chemical Engineering | CACE-D-26-01079 | under review | `paper4/` |
 | `busico_m5` | M5 dynamic / horizon | Horizon-wide safety guarantees for closed-loop process operation via adaptive conformal calibration | IEEE Trans. Control Systems Technology (target; retargeted from CACE per 2026-07-04 de-risk) | none (in prep) | `paper5/` |
@@ -53,7 +53,7 @@ Downstream `references.bib` files must contain exactly these for the keys they c
 
 @article{busico_m2,
   title={{Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer}},
-  author={Busico, Bien}, journal={Reliability Engineering \& System Safety}, year={2026}, note={In press}}
+  author={Busico, Bien}, journal={Reliability Engineering \& System Safety}, year={2026}, doi={10.1016/j.ress.2026.113634}, note={In press}}
 
 @misc{busico_m3,
   title={{Safe real-time optimization of a distillation column under feed-composition uncertainty: a comparative study of distribution-free constraint back-offs}},
@@ -107,6 +107,12 @@ canonical metadata in Sections 1 and 3, plus the open-debt list in Section 6, ar
 prompt is passed between sessions.
 
 ## 6. Open propagation debt (fix in the owning session)
+
+**2026-10-14 pass (M2 online with DOI).** `busico_m2` gains `doi=10.1016/j.ress.2026.113634` (confirmed from the
+online article, Articles in Press, 2026-10-14). Domino run in the private `ipis-papers` repo by
+`add_m2_doi.py`: `paper4/references.bib`, `paper5/references.bib`, and the bibitem inlined in
+`paper4/em/main_EM.tex` (regenerated text from elsarticle-num-names; M4 EM builds with 0 errors,
+27 pp). Volume and article number replace `note={In press}` after the proof. Blast radius: M4, M5.
 
 **2026-10-09, M1 session (`busico_m1` canonical entry; status flags verified from email).**
 - `busico_m1` now cites the SSRN preprint of the version submitted to JPC: SSRN 7181724,

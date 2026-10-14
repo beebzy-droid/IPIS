@@ -70,8 +70,8 @@ differs from the module numbering for Modules 2 and 3; the module mapping below 
   [doi:10.2139/ssrn.7181724](https://doi.org/10.2139/ssrn.7181724). Source: `paper/`.
 - **Module 2 — Predictive Maintenance (Similarity-Calibrated Conformal):** *Similarity-Calibrated
   Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under
-  operating-regime transfer.* **Accepted**, *Reliability Engineering & System Safety* (2026, in
-  press). Code: [doi:10.5281/zenodo.23211276](https://doi.org/10.5281/zenodo.23211276).
+  operating-regime transfer.* **Published online**, *Reliability Engineering & System Safety* (2026, in
+  press), [doi:10.1016/j.ress.2026.113634](https://doi.org/10.1016/j.ress.2026.113634). Code: [doi:10.5281/zenodo.23211276](https://doi.org/10.5281/zenodo.23211276).
   Source as submitted: `paper3/` (frozen 2026-06-30 preprint); accepted version and proof record:
   private `ipis-papers` repo (see `docs/PAPER_LIFECYCLE.md`).
 - **Module 3 — Real-Time Optimization:** *Safe real-time optimization of a distillation column under feed-composition uncertainty: a comparative study of distribution-free constraint back-offs.* Desk-rejected at
