@@ -28,6 +28,7 @@ import math
 from collections import deque
 
 import numpy as np
+from numpy.typing import ArrayLike
 
 from ipis.module1_soft_sensor.evaluation.conformal import conformal_quantile
 
@@ -87,10 +88,10 @@ def design_gamma(theta: int, alpha: float = 0.1, eps: float = 0.01, n_grid: int 
 
 
 def run_delayed_aci(
-    scores,
-    theta,
+    scores: ArrayLike,
+    theta: int | ArrayLike,
     *,
-    init_scores,
+    init_scores: ArrayLike,
     alpha: float = 0.1,
     gamma: float = 0.005,
     window: int = 200,
@@ -170,3 +171,97 @@ def diagnostics(res: dict[str, np.ndarray], local: int = 100) -> dict[str, float
         "alpha_min": float(res["alpha"].min()),
         "alpha_max": float(res["alpha"].max()),
     }
+
+
+TUNING_GRID = (0.001, 0.0015, 0.002, 0.003, 0.005, 0.007, 0.01, 0.015, 0.02, 0.03, 0.05, 0.07, 0.1)
+
+
+def uninformative(h: ArrayLike, y_range: float) -> np.ndarray:
+    """Per-step flag of an unusable interval: infinite, or wider (2h) than the range of y.
+
+    ``y_range`` is the range of the quality variable on the calibration segment (pre-registration,
+    Sec. 5.4); an interval wider than the variable's normal operating range carries no information.
+    """
+    h = np.asarray(h, dtype=np.float64)
+    return ~np.isfinite(h) | (2.0 * h > y_range)
+
+
+def replay_tune(
+    scores: ArrayLike,
+    theta: int,
+    *,
+    init_scores: ArrayLike,
+    y_range: float,
+    eps: float = 0.01,
+    alpha: float = 0.1,
+    window: int = 200,
+    loop: str = "sequential",
+    burn: int = 0,
+    grid: tuple[float, ...] = TUNING_GRID,
+) -> dict:
+    """Delay-aware tuning by replay (pre-registration, Sec. 5.3).
+
+    Replays the calibration ``scores`` through the delayed loop at dead time ``theta`` for each grid
+    step size in ascending order, capped at 0.8 gamma_crit(theta). It selects the largest step size
+    below the first one whose uninformative share exceeds ``eps``. If even the smallest step size
+    exceeds ``eps``, it returns that step size with ``feasible = False``. Delay-blind tuning is
+    this rule at theta = 0.
+    """
+    return replay_tune_pooled(
+        [(scores, init_scores)],
+        theta,
+        y_range=y_range,
+        eps=eps,
+        alpha=alpha,
+        window=window,
+        loop=loop,
+        burn=burn,
+        grid=grid,
+    )
+
+
+def replay_tune_pooled(
+    segments: list[tuple[ArrayLike, ArrayLike]],
+    theta: int,
+    *,
+    y_range: float,
+    eps: float = 0.01,
+    alpha: float = 0.1,
+    window: int = 200,
+    loop: str = "sequential",
+    burn: int = 0,
+    grid: tuple[float, ...] = TUNING_GRID,
+) -> dict:
+    """``replay_tune`` over several calibration segments of the same plant.
+
+    Each ``(scores, init_scores)`` segment is replayed separately, with its own initial window.
+    The uninformative share is pooled over all replayed steps. This stands in for the longer
+    history a plant would tune on, for example the calibration hours of several TEP runs of one
+    regime.
+    """
+    cap = 0.8 * gamma_crit(theta)
+    path: list[tuple[float, float]] = []
+    chosen, feasible = None, True
+    for g in grid:
+        if g >= cap:
+            break
+        flags = []
+        for scores, init_scores in segments:
+            res = run_delayed_aci(
+                scores,
+                theta,
+                init_scores=init_scores,
+                alpha=alpha,
+                gamma=g,
+                window=window,
+                loop=loop,
+            )
+            flags.append(uninformative(res["h"][burn:], y_range))
+        share = float(np.mean(np.concatenate(flags)))
+        path.append((float(g), share))
+        if share > eps:
+            break
+        chosen = float(g)
+    if chosen is None:
+        chosen, feasible = float(grid[0]), False
+    return {"gamma": chosen, "feasible": feasible, "path": path, "cap": cap}

@@ -1,0 +1,406 @@
+{
+  "_meta": {
+    "generated_utc": "2026-10-17T03:57:12+00:00",
+    "python": "3.13.16",
+    "gfortran": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "sha256": {
+      "teprob.f": "409975e070780a3b197d37125dddeca64e46c11d8c99028528a56a1f238d45e3",
+      "temain_mod.f": "31b83c17f8d52332d6f6fe46d9da3ee7131de2d018bb83945453350bf635c8b6",
+      "generate_tep_modes.py": "2bced8d67b1bf0c1b8a33d6dd7f62baf72005ae4a3cec05919a0d42b21ea4f58",
+      "tep_rng_check.py": "2bbce2aab5a477f70e94da558b33bd43efb8049151e230273e8ea3a49226511b"
+    }
+  },
+  "draws_per_hour": 952325.9,
+  "legacy_period_hours_by_k": {
+    "3": 140.93676124948402,
+    "4": 70.46838062474201,
+    "5": 35.234190312371005,
+    "6": 17.617095156185503,
+    "7": 8.808547578092751,
+    "8": 4.404273789046376,
+    "9": 2.202136894523188,
+    "11": 0.550534223630797
+  },
+  "legacy_seeds_by_k": {
+    "3": 17,
+    "4": 24,
+    "5": 8,
+    "6": 2,
+    "7": 4,
+    "8": 1,
+    "9": 1,
+    "11": 1
+  },
+  "legacy_seeds_by_k_and_cycle": {
+    "k=11, cycle A": 1,
+    "k=3, cycle A": 6,
+    "k=3, cycle B": 11,
+    "k=4, cycle A": 8,
+    "k=4, cycle B": 16,
+    "k=5, cycle A": 4,
+    "k=5, cycle B": 4,
+    "k=6, cycle B": 2,
+    "k=7, cycle B": 4,
+    "k=8, cycle A": 1,
+    "k=9, cycle A": 1
+  },
+  "legacy_seeds": [
+    {
+      "seed": 4651207995,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "B"
+    },
+    {
+      "seed": 1039839281,
+      "k": 6,
+      "period_draws": 16777216,
+      "cycle": "B"
+    },
+    {
+      "seed": 1089278833,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 1134345551,
+      "k": 5,
+      "period_draws": 33554432,
+      "cycle": "A"
+    },
+    {
+      "seed": 1234567890,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "A"
+    },
+    {
+      "seed": 1254545354,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "B"
+    },
+    {
+      "seed": 1431655765,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "A"
+    },
+    {
+      "seed": 1723234455,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 1731738903,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "A"
+    },
+    {
+      "seed": 1940284333,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 1997072199,
+      "k": 7,
+      "period_draws": 8388608,
+      "cycle": "B"
+    },
+    {
+      "seed": 2132432423,
+      "k": 5,
+      "period_draws": 33554432,
+      "cycle": "B"
+    },
+    {
+      "seed": 2144342545,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "A"
+    },
+    {
+      "seed": 2232323236,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 2589274931,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 2891123453,
+      "k": 6,
+      "period_draws": 16777216,
+      "cycle": "B"
+    },
+    {
+      "seed": 2994833239,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 3420494299,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "A"
+    },
+    {
+      "seed": 3433249064,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "B"
+    },
+    {
+      "seed": 3454354353,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 3456432354,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "B"
+    },
+    {
+      "seed": 3485834345,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 4243534565,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "B"
+    },
+    {
+      "seed": 4342232344,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "A"
+    },
+    {
+      "seed": 4346024432,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 4356565463,
+      "k": 5,
+      "period_draws": 33554432,
+      "cycle": "B"
+    },
+    {
+      "seed": 4545445883,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "B"
+    },
+    {
+      "seed": 4593493842,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "A"
+    },
+    {
+      "seed": 4598956239,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "A"
+    },
+    {
+      "seed": 5454589923,
+      "k": 5,
+      "period_draws": 33554432,
+      "cycle": "B"
+    },
+    {
+      "seed": 5457789234,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "B"
+    },
+    {
+      "seed": 5635346588,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "A"
+    },
+    {
+      "seed": 5658678765,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "A"
+    },
+    {
+      "seed": 5683213434,
+      "k": 8,
+      "period_draws": 4194304,
+      "cycle": "A"
+    },
+    {
+      "seed": 5687912315,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "B"
+    },
+    {
+      "seed": 5784921734,
+      "k": 9,
+      "period_draws": 2097152,
+      "cycle": "A"
+    },
+    {
+      "seed": 5849489384,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "B"
+    },
+    {
+      "seed": 6284545932,
+      "k": 7,
+      "period_draws": 8388608,
+      "cycle": "B"
+    },
+    {
+      "seed": 6598593453,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 6678322168,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "B"
+    },
+    {
+      "seed": 6788343442,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "A"
+    },
+    {
+      "seed": 6923255678,
+      "k": 3,
+      "period_draws": 134217728,
+      "cycle": "B"
+    },
+    {
+      "seed": 7327843434,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 7654534567,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 7854912354,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 7984782901,
+      "k": 5,
+      "period_draws": 33554432,
+      "cycle": "A"
+    },
+    {
+      "seed": 8322308324,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 8493323434,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "A"
+    },
+    {
+      "seed": 8934302332,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 8943242344,
+      "k": 7,
+      "period_draws": 8388608,
+      "cycle": "B"
+    },
+    {
+      "seed": 8943243993,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "A"
+    },
+    {
+      "seed": 8998485332,
+      "k": 5,
+      "period_draws": 33554432,
+      "cycle": "A"
+    },
+    {
+      "seed": 9090909232,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "A"
+    },
+    {
+      "seed": 9338398429,
+      "k": 5,
+      "period_draws": 33554432,
+      "cycle": "A"
+    },
+    {
+      "seed": 9343430004,
+      "k": 7,
+      "period_draws": 8388608,
+      "cycle": "B"
+    },
+    {
+      "seed": 9445382439,
+      "k": 4,
+      "period_draws": 67108864,
+      "cycle": "B"
+    },
+    {
+      "seed": 9873223412,
+      "k": 11,
+      "period_draws": 524288,
+      "cycle": "A"
+    },
+    {
+      "seed": 9902234324,
+      "k": 5,
+      "period_draws": 33554432,
+      "cycle": "B"
+    }
+  ],
+  "mrg32k3a_replacement": {
+    "stream": 7,
+    "draws": 200000,
+    "mismatches": 0,
+    "fortran_first_outputs_seed_12345": [
+      0.12701112204657714,
+      0.3185275653967945
+    ]
+  }
+}

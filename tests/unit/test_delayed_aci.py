@@ -7,12 +7,16 @@ import numpy as np
 import pytest
 
 from ipis.module1_soft_sensor.evaluation.delayed_aci import (
+    TUNING_GRID,
     design_gamma,
     diagnostics,
     gamma_crit,
     infinite_fraction_pred,
     noise_gain_sd,
+    replay_tune,
+    replay_tune_pooled,
     run_delayed_aci,
+    uninformative,
 )
 
 
@@ -110,3 +114,49 @@ def test_marginal_coverage_hides_the_limit_cycle():
     assert abs(bad["coverage"] - 0.9) < 0.02 and bad["infinite_share"] > 0.30
     good = diagnostics(run_delayed_aci(s, 60, init_scores=init, gamma=design_gamma(60)))
     assert good["infinite_share"] < 0.05
+
+
+def test_uninformative_flags_infinite_and_too_wide_intervals():
+    h = np.array([0.1, 0.6, np.inf, 0.49])
+    np.testing.assert_array_equal(uninformative(h, 1.0), [False, True, True, False])
+
+
+def _persistent(n, phi=0.97, seed=6):
+    rng = np.random.default_rng(seed)
+    e = rng.standard_normal(n)
+    x = np.empty(n)
+    x[0] = e[0]
+    for t in range(1, n):
+        x[t] = phi * x[t - 1] + math.sqrt(1 - phi * phi) * e[t]
+    return np.abs(x)
+
+
+def test_replay_tuning_is_monotone_in_delay_and_respects_the_cap():
+    s = _persistent(8000)
+    init, cal = s[:200], s[200:]
+    blind = replay_tune(cal, 0, init_scores=init, y_range=1e9, eps=0.01, burn=500)
+    aware = replay_tune(cal, 7, init_scores=init, y_range=1e9, eps=0.01, burn=500)
+    assert blind["feasible"] and aware["feasible"]
+    assert aware["gamma"] < blind["gamma"]
+    assert all(g < 0.8 * gamma_crit(7) for g, _ in aware["path"])
+    # the chosen step size met the budget on the replay; the next grid value did not (or is capped)
+    shares = dict(aware["path"])
+    assert shares[aware["gamma"]] <= 0.01
+    nxt = TUNING_GRID[TUNING_GRID.index(aware["gamma"]) + 1]
+    assert nxt not in shares or shares[nxt] > 0.01
+
+
+def test_replay_tuning_reports_infeasible_budget():
+    s = _persistent(6000, phi=0.995, seed=7)
+    out = replay_tune(s[200:], 40, init_scores=s[:200], y_range=1e9, eps=0.0)
+    assert out["feasible"] is False and out["gamma"] == TUNING_GRID[0]
+
+
+def test_pooled_tuning_matches_single_segment_and_pools_shares():
+    s = _persistent(5000, phi=0.95, seed=8)
+    seg = (s[200:], s[:200])
+    single = replay_tune(seg[0], 3, init_scores=seg[1], y_range=1e9, eps=0.01)
+    pooled = replay_tune_pooled([seg], 3, y_range=1e9, eps=0.01)
+    assert single == pooled
+    twice = replay_tune_pooled([seg, seg], 3, y_range=1e9, eps=0.01)
+    assert twice["gamma"] == single["gamma"] and twice["path"] == single["path"]

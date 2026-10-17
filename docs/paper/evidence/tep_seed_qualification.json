@@ -1,0 +1,931 @@
+{
+  "_meta": {
+    "generated_utc": "2026-10-17T04:00:31+00:00",
+    "python": "3.13.16",
+    "gfortran": "GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "hours": 100,
+    "record_s": 60,
+    "per_regime": 5,
+    "matrix": false,
+    "rng": "MRG32k3a (L'Ecuyer 1999) in place of TESUB7; stream j starts j * 2**127 draws from the seed (12345, 12345, 12345, 12345, 12345, 12345)",
+    "rule": "streams 1, 2, ... dealt to mode1, mode2, mode3 in rotation; each regime takes its first per_regime candidates without a shutdown",
+    "sha256": {
+      "temain_mod.f": "31b83c17f8d52332d6f6fe46d9da3ee7131de2d018bb83945453350bf635c8b6",
+      "teprob.f": "409975e070780a3b197d37125dddeca64e46c11d8c99028528a56a1f238d45e3",
+      "generate_tep_modes.py": "2bced8d67b1bf0c1b8a33d6dd7f62baf72005ae4a3cec05919a0d42b21ea4f58",
+      "tep_seed_qualification.py": "e658569ddf725acd18d7ce3bcf7ddc3c880af441272a108046e87b19ebce0653"
+    }
+  },
+  "complete": true,
+  "chosen": {
+    "mode1": [
+      19,
+      31,
+      49,
+      55,
+      76
+    ],
+    "mode2": [
+      5,
+      11,
+      14,
+      20,
+      23
+    ],
+    "mode3": [
+      3,
+      6,
+      9,
+      18,
+      24
+    ]
+  },
+  "stream_states": {
+    "19": [
+      3984477137,
+      1267973573,
+      3770063761,
+      216527865,
+      1568537936,
+      1200352663
+    ],
+    "31": [
+      3294123071,
+      1464634864,
+      3721431761,
+      2693241183,
+      1754954480,
+      3900039887
+    ],
+    "49": [
+      2667041740,
+      4238911572,
+      3694573673,
+      3166543307,
+      2525238380,
+      2009058941
+    ],
+    "55": [
+      569973296,
+      3971015859,
+      3727859896,
+      2211808163,
+      3074531219,
+      1990606083
+    ],
+    "76": [
+      4162503083,
+      2325318328,
+      3427021647,
+      1263687958,
+      1839993484,
+      1534031616
+    ],
+    "5": [
+      97147054,
+      3131372450,
+      829345164,
+      3691032523,
+      3006063034,
+      4259826321
+    ],
+    "11": [
+      272317999,
+      166758548,
+      310112982,
+      201045826,
+      1680231254,
+      118290799
+    ],
+    "14": [
+      596094074,
+      2279636413,
+      3050913596,
+      1739649456,
+      2368706608,
+      3058697049
+    ],
+    "20": [
+      2503334853,
+      3179736892,
+      2080184241,
+      2881517721,
+      3611607237,
+      2639045213
+    ],
+    "23": [
+      4205039797,
+      2998067142,
+      2737381050,
+      2060484144,
+      21123025,
+      900610517
+    ],
+    "3": [
+      2338701263,
+      1119171942,
+      2570676563,
+      317077452,
+      3194180850,
+      618832124
+    ],
+    "6": [
+      796079799,
+      2105258207,
+      955365076,
+      2923159030,
+      4116632677,
+      3067683584
+    ],
+    "9": [
+      4215590817,
+      3862461878,
+      1087200967,
+      1544910132,
+      936383720,
+      1611370123
+    ],
+    "18": [
+      3446225690,
+      835741554,
+      2195834023,
+      1297741021,
+      3357053382,
+      383824268
+    ],
+    "24": [
+      1708138263,
+      1103344630,
+      3131738563,
+      354874525,
+      1462105562,
+      2799820805
+    ]
+  },
+  "log": [
+    {
+      "stream": 1,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 27.68306,
+        "limit_h": 27.68306,
+        "csv_sha256": "f322208a5cf9703d242c5cb237bcf0d2ec79e49da8b399d122e30a1a2470ce86",
+        "pressure_kpa": 3000.027,
+        "temperature_c": 120.4008
+      }
+    },
+    {
+      "stream": 2,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": 84.53306,
+        "limit_h": 84.53306,
+        "csv_sha256": "89f7ab89c2eb88068b18c9a89df5d085fe1e170e539033fcfb156ef9695798c9",
+        "pressure_kpa": 3000.008,
+        "temperature_c": 120.4078
+      }
+    },
+    {
+      "stream": 3,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "4ccee06819d288cab2393e376ba59a9cc869f9ad9b018755369d8aabd48a38e0"
+      }
+    },
+    {
+      "stream": 4,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 24.01639,
+        "limit_h": 24.01639,
+        "csv_sha256": "98e1b7ea8ced2836d073e2caf947bd1da5f4b424b89b3e00f160881d3d0ca76d",
+        "pressure_kpa": 3000.032,
+        "temperature_c": 120.3881
+      }
+    },
+    {
+      "stream": 5,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "be06a4ba3e34d6f078dee78df393a21894aa31082440ddd468757d0a3aab009b"
+      }
+    },
+    {
+      "stream": 6,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "f3bb691b5b25e747cc69a7e9f0cf55c46d8a5779df36552b3b42fcab019727ad"
+      }
+    },
+    {
+      "stream": 7,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 41.66639,
+        "limit_h": 41.66639,
+        "csv_sha256": "a0ec5fcf17645703be571bbfb1d86fb3d4fad533f36d4a79ffbcaab976367ecf",
+        "pressure_kpa": 3000.014,
+        "temperature_c": 120.3721
+      }
+    },
+    {
+      "stream": 8,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": 28.94972,
+        "limit_h": 28.94972,
+        "csv_sha256": "e58b8d4dc8f49ecdea7efa633f49301bcd6a97a15355a568582136f0bd095a8f",
+        "pressure_kpa": 3000.004,
+        "temperature_c": 120.3814
+      }
+    },
+    {
+      "stream": 9,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "37d027ecfc5fab85b1547b9d1ce41399573999cedb3b64c2bc82bc547b2082e0"
+      }
+    },
+    {
+      "stream": 10,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 84.81639,
+        "limit_h": 84.81639,
+        "csv_sha256": "8918ebc16dba7b08bdb282208bbbf3e8c8f96919088801f703e1866a60b0d609",
+        "pressure_kpa": 3000.094,
+        "temperature_c": 120.3939
+      }
+    },
+    {
+      "stream": 11,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "0dfc899aac9366e6790afd488a3a931342c56e714a83082e4e2e4260475637ab"
+      }
+    },
+    {
+      "stream": 12,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": 88.89972,
+        "limit_h": 88.89972,
+        "csv_sha256": "ea22d3bac8f764dc166998efbcf5d0e5a4808023b36d6b580aecc3fc99563180",
+        "pressure_kpa": 3000.105,
+        "temperature_c": 120.3875
+      }
+    },
+    {
+      "stream": 13,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 20.46639,
+        "limit_h": 20.46639,
+        "csv_sha256": "81c105344d692958079c8ad3886ad2bdf397d9feca84a03ab51f80a4897c5f45",
+        "pressure_kpa": 3000.021,
+        "temperature_c": 120.4161
+      }
+    },
+    {
+      "stream": 14,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "fd1ae70ceb3027145197a73764cee7cd3b2b2bcb954a7aee3f2de8568ae8a873"
+      }
+    },
+    {
+      "stream": 15,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": 57.34972,
+        "limit_h": 57.34972,
+        "csv_sha256": "51d5c45d9c8e22cccd616ef3e28eb37d6325fa3f4382d93a6be6bd1e405ebda1",
+        "pressure_kpa": 3000.049,
+        "temperature_c": 120.4359
+      }
+    },
+    {
+      "stream": 16,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 84.48306,
+        "limit_h": 84.48306,
+        "csv_sha256": "bc9e77ad72e9cdd3bfbd3cf445200ef4c9e21e070bebf60781c1474ee2c3a20a",
+        "pressure_kpa": 3000.015,
+        "temperature_c": 120.3717
+      }
+    },
+    {
+      "stream": 17,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": 19.39972,
+        "limit_h": 19.39972,
+        "csv_sha256": "ba791b5663ba9a2c767f066202f1307fb8db531fc51f47cbbda94c118d1b4e87",
+        "pressure_kpa": 3000.16,
+        "temperature_c": 120.3826
+      }
+    },
+    {
+      "stream": 18,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "816e41d53cc45b73930a5c0a285abc062ade607f378a67753d7bd31baf9f478e"
+      }
+    },
+    {
+      "stream": 19,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "850bbfb28ddb88c2b8af8b297a6c09b42ffde90df06e9a2ad847bd896a8d988b"
+      }
+    },
+    {
+      "stream": 20,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "605e787e3b06d688f431752ed368326071e4b71a559e4077623f628a797a11e8"
+      }
+    },
+    {
+      "stream": 21,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": 38.96639,
+        "limit_h": 38.96639,
+        "csv_sha256": "3ba0d7973f68745eecf6306a0cd80f02ae88ed8ef5804a9baad8ddf021718f17",
+        "pressure_kpa": 3000.056,
+        "temperature_c": 120.4155
+      }
+    },
+    {
+      "stream": 22,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 59.23306,
+        "limit_h": 59.23306,
+        "csv_sha256": "e17bcba0260fd42c19dd24ad06b08cea14c8a87675d6c7b8e2008d7ddd89ebd5",
+        "pressure_kpa": 3000.0,
+        "temperature_c": 120.3569
+      }
+    },
+    {
+      "stream": 23,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "e3039ceaf8745e6d60c7bb48822eeaca5fd18695740106deb3a55ed240c9cad8"
+      }
+    },
+    {
+      "stream": 24,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "26652967cce1d6317112806f5567f9b4b6eafa428754a533cfc269a8b1189a4d"
+      }
+    },
+    {
+      "stream": 25,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 42.46639,
+        "limit_h": 42.46639,
+        "csv_sha256": "192baf9efd57108f92300a61a8696d207579c5ead5046e58f5d47a3a1811e7d8",
+        "pressure_kpa": 3000.054,
+        "temperature_c": 120.4051
+      }
+    },
+    {
+      "stream": 26,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "f5a36c963f78d485698d61d5d985ecc811151ba6c28ecf26ad5c83803290f547"
+      }
+    },
+    {
+      "stream": 27,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "4b49b851589c5b0acefc6b4699da7349bf64b83d538fee263b37806ad3fecc8c"
+      }
+    },
+    {
+      "stream": 28,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 21.24972,
+        "limit_h": 21.24972,
+        "csv_sha256": "e2421618a81395b36401d43378c7313f8ad63bb557b55ebeb16cf068c0d22d2f",
+        "pressure_kpa": 3000.001,
+        "temperature_c": 120.4032
+      }
+    },
+    {
+      "stream": 29,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": 63.66639,
+        "limit_h": 63.66639,
+        "csv_sha256": "3d4e92db340fa0736620e411126a6fcf297898d6728470580d48179533fdc902",
+        "pressure_kpa": 3000.048,
+        "temperature_c": 120.3937
+      }
+    },
+    {
+      "stream": 30,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "f4a6ab3a7e470b4b46053bdd3f35ac07e53cf6bc97588a4e412e74d1be07fa51"
+      }
+    },
+    {
+      "stream": 31,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "4ea5d18799c12e45d3fe538a4be93ba1b885766cfc0f4a3564c2b7cceb5d5f66"
+      }
+    },
+    {
+      "stream": 32,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "ef15bdf255c6217fe1246cb8afbd988530a39cfb11a3e010a38e3d8f79db3681"
+      }
+    },
+    {
+      "stream": 33,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "5915db79d3cc3c273e9359ac68c5e47373a7c9b0c9860a0e7ca271e802f638c1"
+      }
+    },
+    {
+      "stream": 34,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 15.31639,
+        "limit_h": 15.31639,
+        "csv_sha256": "94fe0b4aee903e867a7f65cae50a965c64656ede44e7e296f290a492241bf89b",
+        "pressure_kpa": 3000.065,
+        "temperature_c": 120.4058
+      }
+    },
+    {
+      "stream": 35,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": 20.04972,
+        "limit_h": 20.04972,
+        "csv_sha256": "1f5b76431303039804fd1a562848f4821b65f107574727b47ebdf9b32be0700f",
+        "pressure_kpa": 3000.014,
+        "temperature_c": 120.3618
+      }
+    },
+    {
+      "stream": 36,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "7be62f10625d28f68eda0659153907d89b34e29d6d44551a47a24bae25eda93d"
+      }
+    },
+    {
+      "stream": 37,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 96.39972,
+        "limit_h": 96.39972,
+        "csv_sha256": "52d3164da2e565da490d1dfe440e96c580daa4543ed903b4ab34392838487bfc",
+        "pressure_kpa": 3000.001,
+        "temperature_c": 120.3738
+      }
+    },
+    {
+      "stream": 38,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": 54.39972,
+        "limit_h": 54.39972,
+        "csv_sha256": "5407438769a6d5bf1b90dce2079797c79b8ad4ffe3757040a3471353bfc39297",
+        "pressure_kpa": 3000.03,
+        "temperature_c": 120.4158
+      }
+    },
+    {
+      "stream": 39,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "4f0f05360bc7ab17c15d1eaaf9a7d282136c8e0bf9a9db3b633134200db9748c"
+      }
+    },
+    {
+      "stream": 40,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 26.19972,
+        "limit_h": 26.19972,
+        "csv_sha256": "5419b197b62f57064f594927571fb1eb8d68aeaf7e10fddffa7a4efe07c7587d",
+        "pressure_kpa": 3000.083,
+        "temperature_c": 120.3602
+      }
+    },
+    {
+      "stream": 41,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": 90.93306,
+        "limit_h": 90.93306,
+        "csv_sha256": "1c72c211007d869e5e2801cc5be2dc1e1c24f6d78d9266a37d87d64f76fa7345",
+        "pressure_kpa": 3000.063,
+        "temperature_c": 120.3607
+      }
+    },
+    {
+      "stream": 42,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "677595bbe89b82604bd96678455dd4bf8fa95345e2f6395fd378fe60ede29450"
+      }
+    },
+    {
+      "stream": 43,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 11.63306,
+        "limit_h": 11.63306,
+        "csv_sha256": "844830383fd1c0a47a6309a4ea51b84ec93a3cd8a9b0210e3492b15727ed2234",
+        "pressure_kpa": 3000.008,
+        "temperature_c": 120.3917
+      }
+    },
+    {
+      "stream": 44,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": 23.06639,
+        "limit_h": 23.06639,
+        "csv_sha256": "3f378e76470a264cfb744e3fd2887f5b4774cd4cf35187c1af2e937202e3a03b",
+        "pressure_kpa": 3000.015,
+        "temperature_c": 120.3814
+      }
+    },
+    {
+      "stream": 45,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "80fcdf15d85b860fda25bab52bb4c4fe47061b236c4bcf05286062eb8c44c374"
+      }
+    },
+    {
+      "stream": 46,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 18.58306,
+        "limit_h": 18.58306,
+        "csv_sha256": "ff5f63cc9a757af00dbc735af9e5156a6b28f68c4a7e0074a596a1f594901ac7",
+        "pressure_kpa": 3000.018,
+        "temperature_c": 120.3625
+      }
+    },
+    {
+      "stream": 47,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "d4069368db38ddbe3e4777567cc914ae18ef50bdb577cd03b2251c8ea97f387f"
+      }
+    },
+    {
+      "stream": 48,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "8fc7cf960152fec20f4f05d79e0b53b43f63725c083fd6d4a7d1723cf2b93ada"
+      }
+    },
+    {
+      "stream": 49,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "32d64dd4964a524d456a6e3b9ca2a01f2e860b6288cbfa3178f472143d5e985a"
+      }
+    },
+    {
+      "stream": 50,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "43bc4a7cd764197aac9ded4b5b4a3774b87b8e0615d514c921834b912d280c8d"
+      }
+    },
+    {
+      "stream": 51,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "208169421935168e9d2a40ab03a4f0e6e169058783085f17ff7b163ca35ee7be"
+      }
+    },
+    {
+      "stream": 52,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 30.23306,
+        "limit_h": 30.23306,
+        "csv_sha256": "708acc4684bac286ee81dbfa23d97c03464cce78036ca4157898bd4a9dfa75d0",
+        "pressure_kpa": 3000.014,
+        "temperature_c": 120.3997
+      }
+    },
+    {
+      "stream": 53,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": 28.91639,
+        "limit_h": 28.91639,
+        "csv_sha256": "5aa2a1989a010e5cab250dc6ff7e5592ace8330df561d79f8270ff1cd401efa8",
+        "pressure_kpa": 3000.058,
+        "temperature_c": 120.3783
+      }
+    },
+    {
+      "stream": 54,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": 96.49972,
+        "limit_h": 96.49972,
+        "csv_sha256": "09e7593d2968de5467d4e9267bab09569fb5628727f9df815f51e5c16a201f1e",
+        "pressure_kpa": 3000.017,
+        "temperature_c": 120.403
+      }
+    },
+    {
+      "stream": 55,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "587e1872b5f89612d9ac7c1eda8972e37c99fbe0fd4c69fcc76879faaf057ee0"
+      }
+    },
+    {
+      "stream": 56,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": 32.98306,
+        "limit_h": 32.98306,
+        "csv_sha256": "37fa8388693b162af10f55753ec1406d544286e7f1a7e2a6fc77b4daad61c65d",
+        "pressure_kpa": 3000.116,
+        "temperature_c": 120.3931
+      }
+    },
+    {
+      "stream": 57,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": 62.26639,
+        "limit_h": 62.26639,
+        "csv_sha256": "7eb3514fbee16abd9ffa0b86cdb56945d3a57c619c66bf7ae5772ebd420eaf23",
+        "pressure_kpa": 3000.009,
+        "temperature_c": 120.3881
+      }
+    },
+    {
+      "stream": 58,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 9.34972,
+        "limit_h": 9.34972,
+        "csv_sha256": "806629525df019e89ccda595c91721bf82ab5bb5244c9bbd4af10dd6ca9d4902",
+        "pressure_kpa": 3000.074,
+        "temperature_c": 120.4178
+      }
+    },
+    {
+      "stream": 59,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "155241df206a307d07797edb34c256e231d5b8fe39f1e02c636aad19c2bd6041"
+      }
+    },
+    {
+      "stream": 60,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": 66.09972,
+        "limit_h": 66.09972,
+        "csv_sha256": "81b2afbd4353ba4a76a56a1eaef036d6e51742034c09a7be50a75de8824a8612",
+        "pressure_kpa": 3000.0,
+        "temperature_c": 120.4239
+      }
+    },
+    {
+      "stream": 61,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 5.81639,
+        "limit_h": 5.81639,
+        "csv_sha256": "4ee91535f3844391d96878a3eacc75ab9a57c3713793684af1ab18e25642a688",
+        "pressure_kpa": 3000.046,
+        "temperature_c": 120.3922
+      }
+    },
+    {
+      "stream": 62,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "8838562ea3612ee22f048a7b6e91cb3e986c2abae5b504735366e4ccb215a82d"
+      }
+    },
+    {
+      "stream": 63,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "c774d96acc8bcad61cd5951ff45ee67bba432d1a1d54b18ab0e94e012e02329c"
+      }
+    },
+    {
+      "stream": 64,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 44.29972,
+        "limit_h": 44.29972,
+        "csv_sha256": "055bbb79f7b6178f6eb9a25242e82500f076e9ecb6038f0c07b98dd373cbea3c",
+        "pressure_kpa": 3000.009,
+        "temperature_c": 120.39
+      }
+    },
+    {
+      "stream": 65,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": 22.56639,
+        "limit_h": 22.56639,
+        "csv_sha256": "d433bac3e04976ffd303abeffe2230bbde18b946174ce60f819629d5e59d57cb",
+        "pressure_kpa": 3000.001,
+        "temperature_c": 120.3907
+      }
+    },
+    {
+      "stream": 66,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": 94.21639,
+        "limit_h": 94.21639,
+        "csv_sha256": "33d3973741789aef65df95cb639af5b764df7237c5ee7bc7f0026275eecaebed",
+        "pressure_kpa": 3000.037,
+        "temperature_c": 120.3858
+      }
+    },
+    {
+      "stream": 67,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 37.78306,
+        "limit_h": 37.78306,
+        "csv_sha256": "8b044ecb843ec9499b9f04abba17f1b8134fb9f3267005dd15b74838b9b56b84",
+        "pressure_kpa": 3000.042,
+        "temperature_c": 120.4065
+      }
+    },
+    {
+      "stream": 68,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "7cec1d3d9c6ff75b4f64dc16e569d0646e8fd36abe9ce37201644dc554356666"
+      }
+    },
+    {
+      "stream": 69,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "9c865bd3413df22ccc2839c222751c8640cbe11df4d43f2b13938ad67f934228"
+      }
+    },
+    {
+      "stream": 70,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 6.09972,
+        "limit_h": 6.09972,
+        "csv_sha256": "47d0d75b9c4d4106357efc517998950d622e34bafb4e411fefda70d92cd65451",
+        "pressure_kpa": 3000.071,
+        "temperature_c": 120.4104
+      }
+    },
+    {
+      "stream": 71,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "d7421e24160defe5a9973fe82ba9b8e677df5307383ff4f33a6ee55cd17de9fd"
+      }
+    },
+    {
+      "stream": 72,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "84545ca81942f7b8667018780a68728008a7441effc3528ccb7efba2606d40f5"
+      }
+    },
+    {
+      "stream": 73,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": 54.33306,
+        "limit_h": 54.33306,
+        "csv_sha256": "f5446a8a33dd794f82801409d35c15d881bc4537cf8a239398f9e9a836ed897f",
+        "pressure_kpa": 3000.058,
+        "temperature_c": 120.3751
+      }
+    },
+    {
+      "stream": 74,
+      "assigned": "mode2",
+      "mode2": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "8fd52acd53854c01f2ac927571b43f6272bca8ad15d149dd60dfc3da3694bc4a"
+      }
+    },
+    {
+      "stream": 75,
+      "assigned": "mode3",
+      "mode3": {
+        "shutdown_h": 20.31639,
+        "limit_h": 20.31639,
+        "csv_sha256": "a9bfef6aa084df3aaba0695b9d5540c1fe71b8c86fa195058f51b6f48a77e1fd",
+        "pressure_kpa": 3000.031,
+        "temperature_c": 120.4103
+      }
+    },
+    {
+      "stream": 76,
+      "assigned": "mode1",
+      "mode1": {
+        "shutdown_h": null,
+        "limit_h": null,
+        "csv_sha256": "e6a7870915b30acfe7a74542aef02cfd99d1454cd633c5ce152c4a17ab1fdf03"
+      }
+    }
+  ]
+}

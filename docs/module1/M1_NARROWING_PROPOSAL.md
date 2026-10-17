@@ -1,9 +1,10 @@
 # M1 narrowing proposal (N1): the delayed-label calibration loop
 
 Status: RATIFIED 2026-09-28 by Bien Busico, with D-P0.1 (obey the one-SE rule, k = 1).
-Phase 0 started the same day (Section 10) and closed 2026-10-09 (Section 11). An amendment to the
-claim is proposed in `PHASE1_PREREGISTRATION.md` and is not ratified; until it is, Sections 3 to 6
-stand as ratified. Inputs: `docs/reviews/REVIEW_REGISTER.csv` (42 records), `M1_REVISION_AUDIT.md`
+Phase 0 started the same day (Section 10) and closed 2026-10-09 (Section 11). On 2026-10-13 the
+claim of Section 3 was amended to N1' (D-P1.1, ratified). A further elevation, N1'', is proposed
+and not yet ratified (Section 12; `PHASE1_PREREGISTRATION.md`).
+Inputs: `docs/reviews/REVIEW_REGISTER.csv` (42 records), `M1_REVISION_AUDIT.md`
 (A1-A12), a literature check, and three falsification-first pilots
 (`scripts/pilots/`, synthetic data, reproducible).
 
@@ -193,7 +194,8 @@ Positioning constraints from `LITERATURE_SWEEP_N1.md` (the claim must respect al
 - Do not claim the concept that gamma should depend on delay: El Halabi and Brandt (2026,
   Fig. 18) select gamma* per delay empirically, for the phase-interleaved recursion. Ours is
   the analytical noise-gain rule for the single-state recursion, with a prediction of the
-  infinite-interval share.
+  infinite-interval share. [2026-10-13: superseded. N1' claims delay-aware replay tuning, not
+  this rule, which fails on persistent residuals; Section 12.]
 - Required baselines: projected ACI (level clipped to a band, as used with delayed feedback in
   arXiv 2607.05882), decaying step sizes (Angelopoulos, Barber and Bates 2024), phase-interleaved
   tau-DACI, plus the design-rule and Smith variants.
@@ -253,3 +255,40 @@ library-generated; theta here is the library's theta).
 - Marginal coverage reads 0.900 to 0.901 in every cell.
 
 The amendment proposed in response, and the Phase 1 design, are in `PHASE1_PREREGISTRATION.md`.
+
+## 12. Ratification of Phase 1 and the proposed elevation (2026-10-13)
+
+- Bien ratified D-P1.1 to D-P1.6 on 2026-10-13. The claim is now N1', which replaces the
+  noise-gain prediction claim of Section 3. The training-split pre-check set theta_doc = 3: the
+  label is not recorded as held. It measured residual lag-1 autocorrelation 0.970 and IACT 62.4
+  (commit 98ac681).
+- Proposed on the same day, at Bien's request to elevate rather than adjust:
+  - **D-P1.7, N1''.** Delay-compensated conformal calibration: a (theta + 1)-step residual predictor
+    ahead of the loop, as in minimum-variance control (Astrom 1970). It comes with a delay-limited
+    width bound predicted from the residual autocorrelation, with SPCI and conformal PID as
+    baselines, and with the rules F5b, F6 (+-10 %) and F7 that test it.
+  - **D-P1.8.** A TEP design that survives the plant's own trip limits: 100-h runs, each drawing
+    from its own MRG32k3a stream in place of the simulator's generator, with the streams dealt to
+    the regimes in rotation and qualified by the freeze detector.
+  - **D-P1.9.** The safety factor of replay tuning and the recalibrated F5 rule (tune to eps / 2,
+    fire above 2 eps), fixed by a power analysis.
+- Evidence, all pre-data, is in `PHASE1_PREREGISTRATION.md`, Sections 3C to 3F. In a synthetic
+  AR(1) pilot with phi = 0.965, measured out of sample at theta = 3:
+  - compensation narrows the median interval by 51 %;
+  - it raises the worst local coverage from 0.55 to 0.78;
+  - it allows a 3.9 times larger step size at the same 1 % budget;
+  - the width ratio predicted from the autocorrelation is within 4 % of the measured one (0.7 to
+    4.4 % over the eight cells of the pilot).
+- For the debutanizer itself, the training-split autocorrelation predicts a smaller gain at
+  theta = 3: a width ratio of 0.52 to 0.65 with a one-lag predictor, against 0.51 predicted for the
+  pilot (pre-registration Section 3F).
+- Four independent checks, from 2026-10-13 to 10-17, corrected the draft.
+  - Forecasting the score or residual at the label horizon is prior art: conformal PID's
+    scorecaster at t + 4, and SPCI's multi-step version. N1'' therefore claims the dead-time
+    analysis, compensation analysed as dead-time compensation of the delayed loop, the
+    delay-limited width bound with its analyzer-speed chart, and process validation against both
+    methods as baselines (`PHASE1_PREREGISTRATION.md`, Section 4).
+  - The third check found that the TEP simulator's random-number generator, run in IEEE double
+    precision, repeats within 0.55 to 141 h (within 100 h for 41 of the 58 seeds in the source)
+    and that different seeds share its cycles. Since 2026-10-17 each TEP run draws from its own
+    MRG32k3a stream (pre-registration Sections 3D and 5.2).
