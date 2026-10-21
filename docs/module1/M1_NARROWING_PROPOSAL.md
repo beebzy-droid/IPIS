@@ -2,8 +2,9 @@
 
 Status: RATIFIED 2026-09-28 by Bien Busico, with D-P0.1 (obey the one-SE rule, k = 1).
 Phase 0 started the same day (Section 10) and closed 2026-10-09 (Section 11). On 2026-10-13 the
-claim of Section 3 was amended to N1' (D-P1.1, ratified). A further elevation, N1'', is proposed
-and not yet ratified (Section 12; `PHASE1_PREREGISTRATION.md`).
+claim of Section 3 was amended to N1' (D-P1.1, ratified). The further elevation to N1'' was
+ratified on 2026-10-20 (D-P1.7; Section 12; `PHASE1_PREREGISTRATION.md`). The baseline
+configurations (D-P1.10) and a coverage-matched F7 (D-P1.11) are proposed.
 Inputs: `docs/reviews/REVIEW_REGISTER.csv` (42 records), `M1_REVISION_AUDIT.md`
 (A1-A12), a literature check, and three falsification-first pilots
 (`scripts/pilots/`, synthetic data, reproducible).
@@ -256,7 +257,7 @@ library-generated; theta here is the library's theta).
 
 The amendment proposed in response, and the Phase 1 design, are in `PHASE1_PREREGISTRATION.md`.
 
-## 12. Ratification of Phase 1 and the proposed elevation (2026-10-13)
+## 12. Ratification of Phase 1 and the elevation (2026-10-13; ratified 2026-10-20)
 
 - Bien ratified D-P1.1 to D-P1.6 on 2026-10-13. The claim is now N1', which replaces the
   noise-gain prediction claim of Section 3. The training-split pre-check set theta_doc = 3: the
@@ -292,3 +293,28 @@ The amendment proposed in response, and the Phase 1 design, are in `PHASE1_PRERE
     precision, repeats within 0.55 to 141 h (within 100 h for 41 of the 58 seeds in the source)
     and that different seeds share its cycles. Since 2026-10-17 each TEP run draws from its own
     MRG32k3a stream (pre-registration Sections 3D and 5.2).
+- **Ratified 2026-10-20.** Bien ratified D-P1.7 to D-P1.9 as written in the 2026-10-17 draft. The
+  claim is now N1'', with N1' as its diagnosis. The ratified texts are those of
+  `PHASE1_PREREGISTRATION.md`, Section 4, and are not to be edited. Before the freeze, two steps
+  remain: Bien's byte-for-byte check of the 15 chosen TEP runs, and the baseline configurations
+  (pre-registration Appendix A).
+- **Baseline configurations (2026-10-20; D-P1.10 and D-P1.11, proposed).**
+  - SPCI and conformal PID run at the label horizon and match their authors' code bit for bit
+    (`docs/paper/evidence/baseline_reproduction.json`).
+  - A fifth independent check found that the first version's tuning rule alone made conformal
+    PID 8 to 21 % wider than the compensated loop in six synthetic designs, and its Theta
+    scorecaster another 5 to 8 %. The protocol's rules, not the method, would have decided F7.
+  - Its second pass found that the replay started conformal PID cold, where the compensated
+    loop's replay starts from a seeded window. It also found that F7's coverage band is worth
+    5.5 % of width at a 2-point gap and 11 % at 4 points, more than F7's 5 % margin.
+  - Now four baselines count in F7: SPCI, and conformal PID with three scorecasters, one of them
+    the compensated loop's own predictor. Conformal PID starts from the loop's seed and is tuned
+    by a replay analogue of F7's criterion. D-P1.11 would make F7's "narrower" test
+    coverage-matched.
+  - In a synthetic dry run of the F7 design none of the four meets F7. Three come within -3.1 to
+    +1.1 % of the compensated loop's width, and within -2.8 to +2.0 % at its coverage; the
+    closest is conformal PID with the loop's own predictor. F7 is a live test.
+  - Section 4 carries four dated, bracketed corrections; its ratified wording is unchanged. The
+    main one: conformal PID's COVID experiment ran with delayed feedback, which the code shows.
+    F4 (iii) was screened against Table 1, Sec. 3.3 and Figs. 2, 9 and 10, and does not fire
+    (pre-registration Appendix A.6).
