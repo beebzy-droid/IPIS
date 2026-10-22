@@ -1,0 +1,261 @@
+{
+ "records_received": 533,
+ "records_counting_S3_once": 531,
+ "unique": 377,
+ "in_scopus": 362,
+ "in_wos": 105,
+ "in_both": 90,
+ "codes": {
+  "A": 7,
+  "F": 16,
+  "X1": 25,
+  "X2": 108,
+  "X3": 201,
+  "X4": 6,
+  "X5": 11,
+  "X6": 3
+ },
+ "per_query": {
+  "S1": {
+   "rows": 56,
+   "unique": 56,
+   "F": 3,
+   "A": 4
+  },
+  "S2": {
+   "rows": 39,
+   "unique": 39,
+   "F": 2,
+   "A": 1
+  },
+  "S3": {
+   "rows": 2,
+   "unique": 2,
+   "F": 0,
+   "A": 0
+  },
+  "S5": {
+   "rows": 18,
+   "unique": 18,
+   "F": 1,
+   "A": 1
+  },
+  "S6": {
+   "rows": 3,
+   "unique": 3,
+   "F": 0,
+   "A": 0
+  },
+  "S7": {
+   "rows": 7,
+   "unique": 7,
+   "F": 0,
+   "A": 0
+  },
+  "S8": {
+   "rows": 10,
+   "unique": 10,
+   "F": 0,
+   "A": 0
+  },
+  "S9": {
+   "rows": 129,
+   "unique": 128,
+   "F": 7,
+   "A": 2
+  },
+  "S10": {
+   "rows": 72,
+   "unique": 72,
+   "F": 2,
+   "A": 0
+  },
+  "S11": {
+   "rows": 54,
+   "unique": 54,
+   "F": 0,
+   "A": 0
+  },
+  "S12": {
+   "rows": 33,
+   "unique": 33,
+   "F": 5,
+   "A": 4
+  },
+  "W1": {
+   "rows": 40,
+   "unique": 40,
+   "F": 4,
+   "A": 3
+  },
+  "W2": {
+   "rows": 30,
+   "unique": 30,
+   "F": 1,
+   "A": 0
+  },
+  "W3": {
+   "rows": 3,
+   "unique": 3,
+   "F": 1,
+   "A": 0
+  },
+  "W4": {
+   "rows": 4,
+   "unique": 4,
+   "F": 0,
+   "A": 0
+  },
+  "W5": {
+   "rows": 15,
+   "unique": 15,
+   "F": 1,
+   "A": 1
+  },
+  "W6": {
+   "rows": 3,
+   "unique": 3,
+   "F": 0,
+   "A": 0
+  },
+  "W7": {
+   "rows": 2,
+   "unique": 2,
+   "F": 0,
+   "A": 0
+  },
+  "W8": {
+   "rows": 11,
+   "unique": 11,
+   "F": 0,
+   "A": 0
+  }
+ },
+ "mapping_check": {
+  "Claim_i_delayed_feedback_in_conformal_methods.csv": {
+   "query": "S1",
+   "records": 56,
+   "satisfy": 56
+  },
+  "Claim_i_step_size_and_stability_of_the_adaptive_loop.csv": {
+   "query": "S2",
+   "records": 39,
+   "satisfy": 38
+  },
+  "Claim_ii_delay-limited_width_bound_1.csv": {
+   "query": "S3",
+   "records": 2,
+   "satisfy": 2
+  },
+  "Claim_ii_delay-limited_width_bound_2.csv": {
+   "query": "S3",
+   "records": 2,
+   "satisfy": 2
+  },
+  "Claim_iii_a_forecaster_ahead_of_an_online_conformal_loop.csv": {
+   "query": "S5",
+   "records": 18,
+   "satisfy": 18
+  },
+  "Forward_citations_REF_searches_reference_lists_1.csv": {
+   "query": "S9",
+   "records": 129,
+   "satisfy": 129
+  },
+  "Forward_citations_REF_searches_reference_lists_2.csv": {
+   "query": "S10",
+   "records": 72,
+   "satisfy": 72
+  },
+  "Forward_citations_REF_searches_reference_lists_3.csv": {
+   "query": "S11",
+   "records": 54,
+   "satisfy": 54
+  },
+  "Forward_citations_REF_searches_reference_lists_4.csv": {
+   "query": "S12",
+   "records": 33,
+   "satisfy": 33
+  },
+  "Process_domain_1.csv": {
+   "query": "S6",
+   "records": 3,
+   "satisfy": 3
+  },
+  "Process_domain_2.csv": {
+   "query": "S7",
+   "records": 7,
+   "satisfy": 7
+  },
+  "TEP_random-number_defect.csv": {
+   "query": "S8",
+   "records": 10,
+   "satisfy": 10
+  },
+  "savedrecs.xls": {
+   "query": "W1",
+   "records": 40,
+   "satisfy": 40
+  },
+  "savedrecs_1.xls": {
+   "query": "W2",
+   "records": 30,
+   "satisfy": 30
+  },
+  "savedrecs_2.xls": {
+   "query": "W3",
+   "records": 3,
+   "satisfy": 3
+  },
+  "savedrecs_3.xls": {
+   "query": "W4",
+   "records": 4,
+   "satisfy": 4
+  },
+  "savedrecs_4.xls": {
+   "query": "W5",
+   "records": 15,
+   "satisfy": 15
+  },
+  "savedrecs_5.xls": {
+   "query": "W6",
+   "records": 3,
+   "satisfy": 3
+  },
+  "savedrecs_6.xls": {
+   "query": "W7",
+   "records": 2,
+   "satisfy": 2
+  },
+  "savedrecs_7.xls": {
+   "query": "W8",
+   "records": 11,
+   "satisfy": 11
+  }
+ },
+ "raw_sha256": {
+  "Claim_i_delayed_feedback_in_conformal_methods.csv": "ecd34eeecf12bbfd9c002ab4c9a5193e8a7da780e9b24e0547b1cd8d39d8f13f",
+  "Claim_i_step_size_and_stability_of_the_adaptive_loop.csv": "f4161bba1053ccec02139c38e0bfad90553f80438bd46e430ecfe9297f983332",
+  "Claim_ii_delay-limited_width_bound_1.csv": "68f74b62e35c84f1ec66be357ccba66f6ce10b3076d3d5011b7827061c5438b3",
+  "Claim_ii_delay-limited_width_bound_2.csv": "68f74b62e35c84f1ec66be357ccba66f6ce10b3076d3d5011b7827061c5438b3",
+  "Claim_iii_a_forecaster_ahead_of_an_online_conformal_loop.csv": "3fb1e327b41f06e7a56e6e9118e9895e47b2216bfb0053f466414d5fbb752f57",
+  "Forward_citations_REF_searches_reference_lists_1.csv": "3b5e8783800ad3c16c3d7a84c89058b3622205070f4f4cf8cd26d4b9992bfcf5",
+  "Forward_citations_REF_searches_reference_lists_2.csv": "2e45d539c77563ef5ecbcf371d3fba1498ae1108c21c9fab7c2e9731a2e26183",
+  "Forward_citations_REF_searches_reference_lists_3.csv": "50d8ea58137c389b4aeb92e5ef7bd561109bfbda62affb849016bedf2d1adaac",
+  "Forward_citations_REF_searches_reference_lists_4.csv": "d8469bb5942ec77ecc252c63c44d30ad1eb874dc8d607c41d6af27f8dad538fe",
+  "Process_domain_1.csv": "2f6614d0ca27dcac27159885db85a668256a287f7e1c8b2f854960491161344b",
+  "Process_domain_2.csv": "cf66deb2bb793bbdb04e954d6b2bb20491ba863272e294c7d3817ad47ca5da65",
+  "TEP_random-number_defect.csv": "1778551cc7612a308aad213b8f45467d0f39933444cabf51ac51b15d81b12250",
+  "savedrecs.xls": "266189b0fbb16410d683ed2c21eea97b5c674a93a736482834276946e332b383",
+  "savedrecs_1.xls": "fd66e270eadfa508695db54c61e95467c2ef2d90e2ef040988487cae77e2bbbb",
+  "savedrecs_2.xls": "ac9372eeb87dd60fc58eed210feeb66b6d7578cb080bab52e45bc6b4abfa5e4b",
+  "savedrecs_3.xls": "a09cbfeb7da22989d0a77e9b081d2f3d50e4c7580b523a426cca16ae0c446e8c",
+  "savedrecs_4.xls": "6c6dd84be342f8343786f0e4f898eeb6fca6d8d0446317893ae501c950a126f8",
+  "savedrecs_5.xls": "bc618080f185dbf687727cbe5ca891d4fd8b1585c5299eb9e6853fd4ab990248",
+  "savedrecs_6.xls": "19b28229235a6d2c0f6dc6eb025763e4fae7e3474c17a7096318df39fe9509a9",
+  "savedrecs_7.xls": "aa3ba54742b25f8a36dd01d8abf8037feeae36576dfea53ababb93e9c59ab6d3"
+ },
+ "wos_export_dates": [
+  "2026-10-22"
+ ]
+}

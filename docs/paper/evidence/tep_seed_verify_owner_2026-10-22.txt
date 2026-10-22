@@ -1,0 +1,50 @@
+Owner-side byte-for-byte check of the 15 chosen TEP runs
+(PHASE1_PREREGISTRATION.md, Section 5.2 and Section 9, sequence step 2)
+
+Date received: 2026-10-22, 16:48 Asia/Manila
+Run by: Bien Busico, on his own Windows PC under WSL (Ubuntu, gfortran and python3-numpy
+  from apt; the gfortran and Python versions were not recorded)
+Fortran sources: camaramm/tennessee-eastman-profBraatz at commit 0643318
+Scripts: scripts/generate_tep_modes.py and scripts/tep_seed_qualification.py from IPIS main
+  (unchanged since bae505a; SHA-256 2bced8d6... and e658569d..., the values in the record's
+  _meta.sha256)
+Record checked: docs/paper/evidence/tep_seed_qualification.json (generated
+  2026-10-17T04:00:31Z in the cloud workspace, gfortran 13.3.0 on Ubuntu 24.04)
+Command: python3 tep_seed_qualification.py --verify tep_seed_qualification.json
+  (the script regenerates each chosen run, compares the SHA-256 of its CSV with the record,
+  and deletes the file)
+
+Output, verbatim:
+
+mode1 19 same
+mode1 31 same
+mode1 49 same
+mode1 55 same
+mode1 76 same
+mode2 5 same
+mode2 11 same
+mode2 14 same
+mode2 20 same
+mode2 23 same
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+mode3 3 same
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+mode3 6 same
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+mode3 9 same
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+mode3 18 same
+Note: The following floating-point exceptions are signalling: IEEE_UNDERFLOW_FLAG IEEE_DENORMAL
+mode3 24 same
+all chosen runs reproduce byte for byte
+
+Result: 15 of 15 runs byte-identical on a second machine. No re-qualification is needed, and
+the 2026-10-17 record stands.
+
+On the gfortran notes: the runtime prints this summary when the program ends after a run has
+raised the underflow or denormal flags, that is, when some mode3 results fell into the
+subnormal range.
+The flags change nothing here, since every file's SHA-256 matches the record. The build uses
+gfortran's defaults (`gfortran -std=legacy -w`, generate_tep_modes.py), under which subnormals
+are kept. A build with flush-to-zero (for example -ffast-math or -Ofast) could change the mode3
+output, so the build line must not change.

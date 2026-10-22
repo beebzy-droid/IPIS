@@ -1,7 +1,7 @@
 # N1 Phase 1 pre-registration
 
-Status, 2026-10-20: **D-P1.1 to D-P1.9 ratified; D-P1.10 (Appendix A) and D-P1.11 (F7 at
-matched coverage) proposed; not frozen.**
+Status, 2026-10-22: **D-P1.1 to D-P1.9 ratified; D-P1.10 (Appendix A), D-P1.11 (F7 at
+matched coverage) and D-P1.12 (claim 2 after F4 (iii)) proposed; not frozen.**
 - Bien ratified D-P1.1 to D-P1.6 on 2026-10-13 ("I'm inline with your recommendation").
 - The training-split pre-check has run. Its evidence is in commit 98ac681
   (`docs/paper/evidence/phase1_precheck.json`); results are in Section 8.
@@ -15,10 +15,22 @@ matched coverage) proposed; not frozen.**
     58 seeds in the source (Sections 3D and 5.2).
   - D-P1.9: recalibrate F5 from the power analysis (Section 6).
 
-The freeze waits for two steps of Section 9: Bien's byte-for-byte check of the 15 TEP runs, and
-his decisions on D-P1.10, the baseline configurations of Appendix A, and D-P1.11. Until the
-freeze no Phase 1 number exists from the debutanizer validation or test rows or from new TEP
-runs.
+The freeze waits for step 3 of Section 9: the third, focused pass on Appendix A, then Bien's
+decisions on D-P1.10 (the baseline configurations), D-P1.11 and D-P1.12. Two earlier steps are
+done:
+- 2026-10-22: Bien's build reproduced the 15 chosen TEP runs byte for byte (Section 5.2).
+- 2026-10-22: the Scopus and Web of Science sweep decided F4 (`LITERATURE_SWEEP_N1.md`, rows 21
+  to 32).
+  - (i) and (ii) do not fire.
+  - (iii) fires on its local-coverage clause. Wang and Hyndman (arXiv 2410.13115, 2024) compare
+    a delayed online conformal loop with and without a residual forecast on local coverage (one
+    dataset, one figure). As ratified, claim 2 therefore leaves the claims. D-P1.12 proposes a
+    narrower claim 2' (Section 9).
+  - The sweep also re-attributes P2's bound (Section 4) and narrows Section 3D's report on the
+    TEP generator (Kitchin 2026).
+
+Until the freeze no Phase 1 number exists from the debutanizer validation or test rows or from
+new TEP runs.
 
 Checks of this draft:
 - 2026-10-09: two independent checks compared the numbers with the pilot outputs and the
@@ -256,7 +268,17 @@ hour. Over the source's own seed and the 57 seeds listed in `teprob.f`:
   classic TEP data sets, generated in the 1990s, were affected depends on the arithmetic of the
   machine that generated them, which is not documented.
 - A preliminary web search found no report of this defect. The systematic sweep should check
-  (`LITERATURE_SWEEP_N1.md`).
+  (`LITERATURE_SWEEP_N1.md`). [2026-10-22: Scopus (S8, 10 records) and Web of Science (W8, 11)
+  hold no report.
+  - The one prior account is Kitchin's Rust port of the simulator (tep-rust, GitHub; its log of
+    August 2026; `LITERATURE_SWEEP_N1.md`, row 32). It records that the product exceeds 2^53 on
+    77 % of draws, so that rounding is part of the generator, and that even seeds have shorter
+    periods.
+  - Its cycle search found no return to the starting state within 2e9 states. Such a search
+    cannot see the cycles above: a state that has gained trailing zero bits never returns to its
+    start.
+  - The precision loss is therefore Kitchin's, and is cited. The eventual cycles of 0.55 to
+    141 h, and their sharing across seeds, remain unreported.]
 
 **The remedy.** For Phase 1 runs, `generate_tep_modes.py --streams` replaces TESUB7 with MRG32k3a
 (L'Ecuyer 1999; period about 2^191), exact in double precision by construction. Run j starts at
@@ -406,6 +428,11 @@ Three propositions carry the analysis. Each is short and engineering-facing.
     infinite.
   - Origin: this extends the Gibbs and Candes (2021) argument to the single-state delayed
     recursion; El Halabi and Brandt (2026) prove the analogue for the phase-interleaved one.
+    [2026-10-22: the extension is not new. Wang and Hyndman (arXiv 2410.13115, Cor. 1, in v1 of
+    October 2024) bound the coverage gap of the same single-state delayed recursion, in quantile
+    space, by (b + eta h) / (eta (T - h)). P2 is its analogue in level space, for positive
+    scores. What N1 adds is the consequence under delay, read together with the infinite share
+    (`LITERATURE_SWEEP_N1.md`, row 21).]
   - Numerical check (`scripts/pilots/p2_bound_check.py`): 36 adversarial cases (theta up to 60,
     gamma up to 0.2, persistent, step and spike scores, all positive), with no violation and a
     largest ratio of deviation to bound of 0.345.
@@ -449,6 +476,18 @@ prior art:
     (Algorithm 2, Prop. 1) has a finite-sample guarantee under exchangeability. It gives no width
     bound.
 - **El Halabi and Brandt (2026)** analyse delayed-feedback ACI without compensation.
+- **Wang and Hyndman (arXiv 2410.13115, 2024)** [added 2026-10-22; `LITERATURE_SWEEP_N1.md`,
+  row 21].
+  - Multi-step conformal PID, whose P control "shows an h-period delay in updating the quantile
+    estimate".
+  - AcMCP adds to it a forecast of the h-step error. On the electricity data it is compared with
+    the same loop without that forecast on coverage over rolling windows (Fig. 8), at one fixed
+    step size.
+  - Its Cor. 1 is the analogue of P2.
+- **Dixit et al. (2023), Szabadvary (2024) and Zaffran et al. (2022)** [added 2026-10-22; rows 22
+  to 24]: delayed-feedback ACI run without analysis; a heuristic of larger step sizes at longer
+  horizons, against which P1's limit falls with the delay; and the step-size trade-off on AR(1)
+  residuals without delay.
 
 N1'' does not claim forecasting the residual or the score at the label horizon. It claims four
 things:
@@ -461,7 +500,11 @@ things:
    dead time of 3, and where Sec. 3.3 and Figs. 2, 9 and 10 credit the scorecaster with better
    local coverage, without isolating it; screened under F4 (iii), which does not fire; claim 2 is
    the isolated, delay-aware analysis; Appendix A.6]; claim 2 is limited to the delayed loop and
-   its step size;
+   its step size [2026-10-22: F4 (iii) fired on its local-coverage clause
+   (`LITERATURE_SWEEP_N1.md`, row 21), so claim 2 leaves the claims as ratified. D-P1.12,
+   proposed, keeps claim 2': compensation's effect on the persistence of the miss process and on
+   the step size that holds the budget, with the label delay varied at a fixed predictor. Local
+   coverage is then reported, not claimed (Section 9)];
 3. the delay-limited width bound P3 and the analyzer-speed chart;
 4. validation on process data, with SPCI multi-step and conformal PID at the label horizon as
    baselines. SPCI is the conditional EnbPI that R4.9 asked for.
@@ -524,7 +567,9 @@ be verified before the manuscript (L10).
   - Before the freeze, Bien checks that his build reproduces the 15 chosen runs byte for byte
     (`tep_seed_qualification.py --verify`, which deletes each file after hashing). If any run
     differs, he re-runs the qualification, his record replaces this one, and the difference is
-    logged in Section 10.
+    logged in Section 10. [Done 2026-10-22: 15 of 15 runs byte-identical on Bien's machine,
+    under WSL; `docs/paper/evidence/tep_seed_verify_owner_2026-10-22.txt`. The 2026-10-17 record
+    stands.]
 - **Limitation**: excluding tripped realizations makes the evidence conditional on the plant
   staying within its limits for 100 h. Survival selects calmer disturbance paths, most strongly in
   mode1, where 5 of 26 candidates survived. The same conditioning holds on a real plant, where soft
@@ -638,7 +683,7 @@ F2, so in practice the TEP decides it; the rule stays as ratified.
 | F6, width bound (new, D-P1.7) | In TEP T1 at theta = 4, the mean over the 15 runs of measured / predicted width ratio - 1 lies outside +-10 %. Predictions come from each run's calibration autocorrelation; measurements are static 90 % quantiles on its evaluation rows. Design check (Section 3E): in simulation (Gaussian residuals, no label hold) a correct model stays inside +-10 % in 100 % of studies. The real margin is smaller: non-Gaussian shape alone can move the ratio by about 5 % (P3), and the pilot errors of Section 3C all lie on one side (-0.7 to -4.4 %) | The predictive claim P3 is dropped; the width gains are reported as measured only |
 | F7, comparison (new, D-P1.7) | In TEP T1 at theta = 4, a baseline (SPCI multi-step or conformal PID at the label horizon) meets the validity conditions, and either the compensated loop does not, or the baseline is narrower. The compensated loop is the sequential loop, stored pairing, tuned with the F5 safety factor. Validity, the same for every method: mean U over the 15 runs at most 2 eps (the F5 budget), and mean marginal coverage within 2 percentage points of 0.90. Narrower: the mean over the runs of the run-median width is at least 5 % smaller, and the run-median width is smaller in at least 12 of the 15 runs (with equal widths, 12 of 15 occurs with probability 1.8 %). Medians are over all issued intervals, an infinite interval counting as infinitely wide [2026-10-20: applied to four baselines, D-P1.10; D-P1.11, proposed, would compare coverage-matched widths; Appendix A.1] | N1'' does not claim the best remedy. The compensated loop is presented as the analysable reference (whose width P3 predicts, unless F6 fired), and the better method is recommended by name. If F5b also fired, the remedy claim follows F5b |
 | F1, as ratified (secondary) | The white model is off by more than 25 % in sd(alpha) or in the infinite share inside the design region | Reported. Section 3A predicts it fires on the infinite share at every persistence level. It is not decisive under D-P1.1 |
-| F4 | The systematic sweep finds one of these already published: (i) the single-state dead-time analysis; (ii) a delay-limited (minimum-variance) bound on conformal interval width; (iii) an analysis of a residual or score forecaster ahead of a delayed online conformal loop, for its effect on miss persistence, step size or local coverage | (i) As ratified. (ii) P3 and the chart leave the claims. (iii) Claim 2 of Section 4 leaves the claims |
+| F4 | The systematic sweep finds one of these already published: (i) the single-state dead-time analysis; (ii) a delay-limited (minimum-variance) bound on conformal interval width; (iii) an analysis of a residual or score forecaster ahead of a delayed online conformal loop, for its effect on miss persistence, step size or local coverage | (i) As ratified. (ii) P3 and the chart leave the claims. (iii) Claim 2 of Section 4 leaves the claims [2026-10-22, the database sweep (`LITERATURE_SWEEP_N1.md`, rows 21 to 32): (i) and (ii) do not fire; (iii) fires on its local-coverage clause (row 21); D-P1.12, proposed] |
 
 Why F5 changed (D-P1.9), fixed before any process data:
 - **What changed.** As ratified, F5 tuned the uncompensated loop to eps and fired if its 15-run mean
@@ -715,16 +760,21 @@ structure.
 | D-P1.7 | Elevate to N1'' (Section 4): delay compensation, the width bound P3 and the analyzer-speed chart, SPCI multi-step and conformal PID as baselines, and the rules that test them: F5b, F6 (tolerance +-10 %) and F7. If D-P1.7 is not ratified, F5b, F6 and F7 lapse | Ratified 2026-10-20 |
 | D-P1.8 | TEP: 100-h runs, each from its own MRG32k3a stream in place of the simulator's generator; streams dealt to the regimes in rotation and qualified by the freeze detector (Section 5.2); segments 0-30 / 30-70 / 70-100 h; pooled tuning per regime | Ratified 2026-10-20 |
 | D-P1.9 | F5a and F5b tune to eps / 2 and fire above 2 eps, which doubles the tested budget, without the upper-bound criterion. Fixed by the power analysis (200 studies per persistence level) before any process data. If not ratified, the ratified F5 rule applies to both (Section 6) | Ratified 2026-10-20 |
-| D-P1.10 | The baseline configurations of Appendix A. Their text leaves Sections 5.3 and 6 as ratified, but changes how both are applied. (i) F7's "a baseline" becomes four baselines: SPCI, and conformal PID with a quantile-regression, a Theta and a matched scorecaster. Under equal widths that raises F7's chance of firing on the run count from 1.8 % to at most 7.2 %. If several meet F7, all are named and the narrowest is recommended. (ii) Only the quantile-regression scorecaster forecasts the score quantile that Section 5.3 names. Theta (the authors' code) and matched (the compensated loop's predictor) are added, which can only make F7 easier to fire. (iii) Section 5.3 tunes conformal PID's multiplier; D-P1.10 tunes m, C_sat and K_I jointly by the same replay to the same U target, and selects by a replay analogue of F7's coverage and width conditions. (iv) Conformal PID starts from the compensated loop's seed rows, with a warm tracker and an integrator aged by the seed, as "the same information" requires. (v) SPCI's window keeps the authors' ratio to the training length (87 and 181). (vi) One information exception at the calibration boundary is common to all methods. (vii) Reporting: the coverage gap and the coverage-matched width change are reported beside F7 (A.1) | Proposed 2026-10-20 |
+| D-P1.10 | The baseline configurations of Appendix A. Their text leaves Sections 5.3 and 6 as ratified, but changes how both are applied. (i) F7's "a baseline" becomes four baselines: SPCI, and conformal PID with a quantile-regression, a Theta and a matched scorecaster. Under equal widths that raises F7's chance of firing on the run count from 1.8 % to at most 7.2 %. If several meet F7, all are named and the narrowest is recommended. (ii) Only the quantile-regression scorecaster forecasts the score quantile that Section 5.3 names. Theta (the authors' code) and matched (the compensated loop's predictor) are added, which can only make F7 easier to fire. (iii) Section 5.3 tunes conformal PID's multiplier; D-P1.10 tunes m, C_sat and K_I jointly by the same replay to the same U target, and selects by a replay analogue of F7's coverage and width conditions. (iv) Conformal PID starts from the compensated loop's seed rows, with a warm tracker and an integrator aged by the seed, as "the same information" requires. (v) SPCI's window keeps the authors' ratio to the training length (87 and 181). (vi) One information exception at the calibration boundary is common to all methods. (vii) Reporting: the coverage gap and the coverage-matched width change are reported beside F7 (A.1). (viii) [2026-10-22] The matched scorecaster has the structure of AcMCP (Wang and Hyndman 2024), which is not run separately (A.2) | Proposed 2026-10-20 |
 | D-P1.11 | F7's "narrower" condition compares coverage-matched widths. In each run, the baseline's run-median width is scaled to the compensated loop's coverage in that run by z((1 + c_loop) / 2) / z((1 + c_baseline) / 2). The mean of the scaled widths must be at least 5 % smaller than the loop's mean run-median width, and the scaled width smaller in at least 12 of 15 runs. Validity is unchanged. Conformal PID is then selected by its replayed median width scaled to 0.90 coverage. Why: F7's coverage band is worth 5.5 % of width at a 2-point gap, and 11 % at 4 points (A.1), so F7 as ratified can recommend a method for covering less. Fixed before any process data, from the dry run (A.5) and the second pass of the fifth check (A.8). If not ratified, F7 stays as ratified, conformal PID is selected by unscaled width, and the coverage-matched change is reported beside the verdict (A.1) | Proposed 2026-10-20 |
+| D-P1.12 | Claim 2 after F4 (iii). The database sweep fired F4 (iii) on its local-coverage clause. Wang and Hyndman (arXiv 2410.13115, v1 2024-10-17) compare a delayed P + I loop with and without a residual forecast (AcMCP against MPI) on coverage over rolling windows, for one dataset in one figure, and find a "similar coverage pattern". They fix the step size and count no miss runs (`LITERATURE_SWEEP_N1.md`, row 21). As ratified, claim 2 leaves the claims. D-P1.12 keeps claim 2': compensation's effect on the persistence of the miss process and on the step size that holds the uninformative budget, with the label delay varied at a fixed predictor. Persistence is measured as in Section 8 (the lag-1 autocorrelation of the miss indicator, the mean miss run and the IACT), reported beside Section 5.4's metrics. Local coverage is reported as a result, with that paper cited, and is not claimed. Why: the rule fires on any one of three components, but the prior work covers only one of them, and only in one figure. The two it lacks are the analysis N1'' was built for. Proposed before any Phase 1 data. If not ratified, claim 2 leaves the claims as ratified, and compensation stays as the remedy that F5b, F6 and F7 test | Proposed 2026-10-22 |
 
 Sequence:
 1. Ratify D-P1.7 to D-P1.9. Done 2026-10-20.
-2. Bien checks that his build reproduces the 15 chosen TEP runs byte for byte (Section 5.2).
+2. Bien checks that his build reproduces the 15 chosen TEP runs byte for byte (Section 5.2). Done
+   2026-10-22: 15 of 15.
+   - The database sweep decides F4. Done 2026-10-22: (iii) fired, and D-P1.12 is proposed
+     (`LITERATURE_SWEEP_N1.md`). S4, W9 and W10, and Google Scholar, remain due before
+     submission. They can only add prior art, which would be logged in Section 10.
 3. Write and check the baseline configurations (Appendix A). Written, checked (fifth check) and
    rewritten twice on 2026-10-20, after the check and after its second pass. Still to do: a
-   third, focused pass on the last revisions (A.8); then Bien ratifies D-P1.10 and decides
-   D-P1.11.
+   third, focused pass on the last revisions (A.8) and on D-P1.12; then Bien ratifies D-P1.10
+   and decides D-P1.11 and D-P1.12.
 4. Make the freeze commit.
 5. Bien generates the 15 TEP runs (commands in the hand-off).
 6. Implement the Phase 1 runner, with tests: point models, the arms and baselines of Section 5,
@@ -837,7 +887,7 @@ This version starts conformal PID from the same seed, and D-P1.11 is proposed.
 | Scorecaster | Three variants, (a) to (c) below, each a separate baseline in F7. Scorecasts (a) and (b) are zero until the newest labelled index exceeds 50 (`PID_SCORECAST_MIN`), so with h <= 13 they are active from row 64 on; (c) starts with its forecaster | See the rows below. The code starts its scorecaster after its burn-in |
 | (a) Quantile regression | Per side, a linear quantile regression at level 1 - alpha / 2 = 0.95. For target tau it regresses the score on its three most recent labelled values at the horizon, s_{tau-h}, s_{tau-h-1} and s_{tau-h-2}. No penalty. It is fitted to every labelled pair (scikit-learn `QuantileRegressor`, HiGHS) and refitted for every target | Paper Sec. 1.2 and App. F, the COVID experiment, which has the paper's only multi-step scorecaster: "an ℓ1-penalized quantile regression as implemented by sklearn.linear_model.QuantileRegressor", with penalty 10, on the three most recent scores and the three most recent case and death counts of all 50 states. The authors' notebook uses level 0.9 (1 - alpha / 2 at that experiment's alpha = 0.2), score lags 4 to 6 at the 4-week horizon, and the 10 most recent points. See "Departures in scorecaster (a)" below |
 | (b) Theta | statsmodels `ThetaModel`, period 1, default fit. It is refitted at every step on every score known at issue time, and c for sample tau is its h-step forecast from s_0, ..., s_{tau-h} | Paper Sec. 1.2 (electricity: a Theta scorecaster "re-trained at every time point"); code lines 229-235. See "Scorecaster (b)" below |
-| (c) Matched | c = r-hat for the upper side and -r-hat for the lower. r-hat is the compensated loop's own residual forecast (`fit_direct_forecaster`, the same order and fit). c is zero before its first full lag window | No source: it holds the predictor equal, so that F7 compares the two calibration architectures (A.7, finding 2) |
+| (c) Matched | c = r-hat for the upper side and -r-hat for the lower. r-hat is the compensated loop's own residual forecast (`fit_direct_forecaster`, the same order and fit). c is zero before its first full lag window | No source: it holds the predictor equal, so that F7 compares the two calibration architectures (A.7, finding 2). [2026-10-22: its structure, P + I plus a residual forecast, is that of AcMCP (Wang and Hyndman, arXiv 2410.13115; `LITERATURE_SWEEP_N1.md`, row 21). AcMCP's own forecast has nothing to use at a label delay. An MA(h - 1) model of the h-step errors forecasts only its mean h or more steps ahead, and the shorter-horizon errors its regression uses do not exist when each target has one prediction. AcMCP then reduces to its P + I core, which (c) extends with the best linear predictor of the residual (P3). It is not run separately; to be confirmed by the third pass] |
 | Tuning grid | m: the compensated loop's ladder (1, 1.5, 2, 3, 5 and 7 per decade, from 0.001), extended to 1, giving 19 values; the cap is 1. C_sat: (2 / pi) delta log T, (2 / pi)(ceil(delta log T) - 1 / log T) and 5, with delta = 0.02 and T the run length. That is 0.092, 0.549 and 5 for TEP T1 (T = 1400), and 0.099, 0.555 and 5 for the debutanizer (T = 2379). K_I: B' and 10 B', with B' the largest abs(r) on the run's calibration segment. In all, 114 configurations | m: the paper's default is 0.1; the code's configurations use 0, 0.01, 0.05, 0.1, 0.5 and 1, which the grid spans, and the cap is their largest value. For C_sat and K_I, see "The integrator constants" below |
 | Tuning | Replay on the pooled calibration segments of a regime's five runs (the debutanizer: its own segment), each run from its seeded start at row 200 and scored from there, as the loop's replay is. The selection is a replay analogue of F7's criterion. Among configurations with replayed U <= eps / 2 and replayed coverage within 0.02 of 0.90, take the smallest replayed median width over all issued intervals ("valid"). If there is none, take the coverage nearest 0.90 among those with U <= eps / 2 ("coverage"). If there is none, take the smallest U ("infeasible"). The bounds are inclusive (a tolerance of 1e-9 absorbs rounding: 2640 / 3000 counts as 0.88). Ties go to the smaller m, then C_sat, then K_I. Under D-P1.11 the width compared is the replayed median width scaled to 0.90 coverage (A.1) | Section 5.3: "its own grid and cap, and is tuned by the same replay to the same target as the compensated loop". The replay and the U target are the compensated loop's; the coverage and width conditions are F7's, on the pooled replay rows, where F7 averages run medians and run coverages |
 | Empty sets | A miss of width 0 (Section 5.3) | The authors' evaluation reflects an inverted set instead (tests/base_test.py line 141, minsize 0). That convention is used only in A.4 |
@@ -1079,6 +1129,10 @@ because its scorecasters started later. The Phase 1 totals extrapolate from the 
   - Claim 2's novelty is the isolated, delay-aware analysis: compensation on and off within the
     same delayed loop, its effect on the persistence of misses and on the step size that holds
     the budget, across delays. Local coverage counts for claim 2 only through that ablation.
+  - [2026-10-22: the database sweep found that ablation for local coverage, in Wang and Hyndman
+    (AcMCP against MPI, electricity data, Fig. 8; `LITERATURE_SWEEP_N1.md`, row 21). It meets
+    this section's first two conditions, not the third. F4 (iii) fired on its local-coverage
+    clause; see D-P1.12.]
 
 ### A.7 Fifth check, and what changed
 
