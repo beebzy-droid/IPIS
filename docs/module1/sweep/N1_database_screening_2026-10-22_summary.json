@@ -1,16 +1,16 @@
 {
- "records_received": 533,
- "records_counting_S3_once": 531,
+ "records_received": 535,
+ "records_counting_S3_once": 533,
  "unique": 377,
- "in_scopus": 362,
+ "in_scopus": 364,
  "in_wos": 105,
- "in_both": 90,
+ "in_both": 92,
  "codes": {
-  "A": 7,
-  "F": 16,
+  "A": 6,
+  "F": 17,
   "X1": 25,
-  "X2": 108,
-  "X3": 201,
+  "X2": 103,
+  "X3": 206,
   "X4": 6,
   "X5": 11,
   "X6": 3
@@ -34,11 +34,17 @@
    "F": 0,
    "A": 0
   },
+  "S4": {
+   "rows": 2,
+   "unique": 2,
+   "F": 0,
+   "A": 0
+  },
   "S5": {
    "rows": 18,
    "unique": 18,
-   "F": 1,
-   "A": 1
+   "F": 2,
+   "A": 0
   },
   "S6": {
    "rows": 3,
@@ -109,8 +115,8 @@
   "W5": {
    "rows": 15,
    "unique": 15,
-   "F": 1,
-   "A": 1
+   "F": 2,
+   "A": 0
   },
   "W6": {
    "rows": 3,
@@ -132,6 +138,11 @@
   }
  },
  "mapping_check": {
+  "2026-10-27/Claim_ii_delay-limited_width_bound_2.csv": {
+   "query": "S4",
+   "records": 2,
+   "satisfy": 2
+  },
   "Claim_i_delayed_feedback_in_conformal_methods.csv": {
    "query": "S1",
    "records": 56,
@@ -253,9 +264,36 @@
   "savedrecs_4.xls": "6c6dd84be342f8343786f0e4f898eeb6fca6d8d0446317893ae501c950a126f8",
   "savedrecs_5.xls": "bc618080f185dbf687727cbe5ca891d4fd8b1585c5299eb9e6853fd4ab990248",
   "savedrecs_6.xls": "19b28229235a6d2c0f6dc6eb025763e4fae7e3474c17a7096318df39fe9509a9",
-  "savedrecs_7.xls": "aa3ba54742b25f8a36dd01d8abf8037feeae36576dfea53ababb93e9c59ab6d3"
+  "savedrecs_7.xls": "aa3ba54742b25f8a36dd01d8abf8037feeae36576dfea53ababb93e9c59ab6d3",
+  "2026-10-27/Claim_ii_delay-limited_width_bound_2.csv": "fc0b18930d48d67c29db3fd50db51efb43fcfc8984ae796911ccab7f3be529ca",
+  "2026-10-27/Conformal_PID.xlsx": "98101b58ed85fba90fc0a83240bbecb0339261f818635c283aac1061654f5d30",
+  "2026-10-27/SPCI.xls": "20597742a891df4d3254f8beed87b64d08c7c1a76362fa424b9044d0a6f07250",
+  "2026-10-27/Search_1_-__quote_online_conformal_unquote___quote_multi-step_unquote___quote_forecast_errors_unquote_.txt": "69f27a1353252688d449fe632e0fb242a1366c134a4b5788fc26318eddd49232",
+  "2026-10-27/Search_2_-__quote_online_conformal_prediction_unquote___quote_multi-horizon_unquote__forecasting.txt": "d2916977285761b8f94e81ab1af0cda135f6294a3812738e3a197fc6def0c10e",
+  "2026-10-27/Search_3_-__quote_adaptive_conformal_prediction_unquote___quote_delayed_labels_unquote__forecasting.txt": "7855dccffbdc6237f39e2ca235879f87e1d00b1d4debbba78a51725a3f1b327f",
+  "2026-10-27/Search_4_-_debutanizer__quote_soft_sensor_unquote___quote_conformal_prediction_unquote__PID.txt": "a58b4cf6adfb0ebb9b104e7f60834e1207770b5d2c097dea78807dae3cedc872"
  },
  "wos_export_dates": [
   "2026-10-22"
- ]
+ ],
+ "w9_cited_reference_list": {
+  "file": "2026-10-27/Conformal_PID.xlsx",
+  "rows": 112,
+  "cited_years": [
+   "2023"
+  ],
+  "conformal_pid_variants": 28,
+  "citing_links": 67,
+  "note": "the cited-reference list; the citing set of these variants is still to export"
+ },
+ "w10_source_record": {
+  "file": "2026-10-27/SPCI.xls",
+  "ut": "WOS:001372555100031",
+  "title": "Sequential Predictive Conformal Inference for Time Series",
+  "source": "INTERNATIONAL CONFERENCE ON MACHINE LEARNING, VOL 202",
+  "times_cited_core": 0,
+  "times_cited_all": 0,
+  "exported": "2026-10-22",
+  "note": "no citing record is linked to it; the cited-reference search was not completed"
+ }
 }

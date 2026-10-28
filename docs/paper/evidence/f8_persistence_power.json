@@ -1,0 +1,108 @@
+{
+  "_meta": {
+    "generated_utc": "2026-10-28T06:49:57+00:00",
+    "argv": [
+      "scripts/pilots/f8_persistence_power.py",
+      "--json",
+      "--workers",
+      "2"
+    ],
+    "python": "3.12.3"
+  },
+  "tep_t1": {
+    "0.5": {
+      "f8_fire_share": 0.985,
+      "pred_ratio_mean": 0.9985364735281536,
+      "pred_ratio_range": [
+        0.9964232534444418,
+        0.9996207284909431
+      ],
+      "applicable_share": {
+        "0.9": 0.0,
+        "0.95": 0.0
+      },
+      "f8_fire_share_if_applicable": {
+        "0.9": null,
+        "0.95": null
+      },
+      "step_statement_share": 0.075,
+      "both_hold_share": 0.0,
+      "statement_share_if_rule": {
+        "0.9": 0.0,
+        "0.95": 0.0
+      },
+      "mean": {
+        "open_acf1_diff": 0.0011293333275159889,
+        "open_acf1_raw": 0.16578412275277252,
+        "open_run_diff": 0.0024186773075389237,
+        "open_run_raw": 1.339181848240753,
+        "open_iact_diff": 0.0002973645677370101,
+        "open_iact_raw": 1.4897695677747078,
+        "tuned_acf1_diff": 0.0006735396233012735,
+        "tuned_acf1_raw": 0.17889756291125675,
+        "tuned_run_diff": 0.0011451496113679543,
+        "tuned_run_raw": 1.3600263904493601,
+        "tuned_iact_diff": -0.0029741735265951413,
+        "tuned_iact_raw": 1.483426262662782
+      },
+      "gamma_ratio_mean": 1.0359722222222223
+    },
+    "0.9": {
+      "f8_fire_share": 0.0,
+      "pred_ratio_mean": 0.818633332593459,
+      "pred_ratio_range": [
+        0.7889079891200016,
+        0.848855876961223
+      ],
+      "applicable_share": {
+        "0.9": 1.0,
+        "0.95": 1.0
+      },
+      "f8_fire_share_if_applicable": {
+        "0.9": 0.0,
+        "0.95": 0.0
+      },
+      "step_statement_share": 0.985,
+      "both_hold_share": 0.985,
+      "statement_share_if_rule": {
+        "0.9": 0.985,
+        "0.95": 0.985
+      },
+      "mean": {
+        "open_acf1_diff": -0.16048769503796415,
+        "open_acf1_raw": 0.5959731443937143,
+        "open_run_diff": -0.881872018154989,
+        "open_run_raw": 2.8889429450896045,
+        "open_iact_diff": -3.4485233176921763,
+        "open_iact_raw": 6.171922265324305,
+        "tuned_acf1_diff": -0.1508426278340426,
+        "tuned_acf1_raw": 0.5947917281672936,
+        "tuned_run_diff": -0.8177599311384859,
+        "tuned_run_raw": 2.84795719817017,
+        "tuned_iact_diff": -2.837970191263838,
+        "tuned_iact_raw": 5.376537232959484
+      },
+      "gamma_ratio_mean": 2.145484126984127
+    }
+  },
+  "settings": {
+    "studies": 200,
+    "theta": 4,
+    "alpha": 0.1,
+    "window": 200,
+    "tuning_target": 0.005,
+    "runs": 15,
+    "rows": [
+      800,
+      600
+    ],
+    "held_share": 0.0,
+    "hold_rows": 5
+  },
+  "sources_sha256": {
+    "scripts/pilots/f8_persistence_power.py": "d14d547143825df67a593f71b0c91d1163de2a3adb524341aabc1365a3062b63",
+    "src/ipis/module1_soft_sensor/evaluation/delayed_aci.py": "0407365fe690e4ea43349327eeec670bd6ff83438c57edeadda2e2f5f3e540b5",
+    "src/ipis/module1_soft_sensor/evaluation/delay_compensation.py": "405b5269d95b20b78f4aed5170366f54e19e26a3f628f2a9ccf16e086c4b85d2",
+    "src/ipis/module1_soft_sensor/evaluation/inference.py": "f53ee048e49ea213160e3693ee666182c6999d12cb2923eee52f97cea066a87b"
+  }
+}

@@ -4,7 +4,9 @@ Status: RATIFIED 2026-09-28 by Bien Busico, with D-P0.1 (obey the one-SE rule, k
 Phase 0 started the same day (Section 10) and closed 2026-10-09 (Section 11). On 2026-10-13 the
 claim of Section 3 was amended to N1' (D-P1.1, ratified). The further elevation to N1'' was
 ratified on 2026-10-20 (D-P1.7; Section 12; `PHASE1_PREREGISTRATION.md`). The baseline
-configurations (D-P1.10) and a coverage-matched F7 (D-P1.11) are proposed.
+configurations (D-P1.10), a coverage-matched F7 (D-P1.11) and claim 2' (D-P1.12, after the
+database sweep fired F4 (iii)) were ratified on 2026-10-27; a rule for claim 2' (D-P1.13) and a
+sensitivity report for F7 (D-P1.14) were proposed on 2026-10-28.
 Inputs: `docs/reviews/REVIEW_REGISTER.csv` (42 records), `M1_REVISION_AUDIT.md`
 (A1-A12), a literature check, and three falsification-first pilots
 (`scripts/pilots/`, synthetic data, reproducible).
@@ -298,7 +300,8 @@ The amendment proposed in response, and the Phase 1 design, are in `PHASE1_PRERE
   `PHASE1_PREREGISTRATION.md`, Section 4, and are not to be edited. Before the freeze, two steps
   remain: Bien's byte-for-byte check of the 15 chosen TEP runs, and the baseline configurations
   (pre-registration Appendix A).
-- **Baseline configurations (2026-10-20; D-P1.10 and D-P1.11, proposed).**
+- **Baseline configurations (2026-10-20; D-P1.10 and D-P1.11, proposed then; ratified
+  2026-10-27).**
   - SPCI and conformal PID run at the label horizon and match their authors' code bit for bit
     (`docs/paper/evidence/baseline_reproduction.json`).
   - A fifth independent check found that the first version's tuning rule alone made conformal
@@ -309,12 +312,26 @@ The amendment proposed in response, and the Phase 1 design, are in `PHASE1_PRERE
     5.5 % of width at a 2-point gap and 11 % at 4 points, more than F7's 5 % margin.
   - Now four baselines count in F7: SPCI, and conformal PID with three scorecasters, one of them
     the compensated loop's own predictor. Conformal PID starts from the loop's seed and is tuned
-    by a replay analogue of F7's criterion. D-P1.11 would make F7's "narrower" test
-    coverage-matched.
+    by a replay analogue of F7's criterion. D-P1.11 makes F7's "narrower" test
+    coverage-matched (ratified 2026-10-27).
   - In a synthetic dry run of the F7 design none of the four meets F7. Three come within -3.1 to
     +1.1 % of the compensated loop's width, and within -2.8 to +2.0 % at its coverage; the
     closest is conformal PID with the loop's own predictor. F7 is a live test.
   - Section 4 carries four dated, bracketed corrections; its ratified wording is unchanged. The
     main one: conformal PID's COVID experiment ran with delayed feedback, which the code shows.
     F4 (iii) was screened against Table 1, Sec. 3.3 and Figs. 2, 9 and 10, and does not fire
-    (pre-registration Appendix A.6).
+    (pre-registration Appendix A.6). [2026-10-22: on conformal PID it does not; the database
+    sweep then fired it on Wang and Hyndman (arXiv 2410.13115), below.]
+- **Database sweep and decisions (2026-10-22 to 2026-10-28).**
+  - Scopus and Web of Science, 535 records, 377 unique, with a first Google Scholar pass of 48
+    results (`LITERATURE_SWEEP_N1.md`, rows 21 to 38). F4 (i) and (ii) do not fire. F4 (iii)
+    fires on its local-coverage clause: Wang and Hyndman compare a delayed P + I loop with and
+    without a residual forecast on rolling-window coverage. P2's bound is theirs too (Prop. 4 of
+    v1), in quantile space.
+  - Bien ratified D-P1.10 to D-P1.12 on 2026-10-27. Claim 2 became claim 2': compensation's
+    effect on miss persistence and on the step size that holds the budget, with local coverage
+    reported, not claimed.
+  - A third pass of the fifth check (2026-10-27) found nothing critical. It found that claim 2'
+    had no rule that could reject it, and that the stated bias of F7's Gaussian coverage scaling
+    was half right. D-P1.13 (the rule F8) and D-P1.14 (a scaling by the loop's own score
+    quantiles, reported beside F7) were proposed on 2026-10-28 (pre-registration A.9).

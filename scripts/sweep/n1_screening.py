@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Screening log of the N1 database sweep (Scopus and Web of Science, exported 2026-10-22).
+"""Screening log of the N1 database sweep (Scopus and Web of Science).
 
 Protocol: docs/module1/LITERATURE_SWEEP_N1.md, "Database sweep protocol, 2026-10-20".
 
@@ -8,15 +8,22 @@ the abstracts are the publishers'. They are kept outside git (for example in pri
 which .gitignore excludes). The summary JSON records the SHA-256 of every file read, so the
 log can be traced to the exports without publishing them.
 
-Run, from the repository root, with the exports in one folder under the names they were
-received with (the 8-character prefixes the upload added may stay):
-    python3 scripts/sweep/n1_screening.py private/sweep/2026-10-22
+The exports came in two batches, each kept in its own folder under the names it was received
+with (the 8-character prefixes the upload added may stay):
+- 2026-10-22: the 20 files of FILE_TO_QUERY;
+- 2026-10-27: the files of BATCH2. The S4 export is screened with the first batch. W9's file
+  is the cited-reference list, not the citing set, and W10's is the record of SPCI itself, so
+  both are summarised, not screened. The Google Scholar pages are hashed only; they are
+  screened by hand in docs/module1/sweep/N1_scholar_screening_2026-10-27.csv.
+Run, from the repository root:
+    python3 scripts/sweep/n1_screening.py private/sweep/2026-10-22 private/sweep/2026-10-27
 Requires xlrd >= 2 for the Web of Science .xls files.
 
 It writes docs/module1/sweep/N1_database_screening_2026-10-22.csv, with titles and
-identifiers but no abstracts, and a JSON summary beside it. It also prints, for every export,
-how many of its records satisfy each search string as issued (an approximate check, see
-satisfies()). That check is how each file was matched to its query.
+identifiers but no abstracts, and a JSON summary beside it. The log keeps the name of its first
+batch. It also prints, for every export, how many of its records satisfy each search string as
+issued (an approximate check, see satisfies()). That check is how each file was matched to its
+query.
 
 Screening codes:
   X1  'conformal' appears only in another sense (geometry, coatings, antennas, physics)
@@ -55,7 +62,7 @@ FILE_TO_QUERY = {
     "Claim_i_delayed_feedback_in_conformal_methods.csv": "S1",
     "Claim_i_step_size_and_stability_of_the_adaptive_loop.csv": "S2",
     "Claim_ii_delay-limited_width_bound_1.csv": "S3",
-    "Claim_ii_delay-limited_width_bound_2.csv": "S3",  # byte-identical to _1; S4 not exported
+    "Claim_ii_delay-limited_width_bound_2.csv": "S3",  # byte-identical to _1; S4 came later
     "Claim_iii_a_forecaster_ahead_of_an_online_conformal_loop.csv": "S5",
     "Process_domain_1.csv": "S6",
     "Process_domain_2.csv": "S7",
@@ -73,6 +80,19 @@ FILE_TO_QUERY = {
     "savedrecs_6.xls": "W7",
     "savedrecs_7.xls": "W8",
 }
+
+# Second batch, received 2026-10-27, in a folder of its own: its S4 export has the name of a
+# first-batch file. File -> role. Only the S4 export is screened; every file is hashed.
+BATCH2 = {
+    "Claim_ii_delay-limited_width_bound_2.csv": "S4",
+    "Conformal_PID.xlsx": "W9",
+    "SPCI.xls": "W10",
+    "Search_1_-__quote_online_conformal_unquote___quote_multi-step_unquote___quote_forecast_errors_unquote_.txt": "G1",
+    "Search_2_-__quote_online_conformal_prediction_unquote___quote_multi-horizon_unquote__forecasting.txt": "G2",
+    "Search_3_-__quote_adaptive_conformal_prediction_unquote___quote_delayed_labels_unquote__forecasting.txt": "G3",
+    "Search_4_-_debutanizer__quote_soft_sensor_unquote___quote_conformal_prediction_unquote__PID.txt": "G4",
+}
+BATCH2_TAG = "2026-10-27/"
 
 # Decisions that differ from the default for the record's group, keyed by DOI, else by the
 # Scopus EID or the WoS UT. (code, F4 item or topic, note)
@@ -185,9 +205,9 @@ DECISIONS = {
         "delayed recursive least-squares updates with 90 % conformal intervals",
     ),
     "10.3390/en19174093": (
-        "A",
+        "F",
         "i",
-        "ACP updated from the miscoverage of completed forecasts in rolling-horizon MPC",
+        "read 2026-10-27: per-lead ACI with a projection (Eq. 15), fed h periods late; step size discussed qualitatively; no analysis of the lag",
     ),
     "10.1007/978-3-031-88036-0_16": (
         "A",
@@ -299,6 +319,33 @@ DECISIONS = {
         "-",
         "stream interval post-calibration from observed coverage; no delay",
     ),
+    # 2026-10-28, from the third pass of the check: interval methods without the word
+    # "conformal", which the default for the reference-list searches coded X2
+    "10.1016/j.aei.2025.103979": (
+        "X3",
+        "-",
+        "interval prediction (PICP, PINAW) by frequency-domain learning and fuzzy rules; no loop",
+    ),
+    "10.1145/3744255.3798120": (
+        "X3",
+        "-",
+        "carbon-intensity forecasts with 95 % prediction intervals; no loop",
+    ),
+    "10.1145/3690624.3709286": (
+        "X3",
+        "-",
+        "distribution-free probabilistic inference for regression and forecasting; no loop",
+    ),
+    "10.1016/j.epidem.2025.100820": (
+        "X3",
+        "-",
+        "quantile autoregressive forecasts scored by weighted interval score; no loop",
+    ),
+    "10.1186/s41182-025-00723-7": (
+        "X3",
+        "-",
+        "forecasting methods compared on their uncertainty intervals; no loop",
+    ),
 }
 
 STAT_SENSE = re.compile(
@@ -329,63 +376,164 @@ def norm_title(t: str) -> str:
     return " ".join(re.sub(r"[^a-z0-9]+", " ", t).split())
 
 
-def load(raw: str) -> list[dict]:
+def find(folder: str, names) -> dict[str, str]:
+    """Base name -> path for every name, the upload prefix allowed; other files are ignored."""
+    found: dict[str, str] = {}
+    for f in glob.glob(os.path.join(folder, "*")):
+        b = _base(f)
+        if b in names:
+            if b in found:
+                raise SystemExit(f"{folder}: {b} is there twice")
+            found[b] = f
+    missing = sorted(set(names) - set(found))
+    if missing:
+        raise SystemExit(f"{folder}: missing {missing}")
+    return dict(sorted(found.items()))
+
+
+def _scopus(path: str, name: str) -> list[dict]:
     recs = []
-    for f in sorted(glob.glob(os.path.join(raw, "*.csv"))):
-        with open(f, encoding="utf-8-sig", newline="") as fh:
-            for i, r in enumerate(csv.DictReader(fh)):
-                recs.append(
-                    {
-                        "db": "Scopus",
-                        "file": _base(f),
-                        "row": i + 1,
-                        "id": r.get("EID", ""),
-                        "title": r.get("Title", ""),
-                        "authors": r.get("Authors", ""),
-                        "year": r.get("Year", ""),
-                        "source": r.get("Source title", ""),
-                        "doi": norm_doi(r.get("DOI", "")),
-                        "abstract": r.get("Abstract", ""),
-                        "kw": r.get("Author Keywords", ""),
-                        "ikw": r.get("Index Keywords", ""),
-                        "exported": "",
-                    }
-                )
-    xls = sorted(glob.glob(os.path.join(raw, "*.xls")))
-    if xls:
-        import xlrd  # noqa: PLC0415
+    with open(path, encoding="utf-8-sig", newline="") as fh:
+        for i, r in enumerate(csv.DictReader(fh)):
+            recs.append(
+                {
+                    "db": "Scopus",
+                    "file": name,
+                    "row": i + 1,
+                    "id": r.get("EID", ""),
+                    "title": r.get("Title", ""),
+                    "authors": r.get("Authors", ""),
+                    "year": r.get("Year", ""),
+                    "source": r.get("Source title", ""),
+                    "doi": norm_doi(r.get("DOI", "")),
+                    "abstract": r.get("Abstract", ""),
+                    "kw": r.get("Author Keywords", ""),
+                    "ikw": r.get("Index Keywords", ""),
+                    "exported": "",
+                }
+            )
+    return recs
 
-        for f in xls:
-            sh = xlrd.open_workbook(f).sheet_by_index(0)
-            col = {h: k for k, h in enumerate(sh.row_values(0))}
-            for i in range(1, sh.nrows):
-                v = sh.row_values(i)
 
-                def g(name: str, v=v, col=col) -> str:
-                    x = v[col[name]]
-                    return str(int(x)) if isinstance(x, float) and x.is_integer() else str(x)
+def _xls_rows(path: str) -> list[dict]:
+    import xlrd  # noqa: PLC0415
 
-                recs.append(
-                    {
-                        "db": "WoS",
-                        "file": _base(f),
-                        "row": i,
-                        "id": g("UT (Unique WOS ID)"),
-                        "title": g("Article Title"),
-                        "authors": g("Authors"),
-                        "year": g("Publication Year"),
-                        "source": g("Source Title"),
-                        "doi": norm_doi(g("DOI")),
-                        "abstract": g("Abstract"),
-                        "kw": g("Author Keywords"),
-                        "ikw": g("Keywords Plus"),
-                        "exported": g("Date of Export"),
-                    }
-                )
+    sh = xlrd.open_workbook(path).sheet_by_index(0)
+    head = sh.row_values(0)
+
+    def cell(x) -> str:
+        return str(int(x)) if isinstance(x, float) and x.is_integer() else str(x)
+
+    return [dict(zip(head, map(cell, sh.row_values(i)), strict=True)) for i in range(1, sh.nrows)]
+
+
+def _wos(path: str, name: str) -> list[dict]:
+    return [
+        {
+            "db": "WoS",
+            "file": name,
+            "row": i + 1,
+            "id": g["UT (Unique WOS ID)"],
+            "title": g["Article Title"],
+            "authors": g["Authors"],
+            "year": g["Publication Year"],
+            "source": g["Source Title"],
+            "doi": norm_doi(g["DOI"]),
+            "abstract": g["Abstract"],
+            "kw": g["Author Keywords"],
+            "ikw": g["Keywords Plus"],
+            "exported": g["Date of Export"],
+        }
+        for i, g in enumerate(_xls_rows(path))
+    ]
+
+
+def _xlsx_rows(path: str) -> list[dict]:
+    """First sheet of an .xlsx file, read with the standard library. (W9's file declares its
+    extent as the single cell A1, which readers that trust the declaration take literally.)"""
+    import zipfile  # noqa: PLC0415
+    from xml.etree import ElementTree  # noqa: PLC0415
+
+    m = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
+    with zipfile.ZipFile(path) as z:
+        shared = []
+        if "xl/sharedStrings.xml" in z.namelist():
+            root = ElementTree.fromstring(z.read("xl/sharedStrings.xml"))
+            shared = ["".join(t.text or "" for t in si.iter(m + "t")) for si in root.iter(m + "si")]
+        sheet = ElementTree.fromstring(z.read("xl/worksheets/sheet1.xml"))
+    table = []
+    for row in sheet.iter(m + "row"):
+        cells = {}
+        for c in row.iter(m + "c"):
+            col = re.match(r"[A-Z]+", c.get("r")).group()
+            if c.get("t") == "inlineStr":
+                cells[col] = "".join(t.text or "" for t in c.iter(m + "t"))
+            else:
+                v = c.find(m + "v")
+                x = "" if v is None else (v.text or "")
+                cells[col] = shared[int(x)] if c.get("t") == "s" else x
+        table.append(cells)
+    head = table[0]
+    return [{head[k]: r.get(k, "") for k in head} for r in table[1:]]
+
+
+def load(raw: str, raw2: str) -> tuple[list[dict], dict, dict]:
+    """Records of both batches, in a fixed order: the first batch's Scopus files, then its WoS
+    files, each by name; then the second batch's S4 export. The order sets the uid."""
+    f1 = find(raw, FILE_TO_QUERY)
+    f2 = find(raw2, BATCH2)
+    recs = []
+    for name, path in f1.items():
+        if name.endswith(".csv"):
+            recs += _scopus(path, name)
+    for name, path in f1.items():
+        if name.endswith(".xls"):
+            recs += _wos(path, name)
     for r in recs:
         r["query"] = FILE_TO_QUERY[r["file"]]
+    for name, path in f2.items():
+        if BATCH2[name] == "S4":
+            for r in _scopus(path, BATCH2_TAG + name):
+                recs.append({**r, "query": "S4"})
+    for r in recs:
         r["tkey"] = norm_title(r["title"])
-    return recs
+    return recs, f1, f2
+
+
+def w9_summary(path: str) -> dict:
+    """W9 as received: the cited-reference list of the search (Cited Author Angelopoulos A*,
+    Cited Year 2023), not the citing records. Counts the variants of the conformal PID paper
+    and the citing links they carry. Variants are matched on title or cited work, letters only,
+    so that "Con- formal PID control" is caught."""
+    rows = _xlsx_rows(path)
+    var = [
+        r
+        for r in rows
+        if "conformalpidcontrol" in re.sub(r"[^a-z]", "", (r["TI"] + r["SO"]).lower())
+    ]
+    return {
+        "file": BATCH2_TAG + _base(path),
+        "rows": len(rows),
+        "cited_years": sorted({r["PY"] for r in rows}),
+        "conformal_pid_variants": len(var),
+        "citing_links": int(sum(float(r["TC"] or 0) for r in var)),
+        "note": "the cited-reference list; the citing set of these variants is still to export",
+    }
+
+
+def w10_summary(path: str) -> dict:
+    """W10 as received: SPCI's own Web of Science record, found by its title."""
+    (g,) = _xls_rows(path)
+    return {
+        "file": BATCH2_TAG + _base(path),
+        "ut": g["UT (Unique WOS ID)"],
+        "title": g["Article Title"],
+        "source": g["Source Title"],
+        "times_cited_core": int(g["Times Cited, WoS Core"]),
+        "times_cited_all": int(g["Times Cited, All Databases"]),
+        "exported": g["Date of Export"],
+        "note": "no citing record is linked to it; the cited-reference search was not completed",
+    }
 
 
 # ---- approximate evaluation of the issued strings (mapping check only) ----
@@ -459,6 +607,15 @@ def satisfies(r: dict, q: str) -> bool:
                 "prediction error variance",
             )
             and has("delay*", "dead time", "horizon*")
+        )
+    if q == "S4":
+        return (
+            _near(_any(tok, "prediction interval*", "conformal"), _pos(tok, "width"), 10)
+            and (
+                has("autocorrelat*", "forecast horizon*")
+                or _near(_pos(tok, "analy?er"), _any(tok, "delay*", "speed", "cycle"), 2)
+            )
+            and has("bound*", "limit*", "achievable", "minimum")
         )
     if q == "W4":
         return (
@@ -567,7 +724,8 @@ def decide(u: dict) -> tuple[str, str, str]:
         return ("X5", "3D", "")
     if qs & {"S7", "W7"}:
         return ("X6", "-", "")
-    if qs & {"S6", "W6", "W3", "W4"}:
+    # strings that admit interval methods other than conformal ones
+    if qs & {"S3", "W3", "S4", "W4", "S6", "W6"}:
         return ("X3", "-", "")
     return ("X2", "-", "")
 
@@ -577,16 +735,23 @@ def _qsort(q: str) -> tuple:
 
 
 def main() -> int:
-    raw = sys.argv[1]
-    files = sorted(glob.glob(os.path.join(raw, "*.csv")) + glob.glob(os.path.join(raw, "*.xls")))
-    manifest = {_base(f): hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in files}
-    recs = load(raw)
+    if len(sys.argv) != 3:
+        raise SystemExit("usage: n1_screening.py FOLDER_2026-10-22 FOLDER_2026-10-27")
+    raw, raw2 = sys.argv[1], sys.argv[2]
+    recs, f1, f2 = load(raw, raw2)
+
+    def sha(path: str) -> str:
+        return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+    manifest = {name: sha(path) for name, path in f1.items()}
+    manifest.update({BATCH2_TAG + name: sha(path) for name, path in f2.items()})
+    by_role = {role: f2[name] for name, role in BATCH2.items()}
     # mapping check
     print("export".ljust(62), "query", "records", "satisfy its string")
     check = {}
     for f in sorted({r["file"] for r in recs}):
         rs = [r for r in recs if r["file"] == f]
-        q = FILE_TO_QUERY[f]
+        q = rs[0]["query"]
         k = sum(satisfies(r, q) for r in rs)
         check[f] = {"query": q, "records": len(rs), "satisfy": k}
         print(f.ljust(62), q.ljust(5), str(len(rs)).rjust(7), f"{k}/{len(rs)}")
@@ -640,6 +805,8 @@ def main() -> int:
         "mapping_check": check,
         "raw_sha256": manifest,
         "wos_export_dates": sorted({r["exported"] for r in recs if r["db"] == "WoS"}),
+        "w9_cited_reference_list": w9_summary(by_role["W9"]),
+        "w10_source_record": w10_summary(by_role["W10"]),
     }
     with open(OUT_JSON, "w", encoding="utf-8", newline="\n") as fh:
         json.dump(summary, fh, indent=1)
@@ -656,6 +823,8 @@ def main() -> int:
                     "in_wos",
                     "in_both",
                     "codes",
+                    "w9_cited_reference_list",
+                    "w10_source_record",
                 )
             },
             indent=1,

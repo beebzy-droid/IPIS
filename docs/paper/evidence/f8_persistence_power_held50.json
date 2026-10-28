@@ -1,0 +1,155 @@
+{
+  "_meta": {
+    "generated_utc": "2026-10-28T07:10:03+00:00",
+    "argv": [
+      "scripts/pilots/f8_persistence_power.py",
+      "--json",
+      "--workers",
+      "2",
+      "--studies",
+      "100",
+      "--phis",
+      "0.9",
+      "0.95",
+      "0.97",
+      "--held-share",
+      "0.5",
+      "--name",
+      "f8_persistence_power_held50"
+    ],
+    "python": "3.12.3"
+  },
+  "tep_t1": {
+    "0.9": {
+      "f8_fire_share": 0.49,
+      "pred_ratio_mean": 0.9548684448265067,
+      "pred_ratio_range": [
+        0.9410741264735131,
+        0.9670825456596643
+      ],
+      "applicable_share": {
+        "0.9": 0.0,
+        "0.95": 0.18
+      },
+      "f8_fire_share_if_applicable": {
+        "0.9": null,
+        "0.95": 0.4444444444444444
+      },
+      "step_statement_share": 0.46,
+      "both_hold_share": 0.2,
+      "statement_share_if_rule": {
+        "0.9": 0.0,
+        "0.95": 0.03
+      },
+      "mean": {
+        "open_acf1_diff": -0.037998896133719914,
+        "open_acf1_raw": 0.6000897352295583,
+        "open_run_diff": -0.26373601489716025,
+        "open_run_raw": 2.8670310542729744,
+        "open_iact_diff": -0.7974714362965996,
+        "open_iact_raw": 4.426088557044777,
+        "tuned_acf1_diff": -0.034100488453729566,
+        "tuned_acf1_raw": 0.6028469755176551,
+        "tuned_run_diff": -0.24113481760656683,
+        "tuned_run_raw": 2.8684457372013394,
+        "tuned_iact_diff": -0.6900928454669113,
+        "tuned_iact_raw": 3.998179220777082
+      },
+      "gamma_ratio_mean": 1.2706349206349208
+    },
+    "0.95": {
+      "f8_fire_share": 0.2,
+      "pred_ratio_mean": 0.9182527732964672,
+      "pred_ratio_range": [
+        0.8917165727131932,
+        0.9370406045049082
+      ],
+      "applicable_share": {
+        "0.9": 0.04,
+        "0.95": 1.0
+      },
+      "f8_fire_share_if_applicable": {
+        "0.9": 0.25,
+        "0.95": 0.2
+      },
+      "step_statement_share": 0.68,
+      "both_hold_share": 0.51,
+      "statement_share_if_rule": {
+        "0.9": 0.03,
+        "0.95": 0.51
+      },
+      "mean": {
+        "open_acf1_diff": -0.04752613237231354,
+        "open_acf1_raw": 0.6667716358851021,
+        "open_run_diff": -0.4710899007209759,
+        "open_run_raw": 3.4698786471936627,
+        "open_iact_diff": -1.6168507565389165,
+        "open_iact_raw": 5.684297552877243,
+        "tuned_acf1_diff": -0.040248078319987154,
+        "tuned_acf1_raw": 0.6658935813892514,
+        "tuned_run_diff": -0.39581085020128015,
+        "tuned_run_raw": 3.430300860303195,
+        "tuned_iact_diff": -1.278575629430661,
+        "tuned_iact_raw": 4.987784438126795
+      },
+      "gamma_ratio_mean": 1.5523968253968254
+    },
+    "0.97": {
+      "f8_fire_share": 0.19,
+      "pred_ratio_mean": 0.8947227137771232,
+      "pred_ratio_range": [
+        0.8611780753661962,
+        0.9210839691882454
+      ],
+      "applicable_share": {
+        "0.9": 0.69,
+        "0.95": 1.0
+      },
+      "f8_fire_share_if_applicable": {
+        "0.9": 0.2028985507246377,
+        "0.95": 0.19
+      },
+      "step_statement_share": 0.79,
+      "both_hold_share": 0.64,
+      "statement_share_if_rule": {
+        "0.9": 0.46,
+        "0.95": 0.64
+      },
+      "mean": {
+        "open_acf1_diff": -0.0471546121004209,
+        "open_acf1_raw": 0.7003017783134964,
+        "open_run_diff": -0.5755259201312767,
+        "open_run_raw": 3.877846936900827,
+        "open_iact_diff": -2.2470005658982584,
+        "open_iact_raw": 6.681811306614013,
+        "tuned_acf1_diff": -0.041547223532999666,
+        "tuned_acf1_raw": 0.6990677446286223,
+        "tuned_run_diff": -0.5008277213099784,
+        "tuned_run_raw": 3.819920727565411,
+        "tuned_iact_diff": -1.7846333907913174,
+        "tuned_iact_raw": 5.747909149300861
+      },
+      "gamma_ratio_mean": 1.7944126984126987
+    }
+  },
+  "settings": {
+    "studies": 100,
+    "theta": 4,
+    "alpha": 0.1,
+    "window": 200,
+    "tuning_target": 0.005,
+    "runs": 15,
+    "rows": [
+      800,
+      600
+    ],
+    "held_share": 0.5,
+    "hold_rows": 5
+  },
+  "sources_sha256": {
+    "scripts/pilots/f8_persistence_power.py": "d14d547143825df67a593f71b0c91d1163de2a3adb524341aabc1365a3062b63",
+    "src/ipis/module1_soft_sensor/evaluation/delayed_aci.py": "0407365fe690e4ea43349327eeec670bd6ff83438c57edeadda2e2f5f3e540b5",
+    "src/ipis/module1_soft_sensor/evaluation/delay_compensation.py": "405b5269d95b20b78f4aed5170366f54e19e26a3f628f2a9ccf16e086c4b85d2",
+    "src/ipis/module1_soft_sensor/evaluation/inference.py": "f53ee048e49ea213160e3693ee666182c6999d12cb2923eee52f97cea066a87b"
+  }
+}

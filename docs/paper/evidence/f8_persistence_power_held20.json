@@ -1,0 +1,155 @@
+{
+  "_meta": {
+    "generated_utc": "2026-10-28T07:04:03+00:00",
+    "argv": [
+      "scripts/pilots/f8_persistence_power.py",
+      "--json",
+      "--workers",
+      "2",
+      "--studies",
+      "100",
+      "--phis",
+      "0.9",
+      "0.95",
+      "0.97",
+      "--held-share",
+      "0.2",
+      "--name",
+      "f8_persistence_power_held20"
+    ],
+    "python": "3.12.3"
+  },
+  "tep_t1": {
+    "0.9": {
+      "f8_fire_share": 0.0,
+      "pred_ratio_mean": 0.8869685726307323,
+      "pred_ratio_range": [
+        0.8654684748324603,
+        0.9106395440149514
+      ],
+      "applicable_share": {
+        "0.9": 0.93,
+        "0.95": 1.0
+      },
+      "f8_fire_share_if_applicable": {
+        "0.9": 0.0,
+        "0.95": 0.0
+      },
+      "step_statement_share": 0.88,
+      "both_hold_share": 0.88,
+      "statement_share_if_rule": {
+        "0.9": 0.81,
+        "0.95": 0.88
+      },
+      "mean": {
+        "open_acf1_diff": -0.10578558423832522,
+        "open_acf1_raw": 0.5809007475359812,
+        "open_run_diff": -0.590018874373479,
+        "open_run_raw": 2.7526141671107967,
+        "open_iact_diff": -2.2122358246801777,
+        "open_iact_raw": 5.194394142262304,
+        "tuned_acf1_diff": -0.09832210629812628,
+        "tuned_acf1_raw": 0.5803490402752236,
+        "tuned_run_diff": -0.5472968961559133,
+        "tuned_run_raw": 2.7282001598921086,
+        "tuned_iact_diff": -1.8197383356206942,
+        "tuned_iact_raw": 4.597463258879096
+      },
+      "gamma_ratio_mean": 1.7288571428571429
+    },
+    "0.95": {
+      "f8_fire_share": 0.0,
+      "pred_ratio_mean": 0.7963637357198511,
+      "pred_ratio_range": [
+        0.7602228836191329,
+        0.8239785584466247
+      ],
+      "applicable_share": {
+        "0.9": 1.0,
+        "0.95": 1.0
+      },
+      "f8_fire_share_if_applicable": {
+        "0.9": 0.0,
+        "0.95": 0.0
+      },
+      "step_statement_share": 0.99,
+      "both_hold_share": 0.99,
+      "statement_share_if_rule": {
+        "0.9": 0.99,
+        "0.95": 0.99
+      },
+      "mean": {
+        "open_acf1_diff": -0.14842436807051357,
+        "open_acf1_raw": 0.6675874587192719,
+        "open_run_diff": -1.1832157312633114,
+        "open_run_raw": 3.549275539792412,
+        "open_iact_diff": -4.481589098161244,
+        "open_iact_raw": 7.826398808892619,
+        "tuned_acf1_diff": -0.13407152838923536,
+        "tuned_acf1_raw": 0.6615552333211971,
+        "tuned_run_diff": -1.0382957872285121,
+        "tuned_run_raw": 3.4335201718968773,
+        "tuned_iact_diff": -3.6489792224006554,
+        "tuned_iact_raw": 6.704479462345618
+      },
+      "gamma_ratio_mean": 2.362873015873016
+    },
+    "0.97": {
+      "f8_fire_share": 0.0,
+      "pred_ratio_mean": 0.7401591409647357,
+      "pred_ratio_range": [
+        0.6928734526861506,
+        0.7783133664246444
+      ],
+      "applicable_share": {
+        "0.9": 1.0,
+        "0.95": 1.0
+      },
+      "f8_fire_share_if_applicable": {
+        "0.9": 0.0,
+        "0.95": 0.0
+      },
+      "step_statement_share": 0.98,
+      "both_hold_share": 0.98,
+      "statement_share_if_rule": {
+        "0.9": 0.98,
+        "0.95": 0.98
+      },
+      "mean": {
+        "open_acf1_diff": -0.15153241565052156,
+        "open_acf1_raw": 0.7087467928590828,
+        "open_run_diff": -1.5415066571842453,
+        "open_run_raw": 4.11628971762557,
+        "open_iact_diff": -6.366816403225637,
+        "open_iact_raw": 10.0214487186344,
+        "tuned_acf1_diff": -0.13904340676122376,
+        "tuned_acf1_raw": 0.7015891770099497,
+        "tuned_run_diff": -1.3411089231390343,
+        "tuned_run_raw": 3.932273534033495,
+        "tuned_iact_diff": -5.136737070758919,
+        "tuned_iact_raw": 8.433786171022263
+      },
+      "gamma_ratio_mean": 2.8786349206349207
+    }
+  },
+  "settings": {
+    "studies": 100,
+    "theta": 4,
+    "alpha": 0.1,
+    "window": 200,
+    "tuning_target": 0.005,
+    "runs": 15,
+    "rows": [
+      800,
+      600
+    ],
+    "held_share": 0.2,
+    "hold_rows": 5
+  },
+  "sources_sha256": {
+    "scripts/pilots/f8_persistence_power.py": "d14d547143825df67a593f71b0c91d1163de2a3adb524341aabc1365a3062b63",
+    "src/ipis/module1_soft_sensor/evaluation/delayed_aci.py": "0407365fe690e4ea43349327eeec670bd6ff83438c57edeadda2e2f5f3e540b5",
+    "src/ipis/module1_soft_sensor/evaluation/delay_compensation.py": "405b5269d95b20b78f4aed5170366f54e19e26a3f628f2a9ccf16e086c4b85d2",
+    "src/ipis/module1_soft_sensor/evaluation/inference.py": "f53ee048e49ea213160e3693ee666182c6999d12cb2923eee52f97cea066a87b"
+  }
+}

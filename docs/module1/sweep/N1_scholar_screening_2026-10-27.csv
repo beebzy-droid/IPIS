@@ -1,0 +1,49 @@
+gid,queries,year,first_author,title,venue,identifier,code,item,basis,note
+G001,G1,2024,"Wang, X.",Online conformal inference for multi-step time series forecasting,arXiv,arXiv:2410.13115,X4,iii,record,row 21
+G002,G1 G2,2025,"Li, R.",Optimization-based Online Conformal Prediction for Multi-step Forecasting,arXiv,arXiv:2508.13362,X4,i,record,row 25 (a)
+G003,G1,2026,"El Halabi, L.",Adaptive Conformal Inference Under Delayed Feedback: Coverage Guarantees and a Delay-to-Memory Diagnostic,arXiv,arXiv:2609.07251,X4,i,record,row 2
+G004,G1,2026,"Guo, C.",CoCoNav: Conformal Control for Safe Robot Navigation in Crowds,arXiv,arXiv:2608.07751,F,i,full text,row 37 (b): horizon-specific P + I controller fed delayed scores; coverage proved for one step only
+G005,G1,2026,"Diaz-Martinez, J.U.",Conformal Prediction Tools in R,R Journal,,X3,-,snippet,review of R software
+G006,G1,2026,"Wang, X.",conformalForecast: An R package for sequential conformal prediction in time series,arXiv,arXiv:2610.21648,F,iii,full text,"row 37 (c): software for SCP, WCP, ACP, PID and AcMCP; no new method or theory"
+G007,G1 G2,2026,"Oancea, B.",Dynamic Regime-Aware Conformal Calibration for Reliable Economic Forecast Intervals under Multiple Distribution Shifts,arXiv,arXiv:2608.17079,F,i,full text,row 37 (d): ACI controller with the delay-free bound; outcomes queued until observable
+G008,G1 G2,2025,"McLean, R.",High-Dimensional and Univariate Approaches to Real-Time Inflation Forecast in Nicaragua with Machine Learning and Conformal Prediction,SSRN,SSRN 6512220,X3,-,snippet,SAOCP for inflation; direct multi-step forecasts
+G009,G1 G2,2026,"Huang, Y.",Event-centred Auditing of Multi-horizon Conformal Intervals: A Reproducible Simulation Benchmark with Electricity-load Stress Tests,SSRN,SSRN 7200098,X3,-,snippet,an auditing benchmark
+G010,G1,2026,"Sözen, Ç.",Monotone forward expected shortfall paths with joint conformal calibration,AIMS Mathematics,,X3,-,snippet,joint calibration of risk paths
+G011,G1,2026,"Liu, G.",Efficient conformal prediction intervals for time series: Online PID-Expert aggregation,arXiv,arXiv:2610.02777,F,i,full text,row 35: one-step only
+G012,G1 G2,2026,"Erkaya, P.",Local Residual Conformal Prediction for Multi-Step Forecasting: Development and Comparative Evaluation,thesis (ProQuest),,X3,-,snippet,direct multi-horizon forecasts; thesis not reached
+G013,G1,2026,"Xing, X.",Multimodal large language model enabled robust beamforming for HAP downlink communications,IEEE Transactions,,X2,-,snippet,matched on a citation of Wang and Hyndman
+G014,G1,2026,"Liu, F.",BACC: Budget-Aware Calibration and Control for Horizontal Autoscaling,arXiv,arXiv:2606.20575,F,i,full text,row 37 (e): ACI-style pacing on an SLO error
+G015,G1,2026,"Liu, Y.",Ultra-Short-Term Multi-Horizon Point and Probabilistic Wind Power Forecasting with Power-Increment Enhancement and Signed Adaptive Conformal Inference,Energies,10.3390/en19194741,X4,i,record,R363; row 30
+G016,G1,2026,"Jiang, Y.",Stepwise conformal prediction for multi-step net load forecasting in microgrids under renewable energy variability,Energies,,X3,-,snippet,stepwise split CP; online calibration left to future work
+G017,G1,2025,"Li, S.",Online Conformal Model Selection for Nonstationary Time Series,arXiv,arXiv:2506.05544,X3,-,abstract,online model prediction sets; no step size or delay
+G018,G1 G2,,"Li, R.",Economic risk certification for fixed day-ahead battery storage schedules under price uncertainty,SSRN,SSRN 7428425,X3,-,snippet,risk certification of schedules
+G019,G1,2026,"Dudek, G.",Recent Advances in Probabilistic Electricity Price Forecasting: A Review of Methods and Evaluation Metrics,Energies,,X3,-,snippet,review
+G020,G1,2026,"Chu, B.X.Y.",Robust Prediction Intervals for Time Series Forecasting: A Bootstrap and Bayesian Approach,Journal of Forecasting,,X3,-,snippet,"bootstrap and Bayesian intervals, not conformal"
+G021,G1,2026,"Bai, S.",Risk-Controlling Predictive Sets for Time-Series Events Under Selective Observation with Finite-Sample Guarantees,Axioms,,X3,-,snippet,"selective observation of labels, not delay"
+G022,G1,2026,"Laguna, J.",Temporal Conformal Prediction for Wind Turbine Anomaly Detection: A Robust Distribution-Free Framework with Conditional Clustering,J. Phys.: Conf. Ser.,,X3,-,snippet,anomaly detection
+G023,G2,2023,"Bhatnagar, A.",Improved online conformal prediction via strongly adaptive online learning,ICML (PMLR),,X3,i,snippet,"SAOCP; one-step, no delay"
+G024,G2,2026,"Amiri Shahbazi, M.",Heterogeneous-Horizon Conformal Ensembles for Online Prediction Under Distribution Shift: An Empirical Comparison with Strongly Adaptive Methods,Forecasting,,X3,-,snippet,an ensemble of online quantile calibrators; no delay in the snippet
+G025,G2,2024,"Podkopaev, A.",Adaptive conformal inference by betting,ICML 2024 (PMLR 235),arXiv:2412.19318,F,i,full text,row 37 (a): parameter-free ACI; delayed feedback not mentioned; one radius per step ahead
+G026,G2,2026,"Sabashvili, A.",Conformal Prediction Algorithms for Time Series Forecasting: Methods and Benchmarking,arXiv,arXiv:2601.18509,X4,-,record,row 13
+G027,G2,2025,"Li, R.",Neural conformal control for time series forecasting,AAAI,10.1609/aaai.v39i17.34029,X4,iii,record,row 26
+G028,G2,2026,"Heidrich, M.Z.",Patch-based transformer with mixture of experts and conformal inference for curtailment time series forecasting,IEEE,,X3,-,snippet,forecasting application
+G029,G2,2026,"Sun, S.",Conformal prediction for time-series forecasting with change points,NeurIPS,,X3,-,snippet,online CP with change points; no delay in the snippet
+G030,G2,2026,"He, X.",Online Multiscale Conformal Calibration for Response-Defined Wind-Ramp Groups,Processes,10.3390/pr14193119,X4,i,record,row 29
+G031,G2,,"Kara, M.R.",Beyond Point Forecasts: A Dynamically Adaptive Conformal Prediction and Explainable AI Framework for 112 Emergency Call Volume Forecasting,SSRN,SSRN 7111693,X3,-,snippet,forecasting application
+G032,G2,2025,"Huang, X.",Feature fitted online conformal prediction for deep time series forecasting model,arXiv,arXiv:2505.08158,X3,-,snippet,a smoother loss in place of the quantile loss
+G033,G2,2026,"Guo, R.",Delving into Non-Exchangeability for Conformal Prediction in Graph-Structured Multivariate Time Series,arXiv,,X3,-,snippet,graph time series
+G034,G2,2026,"Lee, J.",Conformal Prediction for Time Series with Deep Sequence Models,arXiv,arXiv:2610.02357,X3,iii,abstract,row 38 (b): deep sequence models for conditional quantiles; no delay or step size
+G035,G2,2025,"Moccardi, A.",A robust conformal framework for iot-based predictive maintenance,Future Internet,,X3,-,snippet,predictive maintenance application
+G036,G2,,"Yoon, Y.H.",Beyond point accuracy: reliability-aware evaluation of multi-horizon OHLC path forecasting,SSRN,SSRN 7313392,X3,-,snippet,evaluation of path forecasts
+G037,G2,2025,"Persson Suorra, N.",Multivariate Resource Usage Forecasting and Temporal Accuracy in Private Cloud Systems,,,X2,-,snippet,"citation entry, no abstract"
+G038,G2,2026,"Zhang, W.",State-Aware Dynamic Retrieval and Persistence-Anchored Expert Fusion for Very Short-Term Wind Power Forecasting Without Numerical Weather Prediction,Mathematics,,X3,-,snippet,forecasting application
+G039,G2,2026,"Opoku, J.",Spectral Adaptive Conformal Prediction for Structured Non-Exchangeable Data,arXiv,arXiv:2606.15950,X3,-,snippet,one-step localized calibration
+G040,G2,2026,"Li, J.",Sequential Confidence Sets for Coverage-Constrained Conformal Model Selection,arXiv,arXiv:2609.28522,X3,i,main text,row 37 (f): model selection by confidence sequences; no level recursion or step size; App. G.1 not reached
+G041,G2,,"Yu, C.",Conditional Quantile Adjusted Conformal Prediction for Time Series,researchgate.net,,X3,-,snippet,Cornish-Fisher quantile adjustment
+G042,G2,2026,"Düzgün, K.",Uncertainty-Aware Bus ETA Prediction Under Drift with Segment-Level Risk Decomposition,,,X2,-,snippet,"citation entry, no abstract"
+G043,G2,2025,"Ding, T.",Calibrated multi-level quantile forecasting,arXiv,arXiv:2512.23671,F,P2,full text,row 33: delayed coverage bound growing with the delay
+G044,G2,2025,"Sun, S.H.",Probabilistic Deep Learning for Uncertainty Quantification and Decision-Making,thesis (ProQuest),,X3,-,snippet,thesis
+G045,G3,2026,"Qiu, G.",Sensitivity-Aware Proactive Conformal Prediction for Remaining Useful Life Prognostics of PEMFCs,IEEE Transactions on Transportation Electrification,10.1109/tte.2026.3734462,X4,iii,record,"R025; row 31 (a), still to read"
+G046,G3,2026,"Cherenson, D.M.",Staggered Integral Online Conformal Prediction for Safe Dynamics Adaptation with Multi-Step Coverage Guarantees,arXiv,arXiv:2604.06058,F,i,full text,row 34: phase-interleaved thresholds
+G047,G3,2026,"Heddoub, A.",Online Conformal Prediction for Fault Diagnosis Under Operating Mode Transitions,IEEE conference,,A,i,snippet,row 38 (a): extended to handle delayed labels; to read
+G048,G3,2026,"Wang, S.",CoSMO: Conformal Semantic Mapping for Open-World Safe Robot Navigation,arXiv,,X3,-,snippet,the snippet says delayed labels are not used to correct the map

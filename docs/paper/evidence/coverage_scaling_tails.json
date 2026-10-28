@@ -1,0 +1,181 @@
+{
+  "_meta": {
+    "generated_utc": "2026-10-27T16:45:42+00:00",
+    "argv": [
+      "scripts/pilots/coverage_scaling_tails.py"
+    ],
+    "python": "3.12.3"
+  },
+  "0.5": {
+    "pid_qr": {
+      "coverage": 0.8996666666666666,
+      "loop_coverage": 0.8986666666666666,
+      "unscaled_change": 0.014140955504349684,
+      "gaussian": {
+        "change": 0.011106256650034396,
+        "narrower_runs": 2
+      },
+      "t5": {
+        "change": 0.010122441920212832,
+        "narrower_runs": 2
+      },
+      "t3": {
+        "change": 0.00930377912946212,
+        "narrower_runs": 2
+      },
+      "laplace": {
+        "change": 0.009701563290738902,
+        "narrower_runs": 2
+      }
+    },
+    "pid_theta": {
+      "coverage": 0.8986666666666666,
+      "loop_coverage": 0.8986666666666666,
+      "unscaled_change": 0.22421148685604586,
+      "gaussian": {
+        "change": 0.2237975313316134,
+        "narrower_runs": 0
+      },
+      "t5": {
+        "change": 0.22357057621253107,
+        "narrower_runs": 0
+      },
+      "t3": {
+        "change": 0.22338793644645638,
+        "narrower_runs": 0
+      },
+      "laplace": {
+        "change": 0.2236145086895256,
+        "narrower_runs": 0
+      }
+    },
+    "pid_matched": {
+      "coverage": 0.9026666666666667,
+      "loop_coverage": 0.8986666666666666,
+      "unscaled_change": -0.0034930789628390135,
+      "gaussian": {
+        "change": -0.015248737804476442,
+        "narrower_runs": 3
+      },
+      "t5": {
+        "change": -0.018999724851363364,
+        "narrower_runs": 4
+      },
+      "t3": {
+        "change": -0.02214361715984381,
+        "narrower_runs": 4
+      },
+      "laplace": {
+        "change": -0.020763214960179188,
+        "narrower_runs": 4
+      }
+    },
+    "spci": {
+      "coverage": 0.8846666666666667,
+      "loop_coverage": 0.8986666666666666,
+      "unscaled_change": -0.03109335551738901,
+      "gaussian": {
+        "change": 0.008408169146880251,
+        "narrower_runs": 3
+      },
+      "t5": {
+        "change": 0.020643686167774344,
+        "narrower_runs": 3
+      },
+      "t3": {
+        "change": 0.031044300361851906,
+        "narrower_runs": 3
+      },
+      "laplace": {
+        "change": 0.02746443685996436,
+        "narrower_runs": 3
+      }
+    }
+  },
+  "0.9": {
+    "pid_qr": {
+      "coverage": 0.901,
+      "loop_coverage": 0.8943333333333333,
+      "unscaled_change": 0.012505663496602093,
+      "gaussian": {
+        "change": -0.007241722931501715,
+        "narrower_runs": 2
+      },
+      "t5": {
+        "change": -0.013468329562562942,
+        "narrower_runs": 2
+      },
+      "t3": {
+        "change": -0.01865635682477229,
+        "narrower_runs": 3
+      },
+      "laplace": {
+        "change": -0.016372595104317877,
+        "narrower_runs": 3
+      }
+    },
+    "pid_theta": {
+      "coverage": 0.8946666666666665,
+      "loop_coverage": 0.8943333333333333,
+      "unscaled_change": 0.12075076927405304,
+      "gaussian": {
+        "change": 0.11536932543944345,
+        "narrower_runs": 0
+      },
+      "t5": {
+        "change": 0.1133493772350922,
+        "narrower_runs": 0
+      },
+      "t3": {
+        "change": 0.1118513662741385,
+        "narrower_runs": 0
+      },
+      "laplace": {
+        "change": 0.11355088521099055,
+        "narrower_runs": 0
+      }
+    },
+    "pid_matched": {
+      "coverage": 0.9026666666666667,
+      "loop_coverage": 0.8943333333333333,
+      "unscaled_change": 1.5993565273264565e-05,
+      "gaussian": {
+        "change": -0.0282028994992215,
+        "narrower_runs": 5
+      },
+      "t5": {
+        "change": -0.03731150850396103,
+        "narrower_runs": 4
+      },
+      "t3": {
+        "change": -0.04475594481317691,
+        "narrower_runs": 4
+      },
+      "laplace": {
+        "change": -0.04075849926548403,
+        "narrower_runs": 4
+      }
+    },
+    "spci": {
+      "coverage": 0.8813333333333333,
+      "loop_coverage": 0.8943333333333333,
+      "unscaled_change": -0.015705062826374627,
+      "gaussian": {
+        "change": 0.01959271177906574,
+        "narrower_runs": 1
+      },
+      "t5": {
+        "change": 0.03008288496812872,
+        "narrower_runs": 2
+      },
+      "t3": {
+        "change": 0.03908259107782697,
+        "narrower_runs": 2
+      },
+      "laplace": {
+        "change": 0.03692973122348109,
+        "narrower_runs": 2
+      }
+    }
+  }
+}

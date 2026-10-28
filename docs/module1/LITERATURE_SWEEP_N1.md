@@ -118,6 +118,7 @@ It adds:
 - forward citations of delayed-feedback conformal work and of ACI with delay terms: S11, S12.
 
 Google Scholar is not covered here and remains due before submission (THESIS_STANDARDS L7).
+[2026-10-27: a first pass is recorded below, after the full-text reads.]
 
 ### Scopus (Advanced search)
 
@@ -199,31 +200,42 @@ reference-list field):
 - W9: Cited Author `Angelopoulos A*`, Cited Year `2023`; select the entries for "Conformal PID
   control for time series prediction".
 - W10: Cited Author `Xu C*`, Cited Year `2022-2023`; select the entries for "Sequential predictive
-  conformal inference for time series".
+  conformal inference for time series". [2026-10-27: under `Xu C*` the list has about 25,000
+  entries, too many to page through. Narrowed, still to run: add Cited Title `sequential
+  predictive conformal*`.]
 - On each citing set: Refine, Search within results,
   `delay* OR "dead time" OR latency OR "step size" OR "learning rate"`.
 
-### Results (exports received 2026-10-22)
+### Results (exports received 2026-10-22 and 2026-10-27)
 
-Bien sent 12 Scopus CSV files and 8 Web of Science Excel files on 2026-10-22: 533 records.
+Bien sent 12 Scopus CSV files and 8 Web of Science Excel files on 2026-10-22: 533 records. On
+2026-10-27 he sent the S4 export (2 records), files for W9 and W10, and the result pages of four
+Google Scholar queries (next section).
 - **Which file is which query.** Each file was matched to its query by applying the issued
   strings to its records (`scripts/sweep/n1_screening.py`). Every record of every file meets its
   string, so the strings ran as issued. The one exception is an S2 record whose match turns on how
   Scopus tokenises "Al2O3". The REF() strings of S9 to S11 cannot be checked from an export.
 - **Hits** are the records exported. No export reached a database limit.
 - **Run date.** Every WoS record carries its export date, 2026-10-22. The Scopus files carry none
-  and arrived the same day.
-- **Not received:**
-  - S4: the two "Claim ii" files are byte-identical copies of the S3 export;
-  - W9 and W10, the cited-reference searches.
+  and are dated by their arrival.
+- **Second batch, 2026-10-27.** In the first batch, the two "Claim ii" files were byte-identical
+  copies of the S3 export, so S4 came later. The W9 and W10 files are not citing sets:
+  - W9's file is the cited-reference list of the search: 112 entries for 2023, of which 28 are
+    variants of the conformal PID paper, carrying 67 citing links. Its citing set is still to
+    export.
+  - W10's file is SPCI's own WoS record (WOS:001372555100031, exported 2026-10-22), found by its
+    title. It shows 0 citations in the Core Collection and in all databases, so no citing record
+    is linked to it. The cited-reference search under `Xu C*` lists about 25,000 entries, too
+    many to page through (Bien). A narrowed search is still due.
+  - The script reads both batches and records these counts in its summary.
 
 | ID | Run date | Hits | Exported file | Screened | Read in full (not reached) | Bearing on F4 or Section 3D |
 |---|---|---|---|---|---|---|
 | S1 | 2026-10-22 | 56 | Claim_i_delayed_feedback_in_conformal_methods.csv | 56 | 3 (4) | Rows 22, 30, 31; none fires. Most hits use "latency" as a system metric |
 | S2 | 2026-10-22 | 39 | Claim_i_step_size_and_stability_of_the_adaptive_loop.csv | 39 | 2 (1) | Rows 23, 24, 31 |
 | S3 | 2026-10-22 | 2 | Claim_ii_delay-limited_width_bound_1.csv (_2 identical) | 2 | 0 | Both use "conformal" in another sense (a LiDAR transformation, an acoustic array) |
-| S4 | | | Not received | | | To run and export |
-| S5 | 2026-10-22 | 18 | Claim_iii_a_forecaster_ahead_of_an_online_conformal_loop.csv | 18 | 1 (1) | Rows 27, 31 |
+| S4 | 2026-10-27 | 2 | Claim_ii_delay-limited_width_bound_2.csv (second batch) | 2 | 0 | Both already found by W4 (R372, R374): empirical widths in solar forecasting; no bound |
+| S5 | 2026-10-22 | 18 | Claim_iii_a_forecaster_ahead_of_an_online_conformal_loop.csv | 18 | 2 | Rows 27, 36 |
 | S6 | 2026-10-22 | 3 | Process_domain_1.csv | 3 | 0 | Two interval soft sensors under scarce or delayed laboratory labels, neither conformal (Blazic et al. 2024, Appl. Soft Comput.; Ma et al. 2026, Sensors) |
 | S7 | 2026-10-22 | 7 | Process_domain_2.csv | 7 | 0 | Classical Smith predictors; no interval method |
 | S8 | 2026-10-22 | 10 | TEP_random-number_defect.csv | 10 | 0 | Row 32 |
@@ -235,27 +247,32 @@ Bien sent 12 Scopus CSV files and 8 Web of Science Excel files on 2026-10-22: 53
 | W2 | 2026-10-22 | 30 | savedrecs_1.xls | 30 | 1 | Row 24 |
 | W3 | 2026-10-22 | 3 | savedrecs_2.xls | 3 | 1 | Row 28 |
 | W4 | 2026-10-22 | 4 | savedrecs_3.xls | 4 | 0 | Empirical interval widths (solar forecasting, biomass); no bound |
-| W5 | 2026-10-22 | 15 | savedrecs_4.xls | 15 | 1 (1) | Rows 27, 31 |
+| W5 | 2026-10-22 | 15 | savedrecs_4.xls | 15 | 2 | Rows 27, 36 |
 | W6 | 2026-10-22 | 3 | savedrecs_5.xls | 3 | 0 | As S6 |
 | W7 | 2026-10-22 | 2 | savedrecs_6.xls | 2 | 0 | As S7 |
 | W8 | 2026-10-22 | 11 | savedrecs_7.xls | 11 | 0 | Row 32 |
-| W9, W10 | | | Not received | | | To run and export |
+| W9 | 2026-10-27 | 112 cited-reference entries | Conformal_PID.xlsx (second batch) | | | The cited-reference list, not the citing set (above). Still to export |
+| W10 | 2026-10-22 | 1 record | SPCI.xls (second batch) | | | SPCI's own record, with no linked citation (above). A narrowed cited-reference search is still due |
 
-**Screening.** The 533 records (531 with S3 counted once) reduce to 377 unique ones:
-- 362 are in Scopus and 105 in WoS, 90 in both. WoS adds 15 records that Scopus lacks.
+**Screening.** The 533 records of 2026-10-22 (531 with S3 counted once) and the 2 of S4 reduce to
+377 unique ones:
+- 364 are in Scopus and 105 in WoS, 92 in both. WoS adds 13 records that Scopus lacks.
 - Every title and abstract was screened. The log
-  (`docs/module1/sweep/N1_database_screening_2026-10-22.csv`) gives each record a code:
+  (`docs/module1/sweep/N1_database_screening_2026-10-22.csv`) gives each record a code. Since
+  2026-10-27 it includes S4, and R112 is read (row 36). On 2026-10-28 five interval methods
+  that the default for the reference-list searches had coded X2 (R205, R207, R259, R269 and
+  R339) were recoded X3, after the third pass of the check and its re-check:
 
 | Code | Meaning | Records |
 |---|---|---|
 | X1 | "conformal" only in another sense (coatings, antennas, meshes, physics) | 25 |
-| X2 | no conformal or interval method in the title or abstract (a reference-list or keyword match) | 108 |
-| X3 | a conformal or interval method that bears on none of F4 (i) to (iii) or Section 3D | 201 |
+| X2 | no conformal or interval method in the title or abstract (a reference-list or keyword match) | 103 |
+| X3 | a conformal or interval method that bears on none of F4 (i) to (iii) or Section 3D | 206 |
 | X4 | already in this record or the project library | 6 |
 | X5 | uses TEP data or the simulator; nothing on its random-number generator | 11 |
 | X6 | classical dead-time compensation, without intervals | 3 |
-| F | may bear; read in full (rows 22 to 24 and 26 to 30) | 16 |
-| A | may bear; full text not reached from the workspace (row 31) | 7 |
+| F | may bear; read in full (rows 22 to 24, 26 to 30 and 36) | 17 |
+| A | may bear; full text not reached from the workspace (row 31) | 6 |
 
 The raw exports stay out of git: the database terms restrict redistribution, and the abstracts
 belong to the publishers. The summary beside the log records each file's SHA-256.
@@ -268,7 +285,7 @@ of row 32. None of these four is in either database.
 
 | # | Source | Finding | Bearing on N1'' |
 |---|---|---|---|
-| 21 | Wang and Hyndman, "Online conformal inference for multi-step time series forecasting", arXiv 2410.13115 (v1 17 Oct 2024, v2 Feb 2026; Monash EBS working paper 20/2024; R package conformalForecast). Not in Scopus or WoS; found by web search; full text read | **The loop.** Multi-step conformal PID (MPID) and AcMCP, q_{t+h\|t} = q_{t+h-1\|t-1} + eta (err_{t\|t-h} - alpha) + r_t(sum of past errors) + e~_{t+h\|t} (Eq. 8). Sec. 3.4: "The "P" control shows an h-period delay in updating the quantile estimate". **The forecaster.** e~ combines an MA(h - 1) model fitted to the h-step errors observed by t with a regression on shorter-horizon errors (Sec. 4.2). **Theory.** Cor. 1 bounds the coverage gap of the plain delayed iteration by (b + eta h) / (eta (T - h)). Prop. 3: "increasing the forecast horizon h amplifies in-sample deviations from the target coverage". **The ablation.** AcMCP is compared with the same loop without e~ (MPI). On local coverage the comparison is one figure, on the electricity data: Fig. 8 plots coverage over rolling windows of 100 for MPI, MPID and AcMCP, and Sec. 5.3 says "MPI and AcMCP display similar coverage pattern, AcMCP is capable of constructing narrower intervals than MPI". Elsewhere MPI appears only in interval bounds (Fig. 4, AR(2)) and in full-sample coverage per horizon (Fig. 11, eating out: "compared to MPI, AcMCP exhibits slightly less deviation from the desired coverage across most forecast horizons"). Table 1 gives the minimum and maximum local coverage of MACP and AcMCP only. **Not analysed.** The step size is eta = 0.01 B_t at every horizon, and the paper says "our methodology does not incorporate an automated procedure for tuning the learning-rate parameter". It counts no miss runs and gives no width bound | **(i) does not fire**: there is no stability limit, noise gain, infinite share or step-size rule. Cor. 1 is, however, the analogue of P2's bound for the same single-state delayed recursion, in quantile space, and it predates N1''. P2's origin is corrected (PHASE1_PREREGISTRATION Section 4). **(ii) does not fire.** **(iii) fires on its local-coverage clause.** This is a residual forecast ahead of a delayed online conformal loop, compared with the loop without it, on local coverage. That meets two of the three conditions of PHASE1_PREREGISTRATION A.6: the forecaster is isolated, and the delay is recognised and varied. The third, an analysis of step size or miss persistence, is absent. The evidence is thin (one dataset, one figure, a finding of no difference), and a lenient reading would not fire. The strict reading is taken, because it can only make N1'' claim less. For claim 2, see the verdict below and D-P1.12 |
+| 21 | Wang and Hyndman, "Online conformal inference for multi-step time series forecasting", arXiv 2410.13115 (v1 17 Oct 2024, v2 Feb 2026; Monash EBS working paper 20/2024; R package conformalForecast). Not in Scopus or WoS; found by web search; full text read | **The loop.** Multi-step conformal PID (MPID) and AcMCP, q_{t+h\|t} = q_{t+h-1\|t-1} + eta (err_{t\|t-h} - alpha) + r_t(sum of past errors) + e~_{t+h\|t} (Eq. 8). Sec. 3.4: "The "P" control shows an h-period delay in updating the quantile estimate". **The forecaster.** e~ combines an MA(h - 1) model fitted to the h-step errors observed by t with a regression on shorter-horizon errors (Sec. 4.2). **Theory.** Cor. 1 bounds the coverage gap of the plain delayed iteration by (b + eta h) / (eta (T - h)). Prop. 3: "increasing the forecast horizon h amplifies in-sample deviations from the target coverage". **The ablation.** AcMCP is compared with the same loop without e~ (MPI). On local coverage the comparison is one figure, on the electricity data: Fig. 8 plots coverage over rolling windows of 100 for MPI, MPID and AcMCP, and Sec. 5.3 says "MPI and AcMCP display similar coverage pattern, AcMCP is capable of constructing narrower intervals than MPI". Elsewhere MPI appears only in interval bounds (Fig. 4, AR(2)) and in full-sample coverage per horizon (Fig. 11, eating out: "compared to MPI, AcMCP exhibits slightly less deviation from the desired coverage across most forecast horizons"). Table 1 gives the minimum and maximum local coverage of MACP and AcMCP only. **Not analysed.** The step size is eta = 0.01 B_t at every horizon, and the paper says "our methodology does not incorporate an automated procedure for tuning the learning-rate parameter". It counts no miss runs and gives no width bound | **(i) does not fire**: there is no stability limit, noise gain, infinite share or step-size rule. Cor. 1 is, however, the analogue of P2's bound for the same single-state delayed recursion, in quantile space, and it predates N1''. P2's origin is corrected (PHASE1_PREREGISTRATION Section 4). **(ii) does not fire.** **(iii) fires on its local-coverage clause.** This is a residual forecast ahead of a delayed online conformal loop, compared with the loop without it, on local coverage. That meets two of the three conditions of PHASE1_PREREGISTRATION A.6: the forecaster is isolated, and the delay is recognised and varied. The third, an analysis of step size or miss persistence, is absent. The evidence is thin (one dataset, one figure, a finding of no difference), and a lenient reading would not fire. The strict reading is taken, because it can only make N1'' claim less. For claim 2, see the verdict below and D-P1.12. [2026-10-28: the labels and quotes of this row follow v2 (2026-02-02). In v1 (2024-10-17) the bound is Prop. 4, the eating-out result is Fig. 12, there is no Table 1, Sec. 3.4 reads "The P control in MPID shows a delayed correction of the quantile estimate for a length of h periods", and its Sec. 5.3, on Fig. 8, reads "MPI and AcMCP coverage display similar pattern". The verdict rests on v1 as much as on v2. The authors are revising the paper (github.com/xqnwang/cpts, commit d972b6e of 2026-10-27): eta becomes 0.1 B-hat_t, delayed feedback is named throughout, and a finite-window bound on local coverage is added. On a search of its source nothing more fires; the published version is to be screened again before submission] |
 | 22 | Dixit, Lindemann, Wei, Cleaveland, Pappas and Burdick, "Adaptive conformal prediction for motion planning among dynamic agents", L4DC 2023, PMLR 211 (S1, S12, W1); full text read | The tau-step ACP uses "the tau step-ahead prediction error that was made tau time steps ago" (Eq. 4). Coverage is proved for one step only: "only the one step-ahead prediction errors are relevant" (Thm 3). MPC infeasibility "arises during sudden changes in the size of the uncertainty sets when the learning rate gamma is chosen too large" (Sec. 5) | (i) Does not fire: the delayed update is run, not analysed. It is the earliest delayed-feedback ACI found; to cite |
 | 23 | Hallberg Szabadvary, "Adaptive conformal inference for multi-step ahead time-series forecasting online", COPA 2024, PMLR 230 (S2, S9, S12); full text read | One ACI per step, each updated with its own step's error once that error is observed (Eq. 6 to 8). The ACI bound is restated per step (Eq. 9, 10). Sec. 3: "it would therefore seem natural to set the learning rates successively larger the further ahead we predict". Sec. 4.3: "If the learning rates are chosen too high, there is a risk of loosing stability", seen in one figure. Its one per-step learning-rate example changes the target error at the same time | (i) Does not fire. The heuristic runs against P1, whose stability limit 2 sin(pi / (4 theta + 2)) falls as the delay grows; the manuscript can say so |
 | 24 | Zaffran, Feron, Goude, Josse and Dieuleveut, "Adaptive conformal predictions for time series", ICML 2022, PMLR 162 (S2, S12, W2); full text read | Theta = 0 only. Thm 3.1, exchangeable scores: the average length grows linearly with gamma. Thm 3.2, AR(1) residuals: (alpha_t, eps_{t-1}) is a Markov chain with a unique stationary law; the efficient gamma is found numerically and is not monotone in phi (Fig. 2). Sec. 3.2: "very large gamma cause the algorithm to be less stable and produce numerous infinite intervals" | (i) Does not fire. It is prior art for the step-size trade-off on autocorrelated residuals without delay, which the noise-gain discussion (O2) cites. N1 claims only the dependence on the delay |
@@ -278,10 +295,38 @@ of row 32. None of these four is in either database.
 | 28 | Knuppel, "Forecast-error-based estimation of forecast uncertainty when the horizon is increased", Int. J. Forecasting 34 (2018) (W3); Bundesbank DP 40/2014 read | Estimates the h-step forecast-error variance, sigma^2 sum_{i<h} b_i^2 in Wold form, jointly across horizons by SUR. No intervals, no conformal method, no bound | (ii) Does not fire. P3 rests on the classical identity (Box and Jenkins; Harris 1989), cited as such |
 | 29 | "Online multiscale conformal calibration for response-defined wind-ramp groups", Processes 14 (2026) 3119 (W1); read | Per-horizon controllers with an event queue, so that feedback "becomes eligible only when v_i <= t at a subsequent issuance"; "Target-time sorting alone does not enforce this rule". A post-review audit found premature feedback in the paper's own earlier evaluation, which was then reanalysed. Thm 1 bounds group miscoverage, with a term that pending feedback can leave positive. No stability or step-size analysis | (i) Does not fire. A published instance of the evaluation error that the delay convention prevents; usable in the introduction |
 | 30 | Nine applications read in full (S1, S9, S10, S12, W1). Delay-compensated teleoperation (CCTA 2025): offline split CP; the compensator acts on control commands. ConformIDS (IJIES 2026): ACI window W* = L*(1 + rho_1) / (1 - rho_1) under AR(1), with the step size set separately and label delay tested only empirically. Certified inventory control (Oper. Res. Lett. 2026): no lead time. Conformal control of storage arbitrage (e-Energy 2026): a temporal-difference proxy for a delayed value, with a one-step lag. CUQDS (AAAI 2025): no delay handling. On-line conformalized ensembles for day-ahead prices (Appl. Energy 2025): conformal PI control; delay not discussed. Egocentric CP in MPC (CDC 2025): per-step ACP with lagged feedback. Feedback-enhanced online multiple testing (JMLR 2026): FDR control, no interval loop. Signed ACI for multi-horizon wind (Energies 2026): per-horizon updates once labels arrive, eta fixed at 0.02 | None analyses a delayed loop's stability or step size, or a forecaster's effect on miss persistence | (i) and (iii) do not fire |
-| 31 | Seven records that may bear; full text not reached from the workspace (paywall or rate limit). (a) Qiu et al., sensitivity-aware proactive conformal prediction for PEMFC prognostics, IEEE Trans. Transp. Electrif. 2026: the abstract says ACP's "dependence on delayed label feedback" is met by a proactive proxy. (b) Meng et al., a soft sensor with "PID-guided conformal inference", Measurement 2026: two processes, label delay not stated. (c) Five applications with delayed feedback: IEEE Access 2026; Aerosp. Sci. Technol. 2027; J. Supercomput. 2026; Energies 2026; LNCS 2025 | No abstract states an analysis of a delayed loop | Abstract-level verdict: none fires. To read before submission, (a) and (b) first. (a) is the abstract closest to claim 2. If (b) runs conformal PID on the debutanizer, Section 5.3's conformal PID baseline has a process precedent, and the positioning in rows 5 and 7 changes |
+| 31 | Seven records that may bear; full text not reached from the workspace (paywall or rate limit). (a) Qiu et al., sensitivity-aware proactive conformal prediction for PEMFC prognostics, IEEE Trans. Transp. Electrif. 2026: the abstract says ACP's "dependence on delayed label feedback" is met by a proactive proxy. (b) Meng et al., a soft sensor with "PID-guided conformal inference", Measurement 2026: two processes, label delay not stated. (c) Five applications with delayed feedback: IEEE Access 2026; Aerosp. Sci. Technol. 2027; J. Supercomput. 2026; Energies 2026; LNCS 2025 | No abstract states an analysis of a delayed loop | Abstract-level verdict: none fires. To read before submission, (a) and (b) first. (a) is the abstract closest to claim 2. If (b) runs conformal PID on the debutanizer, Section 5.3's conformal PID baseline has a process precedent, and the positioning in rows 5 and 7 changes. [2026-10-27: the Energies record (R112) was read, row 36. Six remain, and row 38 (a) adds a seventh. 2026-10-28: (c) wrongly counted the LNCS record (R073) as an application with delayed feedback; its abstract describes an ACI learning-rate method and no delay, as the log's note says. It stays to read, for its learning-rate method] |
 | 32 | Section 3D. Databases: S8 (10 records) and W8 (11). Web, 2026-10-22: Kitchin, tep-rust, a Rust port of the TEP simulator (github.com/jkitchin/tep-rust, HEAD 0735ad3 of 2026-10-20; LOG.org and the book read) | **Databases.** No record mentions TEP's generator. All use the simulator or its data, several with "N random seeds" for their own training. **tep-rust** reproduces TESUB7 bit for bit. Its log records three things. G * 9228907 exceeds 2^53 on 0.7716 of draws, so "rounding is part of the algorithm" (B-0005, 2026-08-10). 27 of the 54 dataset seeds in teprob.f are even, so "those runs have a shorter period and low bits that never move" (B-0047a, 2026-08-28). And a cycle search found "no return to the starting state within 2e9 states" (2026-08-29) | **The precision loss is reported** (Kitchin 2026). **The defect of Section 3D is not.** Rounding adds trailing zero bits to every seed's state until G = 2^k m. After that the stream cycles with period 2^(30 - k) draws, 0.55 to 141 h, and seeds share the cycles. A search for a return to the starting state cannot see such a cycle, because the state never returns to its start. Section 3D is corrected to cite Kitchin |
 
-## Verdict of the database sweep, 2026-10-22
+## Second batch and Google Scholar, 2026-10-27
+
+Google Scholar (THESIS_STANDARDS L7), first pass. Bien ran four queries on 2026-10-27 and copied
+the result pages as text. The pages are kept with the second batch, and the summary JSON records
+their SHA-256. Each result is screened in `docs/module1/sweep/N1_scholar_screening_2026-10-27.csv`
+on its title and snippet, and on the abstract or full text where it may bear. The codes are the
+database log's, with X4 extended to rows 1 to 32 and the log.
+
+| ID | Query | Results copied | Unique | Read (not reached) | Bearing on F4 or Section 3D |
+|---|---|---|---|---|---|
+| G1 | `"online conformal" "multi-step" "forecast errors"` | 22 | 22 | 5 | Rows 35, 37; rows 2, 21, 25 and 30 found again |
+| G2 | `"online conformal prediction" "multi-horizon" forecasting` | 28 (6 also in G1) | 22 | 3; 1 at abstract level only, row 38 (b) | Rows 33, 37, 38; rows 13, 25, 26 and 29 found again |
+| G3 | `"adaptive conformal prediction" "delayed labels" forecasting` | 4 (all) | 4 | 1 (1) | Rows 34, 38; row 31 (a) found again |
+| G4 | `debutanizer "soft sensor" "conformal prediction" PID` | 0 | 0 | 0 | Row 38 |
+
+The 48 unique results: X2 3, X3 28, X4 8, F 8, A 1. G1 found Wang and Hyndman (row 21), which
+the databases missed; so the family of terms the 2026-10-22 verdict added does reach it. The full
+pass, with the first 100 results of each query, remains due before submission.
+
+| # | Source | Finding | Bearing on N1'' |
+|---|---|---|---|
+| 33 | Ding, Gibbs and Tibshirani, "Calibrated multi-level quantile forecasting" (MultiQT), arXiv 2512.23671 (G2); full text read | The outcome of a forecast made at t is revealed at t + D, with D = h - 1: "a four-week-ahead forecast has a lead time of four and corresponds to a feedback delay of D=3" (Sec. 2). Thm 2 bounds the calibration error of the delayed iterates by 2 \|\|theta~_1\|\| / (eta T) + sqrt(m (2D + 1) / T + 2 R m^2 / (eta d_A T)): "the bound worsens with increasing delay, which is unsurprising". Thm 4 adds eta (2D + 1) L^2 / 2 to the regret. No limit on eta falls with D; the bounded-distance result (Lemma 3) is for no delay only; the learning-rate heuristic (Sec. 5) does not use D. Aggregate metrics only | (i) Does not fire. A further delayed-feedback coverage bound that grows with the delay, beside Wang and Hyndman's Cor. 1 (row 21) and P2's bound (PHASE1_PREREGISTRATION Section 4). Cited with them (P11) |
+| 34 | Cherenson and Panagou, "Staggered integral online conformal prediction for safe dynamics adaptation with multi-step coverage guarantees", arXiv 2604.06058 (G3); full text read | P = T_p / Delta t thresholds; the thread j = k mod P is active at step k and is updated with the "true label for the prediction made by thread j at time t_k - T_p" (Eq. 10). The threads are phase-interleaved, as in El Halabi and Brandt (row 2). Thm 1: long-run safety. Rem. 2: "The asymptotic safety guarantee extends to arbitrary positive step size sequences"; its bound (Eq. 18) has no delay term. Adaptation on and off is compared on overall coverage only (Figs. 2, 3) | (i) Does not fire. The staggered threads avoid the dead-time loop, as row 2's do, and the step size is not analysed against the delay. Cited with row 2 (P11) |
+| 35 | Liu, Kang, Miao and Wang, "Efficient conformal prediction intervals for time series: online PID-Expert aggregation", arXiv 2610.02777 (G1); full text read | One-step-ahead only: "All experiments use one-step-ahead forecasting with symmetric prediction intervals" (Sec. 5). The stability condition is a drift assumption on the miss rate at high multipliers (Assumption 2, Eq. 13), with no delay. Minimum rolling coverage over windows of 100 is reported (Table 1). Conformal PID and PID-Expert share a Theta scorecaster, which is not ablated; the multiplier step is fixed at 0.02 | (i) and (iii) do not fire: no delay |
+| 36 | Cheng, Yan, Nan and Sun, "Risk-aware rolling-horizon scheduling of a PV-battery-EV charging station via adaptive conformal prediction", Energies 19 (2026) 4093 (R112; S5, W5); read 2026-10-27 | Per-lead ACI with a projection: alpha_{t,h} = Pi_A[alpha_{t-1,h} + gamma (alpha* - e_{t,h})] (Eq. 15). The miss indicator compares the outcome with the bound issued h steps earlier (Eq. 14), so the update is fed h periods late; the paper does not say so. The step size is discussed only in words ("A larger gamma allows the upper bound to expand more rapidly after consecutive miscoverage events"), with no value, sensitivity or stability analysis | (i) Does not fire. Another delayed per-lead loop run without analysis, like rows 22 and 30 |
+| 37 | Six more from G1 and G2: five read in full, (f) in part. (a) Podkopaev, Xu and Lee, "Adaptive conformal inference by betting", ICML 2024, PMLR 235 (arXiv 2412.19318). (b) Guo et al., "CoCoNav: conformal control for safe robot navigation in crowds", arXiv 2608.07751. (c) Wang and Girolimetto, "conformalForecast: an R package for sequential conformal prediction in time series", arXiv 2610.21648. (d) Oancea, "Dynamic regime-aware conformal calibration for reliable economic forecast intervals under multiple distribution shifts", arXiv 2608.17079. (e) Liu, Farkiani, Li and Crowley, "BACC: budget-aware calibration and control for horizontal autoscaling", arXiv 2606.20575. (f) Li and Zhu, "Sequential confidence sets for coverage-constrained conformal model selection", arXiv 2609.28522 | (a) Parameter-free ACI, with no step size to tune. Delayed feedback is not mentioned. At H = 5 there is one radius per step ahead, in the stock data "updated on a weekly basis" (Sec. 3), so each radius has its outcome before its next use. Localized coverage is plotted, without an ablation. (b) A horizon-specific conformal P + I controller fed "the delayed score s_k^tau, which evaluates the forecast issued at k - tau" (Sec. IV.B.2, Eqs. 9 to 11). Coverage is proved for tau = 1 only (Prop. 1). "Under the shift, ACP repeatedly diverges, saturating to the infinite-uncertainty bound" (Sec. V.F.1), at an unstated horizon. (c) Software for SCP, WCP, ACP, PID and AcMCP, with no new method or theory. Rolling coverage of all methods is plotted (Fig. 4) without isolating the forecaster; data-adaptive learning rates are future work. (d) An ACI controller with the delay-free bound (1 + 2 gamma) / (gamma T) (Thm 2a). Outcomes are queued until observable (Sec. 6.5). The controller, not a forecaster, is ablated, on coverage deviation. (e) An ACI-style pacing update on an SLO error (Eq. 9); the split-conformal score history is built from completed forecast windows (Sec. III-B and III-C). Calibration on and off is compared on SLO outcomes only. (f) Model selection by confidence sequences, with no level recursion or step size. Its delayed multi-horizon extension (App. G.1) was not reached | (i) and (iii) do not fire. None analyses a delayed loop's stability or step size, or isolates a forecaster ahead of one. (a) is the step-size-free alternative a reviewer will raise (P12) |
+| 38 | Not reached, or read at abstract level. (a) Heddoub, Homri and Siadat, "Online conformal prediction for fault diagnosis under operating mode transitions", 2026 IEEE conference (G3). (b) Lee, Lee and Xie, "Conformal prediction for time series with deep sequence models", arXiv 2610.02357 (G2). (c) G4 | (a) The snippet says the framework is extended "to handle delayed labels". No open copy was found on 2026-10-27. (b) Abstract read; the full text was rate-limited twice. Deep sequence models for conditional quantile regression, quantile-function estimation and localized CP, with asymptotic conditional coverage. No delay, step size or width bound. (c) No result | (a) Joins row 31's list: seven records to read. (b) Does not bear. (c) Does not settle row 31 (b). That paper says "conformal inference", which the phrase "conformal prediction" may miss. The full pass adds G4 with "conformal inference" |
+
+## Verdict of the database sweep, 2026-10-22, updated 2026-10-27
 
 - **F4 (i) does not fire.**
   - The closest are El Halabi and Brandt (row 2), Wang and Hyndman's Cor. 1 (row 21), Dixit et
@@ -289,19 +334,27 @@ of row 32. None of these four is in either database.
   - None gives the stability limit, the noise gain, the infinite share or a delay-dependent
     step-size rule of the single-state loop.
   - P2's bound is not new: Wang and Hyndman's Cor. 1 is its analogue in quantile space.
-- **F4 (ii) does not fire** (rows 21, 28; W4 holds only empirical widths).
+  - 2026-10-27: MultiQT (row 33) adds a further delayed coverage bound that grows with the delay,
+    and SI-OCP (row 34) another phase-interleaved recursion. Neither analyses stability or step
+    size against the delay.
+- **F4 (ii) does not fire** (rows 21, 28; W4 and S4 hold only empirical widths).
 - **F4 (iii) fires on its local-coverage clause** (row 21).
   - Wang and Hyndman compare a delayed P + I loop with and without a residual forecast on
     coverage over rolling windows (electricity, Fig. 8), and find a "similar coverage pattern".
   - They do not analyse the step size, which is fixed, or the persistence of misses.
   - The evidence is thin, and the strict reading is taken because it can only claim less.
-  - As ratified, claim 2 leaves the claims. D-P1.12 proposes to keep a narrowed claim 2':
-    persistence and step size, with the delay varied at a fixed predictor. Local coverage is
-    then reported, not claimed. Bien decides (PHASE1_PREREGISTRATION Section 9).
+  - Under the rule as ratified, claim 2 leaves the claims. D-P1.12, ratified 2026-10-27, keeps a
+    narrowed claim 2': persistence and step size, with the delay varied at a fixed predictor
+    (point model). Local coverage is reported, not claimed (PHASE1_PREREGISTRATION Section 9).
+    D-P1.13, proposed 2026-10-28, adds F8, a rule that can reject claim 2'.
+  - 2026-10-27: rows 33 to 38 add no comparison of a delayed loop with and without a forecaster
+    on local coverage, miss persistence or step size. (SI-OCP, row 34, compares adaptation on
+    and off on overall coverage only.)
 - **Section 3D**: the precision loss is Kitchin's (2026). The eventual short cycles and their
   sharing across seeds remain unreported (row 32).
 - **Process positioning.** "No conformal soft sensor under laboratory delay" (rows 5 and 7)
-  still holds in both databases, subject to row 31 (b).
+  still holds in both databases, subject to row 31 (b). G4 found nothing, but cannot test it
+  (row 38 (c)).
 
 Constraints added to the list at the top:
 - P5. Cite Wang and Hyndman (2024) for the multi-step delayed loop, its coverage bound (Cor. 1)
@@ -315,9 +368,21 @@ Constraints added to the list at the top:
 - P9. Cite Kitchin (2026) for TESUB7's precision loss. Claim only the eventual short cycles and
   their sharing across seeds.
 - P10. Appendix A's matched conformal PID has AcMCP's structure, and the manuscript says so.
+- P11 (2026-10-27). Cite Ding, Gibbs and Tibshirani (row 33) beside Wang and Hyndman's Cor. 1
+  for delayed coverage bounds that grow with the delay. Cite Cherenson and Panagou (row 34) beside
+  El Halabi and Brandt for phase-interleaved updates.
+- P12 (2026-10-27). Cite Podkopaev et al. (row 37 a) as the step-size-free alternative to a
+  step-size rule. Its behaviour under delayed feedback is not analysed there, and N1'' does not
+  test it, so the manuscript makes no claim about it.
 
 Still due before submission:
-- S4, W9 and W10: run, record the hit counts and export.
-- Google Scholar (THESIS_STANDARDS L7), which also reaches arXiv. Add the family of terms that
-  missed row 21: "multi-step" or "multi-horizon" with "online conformal" and "forecast errors".
-- Row 31: read the seven records, (a) and (b) first.
+- W9: the citing set. In the cited-reference results, select the 28 variants of "Conformal PID
+  control for time series prediction", then See Results and export (about 67 citing links).
+- W10: a narrowed cited-reference search, Cited Author `Xu C*` with Cited Title `sequential
+  predictive conformal*` and Cited Year `2022-2023`; select the variants, then See Results and
+  export. S10 already gives the Scopus citing set (72 records).
+- Google Scholar, the full pass: the first 100 results of G1 and G2 (22 and 28 copied so far),
+  and G4 again with "conformal inference" in place of "conformal prediction". G3 is complete.
+- Rows 31 and 38 (a): read the seven records, row 31 (a) and (b) first.
+- Row 37 (f): Li and Zhu's App. G.1 (delayed multi-horizon feedback), not reached.
+- Row 21: screen the published version of Wang and Hyndman's revision again.
