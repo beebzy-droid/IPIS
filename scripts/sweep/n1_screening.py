@@ -8,15 +8,17 @@ the abstracts are the publishers'. They are kept outside git (for example in pri
 which .gitignore excludes). The summary JSON records the SHA-256 of every file read, so the
 log can be traced to the exports without publishing them.
 
-The exports came in two batches, each kept in its own folder under the names it was received
+The exports came in three batches, each kept in its own folder under the names it was received
 with (the 8-character prefixes the upload added may stay):
 - 2026-10-22: the 20 files of FILE_TO_QUERY;
 - 2026-10-27: the files of BATCH2. The S4 export is screened with the first batch. W9's file
   is the cited-reference list, not the citing set, and W10's is the record of SPCI itself, so
   both are summarised, not screened. The Google Scholar pages are hashed only; they are
-  screened by hand in docs/module1/sweep/N1_scholar_screening_2026-10-27.csv.
+  screened by hand in docs/module1/sweep/N1_scholar_screening_2026-10-27.csv;
+- 2026-10-28: the files of BATCH3, the citing sets of W9 and W10 (full records), screened.
 Run, from the repository root:
     python3 scripts/sweep/n1_screening.py private/sweep/2026-10-22 private/sweep/2026-10-27
+        private/sweep/2026-10-28
 Requires xlrd >= 2 for the Web of Science .xls files.
 
 It writes docs/module1/sweep/N1_database_screening_2026-10-22.csv, with titles and
@@ -93,6 +95,13 @@ BATCH2 = {
     "Search_4_-_debutanizer__quote_soft_sensor_unquote___quote_conformal_prediction_unquote__PID.txt": "G4",
 }
 BATCH2_TAG = "2026-10-27/"
+
+# Third batch, received 2026-10-28: the citing sets of W9 (conformal PID, from the 28 variants)
+# and W10 (SPCI, by the narrowed cited-reference search), Web of Science full records.
+BATCH3 = {"W9.xls": "W9", "W10.xls": "W10"}
+BATCH3_TAG = "2026-10-28/"
+# The protocol's refinement of each citing set ("Search within results")
+REFINE = ("delay*", "dead time", "latency", "step size", "learning rate")
 
 # Decisions that differ from the default for the record's group, keyed by DOI, else by the
 # Scopus EID or the WoS UT. (code, F4 item or topic, note)
@@ -178,31 +187,31 @@ DECISIONS = {
         "ii",
         "Knuppel 2018: SUR estimator of h-step forecast-error variance (Wold form); no intervals or bound",
     ),
-    # May bear; full text not reached
+    # Read 2026-10-28 (rows 39 to 44); coded A before, with the full text not reached
     "10.1109/tte.2026.3734462": (
-        "A",
+        "F",
         "iii",
-        "ACP whose dependence on delayed label feedback is addressed by a proactive uncertainty proxy (MIAD)",
+        "read 2026-10-28 (row 40): adaptive CP tracking a radius on delayed indicators, d = 6 (Eq. 12), its step size raised by a label-free uncertainty signal (MIAD, Eq. 13); marginal PICP and PINAW only; nothing analysed in d",
     ),
     "10.1016/j.measurement.2026.122647": (
-        "A",
+        "F",
         "process",
-        "soft sensor with PID-guided conformal inference on two processes; abstract silent on label delay",
+        "read 2026-10-28 (row 39): PID-guided conformal soft sensor on the sulfur recovery unit and a cooling load; labels used at once; Thm 1 bounds the miss run without delay",
     ),
     "10.1109/access.2026.3709868": (
-        "A",
+        "F",
         "i",
-        "graph-diffused drift-adaptive CP with ACI; delayed reference labels named as a cause of drift",
+        "read 2026-10-28 (row 42): graph-weighted ACI; a reference label enters after its interval is issued, with no delay length; eta tuned on a calibration segment",
     ),
     "10.1016/j.ast.2026.113895": (
-        "A",
+        "F",
         "i",
-        "online adaptive CP fed by delayed feedback in satellite scheduling",
+        "read 2026-10-28 (row 42): projected quantile tracking fed by delayed truth (Eq. 20); eta = 0.01 fixed; no stability or step-size analysis",
     ),
     "10.1007/s11227-026-08865-z": (
-        "A",
+        "F",
         "i",
-        "delayed recursive least-squares updates with 90 % conformal intervals",
+        "read 2026-10-28 (row 42): split conformal on a past-only residual queue, appended when the h-step label arrives; no level recursion or step size",
     ),
     "10.3390/en19174093": (
         "F",
@@ -210,9 +219,20 @@ DECISIONS = {
         "read 2026-10-27: per-lead ACI with a projection (Eq. 15), fed h periods late; step size discussed qualitatively; no analysis of the lag",
     ),
     "10.1007/978-3-031-88036-0_16": (
-        "A",
+        "F",
         "i",
-        "ACI with an adaptive learning rate against width explosions; no delay in the abstract",
+        "read 2026-10-28 (row 43) in the 2024 master's thesis, the chapter not reached: ACI with a learning rate set from past steps; long-run coverage under a constant error law; no delay",
+    ),
+    # Third batch (citing sets of W9 and W10), 2026-10-28
+    "WOS:001669603900061": (
+        "F",
+        "iii",
+        "read 2026-10-28 (row 44), ICML 2025: quantile tracking linear in past scores (LQT), fixed and decaying learning rates; its gain grows with the scores' lag-1 autocorrelation; no delayed feedback",
+    ),
+    "10.1016/j.jii.2026.101218": (
+        "X3",
+        "process",
+        "water virtual sensors: residual limits calibrated on earlier residuals, and change points, offline; no loop or delay",
     ),
     # Already known
     "2-s2.0-85187772172": ("X4", "iii", "conformal PID (rows 11, 16, 19, 20)"),
@@ -477,11 +497,13 @@ def _xlsx_rows(path: str) -> list[dict]:
     return [{head[k]: r.get(k, "") for k in head} for r in table[1:]]
 
 
-def load(raw: str, raw2: str) -> tuple[list[dict], dict, dict]:
-    """Records of both batches, in a fixed order: the first batch's Scopus files, then its WoS
-    files, each by name; then the second batch's S4 export. The order sets the uid."""
+def load(raw: str, raw2: str, raw3: str) -> tuple[list[dict], dict, dict, dict]:
+    """Records of the three batches, in a fixed order: the first batch's Scopus files, then its
+    WoS files, each by name; then the second batch's S4 export; then the third batch's files by
+    name. The order sets the uid."""
     f1 = find(raw, FILE_TO_QUERY)
     f2 = find(raw2, BATCH2)
+    f3 = find(raw3, BATCH3)
     recs = []
     for name, path in f1.items():
         if name.endswith(".csv"):
@@ -495,9 +517,11 @@ def load(raw: str, raw2: str) -> tuple[list[dict], dict, dict]:
         if BATCH2[name] == "S4":
             for r in _scopus(path, BATCH2_TAG + name):
                 recs.append({**r, "query": "S4"})
+    for name, path in f3.items():
+        recs += [{**r, "query": BATCH3[name]} for r in _wos(path, BATCH3_TAG + name)]
     for r in recs:
         r["tkey"] = norm_title(r["title"])
-    return recs, f1, f2
+    return recs, f1, f2, f3
 
 
 def w9_summary(path: str) -> dict:
@@ -517,7 +541,7 @@ def w9_summary(path: str) -> dict:
         "cited_years": sorted({r["PY"] for r in rows}),
         "conformal_pid_variants": len(var),
         "citing_links": int(sum(float(r["TC"] or 0) for r in var)),
-        "note": "the cited-reference list; the citing set of these variants is still to export",
+        "note": "the cited-reference list; the citing set of these variants is W9.xls of 2026-10-28",
     }
 
 
@@ -532,7 +556,7 @@ def w10_summary(path: str) -> dict:
         "times_cited_core": int(g["Times Cited, WoS Core"]),
         "times_cited_all": int(g["Times Cited, All Databases"]),
         "exported": g["Date of Export"],
-        "note": "no citing record is linked to it; the cited-reference search was not completed",
+        "note": "no citing record is linked to it; the narrowed cited-reference search is W10.xls of 2026-10-28",
     }
 
 
@@ -680,7 +704,9 @@ def satisfies(r: dict, q: str) -> bool:
         )
     if q == "S12":  # the TITLE-ABS-KEY part only; REF() cannot be checked from the export
         return has("delay*", "dead time", "latency", "step size", "learning rate")
-    return True  # S9 to S11: REF() searches, not checkable from the export
+    # S9 to S11 (REF() searches) and the citing sets W9 and W10, whose exports carry no cited
+    # references: not checkable from the export
+    return True
 
 
 def dedupe(recs: list[dict]) -> list[dict]:
@@ -735,16 +761,19 @@ def _qsort(q: str) -> tuple:
 
 
 def main() -> int:
-    if len(sys.argv) != 3:
-        raise SystemExit("usage: n1_screening.py FOLDER_2026-10-22 FOLDER_2026-10-27")
-    raw, raw2 = sys.argv[1], sys.argv[2]
-    recs, f1, f2 = load(raw, raw2)
+    if len(sys.argv) != 4:
+        raise SystemExit(
+            "usage: n1_screening.py FOLDER_2026-10-22 FOLDER_2026-10-27 FOLDER_2026-10-28"
+        )
+    raw, raw2, raw3 = sys.argv[1], sys.argv[2], sys.argv[3]
+    recs, f1, f2, f3 = load(raw, raw2, raw3)
 
     def sha(path: str) -> str:
         return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
     manifest = {name: sha(path) for name, path in f1.items()}
     manifest.update({BATCH2_TAG + name: sha(path) for name, path in f2.items()})
+    manifest.update({BATCH3_TAG + name: sha(path) for name, path in f3.items()})
     by_role = {role: f2[name] for name, role in BATCH2.items()}
     # mapping check
     print("export".ljust(62), "query", "records", "satisfy its string")
@@ -803,10 +832,22 @@ def main() -> int:
         "codes": dict(sorted(Counter(r["code"] for r in rows).items())),
         "per_query": {q: per_query[q] for q in sorted(per_query, key=_qsort)},
         "mapping_check": check,
+        "mapping_check_note": (
+            "S9 to S11 (REF() searches) and the citing sets W9 and W10 cannot be checked from"
+            " their exports, so their 'satisfy' counts equal their records by construction"
+        ),
         "raw_sha256": manifest,
         "wos_export_dates": sorted({r["exported"] for r in recs if r["db"] == "WoS"}),
         "w9_cited_reference_list": w9_summary(by_role["W9"]),
         "w10_source_record": w10_summary(by_role["W10"]),
+        "citing_sets_refined": {
+            q: sum(
+                bool(_any(_toks(" ".join([r["title"], r["abstract"], r["kw"], r["ikw"]])), *REFINE))
+                for r in recs
+                if r["file"].startswith(BATCH3_TAG) and r["query"] == q
+            )
+            for q in sorted(set(BATCH3.values()), key=_qsort)
+        },
     }
     with open(OUT_JSON, "w", encoding="utf-8", newline="\n") as fh:
         json.dump(summary, fh, indent=1)
@@ -825,6 +866,7 @@ def main() -> int:
                     "codes",
                     "w9_cited_reference_list",
                     "w10_source_record",
+                    "citing_sets_refined",
                 )
             },
             indent=1,

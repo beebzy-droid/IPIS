@@ -6,7 +6,9 @@ claim of Section 3 was amended to N1' (D-P1.1, ratified). The further elevation 
 ratified on 2026-10-20 (D-P1.7; Section 12; `PHASE1_PREREGISTRATION.md`). The baseline
 configurations (D-P1.10), a coverage-matched F7 (D-P1.11) and claim 2' (D-P1.12, after the
 database sweep fired F4 (iii)) were ratified on 2026-10-27; a rule for claim 2' (D-P1.13) and a
-sensitivity report for F7 (D-P1.14) were proposed on 2026-10-28.
+sensitivity report for F7 (D-P1.14) were proposed and ratified on 2026-10-28. With D-P1.15,
+on prior art that the screens still due find later, ratified on 2026-10-29, the Phase 1
+protocol was frozen (`PHASE1_PREREGISTRATION.md` Section 10, tag `n1-phase1-freeze`).
 Inputs: `docs/reviews/REVIEW_REGISTER.csv` (42 records), `M1_REVISION_AUDIT.md`
 (A1-A12), a literature check, and three falsification-first pilots
 (`scripts/pilots/`, synthetic data, reproducible).
@@ -322,7 +324,7 @@ The amendment proposed in response, and the Phase 1 design, are in `PHASE1_PRERE
     F4 (iii) was screened against Table 1, Sec. 3.3 and Figs. 2, 9 and 10, and does not fire
     (pre-registration Appendix A.6). [2026-10-22: on conformal PID it does not; the database
     sweep then fired it on Wang and Hyndman (arXiv 2410.13115), below.]
-- **Database sweep and decisions (2026-10-22 to 2026-10-28).**
+- **Database sweep and decisions (2026-10-22 to 2026-10-29).**
   - Scopus and Web of Science, 535 records, 377 unique, with a first Google Scholar pass of 48
     results (`LITERATURE_SWEEP_N1.md`, rows 21 to 38). F4 (i) and (ii) do not fire. F4 (iii)
     fires on its local-coverage clause: Wang and Hyndman compare a delayed P + I loop with and
@@ -335,3 +337,12 @@ The amendment proposed in response, and the Phase 1 design, are in `PHASE1_PRERE
     had no rule that could reject it, and that the stated bias of F7's Gaussian coverage scaling
     was half right. D-P1.13 (the rule F8) and D-P1.14 (a scaling by the loop's own score
     quantiles, reported beside F7) were proposed on 2026-10-28 (pre-registration A.9).
+  - 2026-10-28: the third batch, the citing sets of W9 and W10, brought the log to 651 records
+    received and 382 unique, and the seven texts still due were read (`LITERATURE_SWEEP_N1.md`,
+    rows 39 to 44). No F4 verdict changed. Meng et al. (Measurement 2026) run a conformal
+    PID-type soft sensor without laboratory delay, so the process claim is the analysis and the
+    remedy under laboratory delay (P13 there). Bien ratified D-P1.13 and D-P1.14 the same day.
+  - 2026-10-29: Bien ratified D-P1.15, which closes the gap found by the focused check of
+    2026-10-28 (pre-registration A.10): prior art that the screens still due find after the
+    freeze removes from claim 2' only the part it covers. The Phase 1 protocol was frozen
+    (pre-registration Section 10, tag `n1-phase1-freeze`).

@@ -1,6 +1,6 @@
 # N1 Phase 1 pre-registration
 
-Status, 2026-10-28: **D-P1.1 to D-P1.12 ratified; D-P1.13 and D-P1.14 proposed; not frozen.**
+Status, 2026-10-29: **D-P1.1 to D-P1.15 ratified; frozen (Section 10).**
 - Bien ratified D-P1.1 to D-P1.6 on 2026-10-13 ("I'm inline with your recommendation").
 - The training-split pre-check has run. Its evidence is in commit 98ac681
   (`docs/paper/evidence/phase1_precheck.json`); results are in Section 8.
@@ -18,15 +18,21 @@ Status, 2026-10-28: **D-P1.1 to D-P1.12 ratified; D-P1.13 and D-P1.14 proposed; 
   - D-P1.10: the baseline configurations of Appendix A;
   - D-P1.11: F7's "narrower" condition at matched coverage;
   - D-P1.12: claim 2', after F4 (iii) fired.
-- Proposed 2026-10-28, after the third pass of the fifth check (A.9):
+- Bien ratified D-P1.13 and D-P1.14 on 2026-10-28 ("ratified D-P1.13-14"), as written in commit
+  9277784, after the third pass of the fifth check (A.9):
   - D-P1.13: the rule F8, which can reject claim 2' (Sections 6 and 9);
   - D-P1.14: a check of F7's coverage scaling, reported beside it, and an edge case of D-P1.11.
+- Bien ratified D-P1.15 on 2026-10-29, choosing "Clause by clause (Recommended)" over "Strict:
+  claim 2' leaves whole" in the decision dialog: prior art found after the freeze by the screens
+  still due removes from claim 2' only the part it covers (Sections 6 and 9). Section 9 records
+  the text he selected word for word.
 
-The freeze waits for Bien's decision on D-P1.13 and D-P1.14, and a short independent check of
-the changes made on 2026-10-28. The freeze commit follows. The earlier steps are done:
+The protocol is frozen at the commit that adds the freeze record of Section 10. The steps before
+it:
 - 2026-10-22: Bien's build reproduced the 15 chosen TEP runs byte for byte (Section 5.2).
 - 2026-10-22: the Scopus and Web of Science sweep decided F4 (`LITERATURE_SWEEP_N1.md`, rows 21
-  to 32; rows 33 to 38 add the 2026-10-27 exports and a first Google Scholar pass).
+  to 32; rows 33 to 38 add the 2026-10-27 exports and a first Google Scholar pass, and rows 39
+  to 44 the citing sets and full texts of 2026-10-28).
   - (i) and (ii) do not fire.
   - (iii) fires on its local-coverage clause. Wang and Hyndman (arXiv 2410.13115, 2024) compare
     a delayed online conformal loop with and without a residual forecast on local coverage (one
@@ -37,8 +43,15 @@ the changes made on 2026-10-28. The freeze commit follows. The earlier steps are
 - 2026-10-27: Bien ratified D-P1.10 to D-P1.12.
 - 2026-10-27 and 28: the third pass of the fifth check ran (A.9). Nothing critical; two major
   findings led to D-P1.13 and D-P1.14.
+- 2026-10-28: the citing sets of W9 and W10 (116 records, five new) were screened, and the seven
+  texts still due were read, for R073 the thesis in place of the chapter
+  (`LITERATURE_SWEEP_N1.md`, rows 39 to 44). No F4 verdict changed; the positioning gained four
+  constraints (P13 to P16 there). Bien ratified D-P1.13 and D-P1.14, and a focused check
+  covered the day's changes (A.10).
+- 2026-10-29: Bien ratified D-P1.15, which the focused check's one major finding led to
+  (A.10).
 
-Until the freeze no Phase 1 number exists from the debutanizer validation or test rows or from
+At the freeze no Phase 1 number exists from the debutanizer validation or test rows or from
 new TEP runs.
 
 Checks of this draft:
@@ -83,6 +96,12 @@ Checks of this draft:
   had no rule that could reject it, and that A.1 misstated which way the Gaussian coverage
   scaling errs; also version labels of Wang and Hyndman, stale status text and smaller slips.
   D-P1.13 and D-P1.14 were proposed and the text corrected (A.9).
+- 2026-10-28, a re-check and a micro-check by the same agent, of those corrections, of D-P1.13
+  and D-P1.14 and of F8's design check. The re-check found that F8's design check left out T1's
+  label hold; F8 was moved to the IACT (A.9).
+- 2026-10-28, a focused check before the freeze, by the same agent: the third sweep batch, rows
+  39 to 44 of the sweep, the ratification and the freeze record. Nothing critical; its one major
+  finding led to D-P1.15 (A.10).
 
 All are corrected here. Each TEP run now draws from its own MRG32k3a stream, and the runs were
 re-qualified (Sections 3D and 5.2). The power analysis was re-run with 200 studies per
@@ -100,7 +119,7 @@ Phase 1 decides whether N1 survives process data. It tests:
 - whether SPCI or conformal PID at the label horizon beats the compensated loop (F7, comparative,
   new);
 - whether compensation makes the miss process that drives the loop less persistent, where P3
-  predicts a gain (F8, proposed 2026-10-28, D-P1.13).
+  predicts a gain (F8, D-P1.13, ratified 2026-10-28).
 
 ## 2. Delay provenance (answers R4.7)
 
@@ -451,7 +470,8 @@ Three propositions carry the analysis. Each is short and engineering-facing.
     coverage gap of the same single-state delayed recursion, in quantile space, by
     (b + eta h) / (eta (T - h)). P2 is its analogue in level space, for positive
     scores. What N1 adds is the consequence under delay, read together with the infinite share
-    (`LITERATURE_SWEEP_N1.md`, row 21).]
+    (`LITERATURE_SWEEP_N1.md`, row 21). 2026-10-28: further bounds that grow with the delay or
+    with the batch size of a batched update are cited beside it (there, P11 and P15).]
   - Numerical check (`scripts/pilots/p2_bound_check.py`): 36 adversarial cases (theta up to 60,
     gamma up to 0.2, persistent, step and spike scores, all positive), with no violation and a
     largest ratio of deviation to bound of 0.345.
@@ -507,6 +527,14 @@ prior art:
   to 24]: delayed-feedback ACI run without analysis; a heuristic of larger step sizes at longer
   horizons, against which P1's limit falls with the delay; and the step-size trade-off on AR(1)
   residuals without delay.
+- **Meng et al. (2026), Qiu et al. (2026) and Areces et al. (2025)** [added 2026-10-28; rows 39,
+  40 and 44]:
+  - a conformal PID-type soft sensor on the sulfur recovery unit, each label used at once, with
+    a delay-free bound on the length of a miss run;
+  - delayed-feedback adaptive conformal prediction (a fixed delay of 6) whose step size a
+    label-free uncertainty signal raises, judged on marginal coverage and width;
+  - a quantile model linear in past scores, whose gain grows with their lag-1 autocorrelation,
+    without delay, and a coverage bound that grows with the batch size of a batched update.
 
 N1'' does not claim forecasting the residual or the score at the label horizon. It claims four
 things:
@@ -525,7 +553,9 @@ things:
    process and on the step size that holds the budget, with the label delay varied at a fixed
    predictor. Local coverage is then reported, not claimed (Section 9). 2026-10-28: "a fixed
    predictor" means a fixed point model; the compensation forecaster is refitted for each theta
-   (Section 5.3). D-P1.13, proposed, adds the rule F8 that tests claim 2' (Section 6)];
+   (Section 5.3). D-P1.13, ratified 2026-10-28, adds the rule F8 that tests claim 2' (Section
+   6). D-P1.15, ratified 2026-10-29, decides what prior art found after the freeze removes from
+   claim 2' (Section 9)];
 3. the delay-limited width bound P3 and the analyzer-speed chart;
 4. validation on process data, with SPCI multi-step and conformal PID at the label horizon as
    baselines. SPCI is the conditional EnbPI that R4.9 asked for.
@@ -703,9 +733,9 @@ F2, so in practice the TEP decides it; the rule stays as ratified.
 | F5b, budget of the N1'' remedy (new; D-P1.7, D-P1.9) | The same, with compensation on | The remedy claim narrows to whichever loop meets the budget, or to reporting only |
 | F6, width bound (new, D-P1.7) | In TEP T1 at theta = 4, the mean over the 15 runs of measured / predicted width ratio - 1 lies outside +-10 %. Predictions come from each run's calibration autocorrelation; measurements are static 90 % quantiles on its evaluation rows. Design check (Section 3E): in simulation (Gaussian residuals, no label hold) a correct model stays inside +-10 % in 100 % of studies. The real margin is smaller: non-Gaussian shape alone can move the ratio by about 5 % (P3), and the pilot errors of Section 3C all lie on one side (-0.7 to -4.4 %) | The predictive claim P3 is dropped; the width gains are reported as measured only |
 | F7, comparison (new, D-P1.7) | In TEP T1 at theta = 4, a baseline (SPCI multi-step or conformal PID at the label horizon) meets the validity conditions, and either the compensated loop does not, or the baseline is narrower. The compensated loop is the sequential loop, stored pairing, tuned with the F5 safety factor. Validity, the same for every method: mean U over the 15 runs at most 2 eps (the F5 budget), and mean marginal coverage within 2 percentage points of 0.90. Narrower: the mean over the runs of the run-median width is at least 5 % smaller, and the run-median width is smaller in at least 12 of the 15 runs (with equal widths, 12 of 15 occurs with probability 1.8 %). Medians are over all issued intervals, an infinite interval counting as infinitely wide [2026-10-20: applied to four baselines, D-P1.10; D-P1.11 compares coverage-matched widths; both ratified 2026-10-27; Appendix A.1] | N1'' does not claim the best remedy. The compensated loop is presented as the analysable reference (whose width P3 predicts, unless F6 fired), and the better method is recommended by name. If F5b also fired, the remedy claim follows F5b |
-| F8, persistence (new, D-P1.13, proposed 2026-10-28) | In TEP T1 at theta = 4, where P3 predicts a gain: the mean over the 15 runs of the predicted width ratio, computed from each run's calibration autocorrelation before its evaluation rows are read, is at most 0.95. F8 fires if the paired difference over the 15 runs, compensated minus uncompensated, of the integrated autocorrelation time (IACT) of the open-loop miss indicator on the evaluation rows has a two-sided 95 % t interval that does not lie wholly below 0. The open-loop miss indicator is that of the delayed loop at gamma = 0 (the disturbance that drives the loop, Section 8), its window seeded with the last 200 calibration scores. The IACT uses Sokal's automatic window with c = 5 (`inference.iact`, as in Sections 7 and 8); a constant miss indicator gives 1. Design check (Gaussian AR(1) residuals, `scripts/pilots/f8_persistence_power.py`). Without a label hold (200 studies at phi = 0.5 and 0.9, 100 at 0.7, 0.8, 0.85 and 0.95): the mean predicted ratio is 0.999, 0.986, 0.947, 0.901, 0.819 and 0.658, so F8 is tested at phi >= 0.85 in every study and at phi = 0.8 in 70 %. Where tested it fires in 1.4 % of studies at phi = 0.8 and in none at 0.85 to 0.95, on this grid. The mean difference in IACT is -0.99 on 3.42 at phi = 0.8 and -3.45 on 6.17 at 0.9. Where not tested the effect is negligible (0.00 at phi = 0.5, -0.24 at 0.7), and F8 would fire in 98.5 % and 55 % of studies; at phi = 0.5, where compensation has nothing to remove, the interval lies wholly below 0 in 1.5 % of studies (`f8_estimand_check.json`). With T1's label hold (phi = 0.9, 0.95 and 0.97; `f8_estimand_check.json`, 200 studies per cell): T1 holds each XMEAS(40) reading, with its noise (sd 0.5, `teprob.f` XNS(40)), for 5 rows, and compensation at h = 5 cannot predict the current block's noise. With a fifth of the residual variance held, F8 is tested in every study and fires in at most 0.5 %. With half held, the gate admits 18 % of studies at phi = 0.9 and all at 0.95 and 0.97, and F8 fires in 53, 19 and 17 % of those it admits although compensation works (mean difference in IACT -0.75 to -2.28). The held share is not known before the data; the Phase-1C intervals (`coverage_tep.json`, another model) suggest roughly 25 to 100 % | Claim 2' leaves the claims: compensation's effect on persistence and step size is reported as measured. If P3 predicts no gain (mean ratio above 0.95), claim 2' is not tested on TEP, is reported as measured, and the paper says why. The larger step size is stated only if F8 is tested and does not fire, and the compensated loop's step size, tuned as for F5, is larger in at least two of the three regimes and smaller in none. Design check, share of studies in which the statement is made: 98.5 % at phi = 0.9, 87 % at 0.85, 47 % at 0.8 and none at 0.5; with a fifth of the variance held, 88 to 99 %; with half held, 3 % at phi = 0.9 and 51 to 64 % at 0.95 and 0.97 (`f8_persistence_power_held20.json` and `_held50.json`, 100 studies per cell). The lag-1 autocorrelation and the mean miss run of the miss indicator are reported beside F8. A fired F8 bears on claim 2' alone; no other rule depends on it |
+| F8, persistence (new, D-P1.13, ratified 2026-10-28) | In TEP T1 at theta = 4, where P3 predicts a gain: the mean over the 15 runs of the predicted width ratio, computed from each run's calibration autocorrelation before its evaluation rows are read, is at most 0.95. F8 fires if the paired difference over the 15 runs, compensated minus uncompensated, of the integrated autocorrelation time (IACT) of the open-loop miss indicator on the evaluation rows has a two-sided 95 % t interval that does not lie wholly below 0. The open-loop miss indicator is that of the delayed loop at gamma = 0 (the disturbance that drives the loop, Section 8), its window seeded with the last 200 calibration scores. The IACT uses Sokal's automatic window with c = 5 (`inference.iact`, as in Sections 7 and 8); a constant miss indicator gives 1. Design check (Gaussian AR(1) residuals, `scripts/pilots/f8_persistence_power.py`). Without a label hold (200 studies at phi = 0.5 and 0.9, 100 at 0.7, 0.8, 0.85 and 0.95): the mean predicted ratio is 0.999, 0.986, 0.947, 0.901, 0.819 and 0.658, so F8 is tested at phi >= 0.85 in every study and at phi = 0.8 in 70 %. Where tested it fires in 1.4 % of studies at phi = 0.8 and in none at 0.85 to 0.95, on this grid. The mean difference in IACT is -0.99 on 3.42 at phi = 0.8 and -3.45 on 6.17 at 0.9. Where not tested the effect is negligible (0.00 at phi = 0.5, -0.24 at 0.7), and F8 would fire in 98.5 % and 55 % of studies; at phi = 0.5, where compensation has nothing to remove, the interval lies wholly below 0 in 1.5 % of studies (`f8_estimand_check.json`). With T1's label hold (phi = 0.9, 0.95 and 0.97; `f8_estimand_check.json`, 200 studies per cell): T1 holds each XMEAS(40) reading, with its noise (sd 0.5, `teprob.f` XNS(40)), for 5 rows, and compensation at h = 5 cannot predict the current block's noise. With a fifth of the residual variance held, F8 is tested in every study and fires in at most 0.5 %. With half held, the gate admits 18 % of studies at phi = 0.9 and all at 0.95 and 0.97, and F8 fires in 53, 19 and 17 % of those it admits although compensation works (mean difference in IACT -0.75 to -2.28). The held share is not known before the data; the Phase-1C intervals (`coverage_tep.json`, another model) suggest roughly 25 to 100 % | Claim 2' leaves the claims: compensation's effect on persistence and step size is reported as measured. If P3 predicts no gain (mean ratio above 0.95), claim 2' is not tested on TEP, is reported as measured, and the paper says why. The larger step size is stated only if F8 is tested and does not fire, and the compensated loop's step size, tuned as for F5, is larger in at least two of the three regimes and smaller in none. Design check, share of studies in which the statement is made: 98.5 % at phi = 0.9, 87 % at 0.85, 47 % at 0.8 and none at 0.5; with a fifth of the variance held, 88 to 99 %; with half held, 3 % at phi = 0.9 and 51 to 64 % at 0.95 and 0.97 (`f8_persistence_power_held20.json` and `_held50.json`, 100 studies per cell). The lag-1 autocorrelation and the mean miss run of the miss indicator are reported beside F8. A fired F8 bears on claim 2' alone; no other rule depends on it |
 | F1, as ratified (secondary) | The white model is off by more than 25 % in sd(alpha) or in the infinite share inside the design region | Reported. Section 3A predicts it fires on the infinite share at every persistence level. It is not decisive under D-P1.1 |
-| F4 | The systematic sweep finds one of these already published: (i) the single-state dead-time analysis; (ii) a delay-limited (minimum-variance) bound on conformal interval width; (iii) an analysis of a residual or score forecaster ahead of a delayed online conformal loop, for its effect on miss persistence, step size or local coverage | (i) As ratified. (ii) P3 and the chart leave the claims. (iii) Claim 2 of Section 4 leaves the claims [2026-10-22, the database sweep (`LITERATURE_SWEEP_N1.md`, rows 21 to 32): (i) and (ii) do not fire; (iii) fires on its local-coverage clause (row 21); D-P1.12, ratified 2026-10-27] |
+| F4 | The systematic sweep finds one of these already published: (i) the single-state dead-time analysis; (ii) a delay-limited (minimum-variance) bound on conformal interval width; (iii) an analysis of a residual or score forecaster ahead of a delayed online conformal loop, for its effect on miss persistence, step size or local coverage | (i) As ratified. (ii) P3 and the chart leave the claims. (iii) Claim 2 of Section 4 leaves the claims [2026-10-22, the database sweep (`LITERATURE_SWEEP_N1.md`, rows 21 to 32): (i) and (ii) do not fire; (iii) fires on its local-coverage clause (row 21); D-P1.12, ratified 2026-10-27. 2026-10-28: rows 39 to 44, the citing sets of W9 and W10 and the seven texts still due, change no verdict. From the freeze to submission, D-P1.15 applies (iii) to claim 2' clause by clause] |
 
 Why F5 changed (D-P1.9), fixed before any process data:
 - **What changed.** As ratified, F5 tuned the uncompensated loop to eps and fired if its 15-run mean
@@ -754,7 +784,8 @@ its evaluation rows are read (Section 3F).
   run-median width is reported with a t interval, as a description. [2026-10-28: under D-P1.11
   that is done for the coverage-matched widths F7 tests and for the unscaled widths; D-P1.14
   adds the widths matched by the loop's own score quantiles.]
-- **F8** (D-P1.13, proposed) is decided by its paired two-sided 95 % t interval over the 15 runs.
+- **F8** (D-P1.13, ratified 2026-10-28) is decided by its paired two-sided 95 % t interval over the
+  15 runs.
 - **Matched controls**: within a dataset, every arm shares the point model and the residual stream.
   Each comparison varies one factor.
 - **Power**: Section 3E.
@@ -787,9 +818,10 @@ structure.
 | D-P1.9 | F5a and F5b tune to eps / 2 and fire above 2 eps, which doubles the tested budget, without the upper-bound criterion. Fixed by the power analysis (200 studies per persistence level) before any process data. If not ratified, the ratified F5 rule applies to both (Section 6) | Ratified 2026-10-20 |
 | D-P1.10 | The baseline configurations of Appendix A. Their text leaves Sections 5.3 and 6 as ratified, but changes how both are applied. (i) F7's "a baseline" becomes four baselines: SPCI, and conformal PID with a quantile-regression, a Theta and a matched scorecaster. Under equal widths that raises F7's chance of firing on the run count from 1.8 % to at most 7.2 %. If several meet F7, all are named and the narrowest is recommended. (ii) Only the quantile-regression scorecaster forecasts the score quantile that Section 5.3 names. Theta (the authors' code) and matched (the compensated loop's predictor) are added, which can only make F7 easier to fire. (iii) Section 5.3 tunes conformal PID's multiplier; D-P1.10 tunes m, C_sat and K_I jointly by the same replay to the same U target, and selects by a replay analogue of F7's coverage and width conditions. (iv) Conformal PID starts from the compensated loop's seed rows, with a warm tracker and an integrator aged by the seed, as "the same information" requires. (v) SPCI's window keeps the authors' ratio to the training length (87 and 181). (vi) One information exception at the calibration boundary is common to all methods. (vii) Reporting: the coverage gap and the coverage-matched width change are reported beside F7 (A.1). (viii) [2026-10-22] The matched scorecaster has the structure of AcMCP (Wang and Hyndman 2024), which is not run separately (A.2). [2026-10-28: with D-P1.11 ratified the coverage-matched change is F7's test, so (vii) reports the unscaled change beside it (A.1, A.9)] | Ratified 2026-10-27 |
 | D-P1.11 | F7's "narrower" condition compares coverage-matched widths. In each run, the baseline's run-median width is scaled to the compensated loop's coverage in that run by z((1 + c_loop) / 2) / z((1 + c_baseline) / 2). The mean of the scaled widths must be at least 5 % smaller than the loop's mean run-median width, and the scaled width smaller in at least 12 of 15 runs. Validity is unchanged. Conformal PID is then selected by its replayed median width scaled to 0.90 coverage. Why: F7's coverage band is worth 5.5 % of width at a 2-point gap, and 11 % at 4 points (A.1), so F7 as ratified can recommend a method for covering less. Fixed before any process data, from the dry run (A.5) and the second pass of the fifth check (A.8). If not ratified, F7 stays as ratified, conformal PID is selected by unscaled width, and the coverage-matched change is reported beside the verdict (A.1) | Ratified 2026-10-27 |
-| D-P1.12 | Claim 2 after F4 (iii). The database sweep fired F4 (iii) on its local-coverage clause. Wang and Hyndman (arXiv 2410.13115, v1 2024-10-17) compare a delayed P + I loop with and without a residual forecast (AcMCP against MPI) on coverage over rolling windows, for one dataset in one figure, and find a "similar coverage pattern". They fix the step size and count no miss runs (`LITERATURE_SWEEP_N1.md`, row 21). As ratified, claim 2 leaves the claims. D-P1.12 keeps claim 2': compensation's effect on the persistence of the miss process and on the step size that holds the uninformative budget, with the label delay varied at a fixed predictor. Persistence is measured as in Section 8 (the lag-1 autocorrelation of the miss indicator, the mean miss run and the IACT), reported beside Section 5.4's metrics. Local coverage is reported as a result, with that paper cited, and is not claimed. Why: the rule fires on any one of three components, but the prior work covers only one of them, and only in one figure. The two it lacks are the analysis N1'' was built for. Proposed before any Phase 1 data. If not ratified, claim 2 leaves the claims as ratified, and compensation stays as the remedy that F5b, F6 and F7 test. [2026-10-28 (A.9): the quoted words are those of v2 (2026-02-02); v1's Sec. 5.3, on the same Fig. 8, reads "MPI and AcMCP coverage display similar pattern". "A fixed predictor" means a fixed point model; the compensation forecaster is refitted for each theta (Section 5.3). As written, claim 2' had no rule that could reject it; D-P1.13 adds one. Whatever D-P1.13's fate, the paper states that F4 (iii) fired and that claim 2 was narrowed before any data] | Ratified 2026-10-27 |
-| D-P1.13 | A rule for claim 2': F8 (Section 6). The third pass of the fifth check found that claim 2' (D-P1.12) could not fail. No rule fires if compensation leaves the miss process as persistent, or the tuned step size unchanged, though the ratified N1'' text states both directions (A.9, finding 2). F8 tests persistence on the TEP runs, where P3 predicts a gain: the IACT of the open-loop miss indicator, compensated against uncompensated, paired over the 15 T1 runs at theta = 4. The IACT is the long-run persistence that sets the variance of the loop's level, and with it the step size that holds the budget. Where P3 predicts no gain the effect is negligible, and a test would only measure that; claim 2' is then reported as measured, and the paper says why. The step size is tuned per regime, so each arm has only three values; a larger step size is stated only beside an F8 that holds, and only if it is larger in at least two regimes and smaller in none. The lag-1 autocorrelation and the mean miss run are reported beside F8, as D-P1.12 states. The debutanizer and the other delays are descriptive. The threshold, 0.95 on the mean predicted width ratio, comes from the design check: without a label hold, where it admits a study, F8 fires in at most 1.4 % of studies on the simulated grid (phi = 0.8), and in none from phi = 0.85 on. The measure was chosen among three (`scripts/pilots/f8_estimand_check.py`, 200 studies per cell): the lag-1 and lag-5 autocorrelation and the IACT of the miss indicator. All three confirm a reduction falsely in at most 1.5 % of studies when compensation has nothing to remove (phi = 0.5). The IACT fires least, where compensation works, in three of the five admitted cells where they differ: at phi = 0.8 without the hold (0.7 % against 7.4 % for lag 1 and 2.2 % for lag 5) and at phi = 0.95 and 0.97 with half the variance held (19 and 17 % against 27 and 22 % for lag 1). It fires more in two: at phi = 0.9 with a fifth held (0.5 % against 0 % for both lags) and at phi = 0.9 with half held (53 % against 36 % for lag 1, the same as lag 5), where the gate admits 36 of 200 studies. T1's label hold weakens F8 whatever the measure: compensation cannot remove analyzer noise held over the label's 5 rows, so with half the residual variance held F8 fires in 17 to 53 % of the studies it admits, although compensation works; with a fifth held, in at most 0.5 % (A.9, re-check finding 1). That risk falls on claim 2' alone. Proposed before any Phase 1 data. If not ratified, claim 2' stays as D-P1.12 wrote it, and the paper presents it as descriptive: a direction is stated only where the paired 95 % t interval over the 15 runs excludes zero | Proposed 2026-10-28 |
-| D-P1.14 | Two additions to D-P1.11. (i) Beside F7's coverage-matched comparison, the evidence reports the same comparison with each run's factor taken from the loop's own scores: q(c_loop) / q(c_baseline), with q(c) the empirical c-quantile (linear interpolation) of the absolute compensated calibration scores of the regime's five runs, pooled (the debutanizer: its calibration segment). For half-normal scores this equals the Gaussian factor; it stands in for the unknown shape of each baseline's own scores. It decides nothing: if it and the Gaussian factor disagree on F7, the paper reports both. Why: the Gaussian factor under-corrects under heavier tails, which favours whichever method covers less. In the dry run, t3 tails would move the closest competitor from -2.8 % to -4.5 % at the loop's coverage, against F7's 5 % margin (A.1, A.9). (ii) A run coverage of exactly 0 or 1 is clipped to [1 / (2n), 1 - 1 / (2n)] before scaling, with n the run's number of labelled evaluation intervals; otherwise the factor is infinite or zero. Proposed before any Phase 1 data. If not ratified, F7 is reported as D-P1.11 states, and a run coverage of 0 or 1, if it occurs, is reported as leaving that run's scaled width undefined | Proposed 2026-10-28 |
+| D-P1.12 | Claim 2 after F4 (iii). The database sweep fired F4 (iii) on its local-coverage clause. Wang and Hyndman (arXiv 2410.13115, v1 2024-10-17) compare a delayed P + I loop with and without a residual forecast (AcMCP against MPI) on coverage over rolling windows, for one dataset in one figure, and find a "similar coverage pattern". They fix the step size and count no miss runs (`LITERATURE_SWEEP_N1.md`, row 21). As ratified, claim 2 leaves the claims. D-P1.12 keeps claim 2': compensation's effect on the persistence of the miss process and on the step size that holds the uninformative budget, with the label delay varied at a fixed predictor. Persistence is measured as in Section 8 (the lag-1 autocorrelation of the miss indicator, the mean miss run and the IACT), reported beside Section 5.4's metrics. Local coverage is reported as a result, with that paper cited, and is not claimed. Why: the rule fires on any one of three components, but the prior work covers only one of them, and only in one figure. The two it lacks are the analysis N1'' was built for. Proposed before any Phase 1 data. If not ratified, claim 2 leaves the claims as ratified, and compensation stays as the remedy that F5b, F6 and F7 test. [2026-10-28 (A.9): the quoted words are those of v2 (2026-02-02); v1's Sec. 5.3, on the same Fig. 8, reads "MPI and AcMCP coverage display similar pattern". "A fixed predictor" means a fixed point model; the compensation forecaster is refitted for each theta (Section 5.3). As written, claim 2' had no rule that could reject it; D-P1.13 (ratified 2026-10-28) adds one. The paper states that F4 (iii) fired and that claim 2 was narrowed before any data] | Ratified 2026-10-27 |
+| D-P1.13 | A rule for claim 2': F8 (Section 6). The third pass of the fifth check found that claim 2' (D-P1.12) could not fail. No rule fires if compensation leaves the miss process as persistent, or the tuned step size unchanged, though the ratified N1'' text states both directions (A.9, finding 2). F8 tests persistence on the TEP runs, where P3 predicts a gain: the IACT of the open-loop miss indicator, compensated against uncompensated, paired over the 15 T1 runs at theta = 4. The IACT is the long-run persistence that sets the variance of the loop's level, and with it the step size that holds the budget. Where P3 predicts no gain the effect is negligible, and a test would only measure that; claim 2' is then reported as measured, and the paper says why. The step size is tuned per regime, so each arm has only three values; a larger step size is stated only beside an F8 that holds, and only if it is larger in at least two regimes and smaller in none. The lag-1 autocorrelation and the mean miss run are reported beside F8, as D-P1.12 states. The debutanizer and the other delays are descriptive. The threshold, 0.95 on the mean predicted width ratio, comes from the design check: without a label hold, where it admits a study, F8 fires in at most 1.4 % of studies on the simulated grid (phi = 0.8), and in none from phi = 0.85 on. The measure was chosen among three (`scripts/pilots/f8_estimand_check.py`, 200 studies per cell): the lag-1 and lag-5 autocorrelation and the IACT of the miss indicator. All three confirm a reduction falsely in at most 1.5 % of studies when compensation has nothing to remove (phi = 0.5). The IACT fires least, where compensation works, in three of the five admitted cells where they differ: at phi = 0.8 without the hold (0.7 % against 7.4 % for lag 1 and 2.2 % for lag 5) and at phi = 0.95 and 0.97 with half the variance held (19 and 17 % against 27 and 22 % for lag 1). It fires more in two: at phi = 0.9 with a fifth held (0.5 % against 0 % for both lags) and at phi = 0.9 with half held (53 % against 36 % for lag 1, the same as lag 5), where the gate admits 36 of 200 studies. T1's label hold weakens F8 whatever the measure: compensation cannot remove analyzer noise held over the label's 5 rows, so with half the residual variance held F8 fires in 17 to 53 % of the studies it admits, although compensation works; with a fifth held, in at most 0.5 % (A.9, re-check finding 1). That risk falls on claim 2' alone. Proposed before any Phase 1 data. If not ratified, claim 2' stays as D-P1.12 wrote it, and the paper presents it as descriptive: a direction is stated only where the paired 95 % t interval over the 15 runs excludes zero | Ratified 2026-10-28 |
+| D-P1.14 | Two additions to D-P1.11. (i) Beside F7's coverage-matched comparison, the evidence reports the same comparison with each run's factor taken from the loop's own scores: q(c_loop) / q(c_baseline), with q(c) the empirical c-quantile (linear interpolation) of the absolute compensated calibration scores of the regime's five runs, pooled (the debutanizer: its calibration segment). For half-normal scores this equals the Gaussian factor; it stands in for the unknown shape of each baseline's own scores. It decides nothing: if it and the Gaussian factor disagree on F7, the paper reports both. Why: the Gaussian factor under-corrects under heavier tails, which favours whichever method covers less. In the dry run, t3 tails would move the closest competitor from -2.8 % to -4.5 % at the loop's coverage, against F7's 5 % margin (A.1, A.9). (ii) A run coverage of exactly 0 or 1 is clipped to [1 / (2n), 1 - 1 / (2n)] before scaling, with n the run's number of labelled evaluation intervals; otherwise the factor is infinite or zero. Proposed before any Phase 1 data. If not ratified, F7 is reported as D-P1.11 states, and a run coverage of 0 or 1, if it occurs, is reported as leaving that run's scaled width undefined | Ratified 2026-10-28 |
+| D-P1.15 | Later prior art and claim 2'. F4 stays in force until submission. Prior art found after the freeze by the screens still due (Section 9, step 2) is decided by F4 as written for (i) and (ii). F4 (iii)'s consequence for claim 2 is spent, so for claim 2' it applies clause by clause: a published analysis or comparison of a residual or score forecaster ahead of a delayed online conformal loop, for its effect on miss persistence, removes the persistence part of claim 2'. F8 is still decided and still gates the step-size statement, but its result is reported, not claimed; one for its effect on the step size that holds a coverage or interval budget removes the step-size statement. Either way the paper cites the work. Row 21's [of `LITERATURE_SWEEP_N1.md`] strict reading applies: one comparison with and without the forecaster, on the clause's measure, is enough, without theory. Why: D-P1.12 kept claim 2' because prior work covered only one of claim 2's three parts. A later find on another part is decided the same way, fixed before any Phase 1 data. [2026-10-29: the text Bien selected in the decision dialog, word for word, with its list markers removed and the bracket after "Row 21's" added. It closes A.10's finding 1. The alternative offered, "Strict: claim 2' leaves whole", would have removed claim 2' whole on any later find under (iii)] | Ratified 2026-10-29 |
 
 Sequence:
 1. Ratify D-P1.7 to D-P1.9. Done 2026-10-20.
@@ -798,16 +830,18 @@ Sequence:
    - The database sweep decides F4. Done 2026-10-22: (iii) fired, and D-P1.12 was proposed
      (`LITERATURE_SWEEP_N1.md`). On 2026-10-27, S4 added no new record, W10's file proved to
      be SPCI's own record, with no linked citation, and a first Google Scholar pass (rows 33 to
-     38) changed no verdict. Due before submission: W9's citing set, a narrowed W10, seven full
-     texts, Li and Zhu's App. G.1 (row 37 (f)), a new screen of Wang and Hyndman's revision
-     (row 21) and the full Google Scholar pass. They can only add prior art, which would be
-     logged in Section 10.
+     38) changed no verdict. On 2026-10-28 the citing sets of W9 and W10 and the seven texts
+     still due (rows 39 to 44) changed none either. Due before submission: Li and Zhu's App. G.1
+     (row 37 (f)), a new screen of Wang and Hyndman's revision (row 21), the chapter of row 43
+     if it becomes available, and the full Google Scholar pass. They can only add prior art,
+     which would be logged in Section 10 and decided by F4 as D-P1.15 applies it.
 3. Write and check the baseline configurations (Appendix A). Written, checked (fifth check) and
    rewritten twice on 2026-10-20, after the check and after its second pass. Bien ratified
    D-P1.10, D-P1.11 and D-P1.12 on 2026-10-27. The third, focused pass ran on 2026-10-27 (A.9).
-   Still to do: Bien decides D-P1.13 and D-P1.14, and a short independent check covers the
-   changes of 2026-10-28.
-4. Make the freeze commit.
+   Bien ratified D-P1.13 and D-P1.14 on 2026-10-28, and a focused check covered the changes of
+   that day (A.10). Its one major finding led to D-P1.15, ratified 2026-10-29.
+4. Make the freeze commit: the commit that adds Section 10's freeze record, tagged
+   `n1-phase1-freeze`.
 5. Bien generates the 15 TEP runs (commands in the hand-off).
 6. Implement the Phase 1 runner, with tests: point models, the arms and baselines of Section 5,
    and evidence JSON for every cell.
@@ -816,8 +850,30 @@ Sequence:
 
 ## 10. Freeze record and deviations
 
-Freeze commit: pending. Deviations after the freeze: none yet. Each deviation will be dated and
-justified, and its effect on the F-verdicts stated.
+**Freeze, 2026-10-29.** The protocol is frozen at the commit that adds this record, tagged
+`n1-phase1-freeze` (an annotated tag; `git rev-list -n 1 n1-phase1-freeze` prints its hash). As
+they stand in that commit, the freeze fixes:
+- the purpose and the delay provenance (Sections 1 and 2), the pre-data findings (Section 3),
+  the claims and propositions (Section 4), the design and metrics (Section 5), the rules F1 to
+  F8 (Section 6), the analysis plan (Section 7) and the decisions D-P1.1 to D-P1.15 (Section 9);
+- the baseline configurations (Appendix A);
+- the code these rest on: `src/ipis/module1_soft_sensor/evaluation/`, the TEP generator
+  (`scripts/generate_tep_modes.py --streams`) and the scripts and evidence files cited above.
+
+At the freeze no Phase 1 number exists from the debutanizer validation or test rows or from new
+TEP runs. Before it, the 15 TEP runs were generated only to read their trip status and hashes
+(Section 5.2); they are generated for analysis after it (Section 9, step 5).
+
+A deviation is a change to anything fixed above, including the behaviour of the fixed code.
+Code added after the freeze to run Phase 1 (Section 9, step 6) is not one if it implements
+Sections 5 to 7 and Appendix A as written, leaves the fixed code's behaviour unchanged, and the
+existing tests still pass. Every "If not ratified" fallback of Section 9 lapsed with its
+decision's ratification, so none applies.
+
+Deviations after the freeze: none yet. Each deviation will be dated and justified, and its
+effect on the F-verdicts stated. Prior art found after the freeze is logged here too. If the
+screens still due find it (Section 9, step 2), its bearing on F4 is decided as D-P1.15 applies
+it.
 
 ## Appendix A. Baseline configurations (D-P1.10; fixed 2026-10-20, before the freeze)
 
@@ -840,7 +896,8 @@ scorecasters. A second pass of the same check found that its replay started conf
 while the compensated loop's replay starts from a seeded window, and three more problems (A.8).
 This version starts conformal PID from the same seed, and D-P1.11 was proposed (ratified
 2026-10-27). A third pass of the check, on 2026-10-27, found problems that led to corrections and
-to D-P1.14 (A.9).
+to D-P1.14 (A.9); its re-check and a micro-check followed on 2026-10-28 (A.9), and a focused
+check before the freeze (A.10).
 
 ### A.1 Common to both
 
@@ -1298,3 +1355,48 @@ closed (phi = 0.5), and the IACT's window truncation shrinks the measured reduct
 so that source of error falls against confirming. Independent regenerations of the five F8
 evidence files match the committed ones apart from their timestamps (and, for the comparison,
 the hash list).
+
+### A.10 Focused check before the freeze, and what changed
+
+The check ran on 2026-10-28, by the agent of A.9. Its scope was the changes since commit
+9277784: the third sweep batch, rows 39 to 44 of `LITERATURE_SWEEP_N1.md`, the ratification of
+D-P1.13 and D-P1.14, and the freeze record. The agent read the eight texts before reading the
+rows. It found nothing critical, no change to any F4 verdict, and one gap in the rules.
+Everything mechanical reproduced:
+- The screening log and its summary reproduced byte for byte from the raw exports, whose hashes
+  match the manifest. A recount from W9.xls and W10.xls gave 106 unique records, 10 in both
+  sets, 5 new and 7 matched by the refinement string. The codes of all 12 records whose
+  abstracts it read are right.
+- Every quote in rows 39 to 44 is verbatim. The citations, record numbers and query codes agree
+  with the log.
+- 95 of 95 tests pass, and the ruff and black of the CI and of pre-commit are clean. Every
+  changed file uses LF and adds no non-ASCII text.
+- D-P1.13 and D-P1.14 are byte-identical to commit 9277784 apart from their status cells.
+
+| # | Severity | Finding | Resolution |
+|---|---|---|---|
+| 1 | Major | Section 10 logged later prior art "with its bearing on F4", but F4 (iii)'s consequence for claim 2 is spent. Nothing said whether a later find on miss persistence or on the step size removes all of claim 2' or only the clause it covers, so the choice would have been made with Phase 1 results in hand | D-P1.15 (Section 9), proposed with a strict alternative and ratified 2026-10-29: later prior art is decided clause by clause. The F4 row, Section 9 step 2 and Section 10 point to it |
+| 2 | Minor | Row 40's argument on (iii) left room for the literal reading. It misdescribed Qiu et al.'s signal (a projected gradient norm plus a loss variance, Eq. 10), left out the paper's claim that the signal "bridges the temporal gap" of the delay, and did not say why row 21's strict reading does not apply. It called a radius tracked in score space "ACI" | Row 40 rests the verdict on two grounds: the signal is not a forecast of the score, and no step size is analysed or reported. Row 21's reading applied because every element of (iii) was present there. "Adaptive conformal prediction" in row 40, P14, Section 4 and the log note |
+| 3 | Minor | Row 40 said the paper's coverage statement concerns the undelayed rule. It concerns the delayed Eq. 1, and is asserted without proof, like Fig. 1's | Corrected |
+| 4 | Minor | Row 44: the batched update holds the parameter, not the threshold; "grows with the feedback lag" contradicted "no delayed feedback"; the conditional-coverage results for m > 1 went unaddressed | Corrected in row 44. P2's origin (Section 4) now points to P11 and P15 |
+| 5 | Minor | The verdict's positioning bullet and the review log were looser than P13. They left out the nearest record, Yu and Wang (row 42 (a)), whose reference labels arrive later but whose delay is neither set nor analysed | Both aligned with P13, which names row 42 (a). The manuscript says "no analysis of the conformal loop under laboratory delay" |
+| 6 | Minor | Nothing recorded why Areces et al.'s LQT and Meng et al.'s update are not F7 baselines | P16: A.2 (a) has the structure of SQT + scorecaster, with a threshold linear in the three latest labelled scores, which LQT of order 3 would fit by online gradient descent; Meng et al.'s update is a conformal PID variant without delay handling, represented by conformal PID |
+| 7 | Minor | Row 42 (c) left out Liu and Hassan's residual corrector, the element that (iii) names | Added: it is ablated on point error only, ahead of a queue without a loop |
+| 8 | Minor | Section 12 of `M1_NARROWING_PROPOSAL.md` stopped at "proposed" | A 2026-10-28 entry |
+| 9 | Trivial | Section 10 did not say what counts as a deviation in code, or that the "If not ratified" fallbacks lapsed | Section 10 says both |
+| 10 | Trivial | A.10 was cited before it existed. The list of checks and the introduction to this appendix stopped at 2026-10-27 | This section; both lists completed |
+| 11 | Trivial | "Seven full texts", though R073's was a thesis; row 31's bracket listed six | "Seven texts", with the thesis named; row 41 added to row 31 |
+| 12 | Trivial | Row 43: the chapter's title differs from the thesis's, the theorem is 3.1.1, the coverage figures also show basic ACI, and the two abstracts match closely, not exactly | Corrected |
+| 13 | Trivial | Row 42: the step-size grid belongs to the tuned variant, and Zhu et al.'s sensitivity runs vary reconfiguration-cost parameters, not only weights | Corrected |
+| 14 | Trivial | Row 40: h = 20 is the "history window" of Sec. IV.D | Said so |
+| 15 | Trivial | The Scholar table's G3 row was not updated, and the summary's mapping check counts W9 and W10 as satisfied by construction | G3 row updated; the summary carries a note on the searches it cannot check |
+| 16 | Trivial (for information) | Meng et al.'s proof of Thm 1 is deterministic and does not derive the stated probability | Row 39 and P13 cite the theorem as stated, without leaning on it |
+
+**Micro-check, 2026-10-29.** The same agent checked the fixes above and D-P1.15. All 16
+findings (1 major, 7 minor, 8 trivial) are resolved as the table says, and the log, the tests
+and the lint reproduce. It found that the D-P1.15 row had edited the text Bien selected, though
+the rule was the same; the row now gives that text word for word, with its provenance in a
+dated bracket. Four wording points were corrected as well: the scope "by the screens still
+due" in the summaries of D-P1.15, a date in `M1_NARROWING_PROPOSAL.md`, row 44's "a
+forecaster's effect on the step size", and row 40's account of Fig. 4, which compares runs
+with and without the signal on marginal measures.

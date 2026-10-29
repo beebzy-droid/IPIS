@@ -39,6 +39,13 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 
 ## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-23)
 
+> **Status update 2026-10-29 (M1 session).** The N1 Phase 1 protocol is frozen (tag
+> `n1-phase1-freeze`; `docs/module1/PHASE1_PREREGISTRATION.md`, Section 10): the claims, the rules
+> F1 to F8, the decisions D-P1.1 to D-P1.15 and the baseline configurations. No Phase 1 number
+> exists yet. Next for M1: Bien generates the 15 TEP runs (Section 9, step 5), then the Phase 1
+> runner is implemented and run. Due before submission: the screens of Section 9, step 2
+> (`docs/module1/LITERATURE_SWEEP_N1.md`, "Still due before submission").
+>
 > **Status update 2026-10-09 (M2 session; the 2026-06-23 prose below is kept as written).**
 > M2 / Paper 3 (SCC) **ACCEPTED** in *Reliability Engineering & System Safety* as
 > JRESS-D-26-04700R1 on 2026-10-09; in production, proof pending (plan:

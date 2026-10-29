@@ -1,16 +1,15 @@
 {
- "records_received": 535,
- "records_counting_S3_once": 533,
- "unique": 377,
+ "records_received": 651,
+ "records_counting_S3_once": 649,
+ "unique": 382,
  "in_scopus": 364,
- "in_wos": 105,
- "in_both": 92,
+ "in_wos": 207,
+ "in_both": 189,
  "codes": {
-  "A": 6,
-  "F": 17,
+  "F": 24,
   "X1": 25,
   "X2": 103,
-  "X3": 206,
+  "X3": 210,
   "X4": 6,
   "X5": 11,
   "X6": 3
@@ -19,14 +18,14 @@
   "S1": {
    "rows": 56,
    "unique": 56,
-   "F": 3,
-   "A": 4
+   "F": 7,
+   "A": 0
   },
   "S2": {
    "rows": 39,
    "unique": 39,
-   "F": 2,
-   "A": 1
+   "F": 3,
+   "A": 0
   },
   "S3": {
    "rows": 2,
@@ -67,8 +66,8 @@
   "S9": {
    "rows": 129,
    "unique": 128,
-   "F": 7,
-   "A": 2
+   "F": 9,
+   "A": 0
   },
   "S10": {
    "rows": 72,
@@ -85,14 +84,14 @@
   "S12": {
    "rows": 33,
    "unique": 33,
-   "F": 5,
-   "A": 4
+   "F": 9,
+   "A": 0
   },
   "W1": {
    "rows": 40,
    "unique": 40,
-   "F": 4,
-   "A": 3
+   "F": 7,
+   "A": 0
   },
   "W2": {
    "rows": 30,
@@ -135,6 +134,18 @@
    "unique": 11,
    "F": 0,
    "A": 0
+  },
+  "W9": {
+   "rows": 67,
+   "unique": 67,
+   "F": 5,
+   "A": 0
+  },
+  "W10": {
+   "rows": 49,
+   "unique": 49,
+   "F": 3,
+   "A": 0
   }
  },
  "mapping_check": {
@@ -142,6 +153,16 @@
    "query": "S4",
    "records": 2,
    "satisfy": 2
+  },
+  "2026-10-28/W10.xls": {
+   "query": "W10",
+   "records": 49,
+   "satisfy": 49
+  },
+  "2026-10-28/W9.xls": {
+   "query": "W9",
+   "records": 67,
+   "satisfy": 67
   },
   "Claim_i_delayed_feedback_in_conformal_methods.csv": {
    "query": "S1",
@@ -244,6 +265,7 @@
    "satisfy": 11
   }
  },
+ "mapping_check_note": "S9 to S11 (REF() searches) and the citing sets W9 and W10 cannot be checked from their exports, so their 'satisfy' counts equal their records by construction",
  "raw_sha256": {
   "Claim_i_delayed_feedback_in_conformal_methods.csv": "ecd34eeecf12bbfd9c002ab4c9a5193e8a7da780e9b24e0547b1cd8d39d8f13f",
   "Claim_i_step_size_and_stability_of_the_adaptive_loop.csv": "f4161bba1053ccec02139c38e0bfad90553f80438bd46e430ecfe9297f983332",
@@ -271,10 +293,14 @@
   "2026-10-27/Search_1_-__quote_online_conformal_unquote___quote_multi-step_unquote___quote_forecast_errors_unquote_.txt": "69f27a1353252688d449fe632e0fb242a1366c134a4b5788fc26318eddd49232",
   "2026-10-27/Search_2_-__quote_online_conformal_prediction_unquote___quote_multi-horizon_unquote__forecasting.txt": "d2916977285761b8f94e81ab1af0cda135f6294a3812738e3a197fc6def0c10e",
   "2026-10-27/Search_3_-__quote_adaptive_conformal_prediction_unquote___quote_delayed_labels_unquote__forecasting.txt": "7855dccffbdc6237f39e2ca235879f87e1d00b1d4debbba78a51725a3f1b327f",
-  "2026-10-27/Search_4_-_debutanizer__quote_soft_sensor_unquote___quote_conformal_prediction_unquote__PID.txt": "a58b4cf6adfb0ebb9b104e7f60834e1207770b5d2c097dea78807dae3cedc872"
+  "2026-10-27/Search_4_-_debutanizer__quote_soft_sensor_unquote___quote_conformal_prediction_unquote__PID.txt": "a58b4cf6adfb0ebb9b104e7f60834e1207770b5d2c097dea78807dae3cedc872",
+  "2026-10-28/W10.xls": "fccb434531492b1c054ff381433ff2039aaaf420c08ab0817f940d49cbb9d5bf",
+  "2026-10-28/W9.xls": "4bd15536c8548ba2313a0d0052acd3e03810fa82156b6e4f36174ac5fdd8e018"
  },
  "wos_export_dates": [
-  "2026-10-22"
+  "2026-10-22",
+  "2026-10-27",
+  "2026-10-28"
  ],
  "w9_cited_reference_list": {
   "file": "2026-10-27/Conformal_PID.xlsx",
@@ -284,7 +310,7 @@
   ],
   "conformal_pid_variants": 28,
   "citing_links": 67,
-  "note": "the cited-reference list; the citing set of these variants is still to export"
+  "note": "the cited-reference list; the citing set of these variants is W9.xls of 2026-10-28"
  },
  "w10_source_record": {
   "file": "2026-10-27/SPCI.xls",
@@ -294,6 +320,10 @@
   "times_cited_core": 0,
   "times_cited_all": 0,
   "exported": "2026-10-22",
-  "note": "no citing record is linked to it; the cited-reference search was not completed"
+  "note": "no citing record is linked to it; the narrowed cited-reference search is W10.xls of 2026-10-28"
+ },
+ "citing_sets_refined": {
+  "W9": 5,
+  "W10": 3
  }
 }
