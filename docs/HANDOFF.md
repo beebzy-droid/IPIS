@@ -39,16 +39,18 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 
 ## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-23)
 
+> **Status update 2026-11-03 (M1 session).** N1 Phase 1 has run (pre-registration Section 9,
+> steps 5 to 7; runner 5ed6f0c, stage A 133b0f3, stage B and verdicts bd6454d; no deviation
+> during the run). F2 does not fire and restricts the process claim to TEP; F3, F5a, F5b, F6, F7
+> and F8 do not fire, and the step-size statement is made; F1 fires (secondary). Every number:
+> `docs/module1/PHASE1_RESULTS.md`. Next for M1: step 8, the paper's shape (Bien decides;
+> `PHASE1_RESULTS.md`, Section 9 lists what bears on it). Due before submission: the screens of
+> Section 9, step 2 (`docs/module1/LITERATURE_SWEEP_N1.md`, "Still due before submission").
+>
 > **Status update 2026-10-29 (M1 session).** The N1 Phase 1 protocol is frozen (tag
 > `n1-phase1-freeze`; `docs/module1/PHASE1_PREREGISTRATION.md`, Section 10): the claims, the rules
-> F1 to F8, the decisions D-P1.1 to D-P1.15 and the baseline configurations. No Phase 1 number
-> exists yet. Step 5, the 15 TEP runs, has its helper (`scripts/tep_phase1_runs.py`). Step 6, the
-> runner, is implemented (`src/ipis/module1_soft_sensor/phase1/`, `scripts/phase1_run.py`; every
-> protocol item mapped to code and every reading stated in `docs/module1/PHASE1_RUNNER.md`;
-> deviation 1, the T3 window, and a correction of Section 2's analyzer timing in Section 10).
-> Next for M1 (step 7): Bien runs stage A, commits and pushes its evidence, then runs stage B and
-> the verdicts. Due before submission: the screens of Section 9, step 2
-> (`docs/module1/LITERATURE_SWEEP_N1.md`, "Still due before submission").
+> F1 to F8, the decisions D-P1.1 to D-P1.15 and the baseline configurations. Step 6, the runner:
+> `src/ipis/module1_soft_sensor/phase1/`, `scripts/phase1_run.py`, `docs/module1/PHASE1_RUNNER.md`.
 >
 > **Status update 2026-10-09 (M2 session; the 2026-06-23 prose below is kept as written).**
 > M2 / Paper 3 (SCC) **ACCEPTED** in *Reliability Engineering & System Safety* as
@@ -1212,6 +1214,12 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-11-03 (N1 Phase 1 run)** -- Bien ran the runner: stage A (calibration rows only)
+  committed and pushed at 133b0f3 before stage B; stage B and the verdicts at bd6454d, all 1359
+  checks against stage A exact. The process claim is restricted to TEP (F2 shown at T1, theta = 4,
+  not on the debutanizer); F3, F5a, F5b, F6, F7 and F8 hold; F1 fires (secondary). Results and
+  what bears on the paper's shape: `docs/module1/PHASE1_RESULTS.md`; run record in Section 10 of
+  the pre-registration.
 - **2026-10-29 (N1 Phase 1 runner)** -- The runner of Section 9, step 6, after the freeze: two
   stages, so that every prediction and tuned setting is committed before an evaluation row is
   read (stage A on calibration rows only; stage B checks that it reproduces stage A, then runs

@@ -900,6 +900,15 @@ Notes after the freeze: corrections of fact, which change no fixed setting.
   appears, so its dead time is 0. Both stages check that the label is constant within every
   15-min block of that phase and stop otherwise (`PHASE1_RUNNER.md`, R2 and R3).
 
+**The run, 2026-11-02 (UTC; Section 9, steps 5 to 7).** The 15 TEP runs matched the record byte
+for byte (step 5). The runner was committed at 5ed6f0c (step 6). Stage A, on calibration rows
+only, was committed at 133b0f3 and pushed before stage B read an evaluation row; stage B and the
+verdicts were committed at bd6454d (step 7). There was no deviation during the run. Verdicts: F2
+does not fire, and the process claim is restricted to TEP (the increase is shown at T1, theta = 4,
+and not on the debutanizer at theta_doc = 3); F3, F5a, F5b, F6, F7 and F8 do not fire; F8 was
+tested, and the step-size statement is made; F1 fires (secondary). The numbers are in
+`PHASE1_RESULTS.md`.
+
 ## Appendix A. Baseline configurations (D-P1.10; fixed 2026-10-20, before the freeze)
 
 This appendix fixes the settings of the baselines of Section 5.3 and gives the source of each.
