@@ -870,10 +870,35 @@ Sections 5 to 7 and Appendix A as written, leaves the fixed code's behaviour unc
 existing tests still pass. Every "If not ratified" fallback of Section 9 lapsed with its
 decision's ratification, so none applies.
 
-Deviations after the freeze: none yet. Each deviation will be dated and justified, and its
-effect on the F-verdicts stated. Prior art found after the freeze is logged here too. If the
-screens still due find it (Section 9, step 2), its bearing on F4 is decided as D-P1.15 applies
-it.
+Deviations after the freeze. Each is dated and justified, and its effect on the F-verdicts
+stated. Prior art found after the freeze is logged here too. If the screens still due find it
+(Section 9, step 2), its bearing on F4 is decided as D-P1.15 applies it.
+1. **2026-10-29, the T3 window** (Bien's decision, before any Phase 1 number). Section 5.3 seeds
+   the conformal window with the first 200 rows of the calibration segment, but at T3's event
+   cadence the calibration hours hold 160 labels per run. T3 runs with a window of 40 events,
+   the 10 h that T1's 200 rows span: per run, 40 seed events, 120 replayed and 120 evaluated.
+   Effect on the F-verdicts: F2, F3 and F5 to F8 are decided on the primary cells (Section 6),
+   which do not involve T3. F1, secondary and not decisive (D-P1.1), is evaluated without T3, as
+   it would be if T3 could not run, and T3's cells are reported beside it. Every T3 cell is
+   descriptive (`PHASE1_RUNNER.md`, R3 and R21).
+
+Notes after the freeze: corrections of fact, which change no fixed setting.
+- **2026-10-29, Section 2, the TEP analyzer.** Runs of the extended generator outside the study,
+  all at 60 s (mode1, stream 2000, 3 h; mode2, stream 3000, 2 h; and 15 runs of 100 h, five per
+  regime, streams 3000 to 3150, listed in `PHASE1_RUNNER.md`), show that the driver writes each
+  row before the integration step in which the analyzer updates (`teprob.f` lines 753-761). A
+  new XMEAS(40) value, the composition captured 0.25 h earlier, therefore first appears in the
+  row after its 0.25 h instant, at minute 15k + 1, and is held for 15 rows; at 3-min rows it
+  first appears at minute 15k + 3 and is held for 5. When it first appears, a reading is 16 rows
+  old at 1-min rows and 6 at 3-min rows, not 15 and 5 as Section 2 says. No fixed setting
+  changes. The input lags (15 rows at 1 min, 5 at 3 min) and the dead times count from the row
+  whose inputs give the prediction to the row in which its label is written, which is the
+  0.25 h of Section 2's table. From that row, Section 2's rule gives the label ages 15, 5 and 1
+  and the fixed dead times 14, 4 and 0 (1-min rows, 3-min rows, and per new value); from the
+  composition's capture, one row earlier at a block's first row, it would give 15, 5 and 1. T3's
+  interval for a new value is issued from the inputs of the row in which the previous value
+  appears, so its dead time is 0. Both stages check that the label is constant within every
+  15-min block of that phase and stop otherwise (`PHASE1_RUNNER.md`, R2 and R3).
 
 ## Appendix A. Baseline configurations (D-P1.10; fixed 2026-10-20, before the freeze)
 

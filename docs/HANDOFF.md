@@ -42,8 +42,12 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 > **Status update 2026-10-29 (M1 session).** The N1 Phase 1 protocol is frozen (tag
 > `n1-phase1-freeze`; `docs/module1/PHASE1_PREREGISTRATION.md`, Section 10): the claims, the rules
 > F1 to F8, the decisions D-P1.1 to D-P1.15 and the baseline configurations. No Phase 1 number
-> exists yet. Next for M1: Bien generates the 15 TEP runs (Section 9, step 5), then the Phase 1
-> runner is implemented and run. Due before submission: the screens of Section 9, step 2
+> exists yet. Step 5, the 15 TEP runs, has its helper (`scripts/tep_phase1_runs.py`). Step 6, the
+> runner, is implemented (`src/ipis/module1_soft_sensor/phase1/`, `scripts/phase1_run.py`; every
+> protocol item mapped to code and every reading stated in `docs/module1/PHASE1_RUNNER.md`;
+> deviation 1, the T3 window, and a correction of Section 2's analyzer timing in Section 10).
+> Next for M1 (step 7): Bien runs stage A, commits and pushes its evidence, then runs stage B and
+> the verdicts. Due before submission: the screens of Section 9, step 2
 > (`docs/module1/LITERATURE_SWEEP_N1.md`, "Still due before submission").
 >
 > **Status update 2026-10-09 (M2 session; the 2026-06-23 prose below is kept as written).**
@@ -1208,6 +1212,17 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-10-29 (N1 Phase 1 runner)** -- The runner of Section 9, step 6, after the freeze: two
+  stages, so that every prediction and tuned setting is committed before an evaluation row is
+  read (stage A on calibration rows only; stage B checks that it reproduces stage A, then runs
+  every cell). Spec: `docs/module1/PHASE1_RUNNER.md`. Bien decided the TEP ridge penalty (one-SE
+  rule) and the T3 window (40 events, deviation 1). Runs of the generator outside the study show
+  each new analyzer value is written one 60-s row late; Section 10 records the correction to
+  Section 2, which changes no setting. An independent check recomputed every decided rule from
+  the frozen library and matched the runner bit for bit; its findings are fixed (one TEP point
+  model for every arm, stage A no longer parses the debutanizer's evaluation rows, F1's cells,
+  the Section 7 contrasts). A full-size dress rehearsal on synthetic inputs (2026-11-03): stage A
+  24 min and stage B 84 min on 2 cores, all 1359 stage B checks exact.
 - **2026-10-14 (M2 online)** -- RESS 113634 published online (Articles in Press, before proof),
   doi:10.1016/j.ress.2026.113634. Ledger `busico_m2` gains the DOI; README publications list updated; domino run in the
   private repo (paper4/paper5 bibs, M4 EM bibitem). Zenodo record linked to the article ("Is
