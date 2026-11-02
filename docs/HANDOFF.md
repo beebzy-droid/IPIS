@@ -43,9 +43,10 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 > steps 5 to 7; runner 5ed6f0c, stage A 133b0f3, stage B and verdicts bd6454d; no deviation
 > during the run). F2 does not fire and restricts the process claim to TEP; F3, F5a, F5b, F6, F7
 > and F8 do not fire, and the step-size statement is made; F1 fires (secondary). Every number:
-> `docs/module1/PHASE1_RESULTS.md`. Next for M1: step 8, the paper's shape (Bien decides;
-> `PHASE1_RESULTS.md`, Section 9 lists what bears on it). Due before submission: the screens of
-> Section 9, step 2 (`docs/module1/LITERATURE_SWEEP_N1.md`, "Still due before submission").
+> `docs/module1/PHASE1_RESULTS.md`. Step 8, the paper's shape, decided by Bien the same day
+> (`PHASE1_RESULTS.md`, Section 10). Next for M1: the manuscript, planned in
+> `ipis-papers/paper/N1_OUTLINE.md` (private), and before submission the screens of Section 9,
+> step 2 (`docs/module1/LITERATURE_SWEEP_N1.md`, "Still due before submission").
 >
 > **Status update 2026-10-29 (M1 session).** The N1 Phase 1 protocol is frozen (tag
 > `n1-phase1-freeze`; `docs/module1/PHASE1_PREREGISTRATION.md`, Section 10): the claims, the rules
@@ -1214,6 +1215,10 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-11-03 (N1 step 8)** -- Bien ratified the paper's shape: one N1'' paper, TEP as the
+  process evidence and the debutanizer as a descriptive case, the claims the rules left standing,
+  three limits stated up front (`docs/module1/PHASE1_RESULTS.md`, Section 10). The manuscript plan
+  is in the private repo: `ipis-papers/paper/N1_OUTLINE.md`.
 - **2026-11-03 (N1 Phase 1 run)** -- Bien ran the runner: stage A (calibration rows only)
   committed and pushed at 133b0f3 before stage B; stage B and the verdicts at bd6454d, all 1359
   checks against stage A exact. The process claim is restricted to TEP (F2 shown at T1, theta = 4,

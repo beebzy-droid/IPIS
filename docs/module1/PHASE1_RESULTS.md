@@ -4,7 +4,7 @@ Status, 2026-11-03: step 7 of Section 9 of `PHASE1_PREREGISTRATION.md`, the run 
 F-verdicts. Every number is read from the evidence of commit bd6454d
 (`docs/paper/evidence/phase1_*.json`). A number marked "derived" is a count, ratio or percentage
 computed from recorded numbers after the verdicts; nothing else was computed after them. Step 8,
-the paper's shape, is Bien's decision; Section 9 below lists what bears on it.
+the paper's shape, was decided by Bien on 2026-11-03 (Section 10), on what Section 9 lists.
 
 ## 1. The run
 
@@ -233,3 +233,22 @@ F1 with compensation (descriptive): off by more than 25 % in 40 of its 41 cells.
    cadence (T3) persistence barely changes (IACT -0.65).
 7. **Before submission:** the screens of Section 9, step 2 (F4, D-P1.15); then the venue sequence
    of `VENUE_STRATEGY_N1.md`, Section 4.
+
+## 10. Step 8, decided (Bien, 2026-11-03)
+
+The paper's shape, as proposed after the verdicts and ratified by Bien:
+- **One N1'' paper.** TEP (15 runs, three operating modes) is the process evidence; the
+  debutanizer (one stream) is a descriptive real-plant case.
+- **Its claims are those the rules left standing** (Section 8): the N1' diagnosis, on TEP only;
+  replay tuning (F5a); compensation (F5b) with its width gain; P3 and the analyzer-speed chart;
+  claim 2' with the step-size statement; the comparison with the four baseline configurations
+  (F7) as a tie with the best; F1 reported.
+- **Stated up front:** the diagnosis is TEP-only; on stationary data compensated split conformal
+  matches the loop, which earns its place when the process drifts; P3 is a lower bound on the
+  gain.
+- **Order of work:** the screens still due (pre-registration Section 9, step 2; F4 under
+  D-P1.15), then the venue sequence of `VENUE_STRATEGY_N1.md`, Section 4, starting with a
+  presubmission inquiry to the Journal of Process Control.
+
+The manuscript is written in the private `ipis-papers` repo (`docs/PAPER_LIFECYCLE.md`); its plan
+is `ipis-papers/paper/N1_OUTLINE.md`.
