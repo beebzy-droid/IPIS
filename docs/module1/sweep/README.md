@@ -8,13 +8,16 @@ The protocol and the verdicts are in `../LITERATURE_SWEEP_N1.md` ("Database swee
 | `N1_database_screening_2026-10-22.csv` | One row per unique record of the Scopus and Web of Science exports: those of 2026-10-22, the S4 export of 2026-10-27 and the citing sets of W9 and W10 of 2026-10-28 (382 rows) |
 | `N1_database_screening_2026-10-22_summary.json` | Counts per query and per code; the check that each export meets its search string, with a note on the searches it cannot check; the export dates; the SHA-256 of every file read; what the second batch's W9 and W10 files hold; how many records of each citing set the refinement string matches |
 | `N1_scholar_screening_2026-10-27.csv` | One row per unique Google Scholar result of the first pass, 2026-10-27 (48 rows); screened by hand |
+| `N1_scholar_screening_2026-11-03.csv` | One row per unique result of the full pass of G1 and G2, 2026-11-03 (46 rows; G4b returned none). Results of the first pass keep their gid and code; the two new ones are G049 and G050. Extra column `first_pass` (yes or no) |
+| `N1_scholar_screening_2026-11-03_summary.json` | Results per query, the counts, and the SHA-256 of the copied pages and of the zip they came in |
 
 The first two files are written by `scripts/sweep/n1_screening.py` from the raw exports. The log
 keeps the name of its first batch. The exports are not in the repository, because the database
 terms restrict redistribution and the abstracts belong to the publishers. Keep each batch in its
 own folder, `private/sweep/2026-10-22`, `private/sweep/2026-10-27` and
 `private/sweep/2026-10-28` (excluded by `.gitignore`), under the names the script lists. The
-second batch also holds the Google Scholar result pages. The SHA-256 in the summary identify
+second batch also holds the Google Scholar result pages of the first pass; those of the full pass
+are in `private/sweep/2026-11-03`. The SHA-256 in the summary identify
 every file. The full texts read for the verdicts stay outside the repository too.
 
 Columns of the database log:

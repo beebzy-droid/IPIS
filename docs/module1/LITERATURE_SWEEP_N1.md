@@ -360,7 +360,36 @@ like the exports. Areces et al. (R382), new in W9's citing set, was read in full
 | 43 | Makhin, "Automatic adaptive conformal inference for time series", master's thesis, Skolkovo Institute of Science and Technology, submitted 2024-06-10 (advisor M. Panov). Read in place of the chapter by Makhin and Panov, "Automatic adaptive conformal inference for time series forecasting", LNCS 15419 (2025) 262-274 (R073, S2, S12), which Bien could not obtain. The thesis's abstract closely matches the chapter's, which adds a sentence | AACI is ACI with a learning rate set at each step from past steps: gamma_t = (4 (alpha - 1/2)^2 + 2 alpha h_t) h_t, with h_t the alpha (1 - alpha) quantile of past "perfect steps" in level space (Ch. 2), against the width explosions of ACI and DtACI. Thm 3.1.1: long-run coverage under a constant error distribution, assuming h_t > eps. Local coverage over moving windows of 50 is compared with DtACI and with basic ACI, shown as "Fixed quantile" (Figs. 4.4, 4.7 and 4.11); Table 4.2 compares AACI with DtACI. The COVID forecasts are 7 days ahead, as in the DtACI paper, but the update is written with err_t at once, and delay is not discussed | (i) and (iii) do not fire: no delay, and the step-size rule does not depend on one. One more data-driven step-size rule, beside decaying steps and DtACI (P3). The chapter could differ from the thesis; its abstract does not suggest a delay analysis. To re-check if the chapter becomes available |
 | 44 | Areces, Mohri, Hashimoto and Duchi, "Online conformal prediction via online optimization", ICML 2025, PMLR 267 (R382, W9; third batch); full text read | Online conformal prediction as online gradient descent on the quantile loss of a parametric threshold (Algorithm 1). Linear quantile tracking (LQT) of order p sets the threshold linear in the last p scores; SQT + AR adds an autoregressive scorecaster to scalar quantile tracking. Algorithm 1 updates once per batch of m scores, so a score waits up to m - 1 steps; the long-run coverage bound (Thm 4.1) grows with m. The experiments use m = 1, "since larger batch sizes provide comparable results" (Sec. 7). Consistency and rates for well-specified models (Thms 5.1 and 5.4), with a learning-rate trade-off between coverage and convergence (Fig. 2, right). The datasets (stocks, climate, Elec2, and ERCOT load-forecast errors, the last pre-registered on OSF) are split by the lag-1 autocorrelation of the scores: "when there is linear dependence in the conformal scores, our algorithms fit the data better than the baselines. Otherwise, all algorithms perform similarly" (Sec. 7.2.3; lag 1 of 0.19 against 0.95 on MSFT, 0.94 on ERCOT). Delayed feedback is not discussed | (i) and (iii) do not fire: no delayed feedback, and the batched update holds the parameter theta_b (for SQT, the threshold) through a batch rather than feeding back stale errors. Read as a lagged loop (m > 1), its theory bears on the conditional coverage of a well-specified model (Thms 5.1 and 5.4), the local-coverage clause already conceded (row 21), and on neither persistence nor a forecaster's effect on the step size; its experiments use m = 1. (ii) Does not fire: the link between score autocorrelation and the gain from modelling the scores is empirical, with no width bound and no delay. It is the qualitative precedent of P3's design tool, and Thm 4.1 another coverage bound that grows with the batch size m, a score waiting up to m - 1 steps (P15) |
 
-## Verdict of the database sweep, 2026-10-22, updated 2026-10-27 and 2026-10-28
+## Google Scholar full pass and the open items, 2026-11-03
+
+Bien ran G1 and G2 again on 2026-11-03, and G4 with "conformal inference" in place of "conformal
+prediction" (G4b), and copied every result page as text. He also supplied Li and Zhu's paper
+(arXiv 2609.28522v1, 22 Sep 2026; SHA-256
+6515bff1162b088ce941fde5d208b79822da3463c2ef49a8657bb99bda4ee91f), and could not obtain the
+chapter of row 43 through his institutional access. The pages are kept in
+`private/sweep/2026-11-03`, and `docs/module1/sweep/N1_scholar_screening_2026-11-03_summary.json`
+records their SHA-256 and that of the zip they came in. Each result is screened in
+`docs/module1/sweep/N1_scholar_screening_2026-11-03.csv`, with the first pass's code where it was
+found then.
+
+| ID | Query | Run date | Results | New since 2026-10-27 | Bearing on F4 |
+|---|---|---|---|---|---|
+| G1 | `"online conformal" "multi-step" "forecast errors"` | 2026-11-03 | 23, all copied | G049 | Row 46 (a) |
+| G2 | `"online conformal prediction" "multi-horizon" forecasting` | 2026-11-03 | 29, all copied (6 also in G1) | G050 | Row 46 (b) |
+| G4b | `debutanizer "soft sensor" "conformal inference" PID` | 2026-11-03 | 0 | none | Settles row 38 (c) |
+
+Scholar lists fewer than 100 results for G1 and G2, so the pass is complete at the query level: 46
+unique results, the 44 of the first pass and two new ones. Every first-pass result is found again
+and keeps its code; G040 is now read in full (row 45). Codes: X2 3, X3 27, X4 7, F 7, A 2.
+
+| # | Source | Finding | Bearing on N1'' |
+|---|---|---|---|
+| 45 | Li and Zhu, "Sequential confidence sets for coverage-constrained conformal model selection", arXiv 2609.28522v1, App. G.1 (row 37 (f); G040); read in full from Bien's copy | The paper certifies, over time, which of several conformal pipelines are feasible and narrowest, by martingale confidence sequences on their miscoverage (CC-SMCS). App. G.1 handles delayed multi-horizon feedback by splitting forecast origins into h residue classes, I_{h,k} = {k, k + h, k + 2h, ...} (Eq. G.1): "Within each class, an increment issued at one origin is resolved by the next origin in the same class". One confidence sequence runs per method, constraint, horizon and class, with the error probability allocated across them; Cor. G.1 keeps Theorem 5.2 "simultaneously over all calendar times and monitored horizons, with each horizon-specific target defined over forecast origins whose outcomes have been resolved". There is no level recursion, step size, stability or persistence analysis, and no forecaster ahead of a loop. The experiments are one step ahead ("changing the forecasting horizon to one to match our sequential prediction setting", App. F.2). The paper cites neither El Halabi and Brandt nor Wang and Hyndman | (i), (ii) and (iii) do not fire; under D-P1.15 neither clause of claim 2' is touched. The residue classes are the phase-interleaving of rows 2 and 34, applied to confidence sequences over pipelines (P17) |
+| 46 | Two new Google Scholar results, full text not reached. (a) Maligireddy, "Which vintage calibrated the interval? An event-time benchmark for conformal forecasting with revisable labels" (G049, G1; a PDF on ResearchGate, no year listed). (b) Anonymous, "Required-level risk control for time series forecasting" (G050, G2; a submission on OpenReview). Neither was found by web search on 2026-11-03 | (a) The snippet cites conformal PID control and multi-step online conformal inference, and compares the revision of growth rates to their mature values with forecast errors. Read with the title, labels are revised after their first release, and a calibration that waits for the mature vintage would run on delayed feedback. (b) The snippet asks for risk control in each forecast window, "not only on average", with the forecast for a window "fixed before that window begins". A window's outcome is then complete only at its end, so an online calibration would run on feedback delayed by up to a window | A: to read before submission. Either could analyse a delayed loop (F4 (i)) or a forecaster ahead of one (iii); the snippets do not say. Both readings above are inferences from the snippets |
+| 47 | Makhin and Panov, the chapter of row 43 (AIST 2024, Springer 2025, pp. 262-274, DOI 10.1007/978-3-031-88036-0_16) | Not obtainable through Bien's institutional access on 2026-11-03. The record in MBZUAI's repository (irep.mbzuai.ac.ae, read 2026-11-03) gives the bibliographic data and the abstract, without the text: ACI with a learning rate that adapts to changes in the data-generating process, against the spikes in width of other adaptive methods. The abstract mentions no delay | Row 43's verdict stands on the thesis and the chapter's abstract: (i) and (iii) do not fire. If an author copy arrives before submission, it is screened |
+| 48 | Rows 2 and 21, versions on arXiv, 2026-11-03 | El Halabi and Brandt: v1 only (7 Sep 2026), no journal reference. Wang and Hyndman: v2 (2026-02-02), no journal reference. Scholar lists 1 citing work of row 2 and 25 of row 21 | No new version to screen. Neither citing set has been screened: the database's forward-citation searches covered conformal PID, SPCI, "delayed feedback" in reference lists and ACI with delay terms (S9 to S12, W9, W10) |
+
+## Verdict of the database sweep, 2026-10-22, updated 2026-10-27, 2026-10-28 and 2026-11-03
 
 - **F4 (i) does not fire.**
   - The closest are El Halabi and Brandt (row 2), Wang and Hyndman's Cor. 1 (row 21), Dixit et
@@ -375,6 +404,9 @@ like the exports. Areces et al. (R382), new in W9's citing set, was read in full
     at a fixed delay, with a step size that a label-free uncertainty signal raises, and analyse
     nothing in the delay. Areces et al. (row 44) add a coverage bound that grows with the batch
     size of a batched update, which holds its parameter through a batch: no dead time.
+  - 2026-11-03: rows 45 to 48 add none. Li and Zhu's delayed construction (row 45) is a
+    phase-interleaving for confidence sequences over pipelines, with no level recursion or step
+    size. Two new Scholar results are not yet read (row 46).
 - **F4 (ii) does not fire** (rows 21, 28; W4 and S4 hold only empirical widths). 2026-10-28:
   Areces et al. (row 44) relate the gain from modelling the scores to their lag-1
   autocorrelation, empirically and without delay.
@@ -395,6 +427,8 @@ like the exports. Areces et al. (R382), new in W9's citing set, was read in full
     report no step size, and measure marginal coverage and width only. Liu and Hassan (row 42
     (c)) put a residual forecaster ahead of a conformal queue, but measure its effect on point
     error only.
+  - 2026-11-03: rows 45, 47 and 48 add none, and no clause of claim 2' is touched (D-P1.15). The
+    two Scholar results of row 46 are not yet read.
 - **Section 3D**: the precision loss is Kitchin's (2026). The eventual short cycles and their
   sharing across seeds remain unreported (row 32).
 - **Process positioning.** The finding of rows 5 and 7 holds in both databases in its strict
@@ -407,6 +441,7 @@ like the exports. Areces et al. (R382), new in W9's citing set, was read in full
     interval, and no delay length is set or analysed.
   - The manuscript claims the analysis and the remedy under laboratory delay, not the
     conformal soft sensor (P13). G4 found nothing, but cannot test it (row 38 (c)).
+    2026-11-03: G4b, with "conformal inference", finds nothing either.
 
 Constraints added to the list at the top:
 - P5. Cite Wang and Hyndman (2024) for the multi-step delayed loop, its coverage bound (Cor. 1)
@@ -451,13 +486,18 @@ Constraints added to the list at the top:
   PID variant (smoothed loss, a derivative term, adaptive weights) without delay handling,
   represented in F7 by conformal PID itself. The manuscript says both; neither is run
   separately (PHASE1_PREREGISTRATION Appendix A).
+- P17 (2026-11-03). Li and Zhu (row 45) handle delayed multi-horizon feedback with one confidence
+  sequence per residue class of forecast origins. If the manuscript lists interleaved
+  constructions, cite them beside El Halabi and Brandt and Cherenson and Panagou (P11).
 
 Still due before submission:
-- Google Scholar, the full pass: the first 100 results of G1 and G2 (22 and 28 copied so far),
-  and G4 again with "conformal inference" in place of "conformal prediction". G3 is complete.
-- Row 37 (f): Li and Zhu's App. G.1 (delayed multi-horizon feedback), not reached.
-- Row 21: screen the published version of Wang and Hyndman's revision again.
-- Row 43: the chapter of Makhin and Panov (2025), if it becomes available.
+- Row 46: the full texts of the two new Google Scholar results, G049 and G050.
+- Row 48, added 2026-11-03: the Google Scholar citing sets of rows 2 and 21 (1 and 25 results that
+  day), which no search has covered. A citing paper is where a later analysis of the delayed loop,
+  or of a forecaster ahead of it, would most likely appear.
+- Row 21: screen the published version of Wang and Hyndman's revision again (still v2 of
+  2026-02-02 on 2026-11-03).
+- Row 43: the chapter of Makhin and Panov (2025), if it becomes available (row 47).
 
 What any of these finds is decided by F4 as written. For claim 2' it is decided clause by clause
 (PHASE1_PREREGISTRATION D-P1.15, ratified 2026-10-29): a find on miss persistence removes the
@@ -465,3 +505,6 @@ persistence part, and one on the step size removes the step-size statement.
 
 Done on 2026-10-28: the citing sets of W9 and W10 (third batch) and the seven texts of rows 31
 and 38 (a), for R073 the thesis in place of the chapter (rows 39 to 43).
+
+Done on 2026-11-03: the full Google Scholar pass (G1, G2 and G4b; complete at the query level)
+and Li and Zhu's App. G.1 (rows 45 to 48).

@@ -49,6 +49,9 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 > step 2 (`docs/module1/LITERATURE_SWEEP_N1.md`, "Still due before submission"). The outline's
 > figures and tables are generated from the committed evidence by `scripts/paper_n1/` into
 > `docs/paper/figures/n1/` (`python -m scripts.paper_n1.make_all`; `tests/unit/test_paper_n1.py`).
+> Screens, 2026-11-03: Li and Zhu's App. G.1 and the full Google Scholar pass are done and change
+> no verdict (sweep rows 45 to 48). Still due: two full texts and two Scholar citing sets (rows 46
+> and 48), the published version of Wang and Hyndman (row 21), the row 43 chapter if available.
 >
 > **Status update 2026-10-29 (M1 session).** The N1 Phase 1 protocol is frozen (tag
 > `n1-phase1-freeze`; `docs/module1/PHASE1_PREREGISTRATION.md`, Section 10): the claims, the rules
@@ -1211,12 +1214,25 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   PHYSICS: spec xB<=0.02 is UNACHIEVABLE for z>~0.38 within D in [33,37] (distillate-flow-limited: min xB at z=0.40 is 0.048); so full [0.30,0.40] ensemble is infeasible for all methods -> operational sigma_z must be tight (consistent with Bien's 0.006). Exploratory experiment: /tmp/designB2.py (oracle/CQR/naive, monotone-z shortcut, EconomicsAnchor). NEXT BUILD (pending PI nod on reframe): productionize 3B as oracle + CQR-conditional + CPP a-posteriori + naive baselines; reframe 3B.2 gate around conditional calibration + a-posteriori violation@optimum; 3B.3 = regime map over sigma_z. Then audit A-F, CI, commit.
 
 ## Lessons
+- **Local formatters must match CI's pins** (ruff 0.15.16, black 24.10.0, `.github/workflows/ci.yml`).
+  Black 26.x would reformat `src/ipis/module1_soft_sensor/phase1/stages.py` (redundant parentheses
+  around an unpacking target, 2026-11-03). Do not reformat it: the Phase 1 provenance hashes the
+  runner's sources, and stage B checks them against stage A. Pin the local black instead.
 - **Run the exact CI command, not piecemeal.** A test-file edit was black-formatted
   but ruff was only run on the changed src files, missing an I001 import-order
   regression that CI caught. Before declaring clean: `ruff check src tests` AND
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-11-03 (N1 screens)** -- The screens of pre-registration Section 9, step 2, as far as they
+  can go today (`docs/module1/LITERATURE_SWEEP_N1.md`, rows 45 to 48; Section 10 of the
+  pre-registration). Li and Zhu's App. G.1 handles delayed multi-horizon feedback with
+  residue-class confidence sequences, with no level recursion, step size or forecaster: F4 (i) to
+  (iii) do not fire, and no clause of claim 2' is touched. The full Google Scholar pass (G1 23
+  results, G2 29, G4b none; log `docs/module1/sweep/N1_scholar_screening_2026-11-03.csv`) found
+  every first-pass result again and two new ones, not yet read. The row 43 chapter is not
+  obtainable; its abstract (MBZUAI repository) has no delay. Added: the Scholar citing sets of
+  rows 2 and 21, which no search had covered.
 - **2026-11-03 (N1 figures)** -- The generators of the N1 outline's Figs. 2 to 6 and Tables 2 to 4
   (`scripts/paper_n1/`): they read only the committed Phase 1 evidence and write each figure as
   PDF and PNG with a CSV of the plotted numbers, and each table as a LaTeX body and a CSV, to

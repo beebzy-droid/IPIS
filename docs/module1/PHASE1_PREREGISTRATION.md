@@ -909,6 +909,15 @@ and not on the debutanizer at theta_doc = 3); F3, F5a, F5b, F6, F7 and F8 do not
 tested, and the step-size statement is made; F1 fires (secondary). The numbers are in
 `PHASE1_RESULTS.md`.
 
+**Screens still due, 2026-11-03 (Section 9, step 2).** Li and Zhu's App. G.1 was read in full
+(`LITERATURE_SWEEP_N1.md`, row 45), and the full Google Scholar pass was run: G1 and G2 complete at
+the query level (fewer than 100 results each), G4b with "conformal inference" (no result). No prior
+art was found that bears on F4 (i) to (iii); no verdict changes, and no clause of claim 2' is
+touched (D-P1.15). Still due: the full texts of two new Scholar results (row 46), the Scholar citing
+sets of rows 2 and 21 (row 48, added the same day), the published version of Wang and Hyndman's
+revision (row 21; still v2 of 2026-02-02), and the chapter of row 43 if it becomes available (not
+obtainable on 2026-11-03; row 47).
+
 ## Appendix A. Baseline configurations (D-P1.10; fixed 2026-10-20, before the freeze)
 
 This appendix fixes the settings of the baselines of Section 5.3 and gives the source of each.

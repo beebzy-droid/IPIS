@@ -1,0 +1,31 @@
+{
+  "run_date": "2026-11-03",
+  "source": "Google Scholar result pages copied as text by Bien (private/sweep/2026-11-03)",
+  "zip_sha256": "84ceffa6269381bc317c67c237d7978b621a618de60b20c7839f57e1692fa873",
+  "pages_sha256": {
+    "G1_p1.txt": "272edc563116a9cd9161e7a3600ec1b78444204d5a44fff996529722f09a8175",
+    "G1_p2.txt": "22623f495d0892d03ed0fd738843ad4f9dcc54e22f93d78c99a3426127af1b6c",
+    "G2_p1.txt": "f9b0dad93f4cc90a25f313f858de539d0c50858c63fcada2398efd873dbb4cda",
+    "G2_p2.txt": "dc73bbe9a341c01d2f3c4d8d4d4cfdca76f91f6188271d2281ae4af5c08a48f8",
+    "G4b.txt": "080618f06d0b7eddefa1a49bbb619293163ca1a1fc9196fd3076fb231835e9b7"
+  },
+  "results_per_query": {
+    "G1": 23,
+    "G2": 29,
+    "G4b": 0
+  },
+  "unique_results": 46,
+  "found_in_first_pass": 44,
+  "new": [
+    "G049",
+    "G050"
+  ],
+  "codes": {
+    "X4": 7,
+    "F": 7,
+    "X3": 27,
+    "X2": 3,
+    "A": 2
+  },
+  "note": "Scholar listed fewer than 100 results for G1 and G2, so every result was copied; G4b returned none. Every G1 and G2 result of the first pass (2026-10-27) was found again."
+}
