@@ -46,7 +46,9 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 > `docs/module1/PHASE1_RESULTS.md`. Step 8, the paper's shape, decided by Bien the same day
 > (`PHASE1_RESULTS.md`, Section 10). Next for M1: the manuscript, planned in
 > `ipis-papers/paper/N1_OUTLINE.md` (private), and before submission the screens of Section 9,
-> step 2 (`docs/module1/LITERATURE_SWEEP_N1.md`, "Still due before submission").
+> step 2 (`docs/module1/LITERATURE_SWEEP_N1.md`, "Still due before submission"). The outline's
+> figures and tables are generated from the committed evidence by `scripts/paper_n1/` into
+> `docs/paper/figures/n1/` (`python -m scripts.paper_n1.make_all`; `tests/unit/test_paper_n1.py`).
 >
 > **Status update 2026-10-29 (M1 session).** The N1 Phase 1 protocol is frozen (tag
 > `n1-phase1-freeze`; `docs/module1/PHASE1_PREREGISTRATION.md`, Section 10): the claims, the rules
@@ -1215,6 +1217,15 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-11-03 (N1 figures)** -- The generators of the N1 outline's Figs. 2 to 6 and Tables 2 to 4
+  (`scripts/paper_n1/`): they read only the committed Phase 1 evidence and write each figure as
+  PDF and PNG with a CSV of the plotted numbers, and each table as a LaTeX body and a CSV, to
+  `docs/paper/figures/n1/`. Two checks run inside them (the debutanizer's rolling coverage against
+  its stage B record, the open-loop IACT against F8). `tests/unit/test_paper_n1.py` regenerates
+  every CSV and table and compares it with the committed copy (matplotlib needed for the figures;
+  without it that test skips). Fig. 3 shows the compensated loop beside the uncompensated one:
+  compensation alone does not hold the budget under delay-blind tuning or the white-noise rule
+  (T1, theta = 4: U 5.19 and 15.72 %), only the replay does.
 - **2026-11-03 (N1 step 8)** -- Bien ratified the paper's shape: one N1'' paper, TEP as the
   process evidence and the debutanizer as a descriptive case, the claims the rules left standing,
   three limits stated up front (`docs/module1/PHASE1_RESULTS.md`, Section 10). The manuscript plan

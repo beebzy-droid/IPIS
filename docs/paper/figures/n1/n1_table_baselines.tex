@@ -1,0 +1,11 @@
+\begin{tabular}{@{}lrrcrrc@{}}
+\toprule
+Method & $U$ (\%) & Coverage & Valid & Run-median width & Coverage-matched width change & F7 fires \\
+\midrule
+Compensated loop, replay to $\varepsilon/2$ & 0.18 & 0.8961 & yes & 2.125 & -- & -- \\
+Conformal PID, quantile scorecaster & 0.00 & 0.8941 & yes & 2.153 & +1.6\,\% (8/15) & no \\
+Conformal PID, theta scorecaster & 0.00 & 0.8994 & yes & 2.533 & +17.7\,\% (0/15) & no \\
+Conformal PID, matched scorecaster & 0.00 & 0.8947 & yes & 2.087 & $-$1.5\,\% (8/15) & no \\
+SPCI multi-step & 0.00 & 0.8673 & no & 2.003 & +1.6\,\% (4/15) & no \\
+\bottomrule
+\end{tabular}

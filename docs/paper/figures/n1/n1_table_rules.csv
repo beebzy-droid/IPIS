@@ -1,0 +1,11 @@
+rule,cell,result,verdict
+F2,"TEP T1, $\theta=4$ vs 0","$\Delta U$ = 6.04 pp, 97.5\,\% CI [3.41, 8.68]; 13 of 15 runs",shown
+F2,"Debutanizer, $\theta=3$ vs 0","$\Delta U$ = 0.00 pp, 97.5\,\% CI [0.00, 0.00] (28 blocks)",not shown
+F3,"TEP T1, $\theta=4$","coverage 0.8974, Wilson 95\,\% [0.8910, 0.9035]",does not fire
+F5a,"TEP T1, $\theta=4$, uncompensated","mean $U$ = 0.30\,\% (budget 2\,\%)",does not fire
+F5b,"TEP T1, $\theta=4$, compensated","mean $U$ = 0.18\,\% (budget 2\,\%)",does not fire
+F6,"P3 at TEP T1, $\theta=4$","measured/predicted $-$ 1 = -4.9\,\%, 95\,\% CI [-13.2, 3.5]",does not fire
+F7,Four baselines,"none valid and narrower; closest valid -1.5\,\% (8 of 15 runs)",does not fire
+F8,"TEP T1, $\theta=4$ (predicted ratio 0.880, gate 0.95)","$\Delta$IACT = -4.69, 95\,\% CI [-7.82, -1.55]; lower in 12 of 15 runs",does not fire
+F8,Step size,"0.007, 0.007, 0.007 vs 0.003, 0.003, 0.007",statement made
+F1,47 cells in the design region,"sd($\alpha$) error -73 to -33\,\%; 47 of 47 off by more than 25\,\%",fires
