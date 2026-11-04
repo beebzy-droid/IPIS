@@ -22,10 +22,10 @@
   ],
   "codes": {
     "X4": 7,
-    "F": 7,
+    "F": 9,
     "X3": 27,
-    "X2": 3,
-    "A": 2
+    "X2": 3
   },
-  "note": "Scholar listed fewer than 100 results for G1 and G2, so every result was copied; G4b returned none. Every G1 and G2 result of the first pass (2026-10-27) was found again."
+  "note": "Scholar listed fewer than 100 results for G1 and G2, so every result was copied; G4b returned none. Every G1 and G2 result of the first pass (2026-10-27) was found again.",
+  "note_2026-11-04": "G049 and G050 were read in full on 2026-11-04 (sweep rows 49 and 50) and recoded F; codes are as of that day."
 }

@@ -918,6 +918,14 @@ sets of rows 2 and 21 (row 48, added the same day), the published version of Wan
 revision (row 21; still v2 of 2026-02-02), and the chapter of row 43 if it becomes available (not
 obtainable on 2026-11-03; row 47).
 
+**Screens, 2026-11-04 (Section 9, step 2).** The two Scholar results, the chapter of row 43 and
+the Scholar citing sets of rows 2 and 21 were screened (`LITERATURE_SWEEP_N1.md`, rows 49 to 52).
+None fires under F4 (i) to (iii), and no clause of claim 2' is touched (D-P1.15). The closest
+record of claim 1's mechanism is new: Maligireddy (row 49) observes an ACI loop fed delayed labels
+overcorrect at a fixed step size and attributes it to the delay, without analysing it; the
+manuscript cites it (P18). Still due: two citing works not reached (row 52) and the published
+version of Wang and Hyndman's revision (row 21).
+
 ## Appendix A. Baseline configurations (D-P1.10; fixed 2026-10-20, before the freeze)
 
 This appendix fixes the settings of the baselines of Section 5.3 and gives the source of each.

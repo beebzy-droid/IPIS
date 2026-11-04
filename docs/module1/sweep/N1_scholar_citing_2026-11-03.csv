@@ -1,0 +1,27 @@
+gid,queries,earlier,year,first_author,title,venue,identifier,code,item,basis,note
+G051,C1,R180,2024,"Chen, B.",Conformalized time series with semantic features,NeurIPS,,X4,-,record,R180 (X3) in the database log
+G052,C1,,2026,"Chan, K.H.R.",Conformal information pursuit for interactively guiding large language models,NeurIPS,,X3,-,snippet,conformal sets for LLM question answering; no time-series loop
+G053,C1,,2026,"Zhang, X.",A shared-latent probabilistic digital twin for BLI fan-blade forced response with physics-anchored stress fields,Aerospace Science and Technology,,X2,-,snippet,probabilistic digital twin of fan-blade response; no interval method in the title or snippet
+G054,C1,,2026,"Mahmood, S.",HSE-GNN-CP: Spatiotemporal Teleconnection Modeling and Conformalized Uncertainty Quantification for Global Crop Yield Forecasting,Information,,X3,-,snippet,conformalized crop-yield forecasting
+G055,C1,,2026,"Chen, J.",Uncertainty-Aware Online Time Series Multi-Step Forecasting Framework in Cloud Systems,IEEE journal (Scholar: ... on Knowledge and ...),,A,"i, iii",snippet,"row 52 (a): online multi-step workload forecasting with uncertainty, citing Wang and Hyndman; how feedback is delayed is not in the snippet; full text not reached"
+G043,C1,G043,2025,"Ding, T.",Calibrated multi-level quantile forecasting,arXiv,arXiv:2512.23671,F,P2,full text,row 33
+G011,C1,G011,2026,"Liu, G.",Efficient conformal prediction intervals for time series: Online PID-Expert aggregation,arXiv,arXiv:2610.02777,F,i,full text,row 35
+G003,C1,G003,2026,"El Halabi, L.",Adaptive Conformal Inference Under Delayed Feedback: Coverage Guarantees and a Delay-to-Memory Diagnostic,arXiv,arXiv:2609.07251,X4,i,record,row 2
+G013,C1,G013,2026,"Xing, X.",Multimodal large language model enabled robust beamforming for HAP downlink communications,IEEE Transactions,,X2,-,snippet,matched on a citation of Wang and Hyndman
+G026,C1,G026,2026,"Sabashvili, A.",Conformal Prediction Algorithms for Time Series Forecasting: Methods and Benchmarking,arXiv,arXiv:2601.18509,X4,-,record,row 13
+G056,C1,,2026,"Li, Z.",Classification-Powered Conformal Inference for Zero-inflated Outcomes,arXiv,,X3,-,snippet,conformal inference for zero-inflated outcomes; not a time-series loop
+G002,C1,G002,2025,"Li, R.",Optimization-based Online Conformal Prediction for Multi-step Forecasting,arXiv,arXiv:2508.13362,X4,i,record,row 25 (a)
+G006,C1,G006,2026,"Wang, X.",conformalForecast: An R package for sequential conformal prediction in time series,arXiv,arXiv:2610.21648,F,iii,full text,row 37 (c)
+G020,C1,G020,2026,"Chu, B.X.Y.",Robust Prediction Intervals for Time Series Forecasting: A Bootstrap and Bayesian Approach,Journal of Forecasting,,X3,-,snippet,"bootstrap and Bayesian intervals, not conformal"
+G057,C1,,2026,"Ma, Z.",Adaptive Multi-Scale Forecasting and Gate-Localized Conformal Prediction for Multivariate Nonstationary Time Series,arXiv,,X3,-,snippet,localized conformal prediction for multivariate series; no delay in the snippet
+G058,C1,,2026,"Sampson, M.",Conformal Prediction with Time-Series Data via Sequential Conformalized Density Regions,arXiv,arXiv:2604.07325,X3,-,snippet,density regions with asymptotic conditional coverage; no delay in the snippet
+G059,C1,,2026,"Sabashvili, A.",Simulation-Augmented Multi-Step Split Conformal Prediction for Aggregated Forecasts,arXiv,arXiv:2606.16356,X3,-,snippet,split conformal for aggregated multi-step forecasts; no online loop
+G060,C1,,2024,"Paul, J.R.",An introduction to conformal inference for economists,econstor,,X3,-,snippet,introduction
+G037,C1,G037,2025,"Persson Suorra, N.",Multivariate Resource Usage Forecasting and Temporal Accuracy in Private Cloud Systems,,,X2,-,snippet,"citation entry, no abstract"
+G012,C1,G012,2026,"Erkaya, P.",Local Residual Conformal Prediction for Multi-Step Forecasting: Development and Comparative Evaluation,thesis (ProQuest),,X3,-,snippet,direct multi-horizon forecasts; thesis not reached
+G061,C1,,,"Palihawadana, N.K.",Optimal Predictor Selection for High-dimensional Nonparametric Forecasting,thesis (Monash),,X2,-,snippet,sparse multiple index models; no interval method in the snippet
+G049,C1,G049,2026,"Maligireddy, J.R.",Which Vintage Calibrated the Interval? An Event-Time Benchmark for Conformal Forecasting with Revisable Labels,researchgate.net,,F,"i, iii",full text,row 49
+G062,C1,,,"Morosini, V.",Conformal Prediction: L'incontro tra Statistica e Machine Learning con applicazioni in Economia e Business Intelligence,thesis (Padova),,X3,-,snippet,introductory thesis with applications
+G063,C1,,,"Nehan, M.",Drift-Triggered Test-Time Adaptation: Uncertainty-Aware Edge Forecasting for Air Quality Under Extreme Aerosol Shifts,,,X2,-,snippet,"citation entry, no abstract"
+G064,C1,,,"Nehan, M.",Drift-Triggered Spatio-Temporal Adaptation for Urban Air Quality Forecasting Under Extreme Aerosol Shifts,,,X2,-,snippet,"citation entry, no abstract"
+G065,C2,,2026,"Li, K.",Announced Breaks Separate Conformal Reliability from Frequency Calibration,arXiv,arXiv:2610.23917,A,i,snippet,"row 52 (b): resets at announced breaks and two audits of conformal reliability, citing El Halabi and Brandt; the arXiv page could not be fetched on 2026-11-04 (rate limit); full text not reached"

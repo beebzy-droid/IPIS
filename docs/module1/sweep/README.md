@@ -10,6 +10,8 @@ The protocol and the verdicts are in `../LITERATURE_SWEEP_N1.md` ("Database swee
 | `N1_scholar_screening_2026-10-27.csv` | One row per unique Google Scholar result of the first pass, 2026-10-27 (48 rows); screened by hand |
 | `N1_scholar_screening_2026-11-03.csv` | One row per unique result of the full pass of G1 and G2, 2026-11-03 (46 rows; G4b returned none). Results of the first pass keep their gid and code; the two new ones are G049 and G050. Extra column `first_pass` (yes or no) |
 | `N1_scholar_screening_2026-11-03_summary.json` | Results per query, the counts, and the SHA-256 of the copied pages and of the zip they came in |
+| `N1_scholar_citing_2026-11-03.csv` | One row per result of the Google Scholar "Cited by" lists of sweep rows 21 (C1, 25 results) and 2 (C2, 1 result), copied 2026-11-03 and screened 2026-11-04. Column `earlier` gives the gid or database uid of a result logged before; new results are G051 to G065 |
+| `N1_scholar_citing_2026-11-03_summary.json` | The counts and the SHA-256 of the copied pages and of their zip |
 
 The first two files are written by `scripts/sweep/n1_screening.py` from the raw exports. The log
 keeps the name of its first batch. The exports are not in the repository, because the database
@@ -17,7 +19,7 @@ terms restrict redistribution and the abstracts belong to the publishers. Keep e
 own folder, `private/sweep/2026-10-22`, `private/sweep/2026-10-27` and
 `private/sweep/2026-10-28` (excluded by `.gitignore`), under the names the script lists. The
 second batch also holds the Google Scholar result pages of the first pass; those of the full pass
-are in `private/sweep/2026-11-03`. The SHA-256 in the summary identify
+are in `private/sweep/2026-11-03`, and the "Cited by" pages in `private/sweep/2026-11-03_citing`. The SHA-256 in the summary identify
 every file. The full texts read for the verdicts stay outside the repository too.
 
 Columns of the database log:
@@ -45,4 +47,4 @@ the code rests on (`record` for a result already in the sweep, `full text`, `mai
 | X5 | uses Tennessee Eastman data or the simulator; nothing on its random-number generator |
 | X6 | classical dead-time compensation, without intervals |
 | F | may bear; read in full (verdicts in rows 22 to 24, 26 to 30, 33 to 37 and 39 to 44) |
-| A | may bear; full text not reached from the workspace; to read before submission (none since 2026-10-28, when rows 31 and 38 were read as rows 39 to 43) |
+| A | may bear; full text not reached from the workspace; to read before submission (none from 2026-10-28, when rows 31 and 38 were read as rows 39 to 43, to 2026-11-03; on 2026-11-04, G055 and G065 of row 52) |

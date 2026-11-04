@@ -389,7 +389,36 @@ and keeps its code; G040 is now read in full (row 45). Codes: X2 3, X3 27, X4 7,
 | 47 | Makhin and Panov, the chapter of row 43 (AIST 2024, Springer 2025, pp. 262-274, DOI 10.1007/978-3-031-88036-0_16) | Not obtainable through Bien's institutional access on 2026-11-03. The record in MBZUAI's repository (irep.mbzuai.ac.ae, read 2026-11-03) gives the bibliographic data and the abstract, without the text: ACI with a learning rate that adapts to changes in the data-generating process, against the spikes in width of other adaptive methods. The abstract mentions no delay | Row 43's verdict stands on the thesis and the chapter's abstract: (i) and (iii) do not fire. If an author copy arrives before submission, it is screened |
 | 48 | Rows 2 and 21, versions on arXiv, 2026-11-03 | El Halabi and Brandt: v1 only (7 Sep 2026), no journal reference. Wang and Hyndman: v2 (2026-02-02), no journal reference. Scholar lists 1 citing work of row 2 and 25 of row 21 | No new version to screen. Neither citing set has been screened: the database's forward-citation searches covered conformal PID, SPCI, "delayed feedback" in reference lists and ACI with delay terms (S9 to S12, W9, W10) |
 
-## Verdict of the database sweep, 2026-10-22, updated 2026-10-27, 2026-10-28 and 2026-11-03
+## Citing sets and full texts, 2026-11-04
+
+Bien copied the Google Scholar "Cited by" lists of rows 21 and 2 on 2026-11-03 (C1 and C2 below)
+and on 2026-11-04 sent the full texts of G049 and G050 and the chapter of row 43, which M. Panov
+sent at his request. The pages are kept in `private/sweep/2026-11-03_citing`, and
+`docs/module1/sweep/N1_scholar_citing_2026-11-03_summary.json` records their SHA-256 and that of
+the zip. Each result is screened in `docs/module1/sweep/N1_scholar_citing_2026-11-03.csv`, with its
+earlier gid or database uid where it was logged before; G049 and G050 are recoded F in the full
+pass's log. The texts stay outside git. SHA-256 of the texts:
+- G049: 67d5516d44b0066774235112ddb63f7b4a3197bd614f605650fb193ea471939a;
+- G050: 4669822a1c4f3c71da2f817162caf6992f2cc4b71a2539d3f2ed0c87dbd8aab1;
+- the chapter: f7d3143698b0ca41cf1c168a81adc4bd803ac219bb3b2549ba3d6bb1190c84e4.
+
+| ID | Citing set of | Run date | Results | Already logged | New | Bearing on F4 |
+|---|---|---|---|---|---|---|
+| C1 | Row 21, Wang and Hyndman (arXiv 2410.13115) | 2026-11-03 | 25, all copied | 12 | 13 | Row 52 (a) |
+| C2 | Row 2, El Halabi and Brandt (arXiv 2609.07251) | 2026-11-03 | 1 | 0 | 1 | Row 52 (b) |
+
+Of the 26 results, 12 were logged before: R180 in the database log, and 11 Scholar results that
+include rows 2, 13, 25 (a), 33, 35, 37 (c) and G049. The 14 new ones, on title and snippet: X2 4,
+X3 8, A 2. Codes of the 26: X2 6, X3 10, X4 4, F 4, A 2.
+
+| # | Source | Finding | Bearing on N1'' |
+|---|---|---|---|
+| 49 | Maligireddy, "Which vintage calibrated the interval? An event-time benchmark for conformal forecasting with revisable labels" (University of the Cumberlands; a preprint on ResearchGate, PDF of 2026-10-25; G049, G1 and C1; row 46 (a)); full text read | Point forecasts of six ALFRED series (2005 to 2025 origins, h = 1 and 3) are fixed, and the label vintage admitted to the calibration window is varied: on first release (P1), latest available (P2), or only after a 12-month maturity (P3), against an unavailable oracle. ACI runs with gamma = 0.01, "only when the label of an earlier interval k is first admitted under the policy, so feedback is delayed exactly as labels are" (Sec. III.E), and "When alpha_t <= 0 the interval is set to 1.5x the largest residual in the window, a finite surrogate for an unbounded interval". With ACI at 90 % nominal, P3 covered 86.6 % against the first-release target and 86.3 % against the maturity target, and its maturity-target interval score rose to 10.21 against 6.52 for P1; outside 2020-21, 6.93 against 3.43 (Table V). The controller "receives miss feedback only when labels are admitted, so under P3 it receives a year's misses late and in a burst and then overcorrects ... This is a property of naively combining delayed labels with an online controller, not of ACI per se" (Sec. V.A). The paper "does not propose a new conformal method or a new coverage theorem"; the step size is fixed, the delay takes two values (labels admitted on release or a year later), the P3-ACI results are "sensitive to that surrogate" (Sec. VII), and no forecaster sits ahead of the loop | (i) Does not fire: the delayed loop's overcorrection is observed and attributed to the delay, but nothing is derived (no stability limit, noise gain, infinite share or step-size rule), and the delay is not varied beyond two admission rules. It is the closest empirical record of claim 1's mechanism: a delayed ACI loop at a fixed step overshooting into very wide intervals. Its coverage falls below nominal (86.3 to 86.6 %), so it does not show what claim 1 adds on TEP, nominal coverage over a rising uninformative share. (ii) and (iii) do not fire; D-P1.15 is not touched (P18) |
+| 50 | Anonymous, "Required-level risk control for time series forecasting", under review at ICLR 2027 (OpenReview; PDF of 2026-09-26, 44 pp.; G050, G2; row 46 (b)); full text read | Window-level risk control (ReqRC). Before each window of H points a level is chosen from a fixed family of upper quantile forecasts; each completed window returns its minimum feasible level, and ReqRC uses the j-th order statistic of the last K such levels revealed after a feedback delay D (K = 8, j = 8, D = 1 window in the experiments). "It needs no step size" (Sec. 2). Prop. 1: long-run coverage permits window failures, "a method can meet the long-run target while failing 96% of windows". Thm 2 bounds a window's success probability "from delayed history", with corrections for shift and infeasibility. The ten baselines (ACI, rolling RC, conformal PID "with a persistence scorecaster", DtACI, AgACI, SF-OGD, L-ARC, ECI, NCC and COP) run at a one-window delay, with step sizes set by a rule or chosen on validation; the scorecaster is not ablated, and no baseline's stability or step size is analysed against the delay. The delay sensitivity (D = 2, 4 and 8) and the stress test of Table 16 (success 0.967 at D = 1 and 0.811 at D = 8 under persistence 0.9) concern ReqRC's own order statistic | (i) Does not fire: no level recursion is analysed; the delay enters an order-statistic bound. (iii) Does not fire: no comparison with and without a forecaster, and ReqRC has no step size. (ii) Does not fire. D-P1.15 is not touched. Prop. 1 is a further statement that average coverage hides local failures (P8), as an exact worst case over windows (P19) |
+| 51 | Makhin and Panov, "Automatic adaptive conformal inference for time series forecasting", AIST 2024, LNCS, Springer 2025, pp. 262-274 (row 43; row 47); the authors' version, 13 pp., sent by M. Panov on 2026-11-04; full text read | AACI as in the thesis: alpha_t = alpha_{t-1} + gamma_t (alpha - err_{t-1}), with gamma_t = (4 (alpha - 0.5)^2 + 2 alpha h_t) h_t (Sec. 2.3). The chapter states no theorem (the thesis's Thm 3.1.1 is not in it) and compares AACI with DtACI only, on mean width and mean local coverage over moving windows of 50 (Tables 1 to 3, Fig. 2). The COVID forecasts are for "the next week (7-day horizon)" (Sec. 3.2), and the update uses err_{t-1}; delay is not discussed | Row 43's verdict is confirmed: (i) and (iii) do not fire. The manuscript cites the chapter, not the thesis |
+| 52 | Two citing works that may bear, not reached. (a) Chen et al., "Uncertainty-aware online time series multi-step forecasting framework in cloud systems", an IEEE journal, 2026 (Scholar truncates it to "... on Knowledge and ..."; G055, C1). (b) Li, "Announced breaks separate conformal reliability from frequency calibration", arXiv 2610.23917, 2026 (G065, C2), the only work that cites row 2 | (a) Online multi-step workload forecasting with uncertainty, citing Wang and Hyndman. If it calibrates online, its h-step errors arrive h steps late. Behind a paywall. (b) Resets at announced breaks and two audits of conformal reliability, citing El Halabi and Brandt. arXiv refused the fetch four times on 2026-11-04 (rate limit) | A: to read before submission. The snippets do not say whether either analyses a delayed loop (F4 (i)) or a forecaster ahead of one (iii) |
+
+## Verdict of the database sweep, 2026-10-22, updated 2026-10-27, 2026-10-28, 2026-11-03 and 2026-11-04
 
 - **F4 (i) does not fire.**
   - The closest are El Halabi and Brandt (row 2), Wang and Hyndman's Cor. 1 (row 21), Dixit et
@@ -407,6 +436,10 @@ and keeps its code; G040 is now read in full (row 45). Codes: X2 3, X3 27, X4 7,
   - 2026-11-03: rows 45 to 48 add none. Li and Zhu's delayed construction (row 45) is a
     phase-interleaving for confidence sequences over pipelines, with no level recursion or step
     size. Two new Scholar results are not yet read (row 46).
+  - 2026-11-04: rows 49 to 51 add none. Maligireddy (row 49) runs ACI on labels as they are
+    admitted, sees it overcorrect under a 12-month delay at a fixed step, and attributes this to
+    the delay, without analysis: the closest empirical record of claim 1's mechanism (P18). Two
+    citing works are not yet read (row 52).
 - **F4 (ii) does not fire** (rows 21, 28; W4 and S4 hold only empirical widths). 2026-10-28:
   Areces et al. (row 44) relate the gain from modelling the scores to their lag-1
   autocorrelation, empirically and without delay.
@@ -429,6 +462,9 @@ and keeps its code; G040 is now read in full (row 45). Codes: X2 3, X3 27, X4 7,
     error only.
   - 2026-11-03: rows 45, 47 and 48 add none, and no clause of claim 2' is touched (D-P1.15). The
     two Scholar results of row 46 are not yet read.
+  - 2026-11-04: rows 49 to 51 add none, and no clause of claim 2' is touched. G050 runs conformal
+    PID with its scorecaster at a one-window delay without ablating it, and ReqRC has no step
+    size (row 50). Row 52's two works are not yet read.
 - **Section 3D**: the precision loss is Kitchin's (2026). The eventual short cycles and their
   sharing across seeds remain unreported (row 32).
 - **Process positioning.** The finding of rows 5 and 7 holds in both databases in its strict
@@ -489,15 +525,22 @@ Constraints added to the list at the top:
 - P17 (2026-11-03). Li and Zhu (row 45) handle delayed multi-horizon feedback with one confidence
   sequence per residue class of forecast origins. If the manuscript lists interleaved
   constructions, cite them beside El Halabi and Brandt and Cherenson and Panagou (P11).
+- P18 (2026-11-04). Cite Maligireddy (row 49) for an ACI loop fed labels as they are admitted
+  that overcorrects under a 12-month delay at a fixed step size (gamma = 0.01; interval score
+  10.21 against 6.52, coverage 86.3 to 86.6 % at 90 % nominal), which the paper attributes to
+  "naively combining delayed labels with an online controller". N1'' supplies the analysis of
+  that loop (claim 1); it claims nothing about revisable labels. It is a preprint; cite a
+  published version if one exists at submission.
+- P19 (2026-11-04). G050 (row 50) states that long-run coverage can hide window failures, as an
+  exact worst case (Prop. 1). If it is citable at submission (accepted, or posted with authors),
+  cite it beside Retzlaff et al. (P8). N1'' reports the worst rolling coverage; it makes no
+  window-level guarantee.
 
 Still due before submission:
-- Row 46: the full texts of the two new Google Scholar results, G049 and G050.
-- Row 48, added 2026-11-03: the Google Scholar citing sets of rows 2 and 21 (1 and 25 results that
-  day), which no search has covered. A citing paper is where a later analysis of the delayed loop,
-  or of a forecaster ahead of it, would most likely appear.
+- Row 52: the full texts of the two citing works G055 (Chen et al., an IEEE journal, 2026) and
+  G065 (Li, arXiv 2610.23917).
 - Row 21: screen the published version of Wang and Hyndman's revision again (still v2 of
   2026-02-02 on 2026-11-03).
-- Row 43: the chapter of Makhin and Panov (2025), if it becomes available (row 47).
 
 What any of these finds is decided by F4 as written. For claim 2' it is decided clause by clause
 (PHASE1_PREREGISTRATION D-P1.15, ratified 2026-10-29): a find on miss persistence removes the
@@ -508,3 +551,6 @@ and 38 (a), for R073 the thesis in place of the chapter (rows 39 to 43).
 
 Done on 2026-11-03: the full Google Scholar pass (G1, G2 and G4b; complete at the query level)
 and Li and Zhu's App. G.1 (rows 45 to 48).
+
+Done on 2026-11-04: the full texts of G049 and G050 (rows 49 and 50), the chapter of row 43 (row
+51) and the citing sets of rows 2 and 21 (row 52).

@@ -1,0 +1,26 @@
+{
+  "run_date": "2026-11-03",
+  "source": "Google Scholar 'Cited by' result pages copied as text by Bien (private/sweep/2026-11-03_citing)",
+  "C1": "papers citing Wang and Hyndman, arXiv 2410.13115 (sweep row 21)",
+  "C2": "papers citing El Halabi and Brandt, arXiv 2609.07251 (sweep row 2)",
+  "zip_sha256": "1115b6fccc16fb1bcf63ddbebdd3668e36e8653b124a08e84db63fe642fa9678",
+  "pages_sha256": {
+    "C1_p1.txt": "535ebe54dcb69bcc90225a6b7b9a10955fcf0aac5d9a1a3126519ad28a41d177",
+    "C1_p2.txt": "925d2d8dcd8858a6fb0fae8584a6452bcb43469a3fe4b777dd9d26cb1f90f235",
+    "C2_p1.txt": "45c3054da7e361ec29785715bf8f1481664cdff82cc69a8a458c246e3d190028"
+  },
+  "results_per_query": {
+    "C1": 25,
+    "C2": 1
+  },
+  "already_logged": 12,
+  "new_to_the_logs": 14,
+  "codes": {
+    "A": 2,
+    "F": 4,
+    "X2": 6,
+    "X3": 10,
+    "X4": 4
+  },
+  "note": "Scholar listed 25 citing works of row 21 and 1 of row 2; every page was copied. R180 was in the database log; eleven others were in the Scholar logs."
+}
