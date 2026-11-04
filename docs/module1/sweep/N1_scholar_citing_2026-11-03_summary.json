@@ -16,11 +16,11 @@
   "already_logged": 12,
   "new_to_the_logs": 14,
   "codes": {
-    "A": 2,
-    "F": 4,
+    "F": 6,
     "X2": 6,
     "X3": 10,
     "X4": 4
   },
-  "note": "Scholar listed 25 citing works of row 21 and 1 of row 2; every page was copied. R180 was in the database log; eleven others were in the Scholar logs."
+  "note": "Scholar listed 25 citing works of row 21 and 1 of row 2; every page was copied. R180 was in the database log; eleven others were in the Scholar logs.",
+  "note_2026-11-04": "G055 and G065 were read in full later on 2026-11-04 (sweep rows 53 and 54) and recoded F; codes are as of that day."
 }

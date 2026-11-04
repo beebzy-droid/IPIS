@@ -47,4 +47,4 @@ the code rests on (`record` for a result already in the sweep, `full text`, `mai
 | X5 | uses Tennessee Eastman data or the simulator; nothing on its random-number generator |
 | X6 | classical dead-time compensation, without intervals |
 | F | may bear; read in full (verdicts in rows 22 to 24, 26 to 30, 33 to 37 and 39 to 44) |
-| A | may bear; full text not reached from the workspace; to read before submission (none from 2026-10-28, when rows 31 and 38 were read as rows 39 to 43, to 2026-11-03; on 2026-11-04, G055 and G065 of row 52) |
+| A | may bear; full text not reached from the workspace; to read before submission (none from 2026-10-28, when rows 31 and 38 were read as rows 39 to 43, to 2026-11-03; G055 and G065 of row 52 on 2026-11-04, read the same day as rows 53 and 54) |

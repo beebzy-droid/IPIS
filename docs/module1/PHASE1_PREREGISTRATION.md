@@ -926,6 +926,13 @@ overcorrect at a fixed step size and attributes it to the delay, without analysi
 manuscript cites it (P18). Still due: two citing works not reached (row 52) and the published
 version of Wang and Hyndman's revision (row 21).
 
+**Screens, 2026-11-04, later (Section 9, step 2).** Row 52's two citing works and the current
+state of Wang and Hyndman's revision in the authors' repository were read (rows 53 to 55). None
+fires, and no clause of claim 2' is touched. The revision's post-hoc comparison is the nearest
+record to the step-size clause; it compares two different loops, not one loop with and without
+its forecaster. The one item left is to screen that revision again, in its latest public form, at
+submission.
+
 ## Appendix A. Baseline configurations (D-P1.10; fixed 2026-10-20, before the freeze)
 
 This appendix fixes the settings of the baselines of Section 5.3 and gives the source of each.

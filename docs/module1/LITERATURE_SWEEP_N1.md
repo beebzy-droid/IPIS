@@ -418,6 +418,21 @@ X3 8, A 2. Codes of the 26: X2 6, X3 10, X4 4, F 4, A 2.
 | 51 | Makhin and Panov, "Automatic adaptive conformal inference for time series forecasting", AIST 2024, LNCS, Springer 2025, pp. 262-274 (row 43; row 47); the authors' version, 13 pp., sent by M. Panov on 2026-11-04; full text read | AACI as in the thesis: alpha_t = alpha_{t-1} + gamma_t (alpha - err_{t-1}), with gamma_t = (4 (alpha - 0.5)^2 + 2 alpha h_t) h_t (Sec. 2.3). The chapter states no theorem (the thesis's Thm 3.1.1 is not in it) and compares AACI with DtACI only, on mean width and mean local coverage over moving windows of 50 (Tables 1 to 3, Fig. 2). The COVID forecasts are for "the next week (7-day horizon)" (Sec. 3.2), and the update uses err_{t-1}; delay is not discussed | Row 43's verdict is confirmed: (i) and (iii) do not fire. The manuscript cites the chapter, not the thesis |
 | 52 | Two citing works that may bear, not reached. (a) Chen et al., "Uncertainty-aware online time series multi-step forecasting framework in cloud systems", an IEEE journal, 2026 (Scholar truncates it to "... on Knowledge and ..."; G055, C1). (b) Li, "Announced breaks separate conformal reliability from frequency calibration", arXiv 2610.23917, 2026 (G065, C2), the only work that cites row 2 | (a) Online multi-step workload forecasting with uncertainty, citing Wang and Hyndman. If it calibrates online, its h-step errors arrive h steps late. Behind a paywall. (b) Resets at announced breaks and two audits of conformal reliability, citing El Halabi and Brandt. arXiv refused the fetch four times on 2026-11-04 (rate limit) | A: to read before submission. The snippets do not say whether either analyses a delayed loop (F4 (i)) or a forecaster ahead of one (iii) |
 
+## The last two texts and row 21's revision, 2026-11-04
+
+Later on 2026-11-04 Bien sent the full texts of row 52's two citing works (G055 through the
+University of the Philippines' IEEE Xplore access; G065 from arXiv), which stay outside git. The
+authors' revision of row 21 is public in their repository, and its current state was read the
+same day in place of a published version, which does not exist yet. SHA-256 of the texts:
+- G055: 0a64b0db39ec872691b7c533e5e811e7cdd7d1434215137de22c27d4817be7c8;
+- G065: 8a8fdb8e7e83003ea79d8b5dff984e6bee906f1f181a233cbe077d3c06bc3863.
+
+| # | Source | Finding | Bearing on N1'' |
+|---|---|---|---|
+| 53 | Chen, Luo, Huang, Jiang, Shi, Zhang and Gao, "Uncertainty-aware online time series multi-step forecasting framework in cloud systems", IEEE Transactions on Knowledge and Data Engineering 38(5) (2026) 3277-, DOI 10.1109/TKDE.2026.3674583 (G055, C1; row 52 (a)); full text read | An ensemble (IPOC) whose intervals come from Adaptive Copula Conformal Inference (ACCI): ACI's level update, applied "When the true value x_t is revealed" (Eq. 6) "with a pre-defined parameter gamma >= 0" whose value is not reported, and an empirical copula over the H step losses for joint multi-step intervals (Algorithm 1). Lemma 4 is the delay-free bound alpha_t in [-gamma, 1 + gamma]. The update is written as if each outcome arrived at once; the h-step delay is not discussed. The sensitivity analysis varies the history length, the loss-set size and alpha, not gamma. ACCI is compared with ACI, SAOCP, CopulaCPTS and AcMCP on average coverage ratio and median width (Table VI), without ablating AcMCP's forecaster | (i), (ii) and (iii) do not fire; D-P1.15 is not touched. Another multi-step ACI loop run without a delay analysis, like rows 26, 30 and 36 |
+| 54 | K. Li, "Announced breaks separate conformal reliability from frequency calibration", arXiv 2610.23917v2 (26 Oct 2026), whose footer names NeurIPS 2026 (G065, C2; row 52 (b)); full text read | Resets at structural breaks announced in advance: a reset rule (segmented split conformal) and announced-break ACI, restarted at the boundary with a boosted step. Each outcome is observed before the next interval (Algorithms 1 and 2: "Output C_t ... and observe Y_t"); there is no feedback delay. Two audits, the per-time gap of the threshold in force and the frequency gap of a closed window: the restarted recursion's frequency gap is of order 1/M, and "That gap bounds nothing about the next interval" (abstract). Prop. 2 is a recovery-time lower bound for fixed-step ACI after a break, without delay. El Halabi and Brandt are cited only as work that "sweeps shift sizes under delayed feedback" (Sec. 7) | (i) Does not fire: no delay, and the step-size result is the delay-free recovery time. (ii) and (iii) do not fire; D-P1.15 is not touched. Its two audits make, for breaks, the point claim 1 makes under delay: a frequency audit that passes says nothing about the next interval (P20) |
+| 55 | Wang and Hyndman's revision (row 21), github.com/xqnwang/cpts at commit 3d486c7 (2026-11-04), `paper/cpts.qmd`; 17 commits since d972b6e, read in place of a published version | "Delayed feedback" is now a keyword, and the learning rate may vary over time (Cor. 2). The comparison with MPI, the same loop without the scorecaster, now reads "The two sets of bounds mostly overlap", with local differences. The post-hoc comparison that tunes MACP's step on the test set to match AcMCP's variance of local coverage was there at d972b6e; it now reports the steps chosen, gamma = 0.065, 0.05, 0.035 and 0.035, "much larger than the default gamma=0.005", and that "approximately 12% to 89% of the issued tuned MACP intervals have at least one bound clipped", that is, infinite before clipping. AcMCP keeps eta = 0.1 B-hat_t, set by rule | (i) Does not fire: the infinite bounds are reported for the tuned steps, as a range over data sets and horizons, and not analysed against the delay. (iii) Does not fire on either clause of claim 2': the post-hoc comparison sets two different loops side by side (MACP against AcMCP), not one loop with and without its forecaster; the comparison that does that (MPI against AcMCP) measures neither a step size nor miss persistence; and AcMCP's step is set by rule, not tuned to a budget. This is the closest record yet to the step-size clause, so the published version is screened again on this point before submission (P21) |
+
 ## Verdict of the database sweep, 2026-10-22, updated 2026-10-27, 2026-10-28, 2026-11-03 and 2026-11-04
 
 - **F4 (i) does not fire.**
@@ -440,6 +455,9 @@ X3 8, A 2. Codes of the 26: X2 6, X3 10, X4 4, F 4, A 2.
     admitted, sees it overcorrect under a 12-month delay at a fixed step, and attributes this to
     the delay, without analysis: the closest empirical record of claim 1's mechanism (P18). Two
     citing works are not yet read (row 52).
+  - 2026-11-04, later: rows 53 to 55 add none. Wang and Hyndman's revision (row 55) reports
+    infinite bounds for 12 to 89 % of the intervals of the multi-step ACI loop at steps tuned
+    post hoc, without an analysis against the delay.
 - **F4 (ii) does not fire** (rows 21, 28; W4 and S4 hold only empirical widths). 2026-10-28:
   Areces et al. (row 44) relate the gain from modelling the scores to their lag-1
   autocorrelation, empirically and without delay.
@@ -465,6 +483,9 @@ X3 8, A 2. Codes of the 26: X2 6, X3 10, X4 4, F 4, A 2.
   - 2026-11-04: rows 49 to 51 add none, and no clause of claim 2' is touched. G050 runs conformal
     PID with its scorecaster at a one-window delay without ablating it, and ReqRC has no step
     size (row 50). Row 52's two works are not yet read.
+  - 2026-11-04, later: rows 53 to 55 add none either. The nearest to the step-size clause is the
+    post-hoc comparison of Wang and Hyndman's revision (row 55), which compares two loops rather
+    than one loop with and without its forecaster, and tunes only the forecaster-free one.
 - **Section 3D**: the precision loss is Kitchin's (2026). The eventual short cycles and their
   sharing across seeds remain unreported (row 32).
 - **Process positioning.** The finding of rows 5 and 7 holds in both databases in its strict
@@ -535,12 +556,20 @@ Constraints added to the list at the top:
   exact worst case (Prop. 1). If it is citable at submission (accepted, or posted with authors),
   cite it beside Retzlaff et al. (P8). N1'' reports the worst rolling coverage; it makes no
   window-level guarantee.
+- P20 (2026-11-04). Cite Li (row 54) beside P8 and P19: a passing frequency audit of a closed
+  window bounds nothing about the next interval. Claim 1 is the delay case of that point.
+- P21 (2026-11-04). If the published version of Wang and Hyndman keeps the post-hoc comparison of
+  row 55, cite its infinite bounds at tuned steps (12 to 89 % of intervals) as an empirical
+  instance of claim 1's mechanism, which N1'' analyses. Say that claim 2''s step-size statement
+  compares one loop with and without compensation at a fixed U budget, which their comparison
+  of two loops does not.
 
 Still due before submission:
-- Row 52: the full texts of the two citing works G055 (Chen et al., an IEEE journal, 2026) and
-  G065 (Li, arXiv 2610.23917).
-- Row 21: screen the published version of Wang and Hyndman's revision again (still v2 of
-  2026-02-02 on 2026-11-03).
+- Rows 21 and 55: screen Wang and Hyndman's revision again in the latest public form at
+  submission, the published version if it exists, else arXiv or the authors' repository, on two
+  points: the post-hoc step-size comparison and the local-coverage appendix. Drafting does not
+  wait for it: F4 applies only until submission (D-P1.15), and the revision's current state was
+  read on 2026-11-04 (row 55).
 
 What any of these finds is decided by F4 as written. For claim 2' it is decided clause by clause
 (PHASE1_PREREGISTRATION D-P1.15, ratified 2026-10-29): a find on miss persistence removes the
@@ -553,4 +582,5 @@ Done on 2026-11-03: the full Google Scholar pass (G1, G2 and G4b; complete at th
 and Li and Zhu's App. G.1 (rows 45 to 48).
 
 Done on 2026-11-04: the full texts of G049 and G050 (rows 49 and 50), the chapter of row 43 (row
-51) and the citing sets of rows 2 and 21 (row 52).
+51) and the citing sets of rows 2 and 21 (row 52). Later the same day: the two citing works of row
+52 (rows 53 and 54) and the current state of Wang and Hyndman's revision (row 55).

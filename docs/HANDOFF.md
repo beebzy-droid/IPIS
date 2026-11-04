@@ -50,9 +50,9 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 > figures and tables are generated from the committed evidence by `scripts/paper_n1/` into
 > `docs/paper/figures/n1/` (`python -m scripts.paper_n1.make_all`; `tests/unit/test_paper_n1.py`).
 > Screens, 2026-11-03 and 2026-11-04: Li and Zhu's App. G.1, the full Google Scholar pass, its
-> two new results, the row 43 chapter and the citing sets of rows 2 and 21 change no verdict
-> (sweep rows 45 to 52). Still due: two citing works (row 52) and the published version of Wang
-> and Hyndman (row 21).
+> two new results, the row 43 chapter, the citing sets of rows 2 and 21 and the current state of
+> Wang and Hyndman's revision change no verdict (sweep rows 45 to 55). Left: screen that revision
+> again in its latest public form at submission (rows 21 and 55). Drafting does not wait for it.
 >
 > **Status update 2026-10-29 (M1 session).** The N1 Phase 1 protocol is frozen (tag
 > `n1-phase1-freeze`; `docs/module1/PHASE1_PREREGISTRATION.md`, Section 10): the claims, the rules
@@ -1225,6 +1225,13 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-11-04 (N1 screens, later)** -- Sweep rows 53 to 55: the two citing works of row 52 (an
+  IEEE TKDE paper running multi-step ACI without a delay analysis; a NeurIPS 2026 paper on resets
+  at announced breaks, with no feedback delay) and Wang and Hyndman's revision at the authors'
+  commit 3d486c7. None fires. The revision's post-hoc comparison, MACP tuned to AcMCP's
+  local-coverage variance with infinite bounds in 12 to 89 % of intervals, is the nearest record
+  to claim 2''s step-size clause, but compares two loops rather than one loop with and without
+  its forecaster. The one screen left is that revision again at submission.
 - **2026-11-04 (N1 screens)** -- Sweep rows 49 to 52: the full texts of the two new Scholar
   results, the row 43 chapter (sent by M. Panov at Bien's request) and the Scholar citing sets of
   rows 2 and 21 (26 results, 14 new; log `docs/module1/sweep/N1_scholar_citing_2026-11-03.csv`).
