@@ -114,7 +114,9 @@ def render(in_dir: Path | None = None, out_dir: Path | None = None) -> list[Path
         ax.axhline(1.0, color=INK["muted"], lw=0.8, zorder=1)
     handles, labels = ax_t.get_legend_handles_labels()
     handles += [
-        Line2D([], [], ls="-", marker="o", color=INK["muted"], mfc="white", label="predicted (P3)"),
+        Line2D(
+            [], [], ls="-", marker="o", color=INK["muted"], mfc="white", label="predicted, Eq. (9)"
+        ),
         Line2D([], [], ls="", marker="o", color=INK["muted"], label="measured"),
     ]
     ax_t.legend(handles=handles, loc="lower right", handletextpad=0.4)

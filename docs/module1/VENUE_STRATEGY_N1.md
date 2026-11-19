@@ -84,3 +84,26 @@ journal's own pages, never aggregators)
 2. If declined or unanswered: presubmission inquiry to Control Engineering Practice.
 3. Fallback: ISA Transactions (dead-time compensation, process automation), subject to the Phase 5
    checks. CJChE was removed on 2026-10-09 (Section 1, verified record).
+
+## 5. Decision record, 2026-11-18
+
+- **Step 1 done.** The JPC inquiry went to the Senior Editor who handled JPROCONT-D-26-00618 on
+  2026-11-04, with a corrected resend on 2026-11-07 (`docs/reviews/REVIEW_LOG.md`). No reply by
+  2026-11-18, 14 days after the first.
+- **Step 2 replaced (decided by Bien).** Instead of an inquiry to Control Engineering Practice and
+  another 14 days, a follow-up to the same editor names 25 November as the submission date, and
+  N1 goes to JPC as a new manuscript unless she advises otherwise. The cover letter declares the
+  predecessor and the inquiry. The follow-up was sent on 2026-11-19 at 02:04Z (10:04 in Manila).
+- **Why JPC still leads.** M1 reached four JPC reviewers. Control Engineering Practice's aims
+  expect practical results ("It is normally expected that practical results should be
+  included") and a simulation shown to be representative (journal page,
+  https://shop.elsevier.com/journals/control-engineering-practice/0967-0661, read 2026-11-18);
+  N1's diagnosis appears only on the simulated plant, and on the debutanizer the delay did not
+  raise the uninformative share.
+- **The risk that remains.** JPC's Editor-in-Chief is Martin Guay (identified 2026-11-18 from a
+  JPC decision letter), and the journal pre-screens every submission against its aims and scope.
+  The cover letter therefore states the process-control contribution in its first paragraph: an
+  integral loop with dead time, its stability limit, minimum-variance compensation and a
+  performance benchmark in Harris's sense.
+- **If JPC declines at the desk:** ISA Transactions (Section 4, step 3), after rule 1's 24-month
+  fit count; Control Engineering Practice only with a plant case of the diagnosis.

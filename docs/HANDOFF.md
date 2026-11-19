@@ -39,6 +39,23 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 
 ## 0.5 CURRENT STATE & RESUME HERE (updated 2026-06-23)
 
+> **Status update 2026-11-18 (M1 session).** N1's manuscript is being drafted in the private repo
+> (`ipis-papers/paper/`; skeleton and Sections 2 and 3 at ipis-papers aeb1afc). The JPC
+> presubmission inquiry went out on 2026-11-04 and, corrected, on 2026-11-07; no reply by
+> 2026-11-18. Bien decided: JPC after a follow-up naming 25 November as the submission date
+> (`docs/module1/VENUE_STRATEGY_N1.md`, Section 5); a Zenodo DOI for the Phase 1 evidence before
+> submission; and a new author block for N1 and every paper submitted from now on, "Bien Don
+> Busico, University of the Philippines Diliman, Quezon City, Philippines" (`docs/AUTHOR.md`; the
+> checker accepts both dated blocks and enforces the new one on N1's sources). Later the same day:
+> the whole manuscript and its supplement drafted (private repo); the supplementary tables are
+> generated here (`scripts/paper_n1/supplement.py`, part of `make_all`, tested in
+> `tests/unit/test_paper_n1.py`), and the Zenodo deposit is built by
+> `scripts/paper_n1/zenodo_package.py` from the tag `n1-jpc-submission` (steps:
+> `docs/module1/ZENODO_N1.md`). Re-screens at submission done (sweep rows 56 and 57, constraint
+> P22). `data/README.md` corrected (debutanizer rows and origin; TEP variables; licence).
+> 2026-11-19: the follow-up went out (02:04Z), with no reply yet; the manuscript check was applied
+> in the private repo, and four generated labels changed here (changelog, 2026-11-18 entry).
+>
 > **Status update 2026-11-03 (M1 session).** N1 Phase 1 has run (pre-registration Section 9,
 > steps 5 to 7; runner 5ed6f0c, stage A 133b0f3, stage B and verdicts bd6454d; no deviation
 > during the run). F2 does not fire and restricts the process claim to TEP; F3, F5a, F5b, F6, F7
@@ -1225,6 +1242,29 @@ First 3A build turn then delivers: DWSIM debutanizer twin spec + validation harn
   `black --check src tests` (the CI commands), over the whole tree, after the LAST edit.
 
 ## Changelog of this doc
+- **2026-11-18 (N1 supplement, deposit and re-screens)** -- `scripts/paper_n1/supplement.py`
+  writes the supplementary tables (every cell, contrast and baseline as CSV; per-unit LaTeX
+  tables) and joins `make_all`; `tests/unit/test_paper_n1.py` checks them against the committed
+  copies. `scripts/paper_n1/zenodo_package.py` builds the Zenodo deposit (the repository at a tag
+  by `git archive`, and the 15 TEP runs checked against their recorded SHA-256);
+  `docs/module1/ZENODO_N1.md` gives the metadata and the upload steps. Sweep rows 56 (Wang and
+  Hyndman still at arXiv v2, no published version; P21 not triggered) and 57 (Wang and
+  Girolimetto's conformalForecast; P22). `data/README.md`: the debutanizer file has 2394 rows
+  (not "2,205 hourly"), its origin as the book states it; the TEP variables and licence corrected.
+  Labels changed after the manuscript check (numbers unchanged): Table 2's F6 row "Width ratio"
+  (was "P3") and F1 row "47 uncompensated cells, 0 < gamma <= 0.8 gamma_crit" (was "design
+  region"); Table 4's "F7 width" (was "Run-median width") and "Theta scorecaster"; Fig. 4's
+  legend "predicted, Eq. (9)"; Fig. 5b's title "by operating point". Only those figures and
+  tables were rewritten; the others keep their committed bytes.
+- **2026-11-18 (N1 venue and author block)** -- The N1 inquiry to JPC (sent 2026-11-04, corrected
+  resend 2026-11-07) had no reply after 14 days. Bien chose JPC after a follow-up naming
+  25 November, over the strategy's inquiry to Control Engineering Practice, whose aims expect
+  practical results while N1's diagnosis is simulation-only (`VENUE_STRATEGY_N1.md`, Section 5;
+  review log rows of 2026-11-04 to 2026-11-18). JPC's Editor-in-Chief is Martin Guay. New author
+  block of 2026-11-18 in `docs/AUTHOR.md` (Bien Don Busico, University of the Philippines Diliman,
+  Quezon City); the block of 2026-10-09 stays on what was published or submitted with it.
+  `scripts/check_author_block.py` now accepts both dated blocks, flags a file that mixes them, and
+  in the private repo flags an N1 source (`paper/`) that carries the old one.
 - **2026-11-04 (N1 screens, later)** -- Sweep rows 53 to 55: the two citing works of row 52 (an
   IEEE TKDE paper running multi-step ACI without a delay analysis; a NeurIPS 2026 paper on resets
   at announced breaks, with no feedback delay) and Wang and Hyndman's revision at the authors'

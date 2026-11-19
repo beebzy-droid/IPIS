@@ -94,7 +94,7 @@ def rules_table(v: dict) -> tuple[str, list[list[str]]]:
         ],
         [
             "F6",
-            "P3 at TEP T1, $\\theta=4$",
+            r"Width ratio, TEP T1, $\theta=4$",
             rf"measured/predicted $-$ 1 = {100 * f6['mean_error']:.1f}\,\%, "
             rf"95\,\% CI {ci(f6['error_ci95'], 100, 1)}",
             "fires" if f6["fires"] else "does not fire",
@@ -123,7 +123,7 @@ def rules_table(v: dict) -> tuple[str, list[list[str]]]:
         ],
         [
             "F1",
-            f"{len(in_region)} cells in the design region",
+            rf"{len(in_region)} uncompensated cells, $0 < \gamma \le 0.8\gamma_{{\mathrm{{crit}}}}$",
             rf"sd($\alpha$) error {100 * min(esd):.0f} to {100 * max(esd):.0f}\,\%; "
             rf"{n_off} of {len(in_region)} off by more than 25\,\%",
             "fires" if f1["fires"] else "does not fire",
@@ -187,7 +187,7 @@ def t1_table(b: dict) -> tuple[str, list[list[str]]]:
 
 BASELINES = (
     ("pid_qr", "Conformal PID, quantile scorecaster"),
-    ("pid_theta", "Conformal PID, theta scorecaster"),
+    ("pid_theta", "Conformal PID, Theta scorecaster"),
     ("pid_matched", "Conformal PID, matched scorecaster"),
     ("spci", "SPCI multi-step"),
 )
@@ -223,7 +223,7 @@ def baselines_table(v: dict) -> tuple[str, list[list[str]]]:
             ]
         )
     head = (
-        "Method & $U$ (\\%) & Coverage & Valid & Run-median width & "
+        "Method & $U$ (\\%) & Coverage & Valid & F7 width & "
         "Coverage-matched width change & F7 fires \\\\"
     )
     body = ["\\begin{tabular}{@{}lrrcrrc@{}}", "\\toprule", head, "\\midrule"]

@@ -20,6 +20,14 @@ from scripts.paper_n1 import style, tables
 
 FIGURES = ("n1_stability", "n1_diagnosis", "n1_speed_chart", "n1_persistence", "n1_debutanizer")
 TABLES = ("n1_table_rules", "n1_table_t1_cells", "n1_table_baselines")
+SUPPLEMENT = (
+    *(f"n1_supp_primary_{u}.tex" for u in ("T1", "T1_gb", "T2", "T3", "debutanizer")),
+    "n1_supp_loops.tex",
+    "n1_supp_baselines.tex",
+    "n1_supp_cells.csv",
+    "n1_supp_contrasts.csv",
+    "n1_supp_baselines.csv",
+)
 
 
 def _rows(path: Path) -> list[list[str]]:
@@ -61,6 +69,19 @@ def test_tables_match_the_committed_copies(tmp_path: Path) -> None:
             _assert_same_csv(p, old)
 
 
+def test_supplement_matches_the_committed_copies(tmp_path: Path) -> None:
+    from scripts.paper_n1 import supplement
+
+    paths = supplement.render(out_dir=tmp_path)
+    assert sorted(p.name for p in paths) == sorted(SUPPLEMENT)
+    for p in paths:
+        old = style.FIGURE_DIR / p.name
+        if p.suffix == ".tex":
+            assert p.read_text(encoding="utf-8") == old.read_text(encoding="utf-8"), p.name
+        else:
+            _assert_same_csv(p, old)
+
+
 def test_figures_render_and_match_the_committed_numbers(tmp_path: Path) -> None:
     pytest.importorskip("matplotlib")
     from scripts.paper_n1 import make_all
@@ -68,6 +89,7 @@ def test_figures_render_and_match_the_committed_numbers(tmp_path: Path) -> None:
     paths = [p for render in make_all.PARTS.values() for p in render(None, tmp_path)]
     expected = {f"{f}.{e}" for f in FIGURES for e in ("pdf", "png", "csv")}
     expected |= {f"{t}.{e}" for t in TABLES for e in ("tex", "csv")}
+    expected |= set(SUPPLEMENT)
     assert {p.name for p in paths} == expected
     for f in FIGURES:
         _assert_same_csv(tmp_path / f"{f}.csv", style.FIGURE_DIR / f"{f}.csv")

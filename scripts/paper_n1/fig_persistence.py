@@ -114,7 +114,7 @@ def render(in_dir: Path | None = None, out_dir: Path | None = None) -> list[Path
     ax_b.set_yticks(y, [p.replace("mode", "mode ") for p in plants])
     ax_b.set_xlim(0.0, 0.01)
     ax_b.set_xlabel(r"step size $\gamma$, replay to $\varepsilon/2$")
-    ax_b.set_title("(b) tuned step size by regime", loc="left", color=INK["primary"])
+    ax_b.set_title("(b) tuned step size by operating point", loc="left", color=INK["primary"])
     ax_b.legend(loc="lower left")
     ax_b.grid(axis="y", visible=False)
     paths = save_figure(fig, "n1_persistence", out_dir)

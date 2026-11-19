@@ -21,8 +21,11 @@ data/
 ### 1. Debutanizer Column (Primary)
 
 - **Source:** Fortuna, Graziani, Rizzo, Xibilia (2007), *Soft Sensors for Monitoring and Control of Industrial Processes*
-- **Size:** 2,205 hourly samples, 7 input variables, 1 quality output (C4 bottom composition)
-- **Origin:** Real French refinery
+- **Size:** 2,394 samples, 7 input variables (u1 to u7), 1 quality output: the butane (C4) content
+  of the debutanizer bottoms. The book does not say which update period fits the public file (it
+  models the column at 12-min updates in Sec. 6.2 and analyses a 6-min recording in Sec. 4.1).
+- **Origin:** an industrial debutanizer column, part of a desulfuring and naphtha splitter plant
+  in a refinery (the book's Appendix A.3)
 - **License:** Academic use
 - **Download:** Mirrors available via DTU, ResearchGate, and several UCI archives
 - **Save to:** `data/raw/debutanizer/`
@@ -30,9 +33,11 @@ data/
 ### 2. Tennessee Eastman Process (Secondary)
 
 - **Source:** Downs & Vogel (1993), *A plant-wide industrial process control problem*, Computers & Chemical Engineering
-- **Size:** 52 measurements, 41 manipulated variables, 21 fault types
+- **Size:** 41 measured variables (XMEAS) and 12 manipulated variables (XMV); the N1 study
+  generates its own runs (`scripts/generate_tep_modes.py`, `scripts/tep_phase1_runs.py`)
 - **Origin:** Simulated chemical plant benchmark
-- **License:** Public domain
+- **License:** the closed-loop sources of Russell, Chiang and Braatz carry the University of
+  Illinois licence stated in them
 - **Download:** [github.com/camaramm/tennessee-eastman-profBraatz](https://github.com/camaramm/tennessee-eastman-profBraatz)
 - **Save to:** `data/raw/tep/`
 

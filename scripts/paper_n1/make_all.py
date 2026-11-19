@@ -5,9 +5,10 @@ Run from the repository root (Windows cmd):
     python -m scripts.paper_n1.make_all
 
 Reads docs/paper/evidence/phase1_*.json (commit bd6454d and later); writes PDF, PNG and a CSV of
-the plotted numbers for each figure, and a LaTeX body and a CSV for each table, to
-docs/paper/figures/n1/. Nothing is computed that the evidence does not hold, except means and
-t intervals over runs, ratios and rolling coverage, which the modules state.
+the plotted numbers for each figure, a LaTeX body and a CSV for each table, and the supplementary
+tables (supplement.py), to docs/paper/figures/n1/. Nothing is computed that the evidence does not
+hold, except means and t intervals over runs, ratios and rolling coverage, which the modules
+state.
 """
 
 from __future__ import annotations
@@ -22,6 +23,7 @@ from . import (
     fig_persistence,
     fig_speed_chart,
     fig_stability,
+    supplement,
     tables,
 )
 from .style import REPO_ROOT
@@ -33,6 +35,7 @@ PARTS = {
     "persistence": fig_persistence.render,
     "debutanizer": fig_debutanizer.render,
     "tables": tables.render,
+    "supplement": supplement.render,
 }
 
 
