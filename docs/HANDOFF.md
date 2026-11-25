@@ -55,6 +55,10 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 > P22). `data/README.md` corrected (debutanizer rows and origin; TEP variables; licence).
 > 2026-11-19: the follow-up went out (02:04Z), with no reply yet; the manuscript check was applied
 > in the private repo, and four generated labels changed here (changelog, 2026-11-18 entry).
+> 2026-11-25: tag `n1-jpc-submission` (13f602f) pushed and the Zenodo DOI reserved
+> (10.5281/zenodo.24357752); no reply to any of the three emails. The submission set is built in
+> the private repo (`paper/submission_v1/`, Word files from the LaTeX). After submission, the
+> as-submitted copy comes here as the frozen preprint (`docs/PAPER_LIFECYCLE.md`).
 >
 > **Status update 2026-11-03 (M1 session).** N1 Phase 1 has run (pre-registration Section 9,
 > steps 5 to 7; runner 5ed6f0c, stage A 133b0f3, stage B and verdicts bd6454d; no deviation

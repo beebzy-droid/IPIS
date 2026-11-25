@@ -1,10 +1,10 @@
 # N1: the Zenodo deposit of the evidence
 
-Status, 2026-11-19: prepared; Bien uploads it and reserves the DOI (decided 2026-11-18: "Zenodo DOI
-first"). The manuscript cites the deposit as a dataset (`busico2026data`, in the private
-manuscript's bibliography), and its Data and code availability statement points to it. The DOI
-goes into that record before the final PDF is built; the private repository's flattening script
-for the submission copy refuses to run while the placeholder `XXXXXXX` remains.
+Status, 2026-11-25: built by Bien from tag `n1-jpc-submission` (commit 13f602f); DOI
+**10.5281/zenodo.24357752** reserved. The manuscript cites the deposit as a dataset
+(`busico2026data`, in the private manuscript's bibliography, now with the DOI), and its Data and
+code availability statement points to it. The record is published before the manuscript is
+submitted (Section 2, step 6).
 
 ## 1. What is deposited
 
