@@ -6,7 +6,7 @@
 
 **Status:** Theory frozen for Paper 4 core. Build-blocking decisions resolved; open items flagged in §8.
 **Scope of formal claim:** debutanizer / binary-key distillation (the dimensionless framework is the generalization vehicle, not a universal proof).
-**Cross-refs:** Paper 1 / M1 (JPROCONT-D-26-00618, soft sensor), Paper 2 / M2 (JRESS-D-26-04700, similarity-calibrated conformal prognostics), Paper 3 / M3 (CACE-D-26-01040, conditionally calibrated conformal back-offs in RTO). ChemE grounding verified against Perry's 9th ed. (see `docs/module4/perry-verification.md`).
+**Cross-refs:** Paper 1 / M1 (soft sensor: preprint SSRN 7181724; successor N1 under review at JPC, JPROCONT-D-26-01273), Paper 2 / M2 (JRESS-D-26-04700, similarity-calibrated conformal prognostics), Paper 3 / M3 (CACE-D-26-01040, conditionally calibrated conformal back-offs in RTO). ChemE grounding verified against Perry's 9th ed. (see `docs/module4/perry-verification.md`).
 
 ---
 
@@ -165,4 +165,4 @@ This **is** "conformal health-constrained RTO" (the narrow-paper Hooks 1+2), now
 - Marchetti, Chachuat, Bonvin. Modifier-adaptation methodology for real-time optimization.
 - Vovk, Gammerman, Shafer. Algorithmic Learning in a Random World.
 - Perry's Chemical Engineers' Handbook, 9th ed. (Green & Southard): Eqs. 13-30, 13-31/32, 13-33, 13-37/38, 13-42/43/44, 14-138; Table 10-13; Table 14-12; Example 13-1.
-- IPIS Papers 1–3 (internal): Paper 1 = JPROCONT-D-26-00618 (M1, soft sensor), Paper 2 = JRESS-D-26-04700 (M2, similarity-calibrated conformal prognostics), Paper 3 = CACE-D-26-01040 (M3, conditionally calibrated conformal back-offs in RTO).
+- IPIS Papers 1–3 (internal): Paper 1 = M1 soft sensor (preprint SSRN 7181724; successor N1, JPROCONT-D-26-01273, under review at JPC), Paper 2 = JRESS-D-26-04700 (M2, similarity-calibrated conformal prognostics), Paper 3 = CACE-D-26-01040 (M3, conditionally calibrated conformal back-offs in RTO).

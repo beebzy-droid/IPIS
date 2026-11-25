@@ -68,6 +68,8 @@ Gmail and added the M3 and M4 events this log was missing (THESIS_STANDARDS L10,
 | 2026-11-18 | RECORDED | N1 | JPC | Venue decided by the author: JPC, after a follow-up naming 25 November as the submission date (`docs/module1/VENUE_STRATEGY_N1.md`, Section 5); author block of 2026-11-18 (`docs/AUTHOR.md`) | Follow-up drafted; the author sends it |
 | 2026-11-19 | EMAIL 11-19 02:04Z | N1 | JPC, presubmission | Follow-up sent in the thread of the corrected inquiry: submission through Editorial Manager on 25 November as a new manuscript unless the editor advises otherwise | No reply when checked at 10:25 in Manila |
 | 2026-11-25 | RECORDED | N1 | JPC, presubmission | No reply to the inquiries of 4 and 7 November or to the follow-up of 19 November; Zenodo DOI 10.5281/zenodo.24357752 reserved for the evidence deposit built from tag `n1-jpc-submission` (13f602f) | Submission as a new manuscript on 25 November, Word files as the journal's system asks |
+| 2026-11-25 | EMAIL 11-25 05:17Z | N1 | JPC, JPROCONT-D-26-01273 | Submitted through Editorial Manager as a new manuscript, 13:17 Manila. The acknowledgement names Professor Martin Guay as the handling editor, which is the ingest queue's entry and may be reassigned | Under review. The predecessor's Senior Editor never answered the three presubmission emails |
+| 2026-11-25 | RECORDED | N1 | Zenodo | Evidence deposit published (10.5281/zenodo.24357752) and its files replaced the same day with the N1-only archive, the first build having held the whole repository (`docs/module1/ZENODO_N1.md`, Section 5) | Record verified: 4 files, 19.4 MB, archive 3.5 MB. DOI unchanged |
 
 ## Program decision record (verified 2026-10-09 from email headers)
 

@@ -4,9 +4,11 @@
 > `docs/PAPER_LIFECYCLE.md` first. Then read your section ("M1 / N1 session") in `docs/OPEN_ITEMS.md`, and take all
 > front matter (name, affiliation, e-mail, ORCID) from `docs/AUTHOR.md`.
 
-This directory holds Module 1 documentation. **Status: complete; paper rejected after review
-at the Journal of Process Control (JPROCONT-D-26-00618, transferred from CACE-D-26-00944); in
-revision as N1 (`VENUE_STRATEGY_N1.md`, `M1_NARROWING_PROPOSAL.md`).**
+This directory holds Module 1 documentation. **Status: complete; the predecessor was rejected
+after review at the Journal of Process Control (JPROCONT-D-26-00618, transferred from
+CACE-D-26-00944), and its narrowed successor N1 is under review there as a new manuscript
+(JPROCONT-D-26-01273, submitted 2026-11-25; `VENUE_STRATEGY_N1.md`, `M1_NARROWING_PROPOSAL.md`,
+`PHASE1_RESULTS.md`).**
 
 ## Files
 
@@ -37,11 +39,15 @@ revision as N1 (`VENUE_STRATEGY_N1.md`, `M1_NARROWING_PROPOSAL.md`).**
 
 ## Publication
 
-Module 1 is reported in **Paper 1**: "When does a calibrated soft sensor keep its promise? A negative-control study of validity
-without accuracy under drift and delayed labels," under review at the *Journal of Process Control*
-(JPROCONT-D-26-00618, transferred from CACE-D-26-00944)
-(**CACE-D-26-00944**). LaTeX source in `paper/`; markdown working copy, figures, and frozen
-evidence in `docs/paper/`.
+Module 1 is reported in **Paper 1**, now in its second submission to the *Journal of Process
+Control*. The predecessor, "When does a calibrated soft sensor keep its promise? A negative-control
+study of validity without accuracy under drift and delayed labels" (JPROCONT-D-26-00618,
+transferred from CACE-D-26-00944), was declined in August 2026 after four reviews; its preprint is
+public at doi:10.2139/ssrn.7181724 and its frozen copy is `paper/`. The successor N1, "When the
+laboratory is late: dead-time analysis and compensation of conformal soft-sensor intervals", was
+submitted on 25 November 2026 as a new manuscript (JPROCONT-D-26-01273) and is frozen as submitted
+in `paper/n1_jpc/`; its working copy is in the private `ipis-papers` repo. Figures and frozen
+evidence are in `docs/paper/`.
 
 See `docs/architecture/decisions/` for the reasoning behind each decision, and `docs/HANDOFF.md`
 for the full build history.

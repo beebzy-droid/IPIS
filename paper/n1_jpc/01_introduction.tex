@@ -1,0 +1,65 @@
+\section{Introduction}\label{sec:intro}
+
+Soft sensors estimate quality variables that are measured slowly, and plants correct them against
+laboratory or analyzer values that arrive late \citep{fortuna2007,kadlec2009}: the debutanizer's
+gas chromatograph reports about 45~min after sampling \citep[Sec.~6.2]{fortuna2007}, and the
+Tennessee Eastman product analyzer after 0.25~h \citep{downs1993}. Soft-sensor research treats
+such labels as delayed, infrequent or irregular measurements \citep{guo2014,shardt2016}. An
+operator also needs to know how far to trust the estimate, and adaptive conformal inference
+\citep{gibbs2021aci} is a natural way to say it: an interval around the prediction whose level is
+adjusted online so that a target share of labels falls outside. On a plant, those adjustments can
+only use the late labels.
+
+The adjustment is a feedback loop, and the delay puts dead time into it. With the step size tuned
+on history that ignores the delay, the loop on the Tennessee Eastman process issued 6.9\,\% of its
+intervals uninformative (infinite, or wider than the range of the measured variable) at the
+analyzer's documented delay, 6.0 percentage points more than without delay, while the coverage
+that is usually reported read 0.897 (Section~\ref{sec:results:diagnosis}). An operator cannot act
+on such an interval, and the coverage figure does not show it.
+
+Online conformal methods with delayed feedback exist. Adaptive conformal inference has been run on
+labels that arrive several steps late \citep{dixit2023,szabadvary2024}, and at the common step of
+0.005 it issued unbounded intervals in four of five electricity-market regions
+\citep{wang2026cf}; its coverage under delay
+has been bounded, with the step chosen per delay by experiment \citep{elhalabi2026}; interleaved
+chains of delay-free updates avoid the dead time \citep{elhalabi2026,cherenson2026,li2026zhu}; and
+AcMCP (autocorrelated multi-step conformal prediction) adds a forecast of the multi-step error to
+a delayed loop \citep{wang2024acmcp}, as conformal PID control forecasts the score quantile
+\citep{angelopoulos2023pid} and SPCI (sequential predictive conformal inference) the residual
+quantiles \citep{xu2023spci}. The step size has been studied without delay \citep{zaffran2022,
+angelopoulos2024decay}, and betting removes it altogether \citep{podkopaev2024}; neither that
+paper nor this one examines betting under delay. Online learning with delayed feedback has a
+regret theory of its own \citep{joulani2013,quanrud2015}. On process and prognostics data, a
+PID-guided conformal
+soft sensor uses each label at once \citep{meng2026}, and delayed-feedback conformal prediction
+for fuel-cell prognostics raises its step with a label-free uncertainty signal \citep{qiu2026}.
+What a plant lacks is an analysis of the conformal loop under laboratory delay: the limit that the
+delay sets on the step, why the persistence of process residuals sets the usable step far below
+that limit, how to tune the step so that it holds a budget out of sample, and what width a better
+analyzer would buy.
+
+This paper supplies that analysis and tests it. (i) The calibrator is an integral loop with dead
+time: its linearisation is stable only for steps below $2\sin(\pi/(4\theta+2))$, and its marginal
+coverage converges to nominal however many intervals are uninformative
+(Section~\ref{sec:analysis}). (ii) Replaying the calibration residuals through the delayed loop
+selects a step that holds a budget for the uninformative share (Section~\ref{sec:remedies:replay}).
+(iii) Predicting the residual over the dead time, as a minimum-variance controller predicts a
+disturbance \citep{astrom1970}, narrows the interval at the same budget, makes the misses less
+persistent and admits a larger step (Section~\ref{sec:remedies:comp}). (iv) The width that this
+compensation buys follows
+from the autocorrelation of the calibration residuals before deployment, so the choice of analyzer
+can be read off a chart (Section~\ref{sec:remedies:p3}). Each claim was tested against a rule
+fixed with its threshold before any result of the study existed, in a pre-registered study on 15
+Tennessee Eastman runs and the debutanizer data, against four baseline configurations
+(Sections~\ref{sec:study} and~\ref{sec:results}).
+
+The paper does not claim the conformal soft sensor, nor forecasting at the label horizon, both of
+which are prior art; it claims their analysis and remedy under laboratory delay. The diagnosis was
+shown on the simulated plant and not on the debutanizer; where the evaluation rows resembled the
+calibration rows, compensated split conformal matched the delayed loop; and the predicted width
+ratio is conservative on average, not a guarantee. An earlier preprint ran a delayed loop on both data sets
+with the step size and the delay set by convention \citep{busico_m1}; here both follow from the
+plant. Section~\ref{sec:loop} sets out the loop and the documented delays,
+Section~\ref{sec:analysis} the analysis and the remedies, Section~\ref{sec:study} the study and
+Section~\ref{sec:results} its results; Section~\ref{sec:discussion} turns them into guidance, and
+Section~\ref{sec:conclusion} concludes.

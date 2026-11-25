@@ -74,8 +74,14 @@ RULES = [
     ("unaccented Mapua", re.compile(r"\bMapua\b")),
     ("Davao del Sur added", re.compile(r"Davao del Sur")),
     (
+        # The domain is read label by label, so a sentence's full stop after the address is not
+        # taken for part of it: "E-mail: bienbusico@gmail.com." is the canonical address, not
+        # another one (ipis-papers scripts/n1_make_docx.py, which writes that line into the Word
+        # manuscript, was reported for it on 2026-11-25).
         "other author e-mail",
-        re.compile(r"[\w.+-]*busico[\w.+-]*@[\w.-]+|[\w.+-]*@[\w.-]*busico[\w.-]*", re.I),
+        re.compile(
+            r"[\w.+-]*busico[\w.+-]*@[\w-]+(?:\.[\w-]+)+|[\w.+-]*@[\w.-]*busico[\w.-]*", re.I
+        ),
     ),
     ("non-canonical \\address", re.compile(r"\\address\{[^}]*\}")),
 ]

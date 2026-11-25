@@ -1,9 +1,11 @@
 # N1: the Zenodo deposit of the evidence
 
 Status, 2026-11-25: built by Bien from tag `n1-jpc-submission` (commit 13f602f); DOI
-**10.5281/zenodo.24357752** reserved and the record published. The first build archived the whole
-repository, other modules and papers included; its files are replaced by the N1-only build within
-Zenodo's period for editing a published record's files, so the DOI does not change (Section 5).
+**10.5281/zenodo.24357752** reserved, the record published, and its files replaced the same day
+with the N1-only build, within Zenodo's period for editing a published record's files, so the DOI
+did not change (Section 5). Verified on the record that evening: 4 files, 19.4 MB in all, with
+`IPIS-n1-jpc-submission.zip` at 3.5 MB and `README.md` at 8.7 kB. Cited by the manuscript
+submitted that day, JPROCONT-D-26-01273.
 The manuscript cites the deposit as a dataset (`busico2026data`, in the private manuscript's
 bibliography, with the DOI), and its Data and code availability statement points to it.
 

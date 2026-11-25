@@ -1,0 +1,45 @@
+\section{Discussion}\label{sec:discussion}
+
+For an engineer who sizes the interval of a soft sensor whose labels arrive late, the results
+reduce to five rules.
+\begin{enumerate}\setlength{\itemsep}{0pt}
+\item Do not tune the step on history that ignores the delay, or by the rule for uncorrelated
+residuals. On the simulated plant they left 6.9 and 18.2\,\% of the intervals uninformative
+against a 2\,\% budget, at coverages of 0.897 and 0.899, so report $U$ beside the coverage.
+\item Tune the step by replaying the calibration residuals through the delayed loop at the plant's
+dead time; the step it chooses lies far below the stability limit.
+\item Compensate the predictable part of the residual first: at the same budget the interval was
+18\,\% narrower, its misses less persistent, and a larger step held the budget.
+\item Before choosing or moving an analyzer, read the width that compensation would buy off the
+autocorrelation of the calibration residuals (Eq.~\eqref{eq:p3}); on average, the gain was never
+smaller than predicted.
+\item Where the evaluation data resemble the calibration data, compensated split conformal may be
+enough. Where they seem not to, as on the debutanizer stream (split conformal 0.750), the loop raised
+the coverage to 0.865 and, compensated, to 0.900, against 0.876 for compensated split conformal
+(Fig.~\ref{fig:debutanizer}); the 95\,\% block-bootstrap intervals of both gains include 0.
+\end{enumerate}
+
+\emph{Why the width prediction errs on the safe side.} Eq.~\eqref{eq:p3} assumes that the
+compensated and uncompensated scores share one standardised shape. With other shapes the width
+ratio can differ from the ratio of standard deviations: for AR(1) residuals with $\phi = 0.9$ and
+uniform or $t_5$ innovations, simulated over 2 million steps before the study, the width ratio at
+one step ahead lay 4.2 to 5.5\,\% below it, the same sign and size as the errors at the longer
+label ages here (0.2 to 5.4\,\%). The larger errors (18 to 44\,\%) suggest two further sources,
+neither tested here. At the shortest label ages on the Tennessee Eastman process the analyzer holds
+each reading, with its noise, for 0.25~h, so the residual one update ahead is mostly predictable and
+its prediction error far from Gaussian, a stronger shape effect than the simulated one. On the
+debutanizer the prediction uses the calibration residuals, and a slow shift in the evaluation rows
+widens the uncompensated interval, which must cover it, more than the compensated one, whose
+predictor follows it; the split-conformal coverage of 0.750 points to such a shift.
+
+\emph{Limits.} The diagnosis rests on a simulator: the Tennessee Eastman runs share one plant model
+and three operating points, come from the streams that did not shut down (36 of 76 candidates),
+and share a tuned step within each operating point. The debutanizer is one stream, on which F2 had a
+power of about 0.1. The dead times follow from documented delays through a timing convention
+(Table~\ref{tab:delays}), which a plant must check against its own data historian. The ridge
+penalty sat at the top of its grid in 10 of the 15 runs, so the point model may be
+over-regularised; the gradient-boosting arm gave the same results on every rule computed for it.
+The baselines were configured from their papers and code before the data, and other settings may
+serve them better. Random and irregular
+delays \citep{shardt2016,guo2014} were not studied.
+

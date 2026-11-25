@@ -1,0 +1,3 @@
+# The frozen submission packages hold Word files, images and digests of both: git must store them
+# byte for byte, so that MD5SUMS.txt still verifies after a checkout on any platform.
+paper*/**/submission_v*/** -text

@@ -1,0 +1,116 @@
+\begin{table*}[t]
+\centering\footnotesize
+\caption{The decided rules and their verdicts. Each rule was fixed with its threshold before any
+result of the study existed (Section~\ref{sec:study}); a rule that fires removes or restricts the
+claim it guards, and one that does not fire leaves it standing. The literature rule F4 fired
+before the data and narrowed the claim on compensation to claim~2$'$
+(Section~\ref{sec:remedies:comp}). F2 fires if neither primary cell shows a rise in $U$
+over $\theta = 0$ of at least 1 percentage point (pp) with a 97.5\,\% interval above 0, and
+restricts the diagnosis to the cell that shows it; F3 fires if 0.90 lies outside the Wilson
+interval where the rise is shown; F5a and F5b if the mean $U$ exceeds 2\,\%; F6 if the mean error
+of the predicted width ratio lies outside $\pm 10$\,\%; F7 if a baseline is valid and either it is
+narrower or the loop is not valid; F8 if the 95\,\% interval of the paired difference in IACT does not lie wholly
+below 0, and its step-size statement needs a larger compensated step in at least two operating
+points and a smaller one in none. F1 is secondary and decides nothing.}
+\label{tab:rules}
+\input{\figdir/n1_table_rules.tex}
+\end{table*}
+
+\section{Pre-registered study}\label{sec:study}
+
+The design below, the rules of Table~\ref{tab:rules} with their thresholds, the analysis plan and
+the baseline configurations were frozen in a public repository on 29 October 2026, before any
+result of the study existed (Data and code availability). Stage A of the run read training and
+calibration rows only: it fitted the point models and compensators, tuned every step size, configured the
+baselines and recorded every predicted width ratio, and its records were committed and pushed
+before stage B read an evaluation row. Stage B recomputed stage A's quantities from the same files
+and passed all 1359 checks against them exactly before evaluating. One deviation was logged before
+any result: the arm that updates once per analyzer value seeds its window with 40 labels instead
+of 200, because its calibration hours hold only 160; no rule is decided on that arm. Claude
+(Anthropic) assisted in writing the analysis code and in screening the literature; the code's
+results are checked as above, and every screening verdict is recorded with its source in the
+repository.
+
+\subsection{Data and point models}\label{sec:study:data}
+
+\emph{Tennessee Eastman process (TEP).} The plant of \citet{downs1993} was simulated with the closed-loop
+Fortran code of Russell, Chiang and Braatz \citep{russell2000}, with the feed-composition,
+feed-temperature and reaction-kinetics disturbances IDV(8), IDV(10) and IDV(13) active
+throughout, at three operating points set by the reactor-feed composition loops: the base case of
+\citet{downs1993} and two with more G in the product (G at about 53.8, 58.2 and 63.4~mol\,\%;
+operating points 1 to 3, labelled mode 1 to 3 in the figures). Each run drew its random
+numbers from its own MRG32k3a stream \citep{lecuyer1999}, because the simulator's generator loses
+precision in double-precision arithmetic \citep{kitchin2026} and then cycles within 0.55 to
+141~h (supplementary material). For each operating point, the first five streams in a fixed
+order whose 100-h run did not shut down were kept (5 of 26 candidates survived at the first, 14 of
+25 and 17 of 25 at the others), so the evidence is conditional on runs that stay within the
+plant's limits. Rows are 60~s apart: hours 0--30 train the point model, 30--70 calibrate and
+70--100 evaluate. The target is the product G analysis, XMEAS(40). The point model is a ridge
+regression on the 22 continuous measurements and 12 manipulated variables taken 15~min earlier,
+its penalty chosen by fivefold cross-validation with the one-standard-error rule. One model per
+run serves three arms that differ only in the calibrator: T1 updates every 3~min
+($\theta = 0, 2, 4$), T2 every minute ($\theta = 0, 4, 14$) and T3 once per new analyzer value
+($\theta = 0$). Gradient boosting on the same inputs checks the estimator class at T1.
+
+\emph{Debutanizer.} The public data of \citet{fortuna2007} are one stream of 2394 rows. The butane
+content is regressed on input $u_5$ 15 rows earlier by least squares on the first 1675 rows, whose
+1660 residuals form the calibration segment; the other 719 rows are evaluated, at
+$\theta = 0, 1, 3, 7$ and 12. The lag was chosen in earlier work on rows 0 to 2033, so for that one
+choice the first 359 evaluated rows are not out of sample.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{n1_diagnosis.pdf}
+\caption{The diagnosis. Uninformative share $U$ (top) and coverage (bottom) against the dead time
+$\theta$ for three ways of choosing the step: replay at the plant's $\theta$ to $\varepsilon/2$,
+delay-blind tuning (replay at $\theta = 0$ to $\varepsilon$) and the white-noise rule
+(Section~\ref{sec:analysis:persistence}); arms T1 (3-min updates; a, b) and T2 (1-min updates; c,
+d), without and with compensation. Means over the 15 runs with 95\,\% $t$ intervals; markers are
+offset around their $\theta$. Grey lines: the budget for $U$, 2\,\%, and the nominal coverage,
+0.90. Coverage stays between 0.885 and 0.902 in every cell, while $U$ rises with $\theta$ under the two policies
+that ignore the delay or the persistence.}
+\label{fig:diagnosis}
+\end{figure*}
+
+\subsection{Cells, baselines and inference}\label{sec:study:cells}
+
+A cell fixes the loop, the step-size policy, the pairing and the compensation; every contrast
+varies one of them on a shared residual stream. The loops are the sequential loop of
+Eq.~\eqref{eq:loop} (primary); split conformal, calibrated once (loop off); the level projected
+onto $[0.01, 0.5]$; $\theta + 1$ interleaved delay-free chains \citep{elhalabi2026}; a
+Smith-predictor form, in which the model $\mathrm{E}[e \mid \alpha] = \alpha$ swaps the miss rate
+expected at the stored level for that at the current one; and decaying steps $c\,n^{-0.6}$
+\citep{angelopoulos2024decay}. The policies are the fixed steps 0.005 \citep{gibbs2021aci} and
+0.05, delay-blind tuning, replay to $\varepsilon$ and to $\varepsilon/2$, and the white-noise rule;
+every loop is tuned by the same replay. The first 200 calibration scores seed the replay's window,
+and every replayed update counts; on the Tennessee Eastman data the calibration segments of an
+operating point's five runs are pooled, standing in for the longer history a plant would tune on.
+Each run is evaluated from a window holding its last 200 calibration scores. Stored pairing is
+primary; arrival pairing at the documented delay is the negative control.
+
+Four baseline configurations get the same point model and only the labels in hand at issue.
+Conformal PID control \citep{angelopoulos2023pid} runs with three scorecasters: quantile
+regression on the three latest labelled scores, a linear form that \citet{areces2025} fit online;
+the Theta model of the authors' code; and the compensator of Eq.~\eqref{eq:comp}, which gives it
+the structure of AcMCP \citep{wang2024acmcp}. Its gains are tuned by the same replay to the same
+target. SPCI \citep{xu2023spci} predicts the residual quantiles at horizon $\theta + 1$ with a
+quantile random forest, without coverage feedback. Each follows its paper and, where the paper is
+silent, the authors' code, with departures, each with its reason, listed in Appendix A of the
+pre-registration (among them a warm start from the loop's seed rows and an unpenalised quantile
+regression).
+
+The 15 runs are independent replications: means carry 95\,\% $t$ intervals over the runs,
+contrasts are paired by run, and pooled coverage carries a Wilson interval; the five runs of an
+operating point share a tuned step, a dependence the $t$ intervals ignore. On the single
+debutanizer stream, intervals come from a circular block bootstrap \citep{politis1992} of the
+per-step indicators, with 2000 resamples, blocks of $\max(25, \lceil 2\,\mathrm{IACT}\rceil)$
+steps and the same blocks for both arms of a contrast. The IACT is summed over the automatic
+window of \citet{sokal1997} with $c = 5$. The rules are decided on the primary cells: F2 and F3 on
+the uncompensated delay-blind loop, against $\theta = 0$ on the same stream, at T1, $\theta = 4$
+and at the debutanizer's $\theta = 3$; F5 to F8 at T1, $\theta = 4$ (Table~\ref{tab:rules}).
+Every other cell is descriptive. A power analysis on simulated AR(1) residuals set the margins: a
+loop tuned to $\varepsilon$ met it on average, but its 15-run mean exceeded it in 21 to 38\,\% of
+200 studies; tuned to $\varepsilon/2$, it exceeded the budget of $2\varepsilon$ in at most
+4\,\%. F2 had a power of 0.91 to 0.99 in the Tennessee Eastman design, against 0.095 to 0.12 on
+one stream of the debutanizer's length.
+

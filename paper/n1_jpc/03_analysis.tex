@@ -1,0 +1,163 @@
+\section{Analysis and remedies}\label{sec:analysis}
+
+\subsection{A stability limit that falls with the delay}\label{sec:analysis:p1}
+
+Linearise Eq.~\eqref{eq:loop} about the target. If the window's scores represent the score
+distribution, an interval issued at level $\alpha$ misses with probability close to $\alpha$, so
+the level error $\varepsilon_t = \alpha_t - \alpha^\ast$ obeys
+\begin{equation}
+  \varepsilon_{t+1} = \varepsilon_t - \gamma\,(\varepsilon_{t-\theta} + \eta_{t-\theta}),
+  \label{eq:linear}
+\end{equation}
+where $\eta_t = e_t - \mathrm{E}[e_t \mid \alpha_t]$ is the miss noise. The calibrator is an
+integral controller of gain $\gamma$ acting through a dead time of $\theta$ updates. Its
+characteristic polynomial $z^{\theta+1} - z^{\theta} + \gamma$ has all its roots inside the unit
+circle if and only if
+\begin{equation}
+  0 < \gamma < \gamma_{\mathrm{crit}}(\theta) = 2\sin\!\left(\frac{\pi}{4\theta+2}\right)
+  = 2\cos\!\left(\frac{\theta\pi}{2\theta+1}\right),
+  \label{eq:gammacrit}
+\end{equation}
+the stability condition of the difference-delay equation
+$\varepsilon_{t+1} - \varepsilon_t + \gamma\varepsilon_{t-\theta} = 0$, which \citet{levin1976} state
+in the second form. The limit is 2 without delay, 1 at $\theta = 1$, 0.347 at $\theta = 4$ and
+0.108 at $\theta = 14$: like any integral loop with dead time, the delayed calibrator tolerates
+less gain the longer the dead time. Delayed-feedback versions of the recursion have been run
+without this analysis \citep{dixit2023,szabadvary2024}, and \citet{szabadvary2024} suggests
+larger steps the further ahead one predicts; the stable range shrinks with the delay instead.
+
+\subsection{Why marginal coverage cannot see it}\label{sec:analysis:p2}
+
+The level starts at $\alpha^\ast \in (0, 1)$. A miss needs a finite interval, issued at a level
+of at least $1/(W+1) > 0$; a hit of a positive score needs a nonzero half-width, issued at a level
+below 1. Each label moves the level by less than $\gamma$, $\theta + 1$ updates after its interval
+was issued, so the level can pass 0 or 1 by at most $\theta + 1$ such steps: for positive scores
+it stays in $[-\gamma(\theta+1),\, 1 + \gamma(\theta+1)]$. Summed over the $T$ labels that have
+fed the loop, Eq.~\eqref{eq:loop} gives $\gamma\sum_s (\alpha^\ast - e_s)$ as the change in level,
+and the realised miscoverage satisfies
+\begin{equation}
+  \Bigl|\, \frac{1}{T}\sum_s e_s - \alpha^\ast \Bigr| \le \frac{1 + 2\gamma(\theta+1)}{\gamma T}.
+  \label{eq:p2}
+\end{equation}
+Marginal coverage therefore converges to $1 - \alpha^\ast$ by construction, however many of the
+intervals were infinite: an infinite interval counts as a hit and pushes the level back up.
+Eq.~\eqref{eq:p2} extends the argument of \citet{gibbs2021aci} to the delayed single-state loop.
+It is the level-space analogue of the bound of \citet[Cor.~1]{wang2024acmcp} for the same
+recursion in quantile space; related bounds grow with the delay \citep[Thm.~2]{ding2025multiqt} or
+with the batch size \citep[Thm.~4.1]{areces2025}, and schemes of interleaved, delay-free chains are
+bounded by \citet{elhalabi2026} and \citet{cherenson2026}. Marginal
+coverage hides clustered misses \citep{retzlaff2025} and says nothing about the next interval
+\citep{li2026breaks}; a coverage of 0.90 says nothing about how many intervals were usable, so $U$
+has to be reported beside it.
+
+\subsection{Why persistence matters}\label{sec:analysis:persistence}
+
+For residuals without serial correlation the miss noise in Eq.~\eqref{eq:linear} is white, with
+variance $\alpha^\ast(1-\alpha^\ast)$, and the standard deviation of the level follows from the
+loop's frequency response,
+\begin{equation}
+  \sigma_\alpha^2 = \alpha^\ast(1-\alpha^\ast)\,\frac{1}{2\pi}\int_{-\pi}^{\pi}
+  \bigl|H(e^{\mathrm{i}\omega})\bigr|^2\,\mathrm{d}\omega,
+  \label{eq:noisegain}
+\end{equation}
+where $H(z) = -\gamma/(z^{\theta+1} - z^{\theta} + \gamma)$ carries the miss noise to the level.
+Even for uncorrelated residuals it is approximate: in simulations before the study it was within
+6\,\% of the measured spread for $\gamma \ge 0.02$ but 22 to 38\,\% high at $\gamma = 0.005$, where
+the window adds feedback of its own (supplementary material). Intervals become
+infinite when the level falls below $1/(W+1) \approx 0$, so a Gaussian level predicts an infinite
+share $\Phi(-\alpha^\ast/\sigma_\alpha)$, a tail that is unreliable even then. The largest step
+that keeps it below $\varepsilon = 1\,\%$, searched below $0.8\gamma_{\mathrm{crit}}$, is the
+white-noise rule.
+
+Process residuals are persistent. Misses then come in runs, and $\eta$ is coloured, with its
+power at the low frequencies that the loop passes with unit gain ($|H(1)| = 1$). The white-noise
+model underestimates how far the level wanders: on the study's data it underestimated
+$\sigma_\alpha$ by 33 to 73\,\% in all 47 cells checked, and the infinite share by 81 to 100\,\% in
+the 24 cells that had infinite intervals (Section~\ref{sec:results:tuning}). Without delay,
+\citet{zaffran2022} found on AR(1) residuals that very large steps make the loop less stable and
+produce numerous infinite intervals; with labels admitted a year late, an adaptive conformal loop
+has been seen to overcorrect at a fixed step of 0.01 \citep{maligireddy2026}. With delay, the step
+that holds a budget is set by persistence, far below the stability limit
+(Fig.~\ref{fig:stability}): all 46 steps that the replay of Section~\ref{sec:remedies:replay}
+selected on the study's calibration data lie at or below 2.8\,\% of $\gamma_{\mathrm{crit}}$. The
+white-noise rule lies above every one of them for $\theta \ge 1$, at 2.5 to 9.5 times the largest
+step selected at each $\theta$ (it holds the infinite share at $\varepsilon$, the replay holds
+$U$ at $\varepsilon/2$). The step has to be chosen on the residuals themselves.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{n1_stability.pdf}
+\caption{Step sizes against the stability limit. Lines: the limit $\gamma_{\mathrm{crit}}(\theta)$
+of Eq.~\eqref{eq:gammacrit}, the replay's cap $0.8\gamma_{\mathrm{crit}}$, and the white-noise rule
+(Section~\ref{sec:analysis:persistence}, $\varepsilon = 1\,\%$). Markers: the step sizes selected by
+replay to $\varepsilon/2$ on the study's calibration data (Section~\ref{sec:remedies:replay}),
+uncompensated and compensated, per operating point for the Tennessee Eastman arms T1 (3-min
+updates) and T2 (1-min updates), and for the debutanizer; markers are offset around their
+$\theta$. Two uncompensated T2 tunings (operating point 1, $\theta = 4$ and 14) were infeasible and
+run at 0.001.}
+\label{fig:stability}
+\end{figure}
+
+\subsection{Remedy 1: tune the step by replaying history through the delayed loop}
+\label{sec:remedies:replay}
+
+Replay the calibration residuals through Eq.~\eqref{eq:loop} at the plant's $\theta$, for each
+step on a grid from 0.001 to 0.1 (13 values) in ascending order, stopping at
+$0.8\gamma_{\mathrm{crit}}(\theta)$, and select the largest step below the first whose replayed $U$
+exceeds a target. The study targets $\varepsilon/2 = 0.5\,\%$ for a budget of $2\varepsilon =
+2\,\%$, a margin fixed by a power analysis on simulated residuals before the protocol was frozen
+(Section~\ref{sec:study}). If even 0.001 exceeds the target, the loop runs at 0.001, flagged
+infeasible. Tuning on history that ignores the delay is the same rule at $\theta = 0$; the study
+runs it to the target $\varepsilon$ and calls it delay-blind.
+
+\subsection{Remedy 2: compensate the predictable residual first}\label{sec:remedies:comp}
+
+Process control meets dead time by predicting the disturbance over it: a minimum-variance
+controller removes the part of the disturbance that is predictable $\theta + 1$ steps ahead and
+leaves only the $(\theta+1)$-step prediction error \citep{astrom1970}. Forecasting the score or
+the residual at the label horizon ahead of a conformal loop is not new: conformal PID control
+forecasts the score quantile \citep{angelopoulos2023pid}, and AcMCP adds a forecast of the
+multi-step error to a delayed loop \citep{wang2024acmcp}, whose authors also compare that loop
+with and without the forecast on coverage over rolling windows. That comparison fired the
+literature rule of this paper's pre-registration (F4) before any data, and the claim was
+narrowed: local coverage is reported here, not claimed. Compensation is treated here as dead-time
+compensation of the loop. Applied to the sensor, the residual is predicted $\theta + 1$ updates
+ahead from the labels in hand,
+\begin{equation}
+  \hat r_t = b_0 + \sum_{j=1}^{p} b_j\, r_{t-\theta-j},
+  \label{eq:comp}
+\end{equation}
+the interval is centred on $\hat y_t + \hat r_t$, and the delayed loop calibrates only the
+prediction error, through the score $s_t = |r_t - \hat r_t|$. The predictor is fitted by least
+squares on the calibration segment, with $p$ chosen by the Bayesian information criterion from 1
+to 10, and then stays fixed; apart from the last $\theta$ calibration labels, which a plant would
+receive during the first $\theta$ evaluation updates, it sees labelled residuals only.
+Compensation narrows the interval, because the window now holds prediction errors instead of
+residuals. The narrowed claim, claim~2$'$, is that compensation also makes the miss process less
+persistent and admits a larger step at the same budget; the study tests it on the Tennessee
+Eastman process at $\theta = 4$ (Section~\ref{sec:results:persistence}).
+
+\subsection{What compensation can buy, before deployment}\label{sec:remedies:p3}
+
+Let $r$ be stationary and zero-mean, with autocorrelation $\rho$. The best linear predictor of
+$r_t$ from $r_{t-\theta-1}, \dots, r_{t-\theta-p}$ leaves the fraction $1 - c^{\top}R^{-1}c$ of the
+residual variance, with $c_j = \rho(\theta+j)$ and $R_{jk} = \rho(|j-k|)$. When the prediction
+error and the residual share one standardised distribution, as Gaussian residuals do, the ratio
+of compensated to uncompensated interval widths is
+\begin{equation}
+  \frac{w_{\mathrm{c}}}{w_{\mathrm{u}}} = \bigl(1 - c^{\top}R^{-1}c\bigr)^{1/2}.
+  \label{eq:p3}
+\end{equation}
+The fraction cannot rise with $p$. Its limit is the $(\theta+1)$-step minimum-variance prediction
+error, which \citet{harris1989} made the benchmark of control-loop performance assessment; no
+linear predictor of the same labels does better. For AR(1) residuals with coefficient $\phi$ the
+fraction is $1 - \phi^{2(\theta+1)}$ at every $p$: with $\phi = 0.9$, an immediate label
+($\theta = 0$) leaves 44\,\% of the width and a dead time of 4 leaves 81\,\%. Eq.~\eqref{eq:p3}
+needs only the autocorrelation of the calibration residuals, so the width that compensation can
+buy can be predicted before deployment, at every analyzer delay; in the study the prediction
+erred, on average, on the safe side in every case checked (Section~\ref{sec:results:p3}). Drawn
+against the label age, it is an analyzer-speed chart that prices a faster or a closer analyzer
+in interval width (Fig.~\ref{fig:speed}). Without delay, the gain from modelling past scores is
+known to grow with their lag-1 autocorrelation \citep{areces2025}; Eq.~\eqref{eq:p3} makes the link
+quantitative and delay-dependent. For other shapes the width ratio can differ from
+Eq.~\eqref{eq:p3} (Section~\ref{sec:discussion}).

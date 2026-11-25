@@ -60,9 +60,19 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 > the private repo (`paper/submission_v1/`, Word files from the LaTeX). After submission, the
 > as-submitted copy comes here as the frozen preprint (`docs/PAPER_LIFECYCLE.md`).
 > Same day: the published record held the whole repository (624 files, other papers included);
-> `zenodo_package.py` now archives the N1 study's 161 files from the same tag, and Bien replaces
+> `zenodo_package.py` now archives the N1 study's 161 files from the same tag, and Bien replaced
 > the record's files within Zenodo's 30-day window, DOI unchanged (`docs/module1/ZENODO_N1.md`,
-> Section 5).
+> Section 5). Verified on the record: 4 files, 19.4 MB, the archive 3.5 MB.
+> **Submitted 2026-11-25, 13:17 Manila: JPROCONT-D-26-01273**, a new manuscript at the Journal of
+> Process Control, handled by Professor Martin Guay per the acknowledgement. As submitted: frozen
+> in `paper/n1_jpc/`; the upload and form answers in the private repo
+> (`paper/submission_v1/EM_SUBMISSION_RECORD.md`); ledger and review log updated the same day.
+> Also fixed that day: `scripts/check_author_block.py` read the full stop after an e-mail address
+> as part of it, so the private repo's Word generator was reported as carrying another author's
+> address. The rule now reads the domain label by label and still catches real variants.
+> Next: nothing to do until the journal writes. A desk decision at JPC took 0.4 to 55.3 days
+> across this program's eight desk decisions, and the predecessor took 41.7 days to a reviewed
+> decision.
 >
 > **Status update 2026-11-03 (M1 session).** N1 Phase 1 has run (pre-registration Section 9,
 > steps 5 to 7; runner 5ed6f0c, stage A 133b0f3, stage B and verdicts bd6454d; no deviation
@@ -557,7 +567,8 @@ benchmark data are **not** CI-tested; library code + unit tests **are**.
 framework with five modules on a first-principles physics layer:
 
 1. **Module 1 — Soft Sensor** — real-time prediction of hard-to-measure quality
-   variables. **(✅ complete; paper rejected after review at JPC, in revision)**
+   variables. **(✅ complete; N1 under review at JPC, JPROCONT-D-26-01273, submitted 2026-11-25;
+   its predecessor was rejected after review there)**
 2. **Module 2 — Predictive Maintenance** — anomaly detection + RUL. **(✅ complete; paper ACCEPTED, RESS, 2026-10-09)**
 3. **Module 3 — RTO** — constrained setpoint recommendations. **(✅ complete; paper paused after four desk rejections)**
 4. **Module 4 — Composed certificate** — the integrated SCC coverage guarantee. **(✅ complete; paper under review at CACE, CACE-D-26-01079)**

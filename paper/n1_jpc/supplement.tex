@@ -1,0 +1,287 @@
+% N1 supplementary material (Journal of Process Control). Build from this folder like main.tex:
+% pdflatex supplement (twice). Tables are read from the sibling IPIS checkout, written by
+% IPIS scripts/paper_n1/supplement.py from the Phase 1 evidence.
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{mathptmx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+\usepackage{natbib}
+\usepackage[labelfont=bf]{caption}
+\newcommand{\figdir}{../../IPIS/docs/paper/figures/n1}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thesection}{S\arabic{section}}
+\setlength{\parskip}{3pt}
+\setlength{\parindent}{0pt}
+
+\title{Supplementary material for ``When the laboratory is late: dead-time analysis and
+compensation of conformal soft-sensor intervals''}
+\author{Bien Don Busico\\
+\small University of the Philippines Diliman, Quezon City, Philippines\\
+\small \texttt{bienbusico@gmail.com}}
+\date{}
+
+\begin{document}
+\maketitle
+
+This supplement holds what the article refers to: every cell and contrast of the pre-registered
+study (Section~\ref{sec:files} and Tables~\ref{tab:T1} to~\ref{tab:baselines}), the run and its
+checks (Section~\ref{sec:run}), the Tennessee Eastman simulator's random numbers
+(Section~\ref{sec:rng}), the baseline configurations (Section~\ref{sec:baselines}), and the design
+checks behind the rules (Section~\ref{sec:design}). Notation and abbreviations follow the article:
+$\theta$ is the dead time in calibrator updates, $U$ the share of issued intervals that are
+infinite or wider than the range of $y$ over the calibration data, $\varepsilon = 1\,\%$, and the
+replay targets $\varepsilon/2$ for a budget of $2\varepsilon$. Every number is read from the records
+of the run (stages A and B; IPIS repository, commit \texttt{bd6454d},
+\texttt{docs/paper/evidence/}) or from the pre-registration and its pilot evidence, as stated. The
+three Tennessee Eastman operating points are labelled mode 1 to 3 in the records and tables.
+
+\section{Data files}\label{sec:files}
+
+Three files accompany this document, written from the stage B records by
+\texttt{scripts/paper\_n1/supplement.py} in the IPIS repository and archived with the evidence.
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item \texttt{n1\_supp\_cells.csv}: every loop cell of every unit (978 cells). Key fields: unit
+(T1, T1\_gb, T2, T3, debutanizer), $\theta$, compensation (raw or comp), loop (none, sequential,
+projected, phase, smith, decaying), step-size policy, pairing (stored or arrival), the number of
+runs, and the step size and tuning feasibility per operating point. Metrics, each with its mean
+and 95\,\% interval: $U$, the infinite share, coverage, the median, 90th and 99th percentiles of
+the finite widths, F7's width (the median over all issued intervals), the worst rolling coverage
+over 100 intervals, sd($\alpha$), and the IACT, lag-1 autocorrelation and mean run length of the
+misses. Tennessee Eastman units: means over the 15 runs with $t$ intervals where the stage B
+summary holds them (run means without an interval otherwise). Debutanizer: the single stream,
+with circular block bootstrap intervals for $U$, the infinite share and coverage.
+\item \texttt{n1\_supp\_contrasts.csv}: every paired contrast (18\,466 rows): compensated minus
+uncompensated, each $\theta$ minus $\theta = 0$, arrival minus stored pairing, loop on minus loop
+off, each loop minus the sequential loop, and each policy minus replay to $\varepsilon/2$; mean and
+95\,\% interval (Tennessee Eastman: $t$ over the runs; debutanizer: block bootstrap over all
+evaluation rows).
+\item \texttt{n1\_supp\_baselines.csv}: the four baseline configurations at every $\theta$ of the
+units that ran them (T1 and the debutanizer).
+\end{itemize}
+
+\section{The run and its checks}\label{sec:run}
+
+The protocol was frozen at tag \texttt{n1-phase1-freeze} (29 October 2026). The run, on
+2 November 2026 (UTC), had three commits.
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item Runner, \texttt{5ed6f0c}: the files of the checked runner, byte for byte.
+\item Stage A, \texttt{133b0f3}: training and calibration rows only (613~s on six workers). It
+fitted the point models and compensators, tuned every step size, configured the baselines and
+recorded the predicted width ratios. Its records were committed and pushed before stage B read an evaluation
+row.
+\item Stage B and the verdicts, \texttt{bd6454d} (1822~s). Stage B recomputed stage A's settings,
+streams, file digests, point models, arrays (by SHA-256), compensator orders and coefficients,
+predicted ratios, static quantiles, ranges of $y$ and conformal PID replays, and passed all 1359
+checks exactly before it evaluated.
+\end{itemize}
+A recomputation of the verdicts from the committed stage A and stage B files on a second platform
+(Linux) reproduced them: of 4772 values, 236 differ in the last digits, with a largest relative
+difference of $1.3 \times 10^{-9}$. In T1's stage B, statsmodels warned twice of an overflow inside its bounded transform of the Theta
+model's smoothing weight (conformal PID's Theta scorecaster); the transform then returns its
+bound, every check was exact and the cell's results are finite.
+
+One deviation from the protocol was logged before any result: arm T3, which updates once per
+analyzer value, seeds its window with 40 labels instead of 200, because its 40 calibration hours
+hold only 160 labels. No rule is decided on T3.
+
+Stage A flagged nine tunings as infeasible, all at T2's first operating point without
+compensation: replay to $\varepsilon/2$ at $\theta = 4$, and to $\varepsilon$ and $\varepsilon/2$
+at $\theta = 14$, for the sequential, projected and Smith loops. There $U$ exceeded its target
+already at the grid's smallest step (0.75 to 0.76\,\% at $\theta = 4$ against 0.5\,\%; 1.72 to
+1.73\,\% at $\theta = 14$ against targets of 1 and 0.5\,\%), so those cells ran at 0.001, as the
+protocol fixes. No tuning was infeasible at T1, T1\_gb, T3 or the debutanizer, and every conformal PID tuning met its
+selection criterion. The ridge penalty chosen by the one-standard-error rule was the top of its
+grid, 1000, in 10 of the 15 runs.
+
+\section{The Tennessee Eastman simulator's random numbers}\label{sec:rng}
+
+The simulator's generator, TESUB7 in \texttt{teprob.f}, computes
+$G \leftarrow 9228907\,G \bmod 2^{32}$ in double precision. The product exceeds $2^{53}$, so IEEE
+double arithmetic rounds it; that rounding is part of the algorithm was recorded by
+\citet{kitchin2026s}. We add what follows from it. The state gains trailing zero bits until
+$G = 2^k m$ with $m$ odd, after which the recursion is exact with period $2^{30-k}$ draws. A
+counting build gives 952\,326 draws per simulated hour. Over the source's own seed and the 57
+seeds listed in \texttt{teprob.f}, the settled $k$ and the periods are:
+
+\begin{center}\footnotesize
+\begin{tabular}{@{}lrrrrrrrr@{}}
+\toprule
+Settled $k$ & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 11 \\
+Seeds & 17 & 24 & 8 & 2 & 4 & 1 & 1 & 1 \\
+Period of the random stream (h) & 141 & 70.5 & 35.2 & 17.6 & 8.8 & 4.4 & 2.2 & 0.55 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+So 41 of the 58 seeds repeat their random stream within 100~h; with $k = 4$, hours 70 to 100 of a
+run would reuse the random numbers of hours 0 to 30. For each $k$ the odd $m$ form two cycles (the
+multiplier is 3 mod 8), so seeds with the same $k$ and cycle draw the same numbers at different
+phases and do not give independent runs. These periods hold for IEEE double arithmetic, as with
+gfortran~13 on x86-64.
+
+For the study, each run drew instead from its own stream of MRG32k3a \citep{lecuyer1999s}, exact
+in double precision: run $j$ starts at stream $j$, $j \times 2^{127}$ draws from the RngStreams
+seed, and a 100-h run uses about $10^{8}$ draws, so no two runs share a random number. The Fortran
+code reproduces a Python reference draw for draw (200\,000 draws), and its first output and stream
+jumps agree with an independent implementation. The plant model, the disturbances and the
+controllers are unchanged. Streams were dealt to the three operating points in rotation, and each
+took the first five whose 100-h run did not shut down: 5 of 26 candidates survived at the first
+operating point, 14 of 25 at the second and 17 of 25 at the third.
+
+\section{Baseline configurations}\label{sec:baselines}
+
+The settings follow each paper and, where a paper is silent, the authors' code: conformal PID
+control (\citealp{angelopoulos2023pids}; code \texttt{aangelopoulos/conformal-time-series}, commit
+\texttt{b729c3f}) and SPCI (\citealp{xu2023spcis}; code \texttt{hamrel-cxu/SPCI-code}, commit
+\texttt{d598dd3}). Where code contradicts its paper, or would use a label before it arrives, the
+paper governs. Appendix A of the pre-registration gives every setting with its source, and every
+departure with its reason. Among them: conformal PID starts from the loop's seed rows, its
+learning rate uses the range of the recent scores (as the code does) rather than their maximum
+(as the paper does), and its quantile-regression scorecaster has no penalty; SPCI's window, which
+the paper leaves open, is scaled from the authors' setting on their electricity data (300 for
+2755 training residuals) to the calibration length.
+
+\emph{Conformal PID.} Signed residual scores, each side tracked at $\alpha/2 = 0.05$. The update
+for sample $t+1$ uses the coverage error of the newest labelled sample, $\theta + 1$ steps back.
+Learning rate $m$ times the range of the 200 latest labelled scores; integrator
+$K_I \tan(x \log n /(C_{\mathrm{sat}} n))$. Scorecasters: (a) a linear quantile regression at level
+0.95 on the three latest labelled scores at the horizon; (b) the Theta model, refitted at every
+step; (c) the compensated loop's own residual forecast. Tuning: 114 configurations ($m$ on 19
+values from 0.001 to 1; $C_{\mathrm{sat}}$ on three values; $K_I$ at $B'$ and $10B'$, with $B'$ the
+largest absolute calibration residual), replayed on the pooled calibration segments from the same
+seeded start as the loop. Among configurations with replayed $U \le \varepsilon/2$ and coverage
+within 0.02 of 0.90, the one with the smallest replayed median width, scaled to 0.90 coverage, was
+taken.
+
+\emph{SPCI.} The point model's residuals in place of EnbPI's leave-one-out ensemble; one quantile
+regression forest for horizon $\theta + 1$ (10 trees, maximum depth 2), trained on windows of
+$w$ known residuals with the residual $\theta + 1$ steps on as the target and refitted at every
+step on the latest $T_{\mathrm{cal}}$ known residuals; $w = \operatorname{round}(300\,T_{\mathrm{cal}}
+/2755)$, 87 for T1 and 181 for the debutanizer; $\hat\beta$ from five values minimising the
+predicted width.
+
+F7 scales each baseline's width to the loop's coverage in each run by the ratio of Gaussian
+quantiles. That scaling errs towards whichever method covers less: in a dry run before the study,
+the closest competitor's coverage-matched difference was $-2.8$\,\% under the Gaussian scaling
+and $-3.7$ to $-4.5$\,\% under $t_5$, $t_3$ and Laplace tails, against F7's 5\,\% margin. The
+comparison scaled by the loop's own score quantiles is therefore reported beside it: +1.7,
++17.9, $-1.3$ and +2.1\,\% for the four baselines in the order of the article's Table~4, against
++1.6, +17.7, $-1.5$ and +1.6\,\% under the Gaussian scaling.
+
+\section{Design checks}\label{sec:design}
+
+\emph{Power.} On synthetic AR(1) residuals analysed with the study's code (200 studies at each
+persistence), F2's test detected the delay effect at the delay-blind step with probability 0.91
+($\phi = 0.5$) and 0.99 ($\phi = 0.9$) in the Tennessee Eastman design (15 runs of 800 calibration
+and 600 evaluation rows, $\theta = 4$), but only 0.12 and 0.095 on a single stream of the
+debutanizer's length ($\phi = 0.965$ and 0.970, $\theta = 3$). Tuned to $\varepsilon$, the
+uncompensated loop's 15-run mean $U$ averaged 0.59 and 0.93\,\% but exceeded $\varepsilon$ in 21
+and 38\,\% of studies; tuned to $\varepsilon/2$ it exceeded $2\varepsilon$ in 0 and 4.0\,\%
+(compensated: 0 and 2.5\,\%), which set F5's tuning target and budget. The mean over 15 runs of
+the width-ratio error lay within $\pm 10\,\%$ in every study at both persistences.
+
+\emph{The white-noise model.} On synthetic residuals (absolute values of a Gaussian AR(1) series,
+window 200, five seeds), the article's Eq.~(7) predicted the standard deviation of the level to
+within $-6$ to $+5$\,\% for steps of at least 0.02 when the series had no serial correlation
+($\phi = 0$), but 22 to 38\,\% too high at a step of 0.005, because the sliding window's quantile
+adds feedback of its own. At $\phi = 0.9$ and steps of at least 0.02 it was 47 to 63\,\% too low.
+
+\emph{Width ratio and residual shape.} Eq.~(9) of the article is the ratio of standard deviations;
+it equals the width ratio when the compensated and uncompensated scores share one standardised
+shape. For AR(1) residuals with $\phi = 0.9$ and uniform or $t_5$ innovations, simulated over 2
+million steps, the width ratio at a one-step horizon was 4.2 to 5.5\,\% below the ratio of
+standard deviations.
+
+\emph{F8.} F8 is tested only where Eq.~(9) predicts a gain (mean predicted ratio at most 0.95).
+On Gaussian AR(1) residuals without a label hold it fired in 1.4\,\% of tested studies at
+$\phi = 0.8$ and in none at 0.85 to 0.95; with a fifth of the residual variance held for five rows,
+as T1's analyzer holds its reading, it fired in at most 0.5\,\%.
+
+\section{Tables}
+
+Tables~\ref{tab:T1} to~\ref{tab:deb} give, for each unit, the sequential loop with stored pairing
+under every step-size policy, and the loop off (split conformal), without and with compensation.
+Tennessee Eastman: means over the 15 runs; the step is given per operating point (1/2/3). Widths
+are full widths in the units of $y$ (mol\,\% for the Tennessee Eastman process), the run median of
+the finite widths; ``worst rolling'' is the minimum coverage over 100 consecutive intervals; IACT
+is that of the miss indicator. The intervals and every other cell are in the data files.
+
+\begin{table}[p]
+\centering\footnotesize
+\caption{T1 (3-min updates; ridge regression): every policy of the sequential loop.}
+\label{tab:T1}
+\input{\figdir/n1_supp_primary_T1.tex}
+\end{table}
+
+\begin{table}[p]
+\centering\footnotesize
+\caption{T1\_gb (3-min updates; gradient boosting): every policy of the sequential loop.}
+\label{tab:T1gb}
+\input{\figdir/n1_supp_primary_T1_gb.tex}
+\end{table}
+
+\begin{table}[p]
+\centering\footnotesize
+\caption{T2 (1-min updates; ridge regression): every policy of the sequential loop.}
+\label{tab:T2}
+\input{\figdir/n1_supp_primary_T2.tex}
+\end{table}
+
+\begin{table}[p]
+\centering\footnotesize
+\caption{T3 (one update per analyzer value; window of 40 labels; descriptive): every policy of
+the sequential loop.}
+\label{tab:T3}
+\input{\figdir/n1_supp_primary_T3.tex}
+\end{table}
+
+\begin{table}[p]
+\centering\footnotesize
+\caption{Debutanizer (one stream, 719 evaluation rows): every policy of the sequential loop. The
+step is the single tuned value.}
+\label{tab:deb}
+\input{\figdir/n1_supp_primary_debutanizer.tex}
+\end{table}
+
+\begin{table}[p]
+\centering\footnotesize
+\caption{The comparison loops at T1, $\theta = 4$, under every step-size policy: means over the 15
+runs, uncompensated, with the compensated loop's $U$ in the last column. Projected: the level
+clipped to $[0.01, 0.5]$; interleaved: $\theta + 1$ delay-free chains (El Halabi and Brandt);
+Smith form: the miss rate expected at the stored level replaced by that at the current level;
+decaying: steps $c\,n^{-0.6}$.}
+\label{tab:loops}
+\input{\figdir/n1_supp_loops.tex}
+\end{table}
+
+\begin{table}[p]
+\centering\footnotesize
+\caption{The four baseline configurations beside the compensated loop tuned by replay to
+$\varepsilon/2$, at every $\theta$ of T1 (means over the 15 runs) and of the debutanizer.
+F7 width: the run median over all issued intervals, infinite ones included. F7 is decided at
+T1, $\theta = 4$ only; the other rows are descriptive.}
+\label{tab:baselines}
+\input{\figdir/n1_supp_baselines.tex}
+\end{table}
+
+\clearpage
+\begin{thebibliography}{9}
+\setlength{\itemsep}{0pt}
+\bibitem[Angelopoulos et al.(2023)]{angelopoulos2023pids} A. Angelopoulos, E. Cand\`es,
+R. J. Tibshirani, Conformal PID control for time series prediction, in: Advances in Neural
+Information Processing Systems (NeurIPS 2023), vol. 36, 2023, pp. 23047--23074.
+\bibitem[Kitchin(2026)]{kitchin2026s} J. Kitchin, tep-rust: pure-Rust Tennessee Eastman process
+simulator, GitHub repository, \url{https://github.com/jkitchin/tep-rust}, development log, entry
+of 10 August 2026; commit 0735ad3.
+\bibitem[L'Ecuyer(1999)]{lecuyer1999s} P. L'Ecuyer, Good parameters and implementations for
+combined multiple recursive random number generators, Operations Research 47 (1) (1999)
+159--164, \url{https://doi.org/10.1287/opre.47.1.159}.
+\bibitem[Xu and Xie(2023)]{xu2023spcis} C. Xu, Y. Xie, Sequential predictive conformal inference
+for time series, in: Proceedings of the 40th International Conference on Machine Learning, PMLR
+202, 2023, pp. 38707--38727.
+\end{thebibliography}
+
+\end{document}

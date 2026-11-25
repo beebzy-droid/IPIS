@@ -12,13 +12,13 @@ downstream paper. Chasing those by hand across `references.bib`, `README.md`, st
 working drafts is lossy and token-expensive. This ledger plus the protocol makes propagation
 mechanical and one-directional.
 
-Last updated: 2026-10-14 (M2 online, `busico_m2` doi:10.1016/j.ress.2026.113634; Section 6). Earlier: 2026-10-09, M1 session pass (`busico_m1` -> SSRN preprint doi:10.2139/ssrn.7181724; M4 and M5 status flags verified from email; see Section 6, first entry). Earlier the same day: (affiliation decided, canonical author block `docs/AUTHOR.md`; open items per session in `docs/OPEN_ITEMS.md`. Earlier the same day: M2 ACCEPTED at RESS as JRESS-D-26-04700R1: `busico_m2` -> `@article`, in press, synced into paper4/paper5; M1 status corrected to rejected-after-review per the 2026-09-28 review register; open items for M1 and M5 owners in Section 6).
+Last updated: 2026-11-25 (N1 submitted to JPC as JPROCONT-D-26-01273; `busico_m1` deliberately unchanged, see Section 6). Earlier: 2026-10-14 (M2 online, `busico_m2` doi:10.1016/j.ress.2026.113634; Section 6). Earlier: 2026-10-09, M1 session pass (`busico_m1` -> SSRN preprint doi:10.2139/ssrn.7181724; M4 and M5 status flags verified from email; see Section 6, first entry). Earlier the same day: (affiliation decided, canonical author block `docs/AUTHOR.md`; open items per session in `docs/OPEN_ITEMS.md`. Earlier the same day: M2 ACCEPTED at RESS as JRESS-D-26-04700R1: `busico_m2` -> `@article`, in press, synced into paper4/paper5; M1 status corrected to rejected-after-review per the 2026-09-28 review register; open items for M1 and M5 owners in Section 6).
 
 ## 1. Canonical ledger
 
 | bibkey | Module | Canonical title | Venue | Manuscript ID | Status | Source dir |
 |---|---|---|---|---|---|---|
-| `busico_m1` | M1 soft sensor | When does a calibrated soft sensor keep its promise? A negative-control study of validity without accuracy under drift and delayed labels | Journal of Process Control (transfer from CACE) | JPROCONT-D-26-00618 (orig. CACE-D-26-00944); preprint SSRN 7181724 | rejected after peer review (decision 2026-08-11); in revision as N1; preprint doi:10.2139/ssrn.7181724 | `paper/` (frozen preprint) |
+| `busico_m1` | M1 soft sensor | When does a calibrated soft sensor keep its promise? A negative-control study of validity without accuracy under drift and delayed labels | Journal of Process Control (transfer from CACE) | JPROCONT-D-26-00618 (orig. CACE-D-26-00944); preprint SSRN 7181724. Successor N1: JPROCONT-D-26-01273 | rejected after peer review (decision 2026-08-11); preprint doi:10.2139/ssrn.7181724, which is what the downstream papers cite. Its narrowed successor N1, "When the laboratory is late: dead-time analysis and compensation of conformal soft-sensor intervals", went to JPC as a new manuscript on 2026-11-25 and is under review; this entry switches to it when it is published | `paper/` (frozen preprint); N1 as submitted in `paper/n1_jpc/` |
 | `busico_m2` | M2 prognostics (SCC) | Similarity-Calibrated Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under operating-regime transfer | Reliability Engineering & System Safety | JRESS-D-26-04700R1 (resub. of JRESS-D-26-04509) | **accepted 2026-10-09; online 2026-10-14**, doi:10.1016/j.ress.2026.113634; proof pending | `paper3/` (preprint); working copy in `ipis-papers` |
 | `busico_m3` | M3 RTO | Safe real-time optimization of a distillation column under feed-composition uncertainty: a comparative study of distribution-free constraint back-offs | none (paused) | none (rejected: CJCE 1404930, TCST 26-0876, CACE-D-26-01040, JPROCONT-D-26-00565) | paused; Wiley Transfer Desk offer pending | `paper2/cjce/` |
 | `busico_m4` | M4 integration | A composed coverage certificate for closed-loop process operation: certified joint product-quality and equipment-survival guarantees under feedback | Computers & Chemical Engineering | CACE-D-26-01079 | under review | `paper4/` |
@@ -107,6 +107,30 @@ canonical metadata in Sections 1 and 3, plus the open-debt list in Section 6, ar
 prompt is passed between sessions.
 
 ## 6. Open propagation debt (fix in the owning session)
+
+**2026-11-25 (N1 submitted to JPC; `busico_m1` deliberately unchanged).** Module 1's narrowed
+successor went to the Journal of Process Control on 25 November 2026 as a **new manuscript**, not a
+revision: **JPROCONT-D-26-01273**, "When the laboratory is late: dead-time analysis and
+compensation of conformal soft-sensor intervals". The acknowledgement names Professor Martin Guay
+as the handling editor, which is the ingest queue's own entry and may be reassigned.
+- **No downstream domino.** `busico_m1` still cites the predecessor's SSRN preprint
+  (doi:10.2139/ssrn.7181724), and that is correct: the preprint is a public object with a DOI, N1
+  is not public, and a manuscript ID under review is not a citable object. So no `references.bib`
+  changes for this event. When N1 is published, `busico_m1` becomes the N1 article (new title,
+  journal, DOI) and the blast radius is M4 and M5, in that order.
+- **OI-01 closed.** Its deferred downstream pulls were applied in `ipis-papers` on the same day, so
+  no working copy still carries the dead ID: `paper4/references.bib`, the inlined bibitem in
+  `paper4/em/main_EM.tex`, `paper5/references.bib`, `companion2026` in `paper2/references.bib`,
+  `paper2/cjce/references.bib` and `paper2/tcst/references.bib`, and the companion sentences in
+  `paper4/cover_letter.md` and `paper5/cover_letter.md`. A public `git grep 00618` still finds the
+  frozen preprints, which keep the strings they were submitted with (PAPER_LIFECYCLE rule 1).
+- **Frozen preprint.** `paper/n1_jpc/` holds N1 as submitted: the LaTeX master, the Word files, the
+  figures and the supplementary CSV files. The cover letter is held back as correspondence, with its
+  digest still in `submission_v1/MD5SUMS.txt`. The record of the upload and the form answers is in
+  the private repo, `paper/submission_v1/EM_SUBMISSION_RECORD.md`.
+- **Dataset reference.** `busico2026data` (the manuscript's own bibliography, private repo) carries
+  doi:10.5281/zenodo.24357752. The deposit's files were replaced on the day of submission with the
+  N1-only archive; the DOI did not change (`docs/module1/ZENODO_N1.md`, Section 5).
 
 **2026-10-14 pass (M2 online with DOI).** `busico_m2` gains `doi=10.1016/j.ress.2026.113634` (confirmed from the
 online article, Articles in Press, 2026-10-14). Domino run in the private `ipis-papers` repo by

@@ -53,7 +53,7 @@ IPIS addresses all three with one architecture, validated across heterogeneous b
 
 | Module | Status | Notes |
 |---|---|---|
-| Module 1 — Soft Sensor | ✅ Complete | Paper rejected after peer review at Journal of Process Control (JPROCONT-D-26-00618); in revision, narrowed to one claim |
+| Module 1 — Soft Sensor | ✅ Complete | Predecessor rejected after peer review at Journal of Process Control (JPROCONT-D-26-00618); narrowed to one claim and resubmitted there as a new manuscript, under review (JPROCONT-D-26-01273, 2026-11-25) |
 | Module 2 — Predictive Maintenance | ✅ Complete | Feature-complete (2A–2D); SCC paper **accepted** in *Reliability Engineering & System Safety* (2026-10-09), in production |
 | Module 3 — Real-Time Optimization | ✅ Complete | Paper paused after desk rejections (latest CJCE 1404930) |
 | Module 4 — Integration (composed certificate) | ✅ Under review | Closed-loop coverage certificate validated on the debutanizer twin; under review at *Computers & Chemical Engineering* (CACE-D-26-01079), reframed and ported after IECR declined on scope (`paper4/`) |
@@ -66,8 +66,13 @@ differs from the module numbering for Modules 2 and 3; the module mapping below 
 
 - **Module 1 — Soft Sensor:** *When does a calibrated soft sensor keep its promise? A negative-control study of validity
   without accuracy under drift and delayed labels.* Rejected after peer review at *Journal of Process Control*
-  (JPROCONT-D-26-00618; earlier CACE-D-26-00944); in revision. Preprint as submitted to JPC:
+  (JPROCONT-D-26-00618; earlier CACE-D-26-00944). Preprint as submitted to JPC:
   [doi:10.2139/ssrn.7181724](https://doi.org/10.2139/ssrn.7181724). Source: `paper/`.
+- **Module 1, second JPC submission (N1):** *When the laboratory is late: dead-time analysis and
+  compensation of conformal soft-sensor intervals.* Under review, *Journal of Process Control*
+  (JPROCONT-D-26-01273, submitted 2026-11-25), a new manuscript narrowed to one claim. Source as
+  submitted: `paper/n1_jpc/`. Protocol, evidence and the 15 Tennessee Eastman runs:
+  [doi:10.5281/zenodo.24357752](https://doi.org/10.5281/zenodo.24357752).
 - **Module 2 — Predictive Maintenance (Similarity-Calibrated Conformal):** *Similarity-Calibrated
   Conformal prediction: data-free coverage guarantees for remaining-useful-life intervals under
   operating-regime transfer.* **Published online**, *Reliability Engineering & System Safety* (2026, in

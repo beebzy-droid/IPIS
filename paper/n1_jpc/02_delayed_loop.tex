@@ -1,0 +1,140 @@
+\section{Late labels and the delayed loop}\label{sec:loop}
+
+\subsection{The soft sensor and its interval}\label{sec:loop:interval}
+
+A soft sensor predicts a quality variable $y$ from process measurements $x$. At every calibrator
+update $t$, spaced $\Delta u$ apart, it issues a prediction $\hat y_t$; the laboratory or the
+analyzer supplies $y_t$ later. The residual is $r_t = y_t - \hat y_t$, and its absolute value, the
+score $s_t = |r_t|$, measures how wrong the sensor was. The interval issued at update $t$ is
+centred on the prediction,
+\begin{equation}
+  C_t = [\,\hat y_t - q_t,\; \hat y_t + q_t\,],
+  \label{eq:interval}
+\end{equation}
+with the half-width $q_t$ equal to the $\lceil (1-\alpha_t)(W+1)\rceil$-th smallest of the $W$
+most recent scores whose labels have arrived, the split-conformal quantile
+\citep{papadopoulos2002}. The half-width is infinite when that rank exceeds $W$, that is for
+$\alpha_t < 1/(W+1)$, and zero for $\alpha_t \ge 1$. The level $\alpha_t$ adapts online to hold
+a target miscoverage $\alpha^\ast$: a miss lowers it, which widens later intervals, and a hit
+raises it \citep{gibbs2021aci}. Throughout, $\alpha^\ast = 0.10$ and $W = 200$ (40 labelled
+events in the arm that updates only on new analyzer values; Section~\ref{sec:study}).
+
+\subsection{Dead time}\label{sec:loop:deadtime}
+
+Let the label of a sample become available a time $D$ after the interval for that sample was
+issued. With updates every $\Delta u$, the label is $a = \lceil D/\Delta u \rceil$ updates old when
+it is first read. Labels are read at the start of an update, before the interval is issued, so the
+label of the interval issued at update $s$ first moves the level used at update $s+\theta+1$, with
+the dead time
+\begin{equation}
+  \theta = a - 1 .
+  \label{eq:theta}
+\end{equation}
+A calibrator that issued before reading would have $\theta = a$. With $\theta = 0$ the scheme is
+ordinary adaptive conformal inference; \citet{elhalabi2026} write $\tau = \theta + 1$. The level
+then obeys
+\begin{equation}
+  \alpha_{t+1} = \alpha_t + \gamma\,(\alpha^\ast - e_{t-\theta}),
+  \qquad e_s = \mathbf{1}\{s_s > q_s\},
+  \label{eq:loop}
+\end{equation}
+with step size $\gamma > 0$, and the score $s_{t-\theta}$ enters the window when its label
+arrives. The miss $e_s$ is judged against the half-width $q_s$ issued for sample $s$, which the
+calibrator stores until the label arrives: stored pairing. Judging it against the half-width in
+force when the label arrives, arrival pairing, is a bookkeeping error that an implementation
+holding a single last half-width makes easily; the study uses it as a negative control
+(Section~\ref{sec:study}). Fig.~\ref{fig:block} shows the loop.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+    font=\scriptsize, >={Stealth[length=1.5mm]}, semithick,
+    blk/.style={draw, rounded corners=1pt, align=center, inner sep=2.5pt,
+      minimum height=7mm},
+    sum/.style={draw, circle, inner sep=0pt, minimum size=3.6mm}]
+  \node[blk] (model) at (0,0) {point\\model};
+  \node[sum] (sum) at (1.25,0) {$+$};
+  \node[blk] (int) at (2.9,0) {interval\\$\hat y_t + \hat r_t \pm q_t$};
+  \node[blk] (comp) at (1.25,-1.4) {compensator\\$(\theta{+}1)$ ahead};
+  \node[blk] (quant) at (2.9,-1.4) {quantile\\$1{-}\alpha_t$ of\\the window};
+  \node[blk] (miss) at (4.85,-1.4) {miss $e_s$,\\score $s_s$,\\residual $r_s$};
+  \node[blk] (lab) at (6.5,-1.4) {laboratory\\$z^{-\theta}$};
+  \node[blk] (integ) at (2.9,-2.85) {integrator, gain $\gamma$\\$\alpha \leftarrow \alpha + \gamma(\alpha^\ast - e_s)$};
+  \draw[->] (-1.0,0) node[left] {$x_t$} -- (model);
+  \draw[->] (model) -- node[above] {$\hat y_t$} (sum);
+  \draw[->] (sum) -- (int);
+  \draw[->] (int.east) -- (5.75,0) node[right] {$C_t$};
+  \draw[->] (4.85,0) -- node[left, align=right] {stored\\$C_s$} (miss.north);
+  \draw[->] (6.5,0.45) node[above] {sample} -- (lab.north);
+  \draw[->] (lab) -- node[above] {$y_s$} (miss);
+  \draw[->] (miss) -- node[above] {$s_s$} (quant);
+  \draw[->] (quant) -- node[right] {$q_t$} (int);
+  \draw[->] (integ) -- node[right] {$\alpha_t$} (quant);
+  \draw[->] ([xshift=-2.5mm]miss.south) |- node[pos=0.3, right] {$e_s$} (integ.east);
+  \draw[->] ([xshift=3mm]miss.south) -- ++(0,-1.95) -| node[pos=0.25, below] {$r_s$, $s \le t-\theta-1$} (comp.south);
+  \draw[->] (comp) -- node[left] {$\hat r_t$} (sum);
+  \fill (4.85,0) circle (1.1pt);
+\end{tikzpicture}
+\caption{The calibrated soft sensor with delayed labels. The interval is centred on the point
+prediction plus the predicted residual $\hat r_t$ ($\hat r_t = 0$ without compensation,
+Section~\ref{sec:remedies:comp}); its half-width is the conformal quantile at level
+$1 - \alpha_t$ of the last $W$ scores. The label $y_s$ arrives $\theta$ updates after the interval
+for sample $s$ was issued and moves the level one update later, through an integrator of gain
+$\gamma$; its miss $e_s$ is judged against the stored interval $C_s$. The calibrator is an
+integral loop with dead time $\theta$.}
+\label{fig:block}
+\end{figure}
+
+\subsection{Documented delays}\label{sec:loop:delays}
+
+Table~\ref{tab:delays} derives $\theta$ from documented delays for the two processes of the
+study. In the debutanizer, the butane content of the bottoms is measured by a gas chromatograph
+on the overhead of the downstream column, with a 15-min cycle and about 45~min from sample to
+result \citep[Sec.~6.2]{fortuna2007}; the same book also gives 20 to 60~min
+\citep[Sec.~5.5]{fortuna2007}, and 30 to 75~min is reported by \citet[p.~42]{siddharth2019}. The
+book models the seven inputs of the public data set at 12-min updates (Sec.~6.2) but analyses a
+recording of the same column at 6-min updates (Sec.~4.1), with outlier counts out of 2394 rows,
+the public file's length; it does not say which applies, so $\theta = 3$ is primary and
+$\theta = 7$ secondary. The Tennessee Eastman product analyzer has a sampling interval and a dead
+time of 0.25~h \citep[Table~5]{downs1993}. The same delay gives a dead time of 4 at 3-min
+updates and of 14 at 1-min updates, and of 0 if the calibrator updates only when a new analyzer
+value appears: the faster the calibrator runs on held labels, the longer its dead time.
+
+\begin{table}[t]
+\centering\footnotesize
+\caption{Dead time from documented delays: label age $a = \lceil D/\Delta u \rceil$ and
+$\theta = a - 1$ (Eq.~\eqref{eq:theta}). Debutanizer: gas chromatograph with a 15-min cycle,
+about 45~min \citep[Sec.~6.2]{fortuna2007}; the range combines 20 to 60~min
+\citep[Sec.~5.5]{fortuna2007} and 30 to 75~min \citep[p.~42]{siddharth2019}; the book gives
+12-min and 6-min updates without saying which fits the public data set. Tennessee Eastman:
+product analyzer XMEAS(40) \citep[Table~5]{downs1993}; $D$ counts from the row whose inputs give
+the prediction to the row in which the label is written (counted from the composition's capture,
+a reading is one row older when it first appears). Primary cells in bold.}
+\label{tab:delays}
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+Process & Delay $D$ & $\Delta u$ & $a$ & $\theta$ \\
+\midrule
+Debutanizer & about 45 min & 12 min & 4 & \textbf{3} \\
+            & about 45 min & 6 min & 8 & 7 \\
+            & 20 to 75 min & 12 or 6 min & 2 to 13 & 1 to 12 \\
+Tennessee Eastman & 0.25 h & 3 min & 5 & \textbf{4} \\
+                  & 0.25 h & 1 min & 15 & 14 \\
+                  & 0.25 h & per new value & 1 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{What is measured}\label{sec:loop:metrics}
+
+The primary measure is the uninformative share $U$: the share of issued intervals that are
+infinite or wider than the range of $y$ over the calibration data. An operator cannot act on
+such an interval, whatever the coverage figure says. Marginal coverage, the share of labelled
+intervals that contain $y$, is reported with its Wilson 95\,\% interval \citep{wilson1927};
+widths by the median, the 90th and the 99th percentiles of the finite widths; local behaviour by
+the worst rolling coverage, the minimum coverage over 100 consecutive intervals. The persistence
+of the misses is measured by the lag-1 autocorrelation of the miss indicator $e$, the mean length
+of a run of consecutive misses, and the integrated autocorrelation time (IACT),
+$1 + 2\sum_{k \ge 1} \rho_e(k)$, summed over an automatic window (Section~\ref{sec:study}). The
+IACT is the factor by which serial correlation inflates the variance of a mean of misses, and so
+of the level that Eq.~\eqref{eq:loop} integrates from them.
