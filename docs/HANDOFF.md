@@ -59,6 +59,10 @@ Then jump to **§0.5 Current state & resume here** (immediately below).
 > (10.5281/zenodo.24357752); no reply to any of the three emails. The submission set is built in
 > the private repo (`paper/submission_v1/`, Word files from the LaTeX). After submission, the
 > as-submitted copy comes here as the frozen preprint (`docs/PAPER_LIFECYCLE.md`).
+> Same day: the published record held the whole repository (624 files, other papers included);
+> `zenodo_package.py` now archives the N1 study's 161 files from the same tag, and Bien replaces
+> the record's files within Zenodo's 30-day window, DOI unchanged (`docs/module1/ZENODO_N1.md`,
+> Section 5).
 >
 > **Status update 2026-11-03 (M1 session).** N1 Phase 1 has run (pre-registration Section 9,
 > steps 5 to 7; runner 5ed6f0c, stage A 133b0f3, stage B and verdicts bd6454d; no deviation
